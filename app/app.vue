@@ -10,7 +10,7 @@
     <Navbar />
 
     <!-- Hero Section -->
-    <header class="relative pt-20 pb-32 px-4 overflow-hidden">
+    <header class="relative py-32 px-4 overflow-hidden">
       <!-- Background Gradient -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-teal-50 to-purple-50"
