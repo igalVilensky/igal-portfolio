@@ -44,7 +44,7 @@
         <!-- Animated Title -->
         <div class="mb-6 sm:mb-8">
           <h1
-            class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white mb-2 sm:mb-4 leading-tight"
+            class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-black mb-2 sm:mb-4 leading-tight"
           >
             My
             <span
@@ -155,7 +155,7 @@
           <div
             v-for="(project, index) in filteredProjects"
             :key="project.id"
-            class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700"
+            class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 flex flex-col min-h-full"
             :style="{ animationDelay: `${index * 100}ms` }"
           >
             <!-- Project Image with Overlay -->
@@ -168,7 +168,6 @@
               <div
                 class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               ></div>
-
               <!-- Project Status Badge -->
               <div class="absolute top-3 right-3">
                 <span
@@ -179,8 +178,8 @@
               </div>
             </div>
 
-            <!-- Enhanced Project Content -->
-            <div class="p-4 sm:p-6">
+            <!-- Project Content -->
+            <div class="p-4 sm:p-6 flex flex-col flex-grow">
               <h3
                 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors duration-300"
               >
@@ -191,8 +190,7 @@
               >
                 {{ project.description }}
               </p>
-
-              <!-- Enhanced Tech Stack -->
+              <!-- Tech Stack -->
               <div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
                 <span
                   v-for="tech in project.technologies"
@@ -202,9 +200,8 @@
                   {{ tech }}
                 </span>
               </div>
-
-              <!-- Enhanced Action Buttons -->
-              <div class="flex gap-3">
+              <!-- Action Buttons -->
+              <div class="flex gap-3 mt-auto">
                 <a
                   :href="project.link"
                   target="_blank"
@@ -372,75 +369,56 @@ const selectedTech = ref("");
 const projects = [
   {
     id: 1,
-    title: "E-Commerce Platform",
+    title: "Sunlit tales",
     description:
-      "A full-stack e-commerce solution with real-time inventory management, secure payment processing, and advanced analytics dashboard.",
-    image: "/igal.jpg",
-    technologies: ["Vue.js", "Node.js", "Stripe", "MongoDB"],
-    link: "https://example.com/ecommerce",
+      "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul.",
+    image: "/sunlit.jpeg",
+    technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity", "MongoDB"],
+    link: "https://sunlit-tales.netlify.app/",
   },
   {
     id: 2,
-    title: "Task Management App",
+    title: "Your Path to Personal Growth",
     description:
-      "A collaborative project management tool featuring drag-and-drop kanban boards, real-time collaboration, and team analytics.",
-    image: "/igal.jpg",
-    technologies: ["React", "TypeScript", "Firebase", "Tailwind CSS"],
-    link: "https://example.com/taskapp",
+      "Psy-Blog blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day.",
+    image: "/psy.jpeg",
+    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
+    link: "https://psy-blog.netlify.app/",
   },
   {
     id: 3,
     title: "Portfolio Website",
-    description:
-      "A modern, responsive portfolio showcasing web development projects with smooth animations and optimal performance.",
-    image: "/igal.jpg",
+    description: "A modern portfolio showcasing my web development projects.",
+    image: "/portfolio.jpeg",
     technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
     link: "#",
   },
   {
     id: 4,
-    title: "Blog Platform",
+    title: "Coming soon",
     description:
       "A headless CMS-powered blog platform with rich text editing, SEO optimization, and multi-author support.",
-    image: "/igal.jpg",
+    image: "/coming_soon.jpg",
     technologies: ["Directus", "Vue.js", "Node.js", "PostgreSQL"],
     link: "https://example.com/blog",
   },
   {
     id: 5,
-    title: "Real Estate Dashboard",
+    title: "Coming soon",
     description:
       "A comprehensive property management system with advanced search filters, virtual tours, and market analytics.",
-    image: "/igal.jpg",
+    image: "/coming_soon.jpg",
     technologies: ["React", "Node.js", "MongoDB", "Stripe"],
     link: "https://example.com/realestate",
   },
   {
     id: 6,
-    title: "Learning Management System",
+    title: "Coming soon",
     description:
       "An interactive online learning platform with video streaming, progress tracking, and certificate generation.",
-    image: "/igal.jpg",
+    image: "/coming_soon.jpg",
     technologies: ["Vue.js", "Firebase", "Tailwind CSS", "Vimeo API"],
     link: "https://example.com/lms",
-  },
-  {
-    id: 7,
-    title: "Social Media Analytics",
-    description:
-      "A powerful analytics dashboard for social media managers with real-time data visualization and reporting tools.",
-    image: "/igal.jpg",
-    technologies: ["React", "TypeScript", "D3.js", "Node.js"],
-    link: "https://example.com/analytics",
-  },
-  {
-    id: 8,
-    title: "Restaurant Booking System",
-    description:
-      "A comprehensive reservation system with table management, customer profiles, and integrated payment processing.",
-    image: "/igal.jpg",
-    technologies: ["Nuxt", "Directus", "Stripe", "PostgreSQL"],
-    link: "https://example.com/restaurant",
   },
 ];
 
