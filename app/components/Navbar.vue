@@ -21,7 +21,7 @@
             <span
               class="bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent"
             >
-              Igal
+              Igal Vilensky
             </span>
           </NuxtLink>
         </div>
@@ -55,7 +55,7 @@
         <div class="hidden md:flex items-center space-x-4">
           <button
             @click="toggleColorMode"
-            class="p-2 rounded-full transition-all duration-200 hover:scale-110"
+            class="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
             :class="[
               colorMode.value === 'dark'
                 ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700'
@@ -79,7 +79,7 @@
           <!-- Mobile Dark Mode Toggle -->
           <button
             @click="toggleColorMode"
-            class="p-2 rounded-full transition-all duration-200"
+            class="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200"
             :class="[
               colorMode.value === 'dark'
                 ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700'
@@ -88,7 +88,7 @@
           >
             <i
               :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"
-              class="text-sm"
+              class="text-lg"
             ></i>
           </button>
 

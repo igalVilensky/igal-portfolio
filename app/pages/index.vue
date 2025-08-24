@@ -304,22 +304,25 @@
         <!-- Social Links Placeholder -->
         <div class="flex justify-center gap-6 mb-8">
           <a
-            href="#"
+            target="_blank"
+            href="https://www.linkedin.com/in/igalvilensky/"
             class="w-12 h-12 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
           >
             <i class="fab fa-linkedin text-xl"></i>
           </a>
           <a
-            href="#"
+            target="_blank"
+            href="https://github.com/igalVilensky"
             class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
           >
             <i class="fab fa-github text-xl"></i>
           </a>
           <a
-            href="#"
+            target="_blank"
+            href="https://www.facebook.com/afawefaw4496546464/"
             class="w-12 h-12 bg-gradient-to-r from-teal-500 to-purple-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
           >
-            <i class="fab fa-twitter text-xl"></i>
+            <i class="fab fa-facebook text-xl"></i>
           </a>
         </div>
 
