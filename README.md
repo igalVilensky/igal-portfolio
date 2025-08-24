@@ -1,75 +1,71 @@
-# Nuxt Minimal Starter
+Igal Vilensky's Portfolio
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+    Personal Portfolio
+    by Igal Vilensky
 
-## Setup
+A modern, responsive portfolio showcasing my skills and projects as a Full Stack Engineer 🚀
 
-Make sure to install dependencies:
+Live Demo
 
-```bash
-# npm
+📖 About
+This is my personal portfolio website, built with Nuxt 4, Tailwind CSS, and TypeScript. It showcases my expertise as a Full Stack Engineer with over 3 years of experience in web and SaaS development. The site features:
+
+Responsive Design: Optimized for desktop and mobile with a sleek, right-aligned mobile dropdown menu.
+Dark Mode: Seamless light/dark mode toggle using @nuxtjs/color-mode.
+Smooth Scrolling: Anchor links for navigating to sections like About, Skills, Projects, Experience, and Contact.
+Modern UI: Gradient effects, animations, and a clean layout with Tailwind CSS.
+
+🛠️ Tech Stack
+
+Frontend: Nuxt 4, Vue 3, TypeScript, Tailwind CSS
+Modules: @nuxtjs/tailwindcss, @nuxtjs/color-mode
+Fonts/Icons: Google Fonts (Poppins), Font Awesome
+Deployment: Static site generation with nuxt generate (deployable to Vercel, Netlify, etc.)
+
+🚀 Getting Started
+To run this project locally:
+
+Clone the repository:
+git clone https://github.com/igalVilensky/igal-portfolio.git
+cd igal-portfolio
+
+Install dependencies:
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
+Run the development server:
 npm run dev
 
-# pnpm
-pnpm dev
+Open in browser: Visit http://localhost:3000 to view the portfolio.
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
+Build for production:
+npm run generate
 npm run preview
 
-# pnpm
-pnpm preview
+📂 Project Structure
+├── assets/
+│ └── css/
+│ └── main.css # Global CSS (smooth scrolling, etc.)
+├── components/
+│ └── Navbar.vue # Navigation bar with mobile dropdown
+├── pages/
+│ └── index.vue # Main page with sections
+├── plugins/
+│ └── fonts.ts # Google Fonts and Font Awesome
+├── public/
+│ ├── igal.jpg # Profile image
+│ └── IgalVilensky_CV.pdf # CV file
+├── nuxt.config.ts # Nuxt configuration
+├── tailwind.config.js # Tailwind CSS configuration
+├── .gitignore
+└── README.md # This file
 
-# yarn
-yarn preview
+📸 Screenshots
+TODO
+📫 Contact
 
-# bun
-bun run preview
-```
+Email: vilenskyigal@gmail.com
+Phone: +49 1783099433
+LinkedIn: linkedin.com/in/igal-vilensky
+Portfolio: https://igalvilensky.netlify.app/
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Built with ❤️ by Igal Vilensky
