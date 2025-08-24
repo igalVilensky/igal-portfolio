@@ -42,17 +42,19 @@ npm run generate
 npm run preview
 
 📂 Project Structure
+├── app/
+│ ├── components/
+│ │ └── Navbar.vue # Navigation bar with mobile dropdown
+│ ├── pages/
+│ │ ├── index.vue # Main page with sections
+│ │ └── projects.vue # Projects page
 ├── assets/
 │ └── css/
 │ └── main.css # Global CSS (smooth scrolling, etc.)
-├── components/
-│ └── Navbar.vue # Navigation bar with mobile dropdown
-├── pages/
-│ └── index.vue # Main page with sections
 ├── plugins/
 │ └── fonts.ts # Google Fonts and Font Awesome
 ├── public/
-│ ├── igal.jpg # Profile image
+│ ├── profile.jpeg # Profile image
 │ └── IgalVilensky_CV.pdf # CV file
 ├── nuxt.config.ts # Nuxt configuration
 ├── tailwind.config.js # Tailwind CSS configuration

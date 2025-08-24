@@ -29,7 +29,7 @@
             class="absolute inset-0 bg-gradient-to-r from-teal-400 to-purple-600 rounded-full blur-lg opacity-75 animate-pulse"
           ></div>
           <img
-            src="/igal.jpg"
+            src="/profile.jpeg"
             alt="Igal Vilensky"
             class="relative w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto border-4 border-white shadow-2xl object-cover"
           />
@@ -334,7 +334,6 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from "../components/Navbar.vue";
 import { useColorMode } from "#imports";
 
 const colorMode = useColorMode();
@@ -343,28 +342,28 @@ const colorMode = useColorMode();
 const featuredProjects = [
   {
     id: 1,
-    title: "E-Commerce Platform",
+    title: "Sunlit tales",
     description:
-      "A full-stack e-commerce solution with real-time inventory and payment integration.",
-    image: "/igal.jpg",
-    technologies: ["Vue.js", "Node.js", "Stripe"],
-    link: "https://example.com/ecommerce",
+      "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul.",
+    image: "/sunlit.jpeg",
+    technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity"],
+    link: "https://sunlit-tales.netlify.app/",
   },
   {
     id: 2,
-    title: "Task Management App",
+    title: "Your Path to Personal Growth",
     description:
-      "A collaborative task management tool with drag-and-drop functionality.",
-    image: "/igal.jpg",
-    technologies: ["React", "TypeScript", "Firebase"],
-    link: "https://example.com/taskapp",
+      "Psy-Blog blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day.",
+    image: "/psy.jpeg",
+    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
+    link: "https://psy-blog.netlify.app/",
   },
   {
     id: 3,
     title: "Portfolio Website",
     description: "A modern portfolio showcasing my web development projects.",
-    image: "/igal.jpg",
-    technologies: ["Nuxt", "Tailwind CSS"],
+    image: "/portfolio.jpeg",
+    technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
     link: "#",
   },
 ];
