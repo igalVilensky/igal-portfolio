@@ -40,7 +40,7 @@
         style="animation-delay: 1s"
       ></div>
 
-      <div class="relative max-w-6xl mx-auto text-center">
+      <div class="relative max-w-7xl mx-auto text-center">
         <!-- Animated Title -->
         <div class="mb-6 sm:mb-8">
           <h1
@@ -288,7 +288,7 @@
     <footer
       class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 sm:py-20"
     >
-      <div class="max-w-6xl mx-auto px-4 text-center">
+      <div class="max-w-7xl mx-auto px-4 text-center">
         <h2 class="text-2xl sm:text-3xl md:text-5xl font-black mb-6 sm:mb-8">
           Let's
           <span
