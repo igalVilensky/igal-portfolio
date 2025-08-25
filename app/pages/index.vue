@@ -167,17 +167,508 @@
         </div>
       </div>
     </section>
+    <!-- Enhanced Skills Section -->
+    <section
+      id="skills"
+      class="py-12 sm:py-16 lg:py-20 px-4 relative overflow-hidden"
+      :class="colorMode.value === 'dark' ? 'bg-gray-800' : 'bg-gray-50'"
+    >
+      <!-- Background Effects -->
+      <div
+        class="absolute top-0 right-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-teal-400/5 dark:bg-teal-400/10 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80 bg-purple-400/5 dark:bg-purple-400/10 rounded-full blur-3xl"
+      ></div>
 
-    <!-- Skills Section Placeholder -->
-    <section id="skills" class="py-20 px-4 bg-gray-50">
-      <div class="max-w-6xl mx-auto text-center">
-        <h2 class="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-          My <span class="text-purple-500">Skills</span>
-        </h2>
+      <div class="max-w-6xl mx-auto relative">
+        <!-- Section Header -->
+        <div class="text-center mb-12 sm:mb-16">
+          <h2
+            class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4"
+          >
+            My <span class="text-purple-500">Skills</span>
+          </h2>
+          <div
+            class="w-20 sm:w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
+          ></div>
+          <p
+            class="text-gray-600 dark:text-gray-300 text-base sm:text-lg lg:text-xl mt-6 max-w-2xl mx-auto leading-relaxed"
+          >
+            Building scalable, user-focused solutions with modern technologies
+            and Agile methodologies
+          </p>
+        </div>
+
+        <!-- Skills Grid -->
         <div
-          class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-8"
-        ></div>
-        <p class="text-gray-600 text-lg">Skills section coming soon...</p>
+          class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+        >
+          <!-- Frontend & Mobile -->
+          <div
+            class="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 transform hover:-translate-y-2"
+          >
+            <!-- Card Glow Effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-teal-600/5 dark:from-teal-400/10 dark:to-teal-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+
+            <div class="relative">
+              <!-- Icon and Title -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
+              >
+                <div
+                  class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+                >
+                  <i
+                    class="fas fa-laptop-code text-white text-lg sm:text-xl"
+                  ></i>
+                </div>
+                <h3
+                  class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
+                >
+                  Frontend & Mobile
+                </h3>
+              </div>
+
+              <!-- Skills List -->
+              <ul class="space-y-3 sm:space-y-4">
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      TypeScript / JavaScript
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      ES2015+, Modern syntax
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      React / React Native
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Hooks, Redux, Context
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Vue.js / Nuxt.js
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Composition API, SSR
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      CSS Frameworks
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      TailwindCSS, Bootstrap, SCSS
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Responsive Design
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Mobile-first, Ionic
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Backend -->
+          <div
+            class="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transform hover:-translate-y-2"
+          >
+            <!-- Card Glow Effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-purple-600/5 dark:from-purple-400/10 dark:to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+
+            <div class="relative">
+              <!-- Icon and Title -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
+              >
+                <div
+                  class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+                >
+                  <i class="fas fa-server text-white text-lg sm:text-xl"></i>
+                </div>
+                <h3
+                  class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
+                >
+                  Backend
+                </h3>
+              </div>
+
+              <!-- Skills List -->
+              <ul class="space-y-3 sm:space-y-4">
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Node.js / Express.js
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Server-side JavaScript
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      MongoDB / Mongoose
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      NoSQL database, ODM
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Directus CMS
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Headless CMS solution
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      REST APIs
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      JWT Authentication
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- DevOps & Tools -->
+          <div
+            class="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 transform hover:-translate-y-2"
+          >
+            <!-- Card Glow Effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-purple-500/5 dark:from-teal-400/10 dark:to-purple-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+
+            <div class="relative">
+              <!-- Icon and Title -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
+              >
+                <div
+                  class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-teal-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+                >
+                  <i class="fas fa-tools text-white text-lg sm:text-xl"></i>
+                </div>
+                <h3
+                  class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
+                >
+                  DevOps & Tools
+                </h3>
+              </div>
+
+              <!-- Skills List -->
+              <ul class="space-y-3 sm:space-y-4">
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      CI/CD Pipelines
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Automated deployment
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Docker
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Containerization
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Git / GitHub
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Team workflow, Version control
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Agile & Scrum
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Project methodologies
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Languages -->
+          <div
+            class="group relative bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transform hover:-translate-y-2"
+          >
+            <!-- Card Glow Effect -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-teal-500/5 dark:from-purple-400/10 dark:to-teal-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            ></div>
+
+            <div class="relative">
+              <!-- Icon and Title -->
+              <div
+                class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
+              >
+                <div
+                  class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
+                >
+                  <i class="fas fa-language text-white text-lg sm:text-xl"></i>
+                </div>
+                <h3
+                  class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
+                >
+                  Languages
+                </h3>
+              </div>
+
+              <!-- Skills List -->
+              <ul class="space-y-3 sm:space-y-4">
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      English
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      C1 - Advanced
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      German
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      B2 - Upper Intermediate
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Russian
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Native Speaker
+                    </span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Hebrew
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Native Speaker
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
