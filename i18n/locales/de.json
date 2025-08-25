@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "about": "Über mich",
+    "skills": "Fähigkeiten",
+    "projects": "Projekte",
+    "experience": "Erfahrung",
+    "education": "Ausbildung",
+    "contact": "Kontakt",
+    "switchToLight": "Zum Hellmodus wechseln",
+    "switchToDark": "Zum Dunkelmodus wechseln"
+  },
+  "welcome": "WelcomeWillkommen zu meinem Portfolio"
+}

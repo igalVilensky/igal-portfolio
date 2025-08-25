@@ -46,12 +46,12 @@
               ]"
             >
               <i :class="item.icon" class="mr-2"></i>
-              {{ t(`nav.${item.id}`) }}
+              {{ $t(`nav.${item.id}`) }}
             </button>
           </div>
         </div>
 
-        <!-- Desktop Right Side - Dark Mode Toggle and Language Switcher -->
+        <!-- Desktop Right Side -->
         <div class="hidden md:flex items-center space-x-4">
           <!-- Language Switcher -->
           <div class="relative">
@@ -66,10 +66,9 @@
               aria-label="Select language"
             >
               <i class="fas fa-globe mr-2"></i>
-              {{
-                languages.find((lang) => lang.code === currentLanguage)?.name
-              }}
+              {{ languages.find((lang) => lang.code === locale)?.name }}
             </button>
+
             <Transition
               enter-active-class="transition ease-out duration-200"
               enter-from-class="opacity-0 scale-95"
@@ -88,24 +87,25 @@
                 ]"
                 style="backdrop-filter: blur(12px)"
               >
-                <button
+                <NuxtLink
                   v-for="lang in languages"
                   :key="lang.code"
-                  @click="setLanguage(lang.code)"
-                  class="w-full text-left block px-4 py-2 text-sm font-semibold transition-all duration-200"
+                  :to="switchLocalePath(lang.code)"
+                  class="block w-full text-left px-4 py-2 text-sm font-semibold transition-all duration-200"
                   :class="[
                     colorMode.value === 'dark'
                       ? 'text-gray-300 hover:text-white hover:bg-gray-700'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100',
-                    currentLanguage === lang.code
+                    locale === lang.code
                       ? colorMode.value === 'dark'
                         ? 'text-teal-400 bg-gray-700'
                         : 'text-teal-600 bg-teal-50'
                       : '',
                   ]"
+                  @click="isLanguageMenuOpen = false"
                 >
                   {{ lang.name }}
-                </button>
+                </NuxtLink>
               </div>
             </Transition>
           </div>
@@ -121,8 +121,8 @@
             ]"
             :title="
               colorMode.value === 'dark'
-                ? t('nav.switchToLight')
-                : t('nav.switchToDark')
+                ? $t('nav.switchToLight')
+                : $t('nav.switchToDark')
             "
             aria-label="Toggle dark mode"
           >
@@ -149,6 +149,7 @@
             >
               <i class="fas fa-globe text-lg"></i>
             </button>
+
             <Transition
               enter-active-class="transition ease-out duration-200"
               enter-from-class="opacity-0 scale-95"
@@ -167,24 +168,25 @@
                 ]"
                 style="backdrop-filter: blur(12px)"
               >
-                <button
+                <NuxtLink
                   v-for="lang in languages"
                   :key="lang.code"
-                  @click="setLanguage(lang.code)"
-                  class="w-full text-left block px-4 py-2 text-sm font-semibold transition-all duration-200"
+                  :to="switchLocalePath(lang.code)"
+                  class="block w-full text-left px-4 py-2 text-sm font-semibold transition-all duration-200"
                   :class="[
                     colorMode.value === 'dark'
                       ? 'text-gray-300 hover:text-white hover:bg-gray-700'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100',
-                    currentLanguage === lang.code
+                    locale === lang.code
                       ? colorMode.value === 'dark'
                         ? 'text-teal-400 bg-gray-700'
                         : 'text-teal-600 bg-teal-50'
                       : '',
                   ]"
+                  @click="isLanguageMenuOpen = false"
                 >
                   {{ lang.name }}
-                </button>
+                </NuxtLink>
               </div>
             </Transition>
           </div>
@@ -263,7 +265,7 @@
             ]"
           >
             <i :class="item.icon" class="mr-3 w-4"></i>
-            {{ t(`nav.${item.id}`) }}
+            {{ $t(`nav.${item.id}`) }}
           </button>
         </div>
       </div>
@@ -272,19 +274,26 @@
 </template>
 
 <script setup lang="ts">
-import { useColorMode } from "#imports";
 import { useI18n } from "vue-i18n";
+import { useSwitchLocalePath } from "#i18n";
+import { useColorMode } from "#imports";
 
-// Initialize reactive state
-const { t, locale } = useI18n();
+// i18n
+const { locale } = useI18n();
+console.log(locale.value);
+
+const switchLocalePath = useSwitchLocalePath();
+
+// Dark mode
 const colorMode = useColorMode();
+
+// State
 const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
 const activeSection = ref("");
 const isLanguageMenuOpen = ref(false);
-const currentLanguage = ref("en"); // Default to 'en' on server
 
-// Navigation items (without translations, as they come from i18n)
+// Navigation items
 const navigationItems = [
   { id: "about", icon: "fas fa-user" },
   { id: "skills", icon: "fas fa-code" },
@@ -294,14 +303,14 @@ const navigationItems = [
   { id: "contact", icon: "fas fa-envelope" },
 ];
 
-// Language options
+// Available languages (sync with nuxt.config.ts i18n.locales)
 const languages = [
   { code: "en", name: "English 🇬🇧" },
   { code: "de", name: "Deutsch 🇩🇪" },
   { code: "ru", name: "Русский 🇷🇺" },
 ];
 
-// Toggle dark mode
+// Dark mode toggle
 const toggleColorMode = () => {
   colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
 };
@@ -311,33 +320,18 @@ const toggleLanguageMenu = () => {
   isLanguageMenuOpen.value = !isLanguageMenuOpen.value;
 };
 
-// Set language
-const setLanguage = (code: string) => {
-  currentLanguage.value = code;
-  if (process.client) {
-    localStorage.setItem("language", code);
-  }
-  locale.value = code; // Update i18n locale
-  isLanguageMenuOpen.value = false;
-};
-
 // Scroll to section
 const scrollToSection = (sectionId: string) => {
   if (sectionId === "top") {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
-
   const element = document.getElementById(sectionId);
   if (element) {
     const navbar = document.querySelector("nav");
     const navbarHeight = navbar?.offsetHeight || 64;
     const elementPosition = element.offsetTop - navbarHeight - 20;
-
-    window.scrollTo({
-      top: elementPosition,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: elementPosition, behavior: "smooth" });
   }
 };
 
@@ -347,7 +341,7 @@ const handleMobileNavClick = (sectionId: string) => {
   isMobileMenuOpen.value = false;
 };
 
-// Handle scroll events
+// Scroll detection
 const handleScroll = () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   isScrolled.value = scrollTop > 10;
@@ -366,30 +360,20 @@ const handleScroll = () => {
       }
     }
   }
-
-  if (scrollTop < 100) {
-    activeSection.value = "";
-  }
+  if (scrollTop < 100) activeSection.value = "";
 };
 
-// Close mobile menu and language menu when clicking outside
+// Close menus when clicking outside
 const handleClickOutside = (event: Event) => {
   const target = event.target as Element;
   const nav = document.querySelector("nav");
-
   if (nav && !nav.contains(target)) {
     if (isMobileMenuOpen.value) isMobileMenuOpen.value = false;
     if (isLanguageMenuOpen.value) isLanguageMenuOpen.value = false;
   }
 };
 
-// Initialize language on client side
 onMounted(() => {
-  if (process.client) {
-    const savedLanguage = localStorage.getItem("language") || "en";
-    currentLanguage.value = savedLanguage;
-    locale.value = savedLanguage; // Update i18n locale
-  }
   window.addEventListener("scroll", handleScroll, { passive: true });
   document.addEventListener("click", handleClickOutside);
   handleScroll();
