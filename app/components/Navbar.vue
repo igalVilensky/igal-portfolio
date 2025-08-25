@@ -304,7 +304,8 @@ const navigationItems = [
 ];
 
 // Available languages (sync with nuxt.config.ts i18n.locales)
-const languages = [
+type LanguageCode = "en" | "de" | "ru";
+const languages: { code: LanguageCode; name: string }[] = [
   { code: "en", name: "English 🇬🇧" },
   { code: "de", name: "Deutsch 🇩🇪" },
   { code: "ru", name: "Русский 🇷🇺" },
@@ -351,12 +352,18 @@ const handleScroll = () => {
   const navbarHeight = navbar?.offsetHeight || 64;
 
   for (let i = sections.length - 1; i >= 0; i--) {
-    const section = document.getElementById(sections[i]);
-    if (section) {
-      const sectionTop = section.offsetTop - navbarHeight - 100;
-      if (scrollTop >= sectionTop) {
-        activeSection.value = sections[i];
-        break;
+    const sectionId = sections[i];
+    if (sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        const sectionTop = section.offsetTop - navbarHeight - 100;
+        if (scrollTop >= sectionTop && sections[i]) {
+          const currentSection = sections[i];
+          if (currentSection) {
+            activeSection.value = currentSection;
+            break;
+          }
+        }
       }
     }
   }
