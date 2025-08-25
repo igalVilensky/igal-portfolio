@@ -200,7 +200,7 @@
                   {{ tech }}
                 </span>
               </div>
-              <!-- Action Buttons f  -->
+              <!-- Action Buttons   -->
               <div class="flex gap-3 mt-auto">
                 <a
                   :href="project.link"
