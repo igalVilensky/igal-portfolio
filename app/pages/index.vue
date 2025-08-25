@@ -837,70 +837,68 @@
 <script setup lang="ts">
 import { useColorMode } from "#imports";
 import { computed } from "vue";
-import { useI18n } from "vue-i18n";
 
 const colorMode = useColorMode();
-const { t } = useI18n();
 
 // Translation computed properties
 const hero = computed(() => ({
-  title: t("hero.title"),
-  lastName: t("hero.lastName"),
-  subtitle: t("hero.subtitle"),
-  viewProjects: t("hero.viewProjects"),
-  downloadCV: t("hero.downloadCV"),
+  title: $t("hero.title"),
+  lastName: $t("hero.lastName"),
+  subtitle: $t("hero.subtitle"),
+  viewProjects: $t("hero.viewProjects"),
+  downloadCV: $t("hero.downloadCV"),
 }));
 
 const about = computed(() => ({
-  title: t("about.title"),
-  description1: t("about.description1"),
-  description2: t("about.description2"),
-  yearsExperience: t("about.yearsExperience"),
-  projectsCompleted: t("about.projectsCompleted"),
-  coreTechnologies: t("about.coreTechnologies"),
+  title: $t("about.title"),
+  description1: $t("about.description1"),
+  description2: $t("about.description2"),
+  yearsExperience: $t("about.yearsExperience"),
+  projectsCompleted: $t("about.projectsCompleted"),
+  coreTechnologies: $t("about.coreTechnologies"),
 }));
 
 const skills = computed(() => ({
-  title: t("skills.title"),
-  subtitle: t("skills.subtitle"),
-  frontendMobile: t("skills.frontendMobile"),
-  backend: t("skills.backend"),
-  devopsTools: t("skills.devopsTools"),
-  languages: t("skills.languages"),
+  title: $t("skills.title"),
+  subtitle: $t("skills.subtitle"),
+  frontendMobile: $t("skills.frontendMobile"),
+  backend: $t("skills.backend"),
+  devopsTools: $t("skills.devopsTools"),
+  languages: $t("skills.languages"),
 }));
 
 const projects = computed(() => ({
-  title: t("projects.title"),
-  seeAllProjects: t("projects.seeAllProjects"),
-  viewProject: t("projects.viewProject"),
+  title: $t("projects.title"),
+  seeAllProjects: $t("projects.seeAllProjects"),
+  viewProject: $t("projects.viewProject"),
 }));
 
 const experience = computed(() => ({
-  title: t("experience.title"),
-  comingSoon: t("experience.comingSoon"),
+  title: $t("experience.title"),
+  comingSoon: $t("experience.comingSoon"),
 }));
 
 const education = computed(() => ({
-  title: t("education.title"),
-  subtitle: t("education.subtitle"),
-  certification: t("education.certification"),
-  certificationSub: t("education.certificationSub"),
-  institution: t("education.institution"),
-  period: t("education.period"),
-  downloadCertificate: t("education.downloadCertificate"),
-  months: t("education.months"),
-  hours: t("education.hours"),
-  technologiesCount: t("education.technologiesCount"),
-  projectsCount: t("education.projectsCount"),
-  technicalCurriculum: t("education.technicalCurriculum"),
-  keyAchievements: t("education.keyAchievements"),
+  title: $t("education.title"),
+  subtitle: $t("education.subtitle"),
+  certification: $t("education.certification"),
+  certificationSub: $t("education.certificationSub"),
+  institution: $t("education.institution"),
+  period: $t("education.period"),
+  downloadCertificate: $t("education.downloadCertificate"),
+  months: $t("education.months"),
+  hours: $t("education.hours"),
+  technologiesCount: $t("education.technologiesCount"),
+  projectsCount: $t("education.projectsCount"),
+  technicalCurriculum: $t("education.technicalCurriculum"),
+  keyAchievements: $t("education.keyAchievements"),
 }));
 
 const contact = computed(() => ({
-  title: t("contact.title"),
-  email: t("contact.email"),
-  phone: t("contact.phone"),
-  copyright: t("contact.copyright"),
+  title: $t("contact.title"),
+  email: $t("contact.email"),
+  phone: $t("contact.phone"),
+  copyright: $t("contact.copyright"),
 }));
 
 // Skills data
@@ -914,83 +912,86 @@ const technologies = computed(() => [
 ]);
 
 const frontendSkills = computed(() => [
-  { title: t("skills.typescript"), description: t("skills.typescriptDesc") },
-  { title: t("skills.react"), description: t("skills.reactDesc") },
-  { title: t("skills.vue"), description: t("skills.vueDesc") },
+  { title: $t("skills.typescript"), description: $t("skills.typescriptDesc") },
+  { title: $t("skills.react"), description: $t("skills.reactDesc") },
+  { title: $t("skills.vue"), description: $t("skills.vueDesc") },
   {
-    title: t("skills.cssFrameworks"),
-    description: t("skills.cssFrameworksDesc"),
+    title: $t("skills.cssFrameworks"),
+    description: $t("skills.cssFrameworksDesc"),
   },
   {
-    title: t("skills.responsiveDesign"),
-    description: t("skills.responsiveDesignDesc"),
+    title: $t("skills.responsiveDesign"),
+    description: $t("skills.responsiveDesignDesc"),
   },
 ]);
 
 const backendSkills = computed(() => [
-  { title: t("skills.nodejs"), description: t("skills.nodejsDesc") },
-  { title: t("skills.mongodb"), description: t("skills.mongodbDesc") },
-  { title: t("skills.directus"), description: t("skills.directusDesc") },
-  { title: t("skills.restApis"), description: t("skills.restApisDesc") },
+  { title: $t("skills.nodejs"), description: $t("skills.nodejsDesc") },
+  { title: $t("skills.mongodb"), description: $t("skills.mongodbDesc") },
+  { title: $t("skills.directus"), description: $t("skills.directusDesc") },
+  { title: $t("skills.restApis"), description: $t("skills.restApisDesc") },
 ]);
 
 const devopsSkills = computed(() => [
-  { title: t("skills.cicd"), description: t("skills.cicdDesc") },
-  { title: t("skills.docker"), description: t("skills.dockerDesc") },
-  { title: t("skills.git"), description: t("skills.gitDesc") },
-  { title: t("skills.agile"), description: t("skills.agileDesc") },
+  { title: $t("skills.cicd"), description: $t("skills.cicdDesc") },
+  { title: $t("skills.docker"), description: $t("skills.dockerDesc") },
+  { title: $t("skills.git"), description: $t("skills.gitDesc") },
+  { title: $t("skills.agile"), description: $t("skills.agileDesc") },
 ]);
 
 const languageSkills = computed(() => [
-  { title: t("skills.english"), level: t("skills.englishLevel") },
-  { title: t("skills.german"), level: t("skills.germanLevel") },
-  { title: t("skills.russian"), level: t("skills.russianLevel") },
-  { title: t("skills.hebrew"), level: t("skills.hebrewLevel") },
+  { title: $t("skills.english"), level: $t("skills.englishLevel") },
+  { title: $t("skills.german"), level: $t("skills.germanLevel") },
+  { title: $t("skills.russian"), level: $t("skills.russianLevel") },
+  { title: $t("skills.hebrew"), level: $t("skills.hebrewLevel") },
 ]);
 
 // Education data
 const technicalCurriculum = computed(() => [
-  { title: t("education.htmlCss"), description: t("education.htmlCssDesc") },
-  { title: t("education.jsTs"), description: t("education.jsTsDesc") },
+  { title: $t("education.htmlCss"), description: $t("education.htmlCssDesc") },
+  { title: $t("education.jsTs"), description: $t("education.jsTsDesc") },
   {
-    title: t("education.reactSkills"),
-    description: t("education.reactSkillsDesc"),
+    title: $t("education.reactSkills"),
+    description: $t("education.reactSkillsDesc"),
   },
   {
-    title: t("education.nodeSkills"),
-    description: t("education.nodeSkillsDesc"),
+    title: $t("education.nodeSkills"),
+    description: $t("education.nodeSkillsDesc"),
   },
   {
-    title: t("education.mongoSkills"),
-    description: t("education.mongoSkillsDesc"),
+    title: $t("education.mongoSkills"),
+    description: $t("education.mongoSkillsDesc"),
   },
   {
-    title: t("education.gitSkills"),
-    description: t("education.gitSkillsDesc"),
+    title: $t("education.gitSkills"),
+    description: $t("education.gitSkillsDesc"),
   },
 ]);
 
 const keyAchievements = computed(() => [
   {
-    title: t("education.programExcellence"),
-    description: t("education.programExcellenceDesc"),
+    title: $t("education.programExcellence"),
+    description: $t("education.programExcellenceDesc"),
   },
   {
-    title: t("education.capstoneProject"),
-    description: t("education.capstoneProjectDesc"),
+    title: $t("education.capstoneProject"),
+    description: $t("education.capstoneProjectDesc"),
   },
   {
-    title: t("education.languageProficiency"),
-    description: t("education.languageProficiencyDesc"),
+    title: $t("education.languageProficiency"),
+    description: $t("education.languageProficiencyDesc"),
   },
   {
-    title: t("education.responsiveDesignEdu"),
-    description: t("education.responsiveDesignEduDesc"),
+    title: $t("education.responsiveDesignEdu"),
+    description: $t("education.responsiveDesignEduDesc"),
   },
-  { title: t("education.security"), description: t("education.securityDesc") },
   {
-    title: t("education.databaseDevelopment"),
-    description: t("education.databaseDevelopmentDesc"),
+    title: $t("education.security"),
+    description: $t("education.securityDesc"),
+  },
+  {
+    title: $t("education.databaseDevelopment"),
+    description: $t("education.databaseDevelopmentDesc"),
   },
 ]);
 
@@ -1016,24 +1017,24 @@ const achievementIcons = computed(() => [
 const featuredProjects = computed(() => [
   {
     id: 1,
-    title: t("projects.sunlitTales.title"),
-    description: t("projects.sunlitTales.description"),
+    title: $t("projects.sunlitTales.title"),
+    description: $t("projects.sunlitTales.description"),
     image: "/sunlit.jpeg",
     technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity"],
     link: "https://sunlit-tales.netlify.app/",
   },
   {
     id: 2,
-    title: t("projects.psyBlog.title"),
-    description: t("projects.psyBlog.description"),
+    title: $t("projects.psyBlog.title"),
+    description: $t("projects.psyBlog.description"),
     image: "/psy.jpeg",
     technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
     link: "https://psy-blog.netlify.app/",
   },
   {
     id: 3,
-    title: t("projects.portfolio.title"),
-    description: t("projects.portfolio.description"),
+    title: $t("projects.portfolio.title"),
+    description: $t("projects.portfolio.description"),
     image: "/portfolio.jpeg",
     technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
     link: "#",
