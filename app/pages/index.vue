@@ -39,16 +39,17 @@
         <h1
           class="text-4xl md:text-6xl lg:text-7xl font-black text-gray-900 mb-4 leading-tight"
         >
-          {{ hero.title }}
+          Igal
           <span
             class="bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent"
-            >{{ hero.lastName }}</span
+            >Vilensky</span
           >
         </h1>
         <p
           class="text-lg md:text-2xl text-gray-600 mb-8 font-medium italic max-w-2xl mx-auto"
         >
-          {{ hero.subtitle }}
+          Crafting digital experiences with 3+ years of passion in web
+          development
         </p>
 
         <!-- CTA Buttons -->
@@ -60,7 +61,7 @@
             class="group bg-gradient-to-r from-teal-500 to-teal-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
           >
             <i class="fas fa-rocket group-hover:animate-bounce"></i>
-            {{ hero.viewProjects }}
+            View Projects
           </NuxtLink>
           <div class="relative group">
             <div
@@ -72,7 +73,7 @@
               class="relative group bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
             >
               <i class="fas fa-download group-hover:animate-pulse"></i>
-              {{ hero.downloadCV }}
+              Download CV
             </NuxtLink>
           </div>
         </div>
@@ -86,8 +87,7 @@
           <h2
             class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4"
           >
-            {{ about.title }}
-            <span class="text-teal-500">{{ $t("about.me") }}</span>
+            About <span class="text-teal-500">Me</span>
           </h2>
           <div
             class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
@@ -96,11 +96,19 @@
 
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="space-y-6">
-            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-              {{ about.description1 }}
+            <p class="text-lg text-gray-600 leading-relaxed">
+              Web and Software Developer with
+              <strong class="text-teal-600">3+ years</strong> in SaaS and web
+              projects. Skilled in JavaScript/TypeScript, React, Vue/Nuxt,
+              Node.js, and Directus.
             </p>
-            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-              {{ about.description2 }}
+            <p class="text-lg text-gray-600 leading-relaxed">
+              I'm passionate about creating
+              <em class="text-purple-600 font-semibold"
+                >beautiful, functional</em
+              >
+              digital experiences that solve real-world problems and delight
+              users.
             </p>
 
             <!-- Quick Stats -->
@@ -110,7 +118,7 @@
               >
                 <div class="text-3xl font-black text-teal-600">3+</div>
                 <div class="text-sm font-semibold text-gray-700">
-                  {{ about.yearsExperience }}
+                  Years Experience
                 </div>
               </div>
               <div
@@ -118,7 +126,7 @@
               >
                 <div class="text-3xl font-black text-purple-600">50+</div>
                 <div class="text-sm font-semibold text-gray-700">
-                  {{ about.projectsCompleted }}
+                  Projects Completed
                 </div>
               </div>
             </div>
@@ -127,27 +135,38 @@
           <!-- Skills Preview -->
           <div class="space-y-4">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">
-              {{ about.coreTechnologies }}
+              Core Technologies
             </h3>
             <div class="flex flex-wrap gap-3">
               <span
-                v-for="(tech, index) in technologies"
-                :key="index"
-                class="px-4 py-2"
-                :class="
-                  index % 2 === 0
-                    ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white'
-                    : 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                "
+                class="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full text-sm font-semibold"
+                >JavaScript</span
               >
-                {{ tech }}
-              </span>
+              <span
+                class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full text-sm font-semibold"
+                >TypeScript</span
+              >
+              <span
+                class="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full text-sm font-semibold"
+                >Vue.js</span
+              >
+              <span
+                class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full text-sm font-semibold"
+                >React</span
+              >
+              <span
+                class="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full text-sm font-semibold"
+                >Node.js</span
+              >
+              <span
+                class="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full text-sm font-semibold"
+                >Nuxt</span
+              >
             </div>
           </div>
         </div>
       </div>
     </section>
-
     <!-- Enhanced Skills Section -->
     <section
       id="skills"
@@ -168,8 +187,7 @@
           <h2
             class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4"
           >
-            {{ skills.title }}
-            <span class="text-purple-500">{{ $t("skills.my") }}</span>
+            My <span class="text-purple-500">Skills</span>
           </h2>
           <div
             class="w-20 sm:w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
@@ -177,7 +195,8 @@
           <p
             class="text-gray-600 dark:text-gray-300 text-base sm:text-lg lg:text-xl mt-6 max-w-2xl mx-auto leading-relaxed"
           >
-            {{ skills.subtitle }}
+            Building scalable, user-focused solutions with modern technologies
+            and Agile methodologies
           </p>
         </div>
 
@@ -209,17 +228,13 @@
                 <h3
                   class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
                 >
-                  {{ skills.frontendMobile }}
+                  Frontend & Mobile
                 </h3>
               </div>
 
               <!-- Skills List -->
               <ul class="space-y-3 sm:space-y-4">
-                <li
-                  v-for="(item, index) in frontendSkills"
-                  :key="index"
-                  class="flex items-start gap-3 group/item"
-                >
+                <li class="flex items-start gap-3 group/item">
                   <div class="flex-shrink-0 mt-2">
                     <div
                       class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
@@ -229,12 +244,92 @@
                     <span
                       class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
                     >
-                      {{ item.title }}
+                      TypeScript / JavaScript
                     </span>
                     <span
                       class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                     >
-                      {{ item.description }}
+                      ES2015+, Modern syntax
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      React / React Native
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Hooks, Redux, Context
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Vue.js / Nuxt.js
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Composition API, SSR
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      CSS Frameworks
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      TailwindCSS, Bootstrap, SCSS
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Responsive Design
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Mobile-first, Ionic
                     </span>
                   </div>
                 </li>
@@ -264,17 +359,13 @@
                 <h3
                   class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
                 >
-                  {{ skills.backend }}
+                  Backend
                 </h3>
               </div>
 
               <!-- Skills List -->
               <ul class="space-y-3 sm:space-y-4">
-                <li
-                  v-for="(item, index) in backendSkills"
-                  :key="index"
-                  class="flex items-start gap-3 group/item"
-                >
+                <li class="flex items-start gap-3 group/item">
                   <div class="flex-shrink-0 mt-2">
                     <div
                       class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
@@ -284,12 +375,72 @@
                     <span
                       class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
                     >
-                      {{ item.title }}
+                      Node.js / Express.js
                     </span>
                     <span
                       class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                     >
-                      {{ item.description }}
+                      Server-side JavaScript
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      MongoDB / Mongoose
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      NoSQL database, ODM
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Directus CMS
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Headless CMS solution
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      REST APIs
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      JWT Authentication
                     </span>
                   </div>
                 </li>
@@ -319,33 +470,88 @@
                 <h3
                   class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
                 >
-                  {{ skills.devopsTools }}
+                  DevOps & Tools
                 </h3>
               </div>
 
               <!-- Skills List -->
               <ul class="space-y-3 sm:space-y-4">
-                <li
-                  v-for="(item, index) in devopsSkills"
-                  :key="index"
-                  class="flex items-start gap-3 group/item"
-                >
+                <li class="flex items-start gap-3 group/item">
                   <div class="flex-shrink-0 mt-2">
                     <div
-                      class="w-2 h-2 rounded-full"
-                      :class="index % 2 === 0 ? 'bg-teal-500' : 'bg-purple-500'"
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
                     ></div>
                   </div>
                   <div class="min-w-0">
                     <span
                       class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
                     >
-                      {{ item.title }}
+                      CI/CD Pipelines
                     </span>
                     <span
                       class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                     >
-                      {{ item.description }}
+                      Automated deployment
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Docker
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Containerization
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Git / GitHub
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Team workflow, Version control
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Agile & Scrum
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Project methodologies
                     </span>
                   </div>
                 </li>
@@ -375,33 +581,87 @@
                 <h3
                   class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white min-w-0"
                 >
-                  {{ skills.languages }}
+                  Languages
                 </h3>
               </div>
 
               <!-- Skills List -->
               <ul class="space-y-3 sm:space-y-4">
-                <li
-                  v-for="(item, index) in languageSkills"
-                  :key="index"
-                  class="flex items-start gap-3 group/item"
-                >
+                <li class="flex items-start gap-3 group/item">
                   <div class="flex-shrink-0 mt-2">
                     <div
-                      class="w-2 h-2 rounded-full"
-                      :class="index % 2 === 0 ? 'bg-teal-500' : 'bg-purple-500'"
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
                     ></div>
                   </div>
                   <div class="min-w-0">
                     <span
                       class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
                     >
-                      {{ item.title }}
+                      English
                     </span>
                     <span
                       class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
                     >
-                      {{ item.level }}
+                      C1 - Advanced
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      German
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      B2 - Upper Intermediate
+                    </span>
+                  </div>
+                </li>
+
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Russian
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Native Speaker
+                    </span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3 group/item">
+                  <div class="flex-shrink-0 mt-2">
+                    <div
+                      class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                    ></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span
+                      class="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 block"
+                    >
+                      Hebrew
+                    </span>
+                    <span
+                      class="text-xs sm:text-sm text-gray-600 dark:text-gray-400"
+                    >
+                      Native Speaker
                     </span>
                   </div>
                 </li>
@@ -418,8 +678,7 @@
         <h2
           class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4"
         >
-          {{ projects.title }}
-          <span class="text-teal-500">{{ $t("projects.featured") }}</span>
+          Featured <span class="text-teal-500">Projects</span>
         </h2>
         <div
           class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-12"
@@ -439,7 +698,7 @@
               class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div class="p-6 flex flex-col flex-grow">
-              <h3 class="text-xl font-bold text-gray-90 dark:text-white mb-2">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 {{ project.title }}
               </h3>
               <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
@@ -461,7 +720,7 @@
                   class="inline-flex items-center text-teal-500 hover:text-teal-600 font-semibold"
                 >
                   <i class="fas fa-external-link-alt mr-2"></i>
-                  {{ projects.viewProject }}
+                  View Project
                 </a>
               </div>
             </div>
@@ -473,7 +732,7 @@
           to="/projects"
           class="mt-12 inline-block bg-gradient-to-r from-teal-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
         >
-          {{ projects.seeAllProjects }}
+          See All Projects
         </NuxtLink>
       </div>
     </section>
@@ -482,17 +741,12 @@
     <section id="experience" class="py-20 px-4 bg-gray-50">
       <div class="max-w-6xl mx-auto text-center">
         <h2 class="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-          {{ experience.title }}
-          <span class="text-purple-500">{{ $t("experience.work") }}</span>
+          Work <span class="text-purple-500">Experience</span>
         </h2>
         <div
           class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-8"
         ></div>
-        <p
-          class="text-gray-600 dark:text-gray-600 text-base sm:text-lg lg:text-xl mt-6 max-w-2xl mx-auto leading-relaxed"
-        >
-          {{ experience.comingSoon }}
-        </p>
+        <p class="text-gray-600 text-lg">Experience timeline coming soon...</p>
       </div>
     </section>
 
@@ -511,22 +765,24 @@
           <h2
             class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4"
           >
-            <span class="text-teal-500">{{ education.title }}</span>
-            {{ $t("education.and") }}
-            <span class="text-purple-500">{{ $t("education.second") }}</span>
+            <span class="text-teal-500">Education</span> &
+            <span class="text-purple-500">Certification</span>
           </h2>
           <div
             class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
           ></div>
           <p
-            class="text-gray-600 dark:text-gray-300 text-base sm:text-lg lg:text-xl mt-6 max-w-2xl mx-auto leading-relaxed"
+            class="text-gray-600 dark:text-gray-300 text-lg mt-6 max-w-2xl mx-auto"
           >
-            {{ education.subtitle }}
+            Comprehensive training in modern web development technologies and
+            methodologies
           </p>
         </div>
 
         <div class="grid md:grid-cols-1 gap-8">
           <div class="relative group">
+            <!-- Card Glow Effect -->
+
             <div
               class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700"
             >
@@ -548,12 +804,12 @@
                       <h3
                         class="text-xl sm:text-2xl lg:text-3xl font-black text-gray-900 dark:text-white mb-2 break-words"
                       >
-                        {{ education.certification }}
+                        Web- und Softwareentwickler/in
                       </h3>
                       <p
                         class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium uppercase tracking-wider"
                       >
-                        {{ education.certificationSub }}
+                        Web & Software Developer Certification
                       </p>
                     </div>
                   </div>
@@ -567,16 +823,15 @@
                       ></i>
                       <span
                         class="text-gray-700 dark:text-gray-300 font-medium min-w-0"
-                        >{{ education.institution }}</span
+                        >Digital Career Institute (DCI), Leipzig</span
                       >
                     </div>
                     <div class="flex items-center gap-2">
                       <i
                         class="fas fa-calendar-alt text-purple-500 flex-shrink-0"
                       ></i>
-                      <span
-                        class="text-teal-600 dark:text-teal-400 font-bold"
-                        >{{ education.period }}</span
+                      <span class="text-teal-600 dark:text-teal-400 font-bold"
+                        >2020 - 2022</span
                       >
                     </div>
                   </div>
@@ -596,7 +851,7 @@
                       <i
                         class="fas fa-download group-hover/btn:animate-bounce"
                       ></i>
-                      <span>{{ education.downloadCertificate }}</span>
+                      <span>Download Certificate</span>
                       <i
                         class="fas fa-arrow-right transform group-hover/btn:translate-x-1 transition-transform duration-300"
                       ></i>
@@ -618,7 +873,7 @@
                   <div
                     class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
                   >
-                    {{ education.months }}
+                    Months
                   </div>
                 </div>
                 <div
@@ -632,7 +887,7 @@
                   <div
                     class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
                   >
-                    {{ education.hours }}
+                    Hours
                   </div>
                 </div>
                 <div
@@ -646,7 +901,7 @@
                   <div
                     class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
                   >
-                    {{ education.technologiesCount }}
+                    Technologies
                   </div>
                 </div>
                 <div
@@ -660,7 +915,7 @@
                   <div
                     class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
                   >
-                    {{ education.projectsCount }}
+                    Projects
                   </div>
                 </div>
               </div>
@@ -680,36 +935,121 @@
                     <h4
                       class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                     >
-                      {{ education.technicalCurriculum }}
+                      Technical Curriculum
                     </h4>
                   </div>
 
                   <div class="space-y-3 sm:space-y-4">
                     <div
-                      v-for="(item, index) in technicalCurriculum"
-                      :key="index"
-                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl"
-                      :class="
-                        index % 2 === 0
-                          ? 'bg-gradient-to-r from-teal-50 to-teal-100/50 dark:from-teal-900/10 dark:to-teal-800/10 border border-teal-200/50 dark:border-teal-700/30'
-                          : 'bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/10 dark:to-purple-800/10 border border-purple-200/50 dark:border-purple-700/30'
-                      "
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-teal-50 to-teal-100/50 dark:from-teal-900/10 dark:to-teal-800/10 border border-teal-200/50 dark:border-teal-700/30"
                     >
                       <i
-                        class="fas fa-check-circle mt-1 text-sm sm:text-lg flex-shrink-0"
-                        :class="
-                          index % 2 === 0 ? 'text-teal-500' : 'text-purple-500'
-                        "
+                        class="fas fa-check-circle text-teal-500 mt-1 text-sm sm:text-lg flex-shrink-0"
                       ></i>
                       <div class="min-w-0">
                         <span
                           class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
-                          >{{ item.title }}</span
+                          >HTML5 & CSS3</span
                         >
                         <p
                           class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
                         >
-                          {{ item.description }}
+                          Semantic markup, responsive design, CSS Grid & Flexbox
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/10 dark:to-purple-800/10 border border-purple-200/50 dark:border-purple-700/30"
+                    >
+                      <i
+                        class="fas fa-check-circle text-purple-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >JavaScript ES2015+ & TypeScript</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Modern JavaScript, async/await, type safety
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-teal-50 to-teal-100/50 dark:from-teal-900/10 dark:to-teal-800/10 border border-teal-200/50 dark:border-teal-700/30"
+                    >
+                      <i
+                        class="fas fa-check-circle text-teal-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >React, React Hooks & Redux</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Component architecture, state management
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/10 dark:to-purple-800/10 border border-purple-200/50 dark:border-purple-700/30"
+                    >
+                      <i
+                        class="fas fa-check-circle text-purple-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Node.js, Express.js & REST APIs</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Server-side development, API design
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-teal-50 to-teal-100/50 dark:from-teal-900/10 dark:to-teal-800/10 border border-teal-200/50 dark:border-teal-700/30"
+                    >
+                      <i
+                        class="fas fa-check-circle text-teal-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >MongoDB & Mongoose</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          NoSQL database design, ODM
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/10 dark:to-purple-800/10 border border-purple-200/50 dark:border-purple-700/30"
+                    >
+                      <i
+                        class="fas fa-check-circle text-purple-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Git, GitHub & Agile Methodologies</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Version control, collaborative development
                         </p>
                       </div>
                     </div>
@@ -729,30 +1069,123 @@
                     <h4
                       class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
                     >
-                      {{ education.keyAchievements }}
+                      Key Achievements
                     </h4>
                   </div>
 
                   <div class="space-y-3 sm:space-y-4">
                     <div
-                      v-for="(item, index) in keyAchievements"
-                      :key="index"
-                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl"
-                      :class="achievementClasses[index]"
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-900/10 dark:to-amber-800/10 border border-amber-200/50 dark:border-amber-700/30"
                     >
                       <i
-                        class="fas mt-1 text-sm sm:text-lg flex-shrink-0"
-                        :class="achievementIcons[index]"
+                        class="fas fa-star text-amber-500 mt-1 text-sm sm:text-lg flex-shrink-0"
                       ></i>
                       <div class="min-w-0">
                         <span
                           class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
-                          >{{ item.title }}</span
+                          >Program Excellence</span
                         >
                         <p
                           class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
                         >
-                          {{ item.description }}
+                          Successfully completed comprehensive 14-month
+                          intensive program
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-900/10 dark:to-emerald-800/10 border border-emerald-200/50 dark:border-emerald-700/30"
+                    >
+                      <i
+                        class="fas fa-project-diagram text-emerald-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Capstone Project</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Developed "Plantastic" - a full-stack plant care
+                          application
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-800/10 border border-blue-200/50 dark:border-blue-700/30"
+                    >
+                      <i
+                        class="fas fa-language text-blue-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Language Proficiency</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Enhanced professional German language skills
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-rose-50 to-rose-100/50 dark:from-rose-900/10 dark:to-rose-800/10 border border-rose-200/50 dark:border-rose-700/30"
+                    >
+                      <i
+                        class="fas fa-mobile-alt text-rose-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Responsive Design</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Mastered modern frameworks and responsive web design
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-violet-50 to-violet-100/50 dark:from-violet-900/10 dark:to-violet-800/10 border border-violet-200/50 dark:border-violet-700/30"
+                    >
+                      <i
+                        class="fas fa-shield-alt text-violet-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Security & Authentication</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          JWT implementation and security best practices
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-indigo-50 to-indigo-100/50 dark:from-indigo-900/10 dark:to-indigo-800/10 border border-indigo-200/50 dark:border-indigo-700/30"
+                    >
+                      <i
+                        class="fas fa-database text-indigo-500 mt-1 text-sm sm:text-lg flex-shrink-0"
+                      ></i>
+                      <div class="min-w-0">
+                        <span
+                          class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
+                          >Database Development</span
+                        >
+                        <p
+                          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
+                        >
+                          Advanced database design and optimization techniques
                         </p>
                       </div>
                     </div>
@@ -772,10 +1205,10 @@
     >
       <div class="max-w-6xl mx-auto px-4 text-center">
         <h2 class="text-3xl md:text-5xl font-black mb-8">
-          {{ contact.title }}
+          Let's
           <span
             class="bg-gradient-to-r from-teal-400 to-purple-400 bg-clip-text text-transparent"
-            >{{ $t("contact.lets") }}</span
+            >Connect</span
           >
         </h2>
         <div
@@ -797,7 +1230,7 @@
             class="group flex items-center gap-3 text-lg hover:text-purple-400 transition-colors duration-300"
           >
             <i class="fas fa-phone text-2xl group-hover:animate-pulse"></i>
-            {{ contact.phone }}
+            +49 1783099433
           </a>
         </div>
 
@@ -827,7 +1260,9 @@
         </div>
 
         <div class="border-t border-gray-700 pt-8">
-          <p class="text-gray-400" v-html="contact.copyright"></p>
+          <p class="text-gray-400">
+            &copy; 2025 Igal Vilensky. Crafted with ❤️ and lots of ☕
+          </p>
         </div>
       </div>
     </footer>
@@ -836,210 +1271,38 @@
 
 <script setup lang="ts">
 import { useColorMode } from "#imports";
-import { computed } from "vue";
 
 const colorMode = useColorMode();
 
-// Translation computed properties
-const hero = computed(() => ({
-  title: $t("hero.title"),
-  lastName: $t("hero.lastName"),
-  subtitle: $t("hero.subtitle"),
-  viewProjects: $t("hero.viewProjects"),
-  downloadCV: $t("hero.downloadCV"),
-}));
-
-const about = computed(() => ({
-  title: $t("about.title"),
-  description1: $t("about.description1"),
-  description2: $t("about.description2"),
-  yearsExperience: $t("about.yearsExperience"),
-  projectsCompleted: $t("about.projectsCompleted"),
-  coreTechnologies: $t("about.coreTechnologies"),
-}));
-
-const skills = computed(() => ({
-  title: $t("skills.title"),
-  subtitle: $t("skills.subtitle"),
-  frontendMobile: $t("skills.frontendMobile"),
-  backend: $t("skills.backend"),
-  devopsTools: $t("skills.devopsTools"),
-  languages: $t("skills.languages"),
-}));
-
-const projects = computed(() => ({
-  title: $t("projects.title"),
-  seeAllProjects: $t("projects.seeAllProjects"),
-  viewProject: $t("projects.viewProject"),
-}));
-
-const experience = computed(() => ({
-  title: $t("experience.title"),
-  comingSoon: $t("experience.comingSoon"),
-}));
-
-const education = computed(() => ({
-  title: $t("education.title"),
-  subtitle: $t("education.subtitle"),
-  certification: $t("education.certification"),
-  certificationSub: $t("education.certificationSub"),
-  institution: $t("education.institution"),
-  period: $t("education.period"),
-  downloadCertificate: $t("education.downloadCertificate"),
-  months: $t("education.months"),
-  hours: $t("education.hours"),
-  technologiesCount: $t("education.technologiesCount"),
-  projectsCount: $t("education.projectsCount"),
-  technicalCurriculum: $t("education.technicalCurriculum"),
-  keyAchievements: $t("education.keyAchievements"),
-}));
-
-const contact = computed(() => ({
-  title: $t("contact.title"),
-  email: $t("contact.email"),
-  phone: $t("contact.phone"),
-  copyright: $t("contact.copyright"),
-}));
-
-// Skills data
-const technologies = computed(() => [
-  "JavaScript",
-  "TypeScript",
-  "Vue.js",
-  "React",
-  "Node.js",
-  "Nuxt",
-]);
-
-const frontendSkills = computed(() => [
-  { title: $t("skills.typescript"), description: $t("skills.typescriptDesc") },
-  { title: $t("skills.react"), description: $t("skills.reactDesc") },
-  { title: $t("skills.vue"), description: $t("skills.vueDesc") },
-  {
-    title: $t("skills.cssFrameworks"),
-    description: $t("skills.cssFrameworksDesc"),
-  },
-  {
-    title: $t("skills.responsiveDesign"),
-    description: $t("skills.responsiveDesignDesc"),
-  },
-]);
-
-const backendSkills = computed(() => [
-  { title: $t("skills.nodejs"), description: $t("skills.nodejsDesc") },
-  { title: $t("skills.mongodb"), description: $t("skills.mongodbDesc") },
-  { title: $t("skills.directus"), description: $t("skills.directusDesc") },
-  { title: $t("skills.restApis"), description: $t("skills.restApisDesc") },
-]);
-
-const devopsSkills = computed(() => [
-  { title: $t("skills.cicd"), description: $t("skills.cicdDesc") },
-  { title: $t("skills.docker"), description: $t("skills.dockerDesc") },
-  { title: $t("skills.git"), description: $t("skills.gitDesc") },
-  { title: $t("skills.agile"), description: $t("skills.agileDesc") },
-]);
-
-const languageSkills = computed(() => [
-  { title: $t("skills.english"), level: $t("skills.englishLevel") },
-  { title: $t("skills.german"), level: $t("skills.germanLevel") },
-  { title: $t("skills.russian"), level: $t("skills.russianLevel") },
-  { title: $t("skills.hebrew"), level: $t("skills.hebrewLevel") },
-]);
-
-// Education data
-const technicalCurriculum = computed(() => [
-  { title: $t("education.htmlCss"), description: $t("education.htmlCssDesc") },
-  { title: $t("education.jsTs"), description: $t("education.jsTsDesc") },
-  {
-    title: $t("education.reactSkills"),
-    description: $t("education.reactSkillsDesc"),
-  },
-  {
-    title: $t("education.nodeSkills"),
-    description: $t("education.nodeSkillsDesc"),
-  },
-  {
-    title: $t("education.mongoSkills"),
-    description: $t("education.mongoSkillsDesc"),
-  },
-  {
-    title: $t("education.gitSkills"),
-    description: $t("education.gitSkillsDesc"),
-  },
-]);
-
-const keyAchievements = computed(() => [
-  {
-    title: $t("education.programExcellence"),
-    description: $t("education.programExcellenceDesc"),
-  },
-  {
-    title: $t("education.capstoneProject"),
-    description: $t("education.capstoneProjectDesc"),
-  },
-  {
-    title: $t("education.languageProficiency"),
-    description: $t("education.languageProficiencyDesc"),
-  },
-  {
-    title: $t("education.responsiveDesignEdu"),
-    description: $t("education.responsiveDesignEduDesc"),
-  },
-  {
-    title: $t("education.security"),
-    description: $t("education.securityDesc"),
-  },
-  {
-    title: $t("education.databaseDevelopment"),
-    description: $t("education.databaseDevelopmentDesc"),
-  },
-]);
-
-const achievementClasses = computed(() => [
-  "bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-900/10 dark:to-amber-800/10 border border-amber-200/50 dark:border-amber-700/30",
-  "bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-900/10 dark:to-emerald-800/10 border border-emerald-200/50 dark:border-emerald-700/30",
-  "bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-800/10 border border-blue-200/50 dark:border-blue-700/30",
-  "bg-gradient-to-r from-rose-50 to-rose-100/50 dark:from-rose-900/10 dark:to-rose-800/10 border border-rose-200/50 dark:border-rose-700/30",
-  "bg-gradient-to-r from-violet-50 to-violet-100/50 dark:from-violet-900/10 dark:to-violet-800/10 border border-violet-200/50 dark:border-violet-700/30",
-  "bg-gradient-to-r from-indigo-50 to-indigo-100/50 dark:from-indigo-900/10 dark:to-indigo-800/10 border border-indigo-200/50 dark:border-indigo-700/30",
-]);
-
-const achievementIcons = computed(() => [
-  "fa-star text-amber-500",
-  "fa-project-diagram text-emerald-500",
-  "fa-language text-blue-500",
-  "fa-mobile-alt text-rose-500",
-  "fa-shield-alt text-violet-500",
-  "fa-database text-indigo-500",
-]);
-
 // Featured projects data
-const featuredProjects = computed(() => [
+const featuredProjects = [
   {
     id: 1,
-    title: $t("projects.sunlitTales.title"),
-    description: $t("projects.sunlitTales.description"),
+    title: "Sunlit tales",
+    description:
+      "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul.",
     image: "/sunlit.jpeg",
     technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity"],
     link: "https://sunlit-tales.netlify.app/",
   },
   {
     id: 2,
-    title: $t("projects.psyBlog.title"),
-    description: $t("projects.psyBlog.description"),
+    title: "Your Path to Personal Growth",
+    description:
+      "Psy-Blog blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day.",
     image: "/psy.jpeg",
     technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
     link: "https://psy-blog.netlify.app/",
   },
   {
     id: 3,
-    title: $t("projects.portfolio.title"),
-    description: $t("projects.portfolio.description"),
+    title: "Portfolio Website",
+    description: "A modern portfolio showcasing my web development projects.",
     image: "/portfolio.jpeg",
     technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
     link: "#",
   },
-]);
+];
 
 // Add Google Fonts for Poppins
 useHead({
