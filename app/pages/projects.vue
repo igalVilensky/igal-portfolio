@@ -158,7 +158,7 @@
             class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 flex flex-col min-h-full"
             :style="{ animationDelay: `${index * 100}ms` }"
           >
-            <!-- Project Image with Overlay -->
+            <!-- Project Image with x Overlay -->
             <div class="relative overflow-hidden">
               <img
                 :src="project.image"
