@@ -1,18 +1,33 @@
 <script setup>
-import { useI18n, useRoute } from "#imports";
+import { useI18n } from "#imports";
+import { useSwitchLocalePath } from "#i18n";
+import { useColorMode } from "#imports";
 
-const { locale, t, setLocale } = useI18n();
-const route = useRoute();
+const { locale, t } = useI18n();
+const switchLocalePath = useSwitchLocalePath();
+const colorMode = useColorMode();
 
-// Ensure locale matches route
-const pathLocale = route.path.split("/")[1] || "en";
-if (locale.value !== pathLocale) {
-  setLocale(pathLocale);
-}
-
-// Debug translations
+// Debug locale and translations
 console.log("Current locale:", locale.value);
 console.log("hero.title:", t("hero.title"));
+
+// Available languages (sync with nuxt.config.ts i18n.locales)
+const languages = [
+  { code: "en", name: "English" },
+  { code: "de", name: "Deutsch" },
+  { code: "ru", name: "Русский" },
+];
+
+// Cycle through languages on button click
+const switchLanguage = () => {
+  const currentIndex = languages.findIndex(
+    (lang) => lang.code === locale.value
+  );
+  const nextIndex = (currentIndex + 1) % languages.length;
+  const nextLocale = languages[nextIndex].code;
+  const path = switchLocalePath(nextLocale);
+  navigateTo(path);
+};
 </script>
 
 <template>
@@ -132,6 +147,25 @@ console.log("hero.title:", t("hero.title"));
             class="absolute top-1 right-1 w-2 h-2 bg-gradient-to-br from-purple-200 to-white rounded-full opacity-60 group-hover:opacity-100 group-hover:scale-150 transition-all duration-300"
           ></div>
         </div>
+      </div>
+
+      <!-- Simple Language Switcher Button -->
+      <div class="mt-6">
+        <button
+          @click="switchLanguage"
+          class="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300"
+          :class="[
+            colorMode.value === 'dark'
+              ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900',
+          ]"
+          aria-label="Switch language"
+        >
+          {{
+            languages.find((lang) => lang.code === locale)?.name ||
+            "Switch Language"
+          }}
+        </button>
       </div>
     </div>
   </header>
