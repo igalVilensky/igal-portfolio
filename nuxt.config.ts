@@ -5,15 +5,14 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "@nuxtjs/i18n"],
   i18n: {
     strategy: "prefix_except_default",
-    langDir: "locales/",
     locales: [
       { code: "en", iso: "en-US", file: "en.json", name: "English 🇬🇧" },
       { code: "de", iso: "de-DE", file: "de.json", name: "Deutsch 🇩🇪" },
       { code: "ru", iso: "ru-RU", file: "ru.json", name: "Русский 🇷🇺" },
     ],
     defaultLocale: "en",
+    vueI18n: "./i18n.config.ts",
   },
-
   colorMode: {
     preference: "system",
     fallback: "light",
