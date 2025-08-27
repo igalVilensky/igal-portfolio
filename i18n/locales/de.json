@@ -12,7 +12,7 @@
   "hero": {
     "title": "Igal",
     "lastName": "Vilensky",
-    "subtitle": "Erstellung digitaler Erlebnisse mit mehr als 3 Jahren Leidenschaft für Webentwicklung",
+    "subtitle": "Web- und Softwareentwickler mit über 3 Jahren Erfahrung in der Entwicklung digitaler Lösungen.",
     "viewProjects": "Projekte ansehen",
     "downloadCV": "Lebenslauf herunterladen"
   },
@@ -134,8 +134,8 @@
     "copyright": "&copy; 2025 Igal Vilensky. Mit ❤️ und viel ☕ erstellt"
   },
   "experience": {
-    "title": "Arbeit",
-    "title_highlight": "Erfahrung",
+    "title": "",
+    "title_highlight": "Berufserfahrung",
     "description": "Meine berufliche Reise in der Softwareentwicklung",
     "flowplace": {
       "period": "2023 - heute",
