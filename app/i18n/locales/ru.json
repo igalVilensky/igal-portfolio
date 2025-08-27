@@ -1,0 +1,181 @@
+{
+  "nav": {
+    "about": "Обо мне",
+    "skills": "Навыки",
+    "projects": "Проекты",
+    "experience": "Опыт",
+    "education": "Образование",
+    "contact": "Контакты",
+    "switchToLight": "Переключиться на светлый режим",
+    "switchToDark": "Переключиться на тёмный режим"
+  },
+  "hero": {
+    "title": "Игаль",
+    "lastName": "Виленский",
+    "subtitle": "Веб- и программист-разработчик с 3+ годами опыта в создании цифровых решений и продуктов.",
+    "viewProjects": "Посмотреть проекты",
+    "downloadCV": "Скачать резюме"
+  },
+  "about": {
+    "title": "Обо",
+    "me": "мне",
+    "description1": "Веб- и программный разработчик с более чем 3-летним опытом работы в SaaS и веб-проектах. Владею JavaScript/TypeScript, React, Vue/Nuxt, Node.js и Directus.",
+    "description2": "Я увлечен созданием красивых, функциональных цифровых впечатлений, которые решают реальные проблемы и радуют пользователей.",
+    "yearsExperience": "Лет опыта",
+    "projectsCompleted": "Завершенных проектов",
+    "coreTechnologies": "Ключевые технологии"
+  },
+  "skills": {
+    "title": "Мои",
+    "my": "навыки",
+    "subtitle": "Создание масштабируемых, ориентированных на пользователя решений с использованием современных технологий и Agile-методологий",
+    "frontendMobile": "Фронтенд и мобильная разработка",
+    "backend": "Бэкенд",
+    "devopsTools": "DevOps и инструменты",
+    "languages": "Языки",
+    "typescript": "TypeScript / JavaScript",
+    "typescriptDesc": "ES2015+, современный синтаксис",
+    "react": "React / React Native",
+    "reactDesc": "Хуки, Redux, Context",
+    "vue": "Vue.js / Nuxt.js",
+    "vueDesc": "Composition API, SSR",
+    "cssFrameworks": "CSS-фреймворки",
+    "cssFrameworksDesc": "TailwindCSS, Bootstrap, SCSS",
+    "responsiveDesign": "Адаптивный дизайн",
+    "responsiveDesignDesc": "Mobile-first, Ionic",
+    "nodejs": "Node.js / Express.js",
+    "nodejsDesc": "Серверный JavaScript",
+    "mongodb": "MongoDB / Mongoose",
+    "mongodbDesc": "NoSQL база данных, ODM",
+    "directus": "Directus CMS",
+    "directusDesc": "Headless CMS решение",
+    "restApis": "REST API",
+    "restApisDesc": "JWT аутентификация",
+    "cicd": "CI/CD пайплайны",
+    "cicdDesc": "Автоматическое развертывание",
+    "docker": "Docker",
+    "dockerDesc": "Контейнеризация",
+    "git": "Git / GitHub",
+    "gitDesc": "Командный workflow, контроль версий",
+    "agile": "Agile & Scrum",
+    "agileDesc": "Методологии проектов",
+    "english": "Английский",
+    "englishLevel": "C1 - Продвинутый",
+    "german": "Немецкий",
+    "germanLevel": "B2 - Выше среднего",
+    "russian": "Русский",
+    "russianLevel": "Родной язык",
+    "hebrew": "Иврит",
+    "hebrewLevel": "Родной язык"
+  },
+  "projects": {
+    "title": "Избранные",
+    "featured": "проекты",
+    "seeAllProjects": "Посмотреть все проекты",
+    "sunlitTales": {
+      "title": "Солнечные рассказы",
+      "description": "Погрузитесь в мир поэзии, где каждое слово - это луч света, освещающий глубины души."
+    },
+    "psyBlog": {
+      "title": "Ваш путь к личностному росту",
+      "description": "Psy-Blog сочетает каббалу и психологию в 10-недельном путешествии по Древу Себя. Ежедневный прогресс приносит очки, уровни и баланс под руководством Энергии Дня."
+    },
+    "portfolio": {
+      "title": "Сайт-портфолио",
+      "description": "Современное портфолио, демонстрирующее мои проекты веб-разработки."
+    },
+    "viewProject": "Посмотреть проект"
+  },
+  "experience": {
+    "title": "Работа",
+    "title_highlight": "Опыт",
+    "description": "Мой профессиональный путь в разработке программного обеспечения",
+    "flowplace": {
+      "period": "2023 - настоящее время",
+      "title": "Full-Stack разработчик",
+      "company": "Flowplace, Лейпциг",
+      "responsibilities": {
+        "1": "Разрабатывал функции SaaS с использованием Vue.js/Nuxt.js и Directus",
+        "2": "Реализовывал адаптивные дизайны пользовательского интерфейса",
+        "3": "Улучшал удобство использования, доступность и согласованность платформы",
+        "4": "Интегрировал REST API и оптимизировал рабочие процессы пользовательского интерфейса"
+      }
+    },
+    "leanera": {
+      "period": "2022 - 2023",
+      "title": "Разработчик программного обеспечения",
+      "company": "LeanERA GmbH, Лейпциг",
+      "responsibilities": {
+        "1": "Разрабатывал динамические веб-приложения с использованием Vue 3, Nuxt 3, TypeScript и Tailwind CSS",
+        "2": "Сотрудничал с межфункциональными командами для выбора оптимальных технологий",
+        "3": "Создал чистую и масштабируемую кодовую базу для перехода к продуктовой ориентации"
+      }
+    },
+    "ari_motors": {
+      "period": "2021 - 2022",
+      "title": "Full Stack веб-разработчик",
+      "company": "ARI Motors GmbH, Лейпциг",
+      "responsibilities": {
+        "1": "Разработал портал сравнения для электрических коммерческих автомобилей",
+        "2": "Улучшил функциональность и пользовательский опыт на нескольких веб-сайтах",
+        "3": "Управлял администрированием веб-сайтов и обслуживанием серверных систем"
+      }
+    },
+    "myfxbook": {
+      "period": "2017 - 2019",
+      "title": "Координатор социальных сетей и веб-сайта",
+      "company": "Myfxbook Ltd (Cashdo)",
+      "responsibilities": {
+        "1": "Управлял веб-сайтом компании и каналами в социальных сетях",
+        "2": "Проводил исследования рынка и кампании по партнерскому маркетингу"
+      }
+    }
+  },
+  "education": {
+    "title": "Образование",
+    "and": "и",
+    "second": "сертификация",
+    "subtitle": "Комплексное обучение современным технологиям и методологиям веб-разработки",
+    "certification": "Веб- и программный разработчик",
+    "certificationSub": "Сертификация веб- и программного разработчика",
+    "institution": "Digital Career Institute (DCI), Лейпциг",
+    "period": "2020 - 2022",
+    "downloadCertificate": "Скачать сертификат",
+    "months": "Месяцев",
+    "hours": "Часов",
+    "technologiesCount": "Технологий",
+    "projectsCount": "Проектов",
+    "technicalCurriculum": "Техническая программа",
+    "htmlCss": "HTML5 & CSS3",
+    "htmlCssDesc": "Семантическая разметка, адаптивный дизайн, CSS Grid & Flexbox",
+    "jsTs": "JavaScript ES2015+ & TypeScript",
+    "jsTsDesc": "Современный JavaScript, async/await, типобезопасность",
+    "reactSkills": "React, React Hooks & Redux",
+    "reactSkillsDesc": "Архитектура компонентов, управление состоянием",
+    "nodeSkills": "Node.js, Express.js & REST API",
+    "nodeSkillsDesc": "Серверная разработка, проектирование API",
+    "mongoSkills": "MongoDB & Mongoose",
+    "mongoSkillsDesc": "NoSQL база данных, ODM",
+    "gitSkills": "Git, GitHub & Agile методологии",
+    "gitSkillsDesc": "Контроль версий, совместная разработка",
+    "keyAchievements": "Ключевые достижения",
+    "programExcellence": "Превосходство программы",
+    "programExcellenceDesc": "Успешное завершение интенсивной 14-месячной программы",
+    "capstoneProject": "Дипломный проект",
+    "capstoneProjectDesc": "Разработка 'Plantastic' - полнофункционального приложения для ухода за растениями",
+    "languageProficiency": "Языковая компетенция",
+    "languageProficiencyDesc": "Улучшенные профессиональные знания немецкого языка",
+    "responsiveDesignEdu": "Адаптивный дизайн",
+    "responsiveDesignEduDesc": "Освоение современных фреймворков и адаптивного веб-дизайна",
+    "security": "Безопасность и аутентификация",
+    "securityDesc": "Реализация JWT и лучшие практики безопасности",
+    "databaseDevelopment": "Разработка баз данных",
+    "databaseDevelopmentDesc": "Продвинутые техники проектирования и оптимизации баз данных"
+  },
+  "contact": {
+    "title": "Давайте",
+    "lets": "свяжемся",
+    "phone": "+49 1783099433",
+    "copyright": "&copy; 2025 Игаль Виленский. Создано с ❤️ и большим количеством ☕"
+  }
+}

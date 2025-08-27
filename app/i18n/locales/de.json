@@ -1,0 +1,181 @@
+{
+  "nav": {
+    "about": "Über mich",
+    "skills": "Fähigkeiten",
+    "projects": "Projekte",
+    "experience": "Erfahrung",
+    "education": "Ausbildung",
+    "contact": "Kontakt",
+    "switchToLight": "Zum hellen Modus wechseln",
+    "switchToDark": "Zum dunklen Modus wechseln"
+  },
+  "hero": {
+    "title": "Igal",
+    "lastName": "Vilensky",
+    "subtitle": "Web- und Softwareentwickler mit über 3 Jahren Erfahrung in der Entwicklung digitaler Lösungen.",
+    "viewProjects": "Projekte ansehen",
+    "downloadCV": "Lebenslauf herunterladen"
+  },
+  "about": {
+    "title": "Über",
+    "me": "Mich",
+    "description1": "Web- und Softwareentwickler mit mehr als 3 Jahren Erfahrung in SaaS- und Webprojekten. Kenntnisse in JavaScript/TypeScript, React, Vue/Nuxt, Node.js und Directus.",
+    "description2": "Ich bin leidenschaftlich daran interessiert, schöne, funktionale digitale Erlebnisse zu schaffen, die reale Probleme lösen und Benutzer begeistern.",
+    "yearsExperience": "Jahre Erfahrung",
+    "projectsCompleted": "Abgeschlossene Projekte",
+    "coreTechnologies": "Kernkompetenzen"
+  },
+  "skills": {
+    "title": "Meine",
+    "my": "Fähigkeiten",
+    "subtitle": "Erstellung skalierbarer, benutzerorientierter Lösungen mit modernen Technologien und Agile-Methoden",
+    "frontendMobile": "Frontend & Mobile",
+    "backend": "Backend",
+    "devopsTools": "DevOps & Tools",
+    "languages": "Sprachen",
+    "typescript": "TypeScript / JavaScript",
+    "typescriptDesc": "ES2015+, Moderne Syntax",
+    "react": "React / React Native",
+    "reactDesc": "Hooks, Redux, Context",
+    "vue": "Vue.js / Nuxt.js",
+    "vueDesc": "Composition API, SSR",
+    "cssFrameworks": "CSS-Frameworks",
+    "cssFrameworksDesc": "TailwindCSS, Bootstrap, SCSS",
+    "responsiveDesign": "Responsives Design",
+    "responsiveDesignDesc": "Mobile-first, Ionic",
+    "nodejs": "Node.js / Express.js",
+    "nodejsDesc": "Serverseitiges JavaScript",
+    "mongodb": "MongoDB / Mongoose",
+    "mongodbDesc": "NoSQL-Datenbank, ODM",
+    "directus": "Directus CMS",
+    "directusDesc": "Headless CMS-Lösung",
+    "restApis": "REST-APIs",
+    "restApisDesc": "JWT-Authentifizierung",
+    "cicd": "CI/CD-Pipelines",
+    "cicdDesc": "Automatisierte Bereitstellung",
+    "docker": "Docker",
+    "dockerDesc": "Containerisierung",
+    "git": "Git / GitHub",
+    "gitDesc": "Teamworkflow, Versionskontrolle",
+    "agile": "Agile & Scrum",
+    "agileDesc": "Projektmethodiken",
+    "english": "Englisch",
+    "englishLevel": "C1 - Fortgeschritten",
+    "german": "Deutsch",
+    "germanLevel": "B2 - Gute Kenntnisse",
+    "russian": "Russisch",
+    "russianLevel": "Muttersprache",
+    "hebrew": "Hebräisch",
+    "hebrewLevel": "Muttersprache"
+  },
+  "projects": {
+    "title": "Ausgewählte",
+    "featured": "Projekte",
+    "seeAllProjects": "Alle Projekte ansehen",
+    "sunlitTales": {
+      "title": "Sonnenbeschienene Geschichten",
+      "description": "Tauchen Sie ein in die Welt der Poesie, in der jedes Wort ein Lichtstrahl ist, der die Tiefen der Seele erhellt."
+    },
+    "psyBlog": {
+      "title": "Ihr Weg zum persönlichen Wachstum",
+      "description": "Psy-Blog verbindet Kabbala und Psychologie zu einer 10-wöchigen Reise durch den Baum des Selbst. Täglicher Fortschritt bringt Punkte, Level und Balance, geführt von der Energie des Tages."
+    },
+    "portfolio": {
+      "title": "Portfolio-Website",
+      "description": "Ein modernes Portfolio, das meine Webentwicklungsprojekte präsentiert."
+    },
+    "viewProject": "Projekt ansehen"
+  },
+  "education": {
+    "title": "Ausbildung",
+    "and": "und",
+    "second": "Zertifizierung",
+    "subtitle": "Umfassende Schulung in modernen Webentwicklungstechnologien und Methoden",
+    "certification": "Web- und Softwareentwickler/in",
+    "certificationSub": "Web & Software Developer Zertifizierung",
+    "institution": "Digital Career Institute (DCI), Leipzig",
+    "period": "2020 - 2022",
+    "downloadCertificate": "Zertifikat herunterladen",
+    "months": "Monate",
+    "hours": "Stunden",
+    "technologiesCount": "Technologien",
+    "projectsCount": "Projekte",
+    "technicalCurriculum": "Technischer Lehrplan",
+    "htmlCss": "HTML5 & CSS3",
+    "htmlCssDesc": "Semantisches Markup, responsives Design, CSS Grid & Flexbox",
+    "jsTs": "JavaScript ES2015+ & TypeScript",
+    "jsTsDesc": "Modernes JavaScript, async/await, Typsicherheit",
+    "reactSkills": "React, React Hooks & Redux",
+    "reactSkillsDesc": "Komponentenarchitektur, Zustandsverwaltung",
+    "nodeSkills": "Node.js, Express.js & REST-APIs",
+    "nodeSkillsDesc": "Serverseitige Entwicklung, API-Design",
+    "mongoSkills": "MongoDB & Mongoose",
+    "mongoSkillsDesc": "NoSQL-Datenbank, ODM",
+    "gitSkills": "Git, GitHub & Agile Methoden",
+    "gitSkillsDesc": "Versionskontrolle, kollaborative Entwicklung",
+    "keyAchievements": "Wichtige Erfolge",
+    "programExcellence": "Programmexzellenz",
+    "programExcellenceDesc": "Erfolgreicher Abschluss des intensiven 14-monatigen Programms",
+    "capstoneProject": "Abschlussprojekt",
+    "capstoneProjectDesc": "Entwicklung von 'Plantastic' - einer Full-Stack-Pflanzenpflegeanwendung",
+    "languageProficiency": "Sprachkompetenz",
+    "languageProficiencyDesc": "Verbesserte professionelle Deutschkenntnisse",
+    "responsiveDesignEdu": "Responsives Design",
+    "responsiveDesignEduDesc": "Beherrschung moderner Frameworks und responsiven Webdesigns",
+    "security": "Sicherheit & Authentifizierung",
+    "securityDesc": "JWT-Implementierung und Sicherheitsbest Practices",
+    "databaseDevelopment": "Datenbankentwicklung",
+    "databaseDevelopmentDesc": "Fortgeschrittene Datenbankdesign- und Optimierungstechniken"
+  },
+  "contact": {
+    "title": "Lassen Sie uns",
+    "lets": "in Verbindung treten",
+    "phone": "+49 1783099433",
+    "copyright": "&copy; 2025 Igal Vilensky. Mit ❤️ und viel ☕ erstellt"
+  },
+  "experience": {
+    "title": "",
+    "title_highlight": "Berufserfahrung",
+    "description": "Meine berufliche Reise in der Softwareentwicklung",
+    "flowplace": {
+      "period": "2023 - heute",
+      "title": "Full-Stack Entwickler",
+      "company": "Flowplace, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung von SaaS-Funktionen mit Vue.js/Nuxt.js & Directus",
+        "2": "Umsetzung responsiver UI-Designs",
+        "3": "Verbesserung der Benutzbarkeit, Barrierefreiheit und Konsistenz der Plattform",
+        "4": "Integration von REST-APIs und Optimierung von UI-Workflows"
+      }
+    },
+    "leanera": {
+      "period": "2022 - 2023",
+      "title": "Softwareentwickler",
+      "company": "LeanERA GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung dynamischer Webanwendungen mit Vue 3, Nuxt 3, TypeScript & Tailwind CSS",
+        "2": "Zusammenarbeit mit interdisziplinären Teams zur Auswahl optimaler Technologien",
+        "3": "Aufbau einer sauberen, skalierbaren Codebasis für eine produktorientierte Umstellung"
+      }
+    },
+    "ari_motors": {
+      "period": "2021 - 2022",
+      "title": "Full-Stack Webentwickler",
+      "company": "ARI Motors GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung eines Vergleichsportals für elektrische Nutzfahrzeuge",
+        "2": "Verbesserung der Benutzerfunktionalität und -erfahrung auf mehreren Websites",
+        "3": "Verwaltung der Website-Administration und Wartung der Backend-Systeme"
+      }
+    },
+    "myfxbook": {
+      "period": "2017 - 2019",
+      "title": "Koordinator für soziale Medien und Web",
+      "company": "Myfxbook Ltd (Cashdo)",
+      "responsibilities": {
+        "1": "Verwaltung der Unternehmenswebsite und Social-Media-Kanäle",
+        "2": "Durchführung von Marktforschung und Affiliate-Marketing-Kampagnen"
+      }
+    }
+  }
+}
