@@ -86,11 +86,6 @@
     },
     "viewProject": "Projekt ansehen"
   },
-  "experience": {
-    "title": "",
-    "work": "Berufserfahrung",
-    "comingSoon": "Zeitleiste der Erfahrungen kommt bald..."
-  },
   "education": {
     "title": "Ausbildung",
     "and": "und",
@@ -137,5 +132,50 @@
     "lets": "in Verbindung treten",
     "phone": "+49 1783099433",
     "copyright": "&copy; 2025 Igal Vilensky. Mit ❤️ und viel ☕ erstellt"
+  },
+  "experience": {
+    "title": "Arbeit",
+    "title_highlight": "Erfahrung",
+    "description": "Meine berufliche Reise in der Softwareentwicklung",
+    "flowplace": {
+      "period": "2023 - heute",
+      "title": "Full-Stack Entwickler",
+      "company": "Flowplace, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung von SaaS-Funktionen mit Vue.js/Nuxt.js & Directus",
+        "2": "Umsetzung responsiver UI-Designs",
+        "3": "Verbesserung der Benutzbarkeit, Barrierefreiheit und Konsistenz der Plattform",
+        "4": "Integration von REST-APIs und Optimierung von UI-Workflows"
+      }
+    },
+    "leanera": {
+      "period": "2022 - 2023",
+      "title": "Softwareentwickler",
+      "company": "LeanERA GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung dynamischer Webanwendungen mit Vue 3, Nuxt 3, TypeScript & Tailwind CSS",
+        "2": "Zusammenarbeit mit interdisziplinären Teams zur Auswahl optimaler Technologien",
+        "3": "Aufbau einer sauberen, skalierbaren Codebasis für eine produktorientierte Umstellung"
+      }
+    },
+    "ari_motors": {
+      "period": "2021 - 2022",
+      "title": "Full-Stack Webentwickler",
+      "company": "ARI Motors GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Entwicklung eines Vergleichsportals für elektrische Nutzfahrzeuge",
+        "2": "Verbesserung der Benutzerfunktionalität und -erfahrung auf mehreren Websites",
+        "3": "Verwaltung der Website-Administration und Wartung der Backend-Systeme"
+      }
+    },
+    "myfxbook": {
+      "period": "2017 - 2019",
+      "title": "Koordinator für soziale Medien und Web",
+      "company": "Myfxbook Ltd (Cashdo)",
+      "responsibilities": {
+        "1": "Verwaltung der Unternehmenswebsite und Social-Media-Kanäle",
+        "2": "Durchführung von Marktforschung und Affiliate-Marketing-Kampagnen"
+      }
+    }
   }
 }

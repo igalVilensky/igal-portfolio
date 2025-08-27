@@ -1,13 +1,465 @@
 <template>
-  <section id="experience" class="py-20 px-4 bg-gray-50">
-    <div class="max-w-7xl mx-auto text-center">
-      <h2 class="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-        Work <span class="text-purple-500">Experience</span>
-      </h2>
-      <div
-        class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-8"
-      ></div>
-      <p class="text-gray-600 text-lg">Experience timeline coming soon...</p>
+  <section
+    id="experience"
+    class="py-12 sm:py-16 lg:py-20 px-4 relative overflow-hidden"
+    :class="colorMode.value === 'dark' ? 'bg-gray-800' : 'bg-gray-50'"
+  >
+    <!-- Background Effects -->
+    <div
+      class="absolute top-0 left-0 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-purple-400/5 dark:bg-purple-400/10 rounded-full blur-3xl"
+    ></div>
+    <div
+      class="absolute bottom-0 right-0 w-56 h-56 sm:w-72 sm:h-72 lg:w-80 lg:h-80 bg-teal-400/5 dark:bg-teal-400/10 rounded-full blur-3xl"
+    ></div>
+
+    <div class="max-w-6xl mx-auto relative">
+      <!-- Section Header -->
+      <div class="text-center mb-12 sm:mb-16">
+        <h2
+          class="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4"
+        >
+          {{ $t("experience.title") }}
+          <span class="text-purple-500">{{
+            $t("experience.title_highlight")
+          }}</span>
+        </h2>
+        <div
+          class="w-20 sm:w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
+        ></div>
+        <p
+          class="text-gray-600 dark:text-gray-300 text-base sm:text-lg lg:text-xl mt-6 max-w-2xl mx-auto leading-relaxed"
+        >
+          {{ $t("experience.description") }}
+        </p>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div
+          class="absolute left-4 sm:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500 via-purple-500 to-teal-500 transform sm:-translate-x-1/2"
+        ></div>
+
+        <!-- Experience Items -->
+        <div class="space-y-8 sm:space-y-12">
+          <!-- Current Position - Flowplace -->
+          <div class="relative flex items-start sm:items-center">
+            <!-- Timeline Dot -->
+            <div
+              class="absolute left-4 sm:left-1/2 w-4 h-4 bg-gradient-to-r from-teal-500 to-purple-500 rounded-full border-4 border-white dark:border-gray-900 shadow-lg transform -translate-x-1/2 sm:-translate-x-1/2 z-10"
+            ></div>
+
+            <!-- Content -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2" :class="{ 'sm:pr-8': true }">
+              <div
+                class="group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 sm:p-8 border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 transform hover:-translate-y-2"
+              >
+                <!-- Hover Background Effect -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-teal-600/5 dark:from-teal-400/10 dark:to-teal-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+
+                <div class="relative">
+                  <!-- Period Badge -->
+                  <div
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-teal-500 to-teal-600 text-white mb-4"
+                  >
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    {{ $t("experience.flowplace.period") }}
+                  </div>
+
+                  <!-- Job Title & Company with Logo -->
+                  <div class="flex items-start gap-4 mb-4">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-12 h-12 sm:w-14 sm:h-14 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300"
+                      >
+                        <!-- Flowplace Logo Placeholder -->
+                        <div
+                          class="w-8 h-8 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-white font-bold text-sm">F</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <h3
+                        class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1"
+                      >
+                        {{ $t("experience.flowplace.title") }}
+                      </h3>
+                      <div class="flex items-center">
+                        <i class="fas fa-building text-teal-500 mr-2"></i>
+                        <span
+                          class="text-teal-600 dark:text-teal-400 font-semibold"
+                        >
+                          {{ $t("experience.flowplace.company") }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Responsibilities -->
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.flowplace.responsibilities.1") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.flowplace.responsibilities.2") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.flowplace.responsibilities.3") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.flowplace.responsibilities.4") }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LeanERA GmbH -->
+          <div class="relative flex items-start sm:items-center">
+            <!-- Timeline Dot -->
+            <div
+              class="absolute left-4 sm:left-1/2 w-4 h-4 bg-gradient-to-r from-purple-500 to-teal-500 rounded-full border-4 border-white dark:border-gray-900 shadow-lg transform -translate-x-1/2 sm:-translate-x-1/2 z-10"
+            ></div>
+
+            <!-- Content -->
+            <div
+              class="ml-12 sm:ml-0 sm:w-1/2"
+              :class="{ 'sm:ml-auto sm:pl-8': true }"
+            >
+              <div
+                class="group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 sm:p-8 border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transform hover:-translate-y-2"
+              >
+                <!-- Hover Background Effect -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-purple-600/5 dark:from-purple-400/10 dark:to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+
+                <div class="relative">
+                  <!-- Period Badge -->
+                  <div
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-purple-500 to-purple-600 text-white mb-4"
+                  >
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    {{ $t("experience.leanera.period") }}
+                  </div>
+
+                  <!-- Job Title & Company with Logo -->
+                  <div class="flex items-start gap-4 mb-4">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-12 h-12 sm:w-14 sm:h-14 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300"
+                      >
+                        <!-- LeanERA Logo Placeholder -->
+                        <div
+                          class="w-8 h-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-white font-bold text-sm">L</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <h3
+                        class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1"
+                      >
+                        {{ $t("experience.leanera.title") }}
+                      </h3>
+                      <div class="flex items-center">
+                        <i class="fas fa-building text-purple-500 mr-2"></i>
+                        <span
+                          class="text-purple-600 dark:text-purple-400 font-semibold"
+                        >
+                          {{ $t("experience.leanera.company") }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Responsibilities -->
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.leanera.responsibilities.1") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.leanera.responsibilities.2") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.leanera.responsibilities.3") }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ARI Motors GmbH -->
+          <div class="relative flex items-start sm:items-center">
+            <!-- Timeline Dot -->
+            <div
+              class="absolute left-4 sm:left-1/2 w-4 h-4 bg-gradient-to-r from-teal-500 to-purple-500 rounded-full border-4 border-white dark:border-gray-900 shadow-lg transform -translate-x-1/2 sm:-translate-x-1/2 z-10"
+            ></div>
+
+            <!-- Content -->
+            <div class="ml-12 sm:ml-0 sm:w-1/2" :class="{ 'sm:pr-8': true }">
+              <div
+                class="group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 sm:p-8 border border-gray-100 dark:border-gray-700 hover:border-teal-200 dark:hover:border-teal-800 transform hover:-translate-y-2"
+              >
+                <!-- Hover Background Effect -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-purple-500/5 dark:from-teal-400/10 dark:to-purple-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+
+                <div class="relative">
+                  <!-- Period Badge -->
+                  <div
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-teal-500 to-purple-500 text-white mb-4"
+                  >
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    {{ $t("experience.ari_motors.period") }}
+                  </div>
+
+                  <!-- Job Title & Company with Logo -->
+                  <div class="flex items-start gap-4 mb-4">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-12 h-12 sm:w-14 sm:h-14 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300"
+                      >
+                        <!-- ARI Motors Logo Placeholder -->
+                        <div
+                          class="w-8 h-8 bg-gradient-to-r from-teal-500 to-purple-500 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-white font-bold text-sm">A</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <h3
+                        class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1"
+                      >
+                        {{ $t("experience.ari_motors.title") }}
+                      </h3>
+                      <div class="flex items-center">
+                        <i class="fas fa-building text-teal-500 mr-2"></i>
+                        <span
+                          class="text-teal-600 dark:text-teal-400 font-semibold"
+                        >
+                          {{ $t("experience.ari_motors.company") }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Responsibilities -->
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.ari_motors.responsibilities.1") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.ari_motors.responsibilities.2") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-teal-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.ari_motors.responsibilities.3") }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Myfxbook Ltd -->
+          <div class="relative flex items-start sm:items-center">
+            <!-- Timeline Dot -->
+            <div
+              class="absolute left-4 sm:left-1/2 w-4 h-4 bg-gradient-to-r from-purple-500 to-teal-500 rounded-full border-4 border-white dark:border-gray-900 shadow-lg transform -translate-x-1/2 sm:-translate-x-1/2 z-10"
+            ></div>
+
+            <!-- Content -->
+            <div
+              class="ml-12 sm:ml-0 sm:w-1/2"
+              :class="{ 'sm:ml-auto sm:pl-8': true }"
+            >
+              <div
+                class="group bg-white dark:bg-gray-900 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 p-6 sm:p-8 border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-800 transform hover:-translate-y-2"
+              >
+                <!-- Hover Background Effect -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-teal-500/5 dark:from-purple-400/10 dark:to-teal-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                ></div>
+
+                <div class="relative">
+                  <!-- Period Badge -->
+                  <div
+                    class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-purple-500 to-teal-500 text-white mb-4"
+                  >
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    {{ $t("experience.myfxbook.period") }}
+                  </div>
+
+                  <!-- Job Title & Company with Logo -->
+                  <div class="flex items-start gap-4 mb-4">
+                    <div class="flex-shrink-0">
+                      <div
+                        class="w-12 h-12 sm:w-14 sm:h-14 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center justify-center border border-gray-200 dark:border-gray-600 group-hover:scale-110 transition-transform duration-300"
+                      >
+                        <!-- Myfxbook Logo Placeholder -->
+                        <div
+                          class="w-8 h-8 bg-gradient-to-r from-purple-500 to-teal-500 rounded-lg flex items-center justify-center"
+                        >
+                          <span class="text-white font-bold text-sm">M</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="min-w-0">
+                      <h3
+                        class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1"
+                      >
+                        {{ $t("experience.myfxbook.title") }}
+                      </h3>
+                      <div class="flex items-center">
+                        <i class="fas fa-building text-purple-500 mr-2"></i>
+                        <span
+                          class="text-purple-600 dark:text-purple-400 font-semibold"
+                        >
+                          {{ $t("experience.myfxbook.company") }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Responsibilities -->
+                  <ul class="space-y-3">
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.myfxbook.responsibilities.1") }}
+                      </span>
+                    </li>
+                    <li class="flex items-start gap-3 group/item">
+                      <div class="flex-shrink-0 mt-2">
+                        <div
+                          class="w-2 h-2 bg-purple-500 rounded-full group-hover/item:scale-150 transition-transform duration-300"
+                        ></div>
+                      </div>
+                      <span
+                        class="text-gray-700 dark:text-gray-300 text-sm sm:text-base"
+                      >
+                        {{ $t("experience.myfxbook.responsibilities.2") }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { useColorMode } from "#imports";
+
+// Initialize color mode
+const colorMode = useColorMode();
+</script>

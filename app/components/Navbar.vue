@@ -135,7 +135,12 @@
               <span
                 class="group-hover:tracking-wide transition-all duration-300"
               >
-                {{ languages.find((lang) => lang.code === locale)?.name }}
+                {{
+                  languages.find(
+                    (lang: { code: LanguageCode; name: string }) =>
+                      lang.code === locale
+                  )?.name
+                }}
               </span>
             </button>
 

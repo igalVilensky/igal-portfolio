@@ -88,9 +88,49 @@
     "viewProject": "View Project"
   },
   "experience": {
-    "title": "Work &",
-    "work": "experience",
-    "comingSoon": "Experience timeline coming soon..."
+    "title": "Work",
+    "title_highlight": "Experience",
+    "description": "My professional journey in software development",
+    "flowplace": {
+      "period": "2023 - Present",
+      "title": "Full-Stack Developer",
+      "company": "Flowplace, Leipzig",
+      "responsibilities": {
+        "1": "Developed SaaS features with Vue.js/Nuxt.js & Directus",
+        "2": "Implemented responsive UI designs",
+        "3": "Improved usability, accessibility & consistency of the platform",
+        "4": "Integrated REST APIs & optimized UI workflows"
+      }
+    },
+    "leanera": {
+      "period": "2022 - 2023",
+      "title": "Software Developer",
+      "company": "LeanERA GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Developed dynamic web applications using Vue 3, Nuxt 3, TypeScript & Tailwind CSS",
+        "2": "Collaborated with cross-functional teams to select optimal technologies",
+        "3": "Established clean, scalable codebase for product-focused transition"
+      }
+    },
+    "ari_motors": {
+      "period": "2021 - 2022",
+      "title": "Full Stack Web Developer",
+      "company": "ARI Motors GmbH, Leipzig",
+      "responsibilities": {
+        "1": "Developed comparison portal for electric commercial vehicles",
+        "2": "Enhanced user functionality and experience across multiple websites",
+        "3": "Managed website administration & back-end systems maintenance"
+      }
+    },
+    "myfxbook": {
+      "period": "2017 - 2019",
+      "title": "Social Media & Web Coordinator",
+      "company": "Myfxbook Ltd (Cashdo)",
+      "responsibilities": {
+        "1": "Managed company website & social media channels",
+        "2": "Conducted market research & affiliate marketing campaigns"
+      }
+    }
   },
   "education": {
     "title": "Education",
