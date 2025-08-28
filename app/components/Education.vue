@@ -13,7 +13,8 @@
         <h2
           class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 mt-8"
         >
-          <span class="text-teal-500">{{ $t("education.title") }}</span> &
+          <span class="text-teal-500">{{ $t("education.title") }}</span>
+          {{ $t("education.and") }}
           <span class="text-purple-500">{{ $t("education.second") }}</span>
         </h2>
         <div
@@ -81,22 +82,35 @@
                 </div>
               </div>
               <div class="flex justify-center sm:justify-start">
-                <div class="relative group/btn">
+                <!-- Enhanced Button with Hero Styling -->
+                <div class="relative group">
+                  <!-- Gradient border frame -->
                   <div
-                    class="absolute inset-0 bg-gradient-to-r from-teal-400 to-purple-600 rounded-full blur-lg opacity-75 group-hover/btn:opacity-100 transition-opacity duration-300 animate-pulse"
+                    class="absolute inset-0 bg-gradient-to-r from-teal-500 via-purple-400 to-purple-600 rounded-full p-[2px] group-hover:p-[3px] transition-all duration-300"
+                  >
+                    <div
+                      class="bg-gradient-to-r from-teal-500 to-purple-600 rounded-full h-full w-full"
+                    ></div>
+                  </div>
+
+                  <!-- Glowing background effect -->
+                  <div
+                    class="absolute inset-0 bg-gradient-to-r from-teal-400/20 to-purple-600/20 rounded-full blur-lg opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                   ></div>
+
                   <a
                     href="/DCI_Igal Vilensky.pdf"
                     target="_blank"
-                    class="relative bg-gradient-to-r from-teal-500 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 text-sm sm:text-base lg:text-lg"
+                    class="relative z-10 group/btn bg-gradient-to-r from-teal-500 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-3 text-sm sm:text-base lg:text-lg"
                   >
                     <i
-                      class="fas fa-download group-hover/btn:animate-bounce"
+                      class="fas fa-download group-hover/btn:animate-pulse group-hover/btn:text-purple-200 transition-colors duration-300"
                     ></i>
-                    <span>{{ $t("education.downloadCertificate") }}</span>
-                    <i
-                      class="fas fa-arrow-right transform group-hover/btn:translate-x-1 transition-transform duration-300"
-                    ></i>
+                    <span
+                      class="group-hover/btn:tracking-wide transition-all duration-300"
+                    >
+                      {{ $t("education.downloadCertificate") }}
+                    </span>
                   </a>
                 </div>
               </div>

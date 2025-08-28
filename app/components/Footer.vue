@@ -18,11 +18,11 @@
       <!-- Enhanced Header -->
       <div class="mb-12 group pt-8">
         <h2 class="text-3xl md:text-5xl font-black mb-8">
-          Let's
+          {{ $t("contact.title") }}
           <span
             class="bg-gradient-to-r from-teal-400 to-purple-400 bg-clip-text text-transparent relative"
           >
-            Connect
+            {{ $t("contact.lets") }}
             <!-- Animated underline -->
             <div
               class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-teal-400/40 to-purple-400/40 rounded-full group-hover:from-teal-400/70 group-hover:to-purple-400/70 transition-all duration-300"
@@ -192,15 +192,8 @@
 
           <p
             class="relative z-10 text-gray-400 group-hover:text-gray-300 transition-colors duration-300 py-4"
-          >
-            &copy; 2025 Igal Vilensky.
-            <span class="inline-flex items-center gap-1">
-              Crafted with
-              <span class="text-red-400 animate-pulse">❤️</span>
-              and lots of
-              <span class="text-yellow-400 group-hover:animate-bounce">☕</span>
-            </span>
-          </p>
+            v-html="$t('contact.copyright')"
+          ></p>
         </div>
       </div>
 

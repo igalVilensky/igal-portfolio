@@ -111,12 +111,37 @@
       </div>
 
       <!-- See All Projects Button -->
-      <NuxtLink
-        to="/projects"
-        class="mt-12 inline-block bg-gradient-to-r from-teal-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
-      >
-        {{ $t("projects.seeAllProjects") }}
-      </NuxtLink>
+      <div class="mt-12 flex justify-center">
+        <div class="relative group">
+          <!-- Gradient border frame -->
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-teal-500 via-teal-400 to-purple-600 rounded-full p-[2px] group-hover:p-[3px] transition-all duration-300"
+          >
+            <div
+              class="bg-gradient-to-r from-teal-500 to-purple-600 rounded-full h-full w-full"
+            ></div>
+          </div>
+
+          <!-- Glowing background effect -->
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-teal-400/20 to-purple-600/20 rounded-full blur-lg opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
+          ></div>
+
+          <NuxtLink
+            to="/projects"
+            class="relative z-10 group/btn bg-gradient-to-r from-teal-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-3"
+          >
+            <i
+              class="fas fa-rocket group-hover/btn:animate-bounce group-hover/btn:text-yellow-200 transition-colors duration-300"
+            ></i>
+            <span
+              class="group-hover/btn:tracking-wide transition-all duration-300"
+            >
+              {{ $t("projects.seeAllProjects") }}
+            </span>
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </section>
 </template>
