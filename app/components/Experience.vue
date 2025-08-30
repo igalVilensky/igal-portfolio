@@ -87,9 +87,6 @@
                       </div>
                       <div class="min-w-0 flex-1">
                         <div class="flex items-center">
-                          <i
-                            class="fas fa-building text-teal-500 mr-2 text-sm"
-                          ></i>
                           <span
                             class="text-teal-600 dark:text-teal-400 font-semibold text-sm sm:text-base"
                           >
@@ -211,9 +208,6 @@
                       </div>
                       <div class="min-w-0 flex-1">
                         <div class="flex items-center">
-                          <i
-                            class="fas fa-building text-purple-500 mr-2 text-sm"
-                          ></i>
                           <span
                             class="text-purple-600 dark:text-purple-400 font-semibold text-sm sm:text-base"
                           >
@@ -320,9 +314,6 @@
                       </div>
                       <div class="min-w-0 flex-1">
                         <div class="flex items-center">
-                          <i
-                            class="fas fa-building text-teal-500 mr-2 text-sm"
-                          ></i>
                           <span
                             class="text-teal-600 dark:text-teal-400 font-semibold text-sm sm:text-base"
                           >
@@ -432,9 +423,6 @@
                       </div>
                       <div class="min-w-0 flex-1">
                         <div class="flex items-center">
-                          <i
-                            class="fas fa-building text-purple-500 mr-2 text-sm"
-                          ></i>
                           <span
                             class="text-purple-600 dark:text-purple-400 font-semibold text-sm sm:text-base"
                           >

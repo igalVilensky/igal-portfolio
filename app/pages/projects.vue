@@ -7,7 +7,10 @@
         : 'bg-white text-gray-900'
     "
   >
-    <!-- Back to Home Button - Enhanced with better mobile positioning -->
+    <!-- Navbar -->
+    <Navbar />
+
+    <!-- Back to Home Button -->
     <div class="fixed top-4 left-4 z-50">
       <NuxtLink
         to="/"
@@ -16,13 +19,13 @@
         <i
           class="fas fa-home group-hover:animate-bounce text-xs sm:text-sm"
         ></i>
-        <span class="hidden xs:inline">Back to Home</span>
-        <span class="xs:hidden">Home</span>
+        <span class="hidden xs:inline">{{ $t("nav.backToHome") }}</span>
+        <span class="xs:hidden">{{ $t("nav.home") }}</span>
       </NuxtLink>
     </div>
 
     <!-- Enhanced Projects Header -->
-    <header class="relative py-20 sm:py-32 px-4 overflow-hidden">
+    <header class="relative pt-20 pb-12 sm:pb-16 sm:pt-32 px-4 overflow-hidden">
       <!-- Animated Background Elements -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-teal-50 via-purple-25 to-purple-50"
@@ -33,164 +36,167 @@
         "
       ></div>
       <div
-        class="absolute top-10 sm:top-20 right-5 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 bg-teal-400/10 rounded-full blur-3xl animate-pulse"
+        class="absolute top-5 right-5 w-32 h-32 sm:w-48 sm:h-48 bg-teal-400/10 rounded-full blur-3xl animate-pulse"
       ></div>
       <div
-        class="absolute bottom-10 left-5 sm:left-10 w-64 h-64 sm:w-96 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse"
+        class="absolute bottom-5 left-5 w-40 h-40 sm:w-64 sm:h-64 bg-purple-400/10 rounded-full blur-3xl animate-pulse"
         style="animation-delay: 1s"
       ></div>
 
-      <div class="relative max-w-7xl mx-auto text-center">
-        <!-- Animated Title -->
-        <div class="mb-6 sm:mb-8">
+      <div class="relative max-w-7xl mx-auto">
+        <!-- Title Section -->
+        <div class="text-center mb-8">
           <h1
-            class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-black mb-2 sm:mb-4 leading-tight"
+            class="text-2xl sm:text-3xl md:text-5xl font-black text-gray-900 dark:text-black mb-2 leading-tight"
           >
-            My
+            {{ $t("projects.title") }}
             <span
               class="bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent animate-gradient"
-              >Projects</span
+              >{{ $t("projects.my") }}</span
             >
           </h1>
           <div
-            class="w-16 sm:w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-4 sm:mb-6"
+            class="w-12 sm:w-16 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-3"
           ></div>
+          <p
+            class="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-500 font-medium max-w-xl mx-auto"
+          >
+            {{ $t("projects.subtitle") }}
+            <em class="text-teal-600 dark:text-teal-400 font-semibold">{{
+              $t("projects.subtitleHighlight")
+            }}</em>
+          </p>
         </div>
 
-        <p
-          class="text-base sm:text-lg md:text-2xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 font-medium max-w-2xl mx-auto px-2"
+        <!-- Stats and Filters Combined -->
+        <div
+          class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-4 sm:p-6"
         >
-          Discover my journey through
-          <em class="text-teal-600 dark:text-teal-400 font-semibold"
-            >innovative solutions</em
-          >
-          and creative digital experiences
-        </p>
-
-        <!-- Stats Section -->
-        <div class="flex justify-center gap-4 sm:gap-8 mb-8">
-          <div class="text-center">
-            <div class="text-2xl sm:text-3xl font-black text-teal-600">
-              {{ projects.length }}
+          <!-- Stats Row -->
+          <div class="flex justify-center gap-6 sm:gap-12 mb-6">
+            <div class="text-center">
+              <div class="text-xl sm:text-2xl font-black text-teal-600">
+                {{ filteredProjects.length }}
+              </div>
+              <div
+                class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400"
+              >
+                {{ selectedTech ? $t("projects.my") : $t("projects.my") }}
+              </div>
             </div>
-            <div
-              class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400"
-            >
-              Projects
+            <div class="text-center">
+              <div class="text-xl sm:text-2xl font-black text-purple-600">
+                {{ technologies.length }}
+              </div>
+              <div
+                class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400"
+              >
+                {{ $t("education.technologiesCount") }}
+              </div>
             </div>
           </div>
+
+          <!-- Filter Buttons -->
           <div class="text-center">
-            <div class="text-2xl sm:text-3xl font-black text-purple-600">
-              {{ technologies.length }}
-            </div>
-            <div
-              class="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400"
+            <h3
+              class="text-sm sm:text-base font-bold mb-4 text-gray-900 dark:text-white"
             >
-              Technologies
+              {{ $t("projects.filterByTech") }}
+            </h3>
+            <div class="flex flex-wrap gap-2 justify-center max-w-4xl mx-auto">
+              <button
+                @click="selectedTech = ''"
+                class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 transform hover:scale-105"
+                :class="
+                  selectedTech === ''
+                    ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
+                    : colorMode.value === 'dark'
+                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                "
+              >
+                {{ $t("projects.allProjects") }}
+              </button>
+              <button
+                v-for="tech in technologies"
+                :key="tech"
+                @click="selectedTech = tech"
+                class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 transform hover:scale-105"
+                :class="
+                  selectedTech === tech
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
+                    : colorMode.value === 'dark'
+                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+                "
+              >
+                {{ tech }}
+              </button>
             </div>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Enhanced Projects Section -->
-    <section class="py-12 sm:py-20 px-4">
+    <!-- Projects Section -->
+    <section class="py-8 sm:py-12 px-4">
       <div class="max-w-7xl mx-auto">
-        <!-- Enhanced Filters Section -->
-        <div class="mb-8 sm:mb-12">
-          <h3
-            class="text-lg sm:text-xl font-bold text-center mb-4 sm:mb-6 text-gray-900 dark:text-white"
-          >
-            Filter by Technology
-          </h3>
-          <div
-            class="flex flex-wrap gap-2 sm:gap-3 justify-center max-w-4xl mx-auto"
-          >
-            <button
-              @click="selectedTech = ''"
-              class="px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 transform hover:scale-105"
-              :class="
-                selectedTech === ''
-                  ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg'
-                  : colorMode.value === 'dark'
-                  ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm'
-              "
-            >
-              All Projects
-            </button>
-            <button
-              v-for="tech in technologies"
-              :key="tech"
-              @click="selectedTech = tech"
-              class="px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 transform hover:scale-105"
-              :class="
-                selectedTech === tech
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
-                  : colorMode.value === 'dark'
-                  ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 shadow-sm'
-              "
-            >
-              {{ tech }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Results Counter -->
-        <div class="text-center mb-6 sm:mb-8">
+        <!-- Results Info -->
+        <div class="text-center mb-6">
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            Showing {{ filteredProjects.length }} of
-            {{ projects.length }} projects
-            <span v-if="selectedTech" class="font-semibold"
-              >for "{{ selectedTech }}"</span
+            {{
+              $t("projects.showingProjects", {
+                filteredCount: filteredProjects.length,
+                totalCount: projects.length,
+              })
+            }}
+            <span
+              v-if="selectedTech"
+              class="font-semibold text-teal-600 dark:text-teal-400"
             >
+              {{ $t("projects.forTech", { selectedTech }) }}
+            </span>
           </p>
         </div>
 
-        <!-- Enhanced Projects Grid -->
+        <!-- Projects Grid -->
         <div
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           <div
             v-for="(project, index) in filteredProjects"
             :key="project.id"
-            class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 flex flex-col min-h-full"
+            class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 flex flex-col"
             :style="{ animationDelay: `${index * 100}ms` }"
           >
-            <!-- Project Image origin main with Overlay -->
             <div class="relative overflow-hidden">
               <img
                 :src="project.image"
-                :alt="project.title"
+                :alt="$t(`projects.${project.title}.title`)"
                 class="w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div
                 class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               ></div>
-              <!-- Project Status Badge -->
               <div class="absolute top-3 right-3">
                 <span
                   class="px-2 py-1 bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xs font-semibold rounded-full"
                 >
-                  Live
+                  {{ $t("projects.live") }}
                 </span>
               </div>
             </div>
-
-            <!-- Project Content -->
             <div class="p-4 sm:p-6 flex flex-col flex-grow">
               <h3
                 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors duration-300"
               >
-                {{ project.title }}
+                {{ $t(`projects.${project.title}.title`) }}
               </h3>
               <p
                 class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4"
               >
-                {{ project.description }}
+                {{ $t(`projects.${project.title}.description`) }}
               </p>
-              <!-- Tech Stack -->
               <div class="flex flex-wrap gap-2 mb-4 sm:mb-6">
                 <span
                   v-for="tech in project.technologies"
@@ -200,7 +206,6 @@
                   {{ tech }}
                 </span>
               </div>
-              <!-- Action Buttons   -->
               <div class="flex gap-3 mt-auto">
                 <a
                   :href="project.link"
@@ -210,14 +215,18 @@
                   <i
                     class="fas fa-external-link-alt mr-2 group-hover/btn:animate-bounce text-xs"
                   ></i>
-                  View Live
+                  {{ $t("projects.viewLive") }}
                 </a>
-                <button
-                  class="p-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
-                  title="View Details"
+                <a
+                  href="https://github.com/igalVilensky"
+                  target="_blank"
+                  class="flex-1 group/btn inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg font-semibold text-sm hover:from-purple-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
                 >
-                  <i class="fas fa-info-circle"></i>
-                </button>
+                  <i
+                    class="fas fa-info-circle mr-2 group-hover/btn:animate-bounce text-xs"
+                  ></i>
+                  {{ $t("projects.viewDetails") }}
+                </a>
               </div>
             </div>
           </div>
@@ -226,24 +235,24 @@
         <!-- Empty State -->
         <div
           v-if="filteredProjects.length === 0"
-          class="text-center py-12 sm:py-20"
+          class="text-center py-12 sm:py-16"
         >
           <div class="mb-4">
-            <i class="fas fa-search text-4xl sm:text-6xl text-gray-400"></i>
+            <i class="fas fa-search text-4xl sm:text-5xl text-gray-400"></i>
           </div>
           <h3
             class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2"
           >
-            No projects found
+            {{ $t("projects.noProjectsFound") }}
           </h3>
           <p class="text-gray-600 dark:text-gray-400 mb-6">
-            No projects match the selected technology filter.
+            {{ $t("projects.noProjectsMatch") }}
           </p>
           <button
             @click="selectedTech = ''"
             class="bg-gradient-to-r from-teal-500 to-purple-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
-            View All Projects
+            {{ $t("projects.viewAllProjects") }}
           </button>
         </div>
       </div>
@@ -251,19 +260,18 @@
 
     <!-- Call to Action Section -->
     <section
-      class="py-12 sm:py-20 px-4 bg-gradient-to-br from-teal-50 to-purple-50 dark:from-gray-800 dark:to-gray-900"
+      class="py-12 sm:py-16 px-4 bg-gradient-to-br from-teal-50 to-purple-50 dark:from-gray-800 dark:to-gray-900"
     >
       <div class="max-w-4xl mx-auto text-center">
         <h2
-          class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 dark:text-white mb-4"
+          class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-4"
         >
-          Have a Project in Mind?
+          {{ $t("contact.subtitle") }}
         </h2>
         <p
-          class="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto"
+          class="text-gray-600 dark:text-gray-300 text-base sm:text-lg mb-6 max-w-2xl mx-auto"
         >
-          Let's collaborate and bring your ideas to life with cutting-edge web
-          technologies.
+          {{ $t("contact.description") }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -271,38 +279,36 @@
             class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
           >
             <i class="fas fa-envelope"></i>
-            Get in Touch
+            {{ $t("contact.getInTouch") }}
           </a>
           <NuxtLink
             to="/"
             class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
           >
             <i class="fas fa-user"></i>
-            Learn More About Me
+            {{ $t("contact.learnMore") }}
           </NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- Enhanced Footer -->
+    <!-- Footer -->
     <footer
-      class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 sm:py-20"
+      class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 sm:py-16"
     >
       <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-2xl sm:text-3xl md:text-5xl font-black mb-6 sm:mb-8">
-          Let's
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-black mb-6">
+          {{ $t("contact.title") }}
           <span
             class="bg-gradient-to-r from-teal-400 to-purple-400 bg-clip-text text-transparent"
-            >Connect</span
+            >{{ $t("contact.lets") }}</span
           >
         </h2>
         <div
-          class="w-16 sm:w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-8 sm:mb-12"
+          class="w-16 sm:w-20 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-8"
         ></div>
-
-        <!-- Contact Links -->
         <div
-          class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mb-8 sm:mb-12"
+          class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mb-8"
         >
           <a
             href="mailto:vilenskyigal@gmail.com"
@@ -311,9 +317,7 @@
             <i
               class="fas fa-envelope text-xl sm:text-2xl group-hover:animate-bounce"
             ></i>
-            <span class="break-all sm:break-normal"
-              >vilenskyigal@gmail.com</span
-            >
+            {{ $t("contact.email") }}
           </a>
           <a
             href="tel:+491783099433"
@@ -322,35 +326,12 @@
             <i
               class="fas fa-phone text-xl sm:text-2xl group-hover:animate-pulse"
             ></i>
-            +49 1783099433
+            {{ $t("contact.phone") }}
           </a>
         </div>
-
-        <!-- Social Links -->
-        <div class="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <a
-            href="#"
-            class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
-          >
-            <i class="fab fa-linkedin text-lg sm:text-xl"></i>
-          </a>
-          <a
-            href="#"
-            class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
-          >
-            <i class="fab fa-github text-lg sm:text-xl"></i>
-          </a>
-          <a
-            href="#"
-            class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-teal-500 to-purple-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform duration-300"
-          >
-            <i class="fab fa-twitter text-lg sm:text-xl"></i>
-          </a>
-        </div>
-
-        <div class="border-t border-gray-700 pt-6 sm:pt-8">
+        <div class="border-t border-gray-700 pt-6">
           <p class="text-gray-400 text-sm sm:text-base">
-            &copy; 2025 Igal Vilensky. Crafted with ❤️ and lots of ☕
+            {{ $t("contact.copyright") }}
           </p>
         </div>
       </div>
@@ -360,7 +341,7 @@
 
 <script setup lang="ts">
 import { useColorMode, useHead } from "#imports";
-import { ref, computed } from "vue";
+import Navbar from "../components/Navbar.vue";
 
 const colorMode = useColorMode();
 const selectedTech = ref("");
@@ -369,56 +350,51 @@ const selectedTech = ref("");
 const projects = [
   {
     id: 1,
-    title: "Sunlit tales",
-    description:
-      "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul.",
+    title: "sunlitTales",
+    description: "sunlitTales",
     image: "/sunlit.jpeg",
     technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity", "MongoDB"],
     link: "https://sunlit-tales.netlify.app/",
   },
   {
     id: 2,
-    title: "Your Path to Personal Growth",
-    description:
-      "Psy-Blog blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day.",
+    title: "psyBlog",
+    description: "psyBlog",
     image: "/psy.jpeg",
     technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
     link: "https://psy-blog.netlify.app/",
   },
   {
     id: 3,
-    title: "Portfolio Website",
-    description: "A modern portfolio showcasing my web development projects.",
+    title: "urlShortener",
+    description: "urlShortener",
+    image: "/url-shortener.jpeg",
+    technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
+    link: "https://clean-links.netlify.app/",
+  },
+  {
+    id: 4,
+    title: "portfolio",
+    description: "portfolio",
     image: "/portfolio.jpeg",
     technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
     link: "#",
   },
   {
-    id: 4,
-    title: "Coming soon",
-    description:
-      "A headless CMS-powered blog platform with rich text editing, SEO optimization, and multi-author support.",
+    id: 5,
+    title: "blogPlatform",
+    description: "blogPlatform",
     image: "/coming_soon.jpg",
     technologies: ["Directus", "Vue.js", "Node.js", "PostgreSQL"],
     link: "https://example.com/blog",
   },
   {
-    id: 5,
-    title: "Coming soon",
-    description:
-      "A comprehensive property management system with advanced search filters, virtual tours, and market analytics.",
+    id: 6,
+    title: "propertyManagement",
+    description: "propertyManagement",
     image: "/coming_soon.jpg",
     technologies: ["React", "Node.js", "MongoDB", "Stripe"],
     link: "https://example.com/realestate",
-  },
-  {
-    id: 6,
-    title: "Coming soon",
-    description:
-      "An interactive online learning platform with video streaming, progress tracking, and certificate generation.",
-    image: "/coming_soon.jpg",
-    technologies: ["Vue.js", "Firebase", "Tailwind CSS", "Vimeo API"],
-    link: "https://example.com/lms",
   },
 ];
 
@@ -439,28 +415,25 @@ const filteredProjects = computed(() => {
   );
 });
 
-// Enhanced SEO meta tags
+// SEO meta tags
 useHead({
-  title: "Projects | Igal Vilensky - Web Developer Portfolio",
+  title: $t("projects.seo.title"),
   meta: [
     {
       name: "description",
-      content:
-        "Explore innovative web and software development projects by Igal Vilensky. From e-commerce platforms to collaborative tools, discover cutting-edge solutions built with modern technologies.",
+      content: $t("projects.seo.description"),
     },
     {
       name: "keywords",
-      content:
-        "web development, portfolio, projects, Vue.js, React, Node.js, TypeScript, Nuxt",
+      content: $t("projects.seo.keywords"),
     },
     {
       property: "og:title",
-      content: "Projects | Igal Vilensky - Web Developer",
+      content: $t("projects.seo.ogTitle"),
     },
     {
       property: "og:description",
-      content:
-        "Discover innovative web development projects showcasing modern technologies and creative solutions.",
+      content: $t("projects.seo.ogDescription"),
     },
   ],
   link: [
@@ -492,7 +465,6 @@ useHead({
   animation: gradient 3s ease infinite;
 }
 
-/* Smooth entrance animation */
 @keyframes slideInUp {
   from {
     opacity: 0;

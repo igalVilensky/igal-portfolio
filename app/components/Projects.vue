@@ -5,7 +5,7 @@
         class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 mt-8"
       >
         {{ $t("projects.title") }}
-        <span class="text-teal-500">{{ $t("projects.featured") }}</span>
+        <span class="text-teal-500">{{ $t("projects.my") }}</span>
       </h2>
       <div
         class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-12"
@@ -13,7 +13,7 @@
 
       <!-- Projects Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Enhanced Project Card -->
+        <!-- Project Card -->
         <div
           v-for="project in projects"
           :key="project.id"
@@ -30,7 +30,7 @@
 
           <!-- Content Container -->
           <div class="relative z-10 flex flex-col h-full">
-            <!-- Enhanced Image Section -->
+            <!-- Image Section -->
             <div class="relative p-3 pb-0">
               <div
                 class="relative overflow-hidden rounded-xl h-48 bg-gradient-to-br from-teal-500/5 to-purple-600/5"
@@ -52,8 +52,8 @@
               </div>
             </div>
 
-            <!-- Enhanced Content Section -->
-            <div class="p-6 pt-4 flex flex-col flex-grow">
+            <!-- Content Section -->
+            <div class="p-6 pt-4 flex flex-col flex-grow text-left">
               <!-- Title with gradient underline -->
               <div class="mb-3">
                 <h3
@@ -72,7 +72,7 @@
                 {{ $t(`projects.${project.titleKey}.description`) }}
               </p>
 
-              <!-- Enhanced Tech Stack -->
+              <!-- Tech Stack -->
               <div class="flex flex-wrap gap-2 mb-6">
                 <span
                   v-for="tech in project.technologies"
@@ -83,8 +83,8 @@
                 </span>
               </div>
 
-              <!-- Enhanced CTA -->
-              <div class="mt-auto">
+              <!-- CTA -->
+              <div class="mt-auto text-center">
                 <a
                   :href="project.link"
                   target="_blank"
@@ -137,7 +137,7 @@
             <span
               class="group-hover/btn:tracking-wide transition-all duration-300"
             >
-              {{ $t("projects.seeAllProjects") }}
+              {{ $t("projects.viewAllProjects") }}
             </span>
           </NuxtLink>
         </div>
@@ -147,30 +147,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-
-// Define projects with translation keys
-const projects = computed(() => [
-  {
-    id: 1,
-    titleKey: "sunlitTales",
-    image: "/sunlit.jpeg",
-    technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity"],
-    link: "https://sunlit-tales.netlify.app/",
-  },
-  {
-    id: 2,
-    titleKey: "psyBlog",
-    image: "/psy.jpeg",
-    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
-    link: "https://psy-blog.netlify.app/",
-  },
-  {
-    id: 3,
-    titleKey: "portfolio",
-    image: "/portfolio.jpeg",
-    technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
-    link: "#",
-  },
-]);
+defineProps<{
+  projects: {
+    id: number | string;
+    titleKey: string;
+    image: string;
+    technologies: string[];
+    link: string;
+  }[];
+}>();
 </script>

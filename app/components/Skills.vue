@@ -43,9 +43,7 @@
             class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-teal-600/5 dark:from-teal-400/10 dark:to-teal-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           ></div>
           <div class="relative">
-            <div
-              class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
-            >
+            <div class="flex flex-row items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div
                 class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
               >
@@ -93,9 +91,7 @@
             class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-purple-600/5 dark:from-purple-400/10 dark:to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           ></div>
           <div class="relative">
-            <div
-              class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
-            >
+            <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div
                 class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
               >
@@ -143,9 +139,7 @@
             class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-purple-500/5 dark:from-teal-400/10 dark:to-purple-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           ></div>
           <div class="relative">
-            <div
-              class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
-            >
+            <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div
                 class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-teal-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
               >
@@ -194,9 +188,7 @@
             class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-teal-500/5 dark:from-purple-400/10 dark:to-teal-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           ></div>
           <div class="relative">
-            <div
-              class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
-            >
+            <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div
                 class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0"
               >

@@ -31,33 +31,28 @@ import Footer from "../components/Footer.vue";
 
 const colorMode = useColorMode();
 
-// Featured projects data
+// Featured projects data with corrected titleKey
 const featuredProjects = [
   {
-    id: 1,
-    title: "Sunlit tales",
-    description:
-      "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul.",
+    id: "sunlitTales",
+    titleKey: "sunlitTales",
     image: "/sunlit.jpeg",
     technologies: ["Node.js", "Nuxt", "Tailwind CSS", "Sanity"],
     link: "https://sunlit-tales.netlify.app/",
   },
   {
-    id: 2,
-    title: "Your Path to Personal Growth",
-    description:
-      "Psy-Blog blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day.",
+    id: "psyBlog",
+    titleKey: "psyBlog",
     image: "/psy.jpeg",
     technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
     link: "https://psy-blog.netlify.app/",
   },
   {
-    id: 3,
-    title: "Portfolio Website",
-    description: "A modern portfolio showcasing my web development projects.",
-    image: "/portfolio.jpeg",
-    technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
-    link: "#",
+    id: "urlShortener",
+    titleKey: "urlShortener",
+    image: "/url-shortener.jpeg",
+    technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
+    link: "https://clean-links.netlify.app/",
   },
 ];
 
