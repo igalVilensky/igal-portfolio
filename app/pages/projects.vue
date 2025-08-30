@@ -317,7 +317,7 @@
             <i
               class="fas fa-envelope text-xl sm:text-2xl group-hover:animate-bounce"
             ></i>
-            {{ $t("contact.email") }}
+            igalVilensky@gmail.com
           </a>
           <a
             href="tel:+491783099433"
