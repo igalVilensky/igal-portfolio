@@ -97,6 +97,10 @@
       "title": "URL shortener",
       "description": "A robust Node.js + Express RESTful API for a simple URL shortener, using MongoDB Atlas for persistence and deployed on Render."
     },
+    "securityPlayground": {
+      "title": "Security Playground",
+      "description": "An interactive demo of common web security issues (XSS, LocalStorage misuse, SQLi simulation) and how to fix them."
+    },
     "portfolio": {
       "title": "Portfolio Website",
       "description": "A modern portfolio showcasing my web development projects."

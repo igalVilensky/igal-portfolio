@@ -341,12 +341,12 @@
 
 <script setup lang="ts">
 import { useColorMode, useHead } from "#imports";
-import Navbar from "../components/Navbar.vue";
+import Navbar from "../../components/Navbar.vue";
 
 const colorMode = useColorMode();
 const selectedTech = ref("");
 
-// Enhanced project data with more realistic projects
+// project data
 const projects = [
   {
     id: 1,

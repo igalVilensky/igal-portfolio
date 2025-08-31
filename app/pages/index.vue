@@ -54,6 +54,13 @@ const featuredProjects = [
     technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
     link: "https://clean-links.netlify.app/",
   },
+  {
+    id: "securityPlayground",
+    titleKey: "securityPlayground",
+    image: "/security.jpeg", // ⚡️ Add a cool lock/glitch-themed image in /public
+    technologies: ["Nuxt", "Vue 3", "Web Security"],
+    link: "/projects/security", // 👈 Internal Nuxt route
+  },
 ];
 
 // Add Google Fonts for Poppins and Font Awesome
