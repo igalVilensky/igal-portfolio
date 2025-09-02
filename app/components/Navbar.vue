@@ -1,80 +1,71 @@
 <template>
   <nav
+    id="navbar"
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="[
       colorMode.value === 'dark'
-        ? 'bg-gray-900/95 border-gray-700'
-        : 'bg-white/95 border-gray-200',
+        ? 'bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 text-slate-300'
+        : 'bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 text-slate-700',
       isScrolled
-        ? 'backdrop-blur-md shadow-2xl border-b-2'
-        : 'backdrop-blur-sm shadow-lg border-b',
+        ? 'backdrop-blur-lg shadow-xl border-b-2 border-slate-200/50 dark:border-slate-700/50'
+        : 'backdrop-blur-md shadow-lg border-b border-slate-200/30 dark:border-slate-700/30',
     ]"
   >
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <!-- Enhanced Logo/Brand -->
-        <div class="flex-shrink-0 group">
-          <div class="relative">
-            <NuxtLink
-              to="#"
-              @click="scrollToSection('top')"
-              class="text-2xl font-black transition-all duration-300 hover:scale-105"
-              :class="
-                colorMode.value === 'dark' ? 'text-white' : 'text-gray-900'
-              "
+        <!-- Logo/Brand -->
+        <div class="flex-shrink-0 group/logo">
+          <NuxtLink
+            to="#"
+            @click="scrollToSection('top')"
+            class="text-2xl font-bold tracking-tight"
+            :class="
+              colorMode.value === 'dark' ? 'text-white' : 'text-slate-900'
+            "
+          >
+            <span
+              class="bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent relative group-hover/logo:scale-105 transition-transform duration-300"
             >
-              <span
-                class="bg-gradient-to-r from-teal-500 to-purple-600 bg-clip-text text-transparent relative"
-              >
-                Igal Vilensky
-                <!-- Animated underline -->
-                <div
-                  class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-teal-500 to-purple-600 group-hover:w-full transition-all duration-500"
-                ></div>
-              </span>
-            </NuxtLink>
-
-            <!-- Floating accent -->
-            <div
-              class="absolute -top-1 -right-1 w-2 h-2 bg-gradient-to-br from-teal-400 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-            ></div>
-          </div>
+              Igal Vilensky
+              <!-- Animated underline -->
+              <div
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 group-hover/logo:w-full transition-all duration-500"
+              ></div>
+            </span>
+          </NuxtLink>
         </div>
 
-        <!-- Enhanced Desktop Navigation -->
+        <!-- Desktop Navigation -->
         <div class="hidden md:block">
-          <div class="ml-10 flex items-baseline space-x-2">
+          <div class="ml-10 flex items-center space-x-6">
             <div
               v-for="item in navigationItems"
               :key="item.id"
-              class="relative group"
+              class="relative group/nav-item"
             >
-              <!-- Gradient border frame for active/hover state -->
+              <!-- Gradient border frame -->
               <div
-                class="absolute inset-0 rounded-lg p-[1px] transition-all duration-300"
-                :class="[
-                  activeSection === item.id
-                    ? 'bg-gradient-to-r from-teal-500 to-purple-600 opacity-100'
-                    : 'bg-gradient-to-r from-teal-500/50 to-purple-600/50 opacity-0 group-hover:opacity-100',
-                ]"
+                class="absolute inset-0 rounded-xl p-[1px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-cyan-500/30 opacity-0 group-hover/nav-item:opacity-100 transition-all duration-300"
               >
                 <div
-                  class="rounded-lg h-full w-full"
+                  class="rounded-xl h-full w-full"
                   :class="
-                    colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'
+                    colorMode.value === 'dark'
+                      ? 'bg-slate-900/95'
+                      : 'bg-white/95'
                   "
                 ></div>
               </div>
 
               <button
                 @click="scrollToSection(item.id)"
-                class="relative z-10 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                class="relative z-10 px-4 py-2 rounded-xl text-sm font-medium transition-transform duration-300 group-hover/nav-item:scale-105 flex items-center gap-2"
                 :class="[
                   colorMode.value === 'dark'
-                    ? 'text-gray-300 hover:text-white'
-                    : 'text-gray-700 hover:text-gray-900',
+                    ? 'text-slate-300 hover:text-white'
+                    : 'text-slate-700 hover:text-slate-900',
                   activeSection === item.id
-                    ? 'text-teal-600 dark:text-teal-400'
+                    ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-600 dark:text-blue-400'
                     : '',
                 ]"
               >
@@ -82,69 +73,65 @@
                   :class="item.icon"
                   class="transition-all duration-300"
                   :style="
-                    activeSection === item.id ? 'color: rgb(20 184 166)' : ''
+                    activeSection === item.id ? 'color: rgb(59, 130, 246)' : ''
                   "
                 ></i>
-                <span
-                  class="group-hover:tracking-wide transition-all duration-300"
-                >
+                <span class="transition-all duration-300 whitespace-nowrap">
                   {{ $t(`nav.${item.id}`) }}
                 </span>
               </button>
 
               <!-- Floating accent dot -->
               <div
-                class="absolute top-1 right-1 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-                :class="
-                  activeSection === item.id
-                    ? 'bg-gradient-to-br from-teal-400 to-purple-600 opacity-70'
-                    : 'bg-gradient-to-br from-teal-400 to-purple-600'
-                "
+                class="absolute top-1 right-1 w-2 h-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full opacity-0 group-hover/nav-item:opacity-100 group-hover/nav-item:scale-125 transition-all duration-300"
               ></div>
             </div>
           </div>
         </div>
 
-        <!-- Enhanced Desktop Right Side -->
-        <div class="hidden md:flex items-center space-x-3">
-          <!-- Enhanced Language Switcher -->
-          <div class="relative group">
-            <!-- Gradient border frame -->
+        <!-- Desktop Right Side -->
+        <div class="hidden md:flex items-center space-x-4">
+          <!-- Language Switcher -->
+          <div class="relative group/lang-selector">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-purple-600/30 rounded-lg p-[1px] opacity-0 group-hover:opacity-100 transition-all duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-xl p-[1px] opacity-0 group-hover/lang-selector:opacity-100 transition-all duration-300"
             >
               <div
-                class="rounded-lg h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'"
+                class="rounded-xl h-full w-full"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="toggleLanguageMenu"
-              class="relative z-10 flex items-center px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105"
+              class="relative z-10 flex items-center px-3 py-2 rounded-xl text-sm font-medium transition-transform duration-300 group-hover/lang-selector:scale-105"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'text-gray-300 hover:text-white'
-                  : 'text-gray-700 hover:text-gray-900',
+                  ? 'text-slate-300 hover:text-white'
+                  : 'text-slate-700 hover:text-slate-900',
               ]"
               aria-label="Select language"
             >
               <i
-                class="fas fa-globe mr-2 group-hover:animate-spin transition-all duration-300"
+                class="fas fa-globe mr-1.5 group-hover/lang-selector:animate-spin transition-all duration-300"
               ></i>
               <span
-                class="group-hover:tracking-wide transition-all duration-300"
+                class="group-hover/lang-selector:tracking-wide transition-all duration-300 whitespace-nowrap"
               >
                 {{
-                  languages.find(
-                    (lang: { code: LanguageCode; name: string }) =>
-                      lang.code === locale
-                  )?.name
+                  languages
+                    .find(
+                      (lang: { code: LanguageCode; name: string }) =>
+                        lang.code === locale
+                    )
+                    ?.code.toUpperCase()
                 }}
               </span>
             </button>
 
-            <!-- Enhanced Language Dropdown -->
+            <!-- Language Dropdown -->
             <Transition
               enter-active-class="transition ease-out duration-200"
               enter-from-class="opacity-0 scale-95 translate-y-1"
@@ -155,23 +142,21 @@
             >
               <div
                 v-show="isLanguageMenuOpen"
-                class="absolute top-12 right-0 w-40 rounded-xl shadow-2xl border overflow-hidden"
+                class="absolute top-12 right-0 w-36 rounded-xl shadow-2xl border overflow-hidden backdrop-blur-lg"
                 :class="[
                   colorMode.value === 'dark'
-                    ? 'bg-gray-800/95 border-gray-600'
-                    : 'bg-white/95 border-gray-300',
+                    ? 'bg-slate-800/95 border-slate-700/50 text-slate-300'
+                    : 'bg-white/95 border-slate-200/50 text-slate-700',
                 ]"
-                style="backdrop-filter: blur(16px)"
               >
-                <!-- Gradient border for dropdown -->
                 <div
-                  class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-purple-600/20 rounded-xl p-[1px]"
+                  class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl p-[1px]"
                 >
                   <div
                     class="rounded-xl h-full w-full"
                     :class="
                       colorMode.value === 'dark'
-                        ? 'bg-gray-800/95'
+                        ? 'bg-slate-800/95'
                         : 'bg-white/95'
                     "
                   ></div>
@@ -182,55 +167,50 @@
                     v-for="lang in languages"
                     :key="lang.code"
                     :to="switchLocalePath(lang.code)"
-                    class="block w-full text-left px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-300 hover:scale-105 relative group/lang"
+                    class="block w-full text-left px-3 py-2 text-xs font-medium rounded-lg transition-transform duration-300 hover:scale-105 relative group/lang-item"
                     :class="[
                       colorMode.value === 'dark'
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100/50',
+                        ? 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/50',
                       locale === lang.code
                         ? colorMode.value === 'dark'
-                          ? 'text-teal-400 bg-gray-700/30'
-                          : 'text-teal-600 bg-teal-50/30'
+                          ? 'text-blue-400 bg-slate-700/30'
+                          : 'text-blue-600 bg-blue-50/30'
                         : '',
                     ]"
                     @click="isLanguageMenuOpen = false"
                   >
                     {{ lang.name }}
-                    <!-- Active indicator -->
                     <div
                       v-if="locale === lang.code"
-                      class="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-teal-400 to-purple-600 rounded-full"
+                      class="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full"
                     ></div>
                   </NuxtLink>
                 </div>
               </div>
             </Transition>
-
-            <!-- Floating accent -->
-            <div
-              class="absolute top-1 right-1 w-2 h-2 bg-gradient-to-br from-teal-400 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-            ></div>
           </div>
 
-          <!-- Enhanced Dark Mode Toggle -->
-          <div class="relative group">
-            <!-- Gradient border frame -->
+          <!-- Dark Mode Toggle -->
+          <div class="relative group/dark-toggle">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-600/30 rounded-full p-[2px] group-hover:p-[3px] transition-all duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-500/30 rounded-full p-[2px] group-hover/dark-toggle:p-[3px] transition-all duration-300"
             >
               <div
                 class="rounded-full h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="toggleColorMode"
-              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-500 hover:scale-110 hover:rotate-12"
+              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-transform duration-500 group-hover/dark-toggle:scale-110 group-hover/dark-toggle:rotate-12 animate-slide-up-delayed-3"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 text-yellow-400 hover:from-yellow-400/30 hover:to-yellow-600/30'
-                  : 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-600 hover:from-blue-500/30 hover:to-blue-600/30',
+                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 text-yellow-400'
+                  : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-500',
               ]"
               :title="
                 colorMode.value === 'dark'
@@ -243,46 +223,45 @@
                 :class="
                   colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'
                 "
-                class="text-lg group-hover:animate-pulse transition-all duration-300"
+                class="text-lg group-hover/dark-toggle:animate-pulse transition-all duration-300"
               ></i>
             </button>
 
-            <!-- Floating accent -->
+            <!-- Animated ring -->
             <div
-              class="absolute top-0 right-0 w-3 h-3 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-              :class="
-                colorMode.value === 'dark'
-                  ? 'bg-gradient-to-br from-yellow-200 to-white'
-                  : 'bg-gradient-to-br from-blue-200 to-white'
-              "
+              class="absolute -inset-1 bg-gradient-to-r from-yellow-500 to-blue-500 rounded-full blur opacity-0 group-hover/dark-toggle:opacity-30 transition-opacity duration-500 animate-pulse-slow"
             ></div>
           </div>
         </div>
 
-        <!-- Enhanced Mobile menu controls -->
-        <div class="md:hidden flex items-center space-x-2">
-          <!-- Enhanced Mobile Language Switcher -->
-          <div class="relative group">
+        <!-- Mobile Menu Controls -->
+        <div class="md:hidden flex items-center space-x-3">
+          <!-- Mobile Language Switcher -->
+          <div class="relative group/lang-selector">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-purple-600/30 rounded-full p-[1px] opacity-0 group-hover:opacity-100 transition-all duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-full p-[1px] opacity-0 group-hover/lang-selector:opacity-100 transition-all duration-300"
             >
               <div
                 class="rounded-full h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="toggleLanguageMenu"
-              class="relative z-10 flex items-center w-10 h-10 justify-center rounded-full transition-all duration-300 hover:scale-110"
+              class="relative z-10 flex items-center w-10 h-10 justify-center rounded-full transition-transform duration-300 group-hover/lang-selector:scale-110"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'text-gray-300 hover:text-white'
-                  : 'text-gray-700 hover:text-gray-900',
+                  ? 'text-slate-300 hover:text-white'
+                  : 'text-slate-700 hover:text-slate-900',
               ]"
               aria-label="Select language"
             >
-              <i class="fas fa-globe text-lg group-hover:animate-spin"></i>
+              <i
+                class="fas fa-globe text-lg group-hover/lang-selector:animate-spin transition-all duration-300"
+              ></i>
             </button>
 
             <!-- Mobile Language Dropdown -->
@@ -296,22 +275,21 @@
             >
               <div
                 v-show="isLanguageMenuOpen"
-                class="absolute top-12 right-0 w-40 rounded-xl shadow-2xl border overflow-hidden"
+                class="absolute top-12 right-0 w-36 rounded-xl shadow-2xl border overflow-hidden backdrop-blur-lg"
                 :class="[
                   colorMode.value === 'dark'
-                    ? 'bg-gray-800/95 border-gray-600'
-                    : 'bg-white/95 border-gray-300',
+                    ? 'bg-slate-800/95 border-slate-700/50 text-slate-300'
+                    : 'bg-white/95 border-slate-200/50 text-slate-700',
                 ]"
-                style="backdrop-filter: blur(16px)"
               >
                 <div
-                  class="absolute inset-0 bg-gradient-to-br from-teal-500/20 to-purple-600/20 rounded-xl p-[1px]"
+                  class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl p-[1px]"
                 >
                   <div
                     class="rounded-xl h-full w-full"
                     :class="
                       colorMode.value === 'dark'
-                        ? 'bg-gray-800/95'
+                        ? 'bg-slate-800/95'
                         : 'bg-white/95'
                     "
                   ></div>
@@ -322,15 +300,15 @@
                     v-for="lang in languages"
                     :key="lang.code"
                     :to="switchLocalePath(lang.code)"
-                    class="block w-full text-left px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-300 relative"
+                    class="block w-full text-left px-3 py-2 text-xs font-medium rounded-lg transition-transform duration-300 hover:scale-105 relative group/lang-item"
                     :class="[
                       colorMode.value === 'dark'
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100/50',
+                        ? 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                        : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100/50',
                       locale === lang.code
                         ? colorMode.value === 'dark'
-                          ? 'text-teal-400 bg-gray-700/30'
-                          : 'text-teal-600 bg-teal-50/30'
+                          ? 'text-blue-400 bg-slate-700/30'
+                          : 'text-blue-600 bg-blue-50/30'
                         : '',
                     ]"
                     @click="isLanguageMenuOpen = false"
@@ -338,7 +316,7 @@
                     {{ lang.name }}
                     <div
                       v-if="locale === lang.code"
-                      class="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-teal-400 to-purple-600 rounded-full"
+                      class="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full"
                     ></div>
                   </NuxtLink>
                 </div>
@@ -346,24 +324,26 @@
             </Transition>
           </div>
 
-          <!-- Enhanced Mobile Dark Mode Toggle -->
-          <div class="relative group">
+          <!-- Mobile Dark Mode Toggle -->
+          <div class="relative group/dark-toggle">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-600/30 rounded-full p-[1px] group-hover:p-[2px] transition-all duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-500/30 rounded-full p-[1px] group-hover/dark-toggle:p-[2px] transition-all duration-300"
             >
               <div
                 class="rounded-full h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="toggleColorMode"
-              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:rotate-12"
+              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-transform duration-300 group-hover/dark-toggle:scale-110 group-hover/dark-toggle:rotate-12 animate-slide-up-delayed"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 text-yellow-400'
-                  : 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-600',
+                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 text-yellow-400'
+                  : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-500',
               ]"
               aria-label="Toggle dark mode"
             >
@@ -371,35 +351,42 @@
                 :class="
                   colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'
                 "
-                class="text-lg group-hover:animate-pulse"
+                class="text-lg group-hover/dark-toggle:animate-pulse"
               ></i>
             </button>
+
+            <!-- Animated ring -->
+            <div
+              class="absolute -inset-1 bg-gradient-to-r from-yellow-500 to-blue-500 rounded-full blur opacity-0 group-hover/dark-toggle:opacity-30 transition-opacity duration-500 animate-pulse-slow"
+            ></div>
           </div>
 
-          <!-- Enhanced Hamburger Button -->
-          <div class="relative group">
+          <!-- Hamburger Button -->
+          <div class="relative group/hamburger">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-teal-500/30 to-purple-600/30 rounded-md p-[1px] opacity-0 group-hover:opacity-100 transition-all duration-300"
+              class="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-xl p-[1px] opacity-0 group-hover/hamburger:opacity-100 transition-all duration-300"
             >
               <div
-                class="rounded-md h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-900' : 'bg-white'"
+                class="rounded-xl h-full w-full"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="isMobileMenuOpen = !isMobileMenuOpen"
-              class="relative z-10 p-2 rounded-md transition-all duration-300 hover:scale-110"
+              class="relative z-10 p-2 rounded-xl transition-transform duration-300 group-hover/hamburger:scale-110"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'text-gray-300 hover:text-white'
-                  : 'text-gray-700 hover:text-gray-900',
+                  ? 'text-slate-300 hover:text-white'
+                  : 'text-slate-700 hover:text-slate-900',
               ]"
               aria-label="Toggle mobile menu"
             >
               <i
                 :class="isMobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'"
-                class="text-xl transition-transform duration-300 group-hover:animate-pulse"
+                class="text-xl transition-transform duration-300 group-hover/hamburger:animate-pulse"
                 :style="{
                   transform: isMobileMenuOpen
                     ? 'rotate(90deg)'
@@ -412,7 +399,7 @@
       </div>
     </div>
 
-    <!-- Enhanced Mobile Navigation Menu -->
+    <!-- Mobile Navigation Menu -->
     <Transition
       enter-active-class="transition ease-out duration-300"
       enter-from-class="opacity-0 scale-95 translate-y-2"
@@ -423,22 +410,20 @@
     >
       <div
         v-show="isMobileMenuOpen"
-        class="md:hidden absolute top-16 right-4 left-4 rounded-2xl shadow-2xl border overflow-hidden"
+        class="md:hidden absolute top-16 right-4 left-4 rounded-2xl shadow-2xl border overflow-hidden backdrop-blur-lg"
         :class="[
           colorMode.value === 'dark'
-            ? 'bg-gray-800/95 border-gray-600'
-            : 'bg-white/95 border-gray-300',
+            ? 'bg-slate-800/95 border-slate-700/50 text-slate-300'
+            : 'bg-white/95 border-slate-200/50 text-slate-700',
         ]"
-        style="backdrop-filter: blur(16px)"
       >
-        <!-- Gradient border for mobile menu -->
         <div
-          class="absolute inset-0 bg-gradient-to-br from-teal-500/30 to-purple-600/30 rounded-2xl p-[2px]"
+          class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-2xl p-[2px]"
         >
           <div
             class="rounded-2xl h-full w-full"
             :class="
-              colorMode.value === 'dark' ? 'bg-gray-800/95' : 'bg-white/95'
+              colorMode.value === 'dark' ? 'bg-slate-800/95' : 'bg-white/95'
             "
           ></div>
         </div>
@@ -447,32 +432,33 @@
           <div
             v-for="item in navigationItems"
             :key="item.id"
-            class="relative group"
+            class="relative group/nav-item"
           >
-            <!-- Individual item border frame -->
             <div
               class="absolute inset-0 rounded-xl p-[1px] transition-all duration-300"
               :class="[
                 activeSection === item.id
-                  ? 'bg-gradient-to-r from-teal-500 to-purple-600 opacity-100'
-                  : 'bg-gradient-to-r from-teal-500/50 to-purple-600/50 opacity-0 group-hover:opacity-100',
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 opacity-100'
+                  : 'bg-gradient-to-r from-blue-500/50 to-cyan-500/50 opacity-0 group-hover/nav-item:opacity-100',
               ]"
             >
               <div
                 class="rounded-xl h-full w-full"
-                :class="colorMode.value === 'dark' ? 'bg-gray-800' : 'bg-white'"
+                :class="
+                  colorMode.value === 'dark' ? 'bg-slate-800/95' : 'bg-white/95'
+                "
               ></div>
             </div>
 
             <button
               @click="handleMobileNavClick(item.id)"
-              class="relative z-10 w-full text-left flex items-center px-4 py-4 rounded-xl text-base font-semibold transition-all duration-300 hover:scale-105"
+              class="relative z-10 w-full text-left flex items-center px-4 py-4 rounded-xl text-base font-medium transition-transform duration-300 group-hover/nav-item:scale-105"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'text-gray-300 hover:text-white'
-                  : 'text-gray-700 hover:text-gray-900',
+                  ? 'text-slate-300 hover:text-white'
+                  : 'text-slate-700 hover:text-slate-900',
                 activeSection === item.id
-                  ? 'text-teal-600 dark:text-teal-400'
+                  ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-600 dark:text-blue-400'
                   : '',
               ]"
             >
@@ -480,11 +466,11 @@
                 :class="item.icon"
                 class="mr-4 w-5 transition-all duration-300"
                 :style="
-                  activeSection === item.id ? 'color: rgb(20 184 166)' : ''
+                  activeSection === item.id ? 'color: rgb(59, 130, 246)' : ''
                 "
               ></i>
               <span
-                class="group-hover:tracking-wide transition-all duration-300"
+                class="group-hover/nav-item:tracking-wide transition-all duration-300 whitespace-nowrap"
               >
                 {{ $t(`nav.${item.id}`) }}
               </span>
@@ -492,12 +478,7 @@
 
             <!-- Floating accent -->
             <div
-              class="absolute top-2 right-2 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-              :class="
-                activeSection === item.id
-                  ? 'bg-gradient-to-br from-teal-400 to-purple-600 opacity-70'
-                  : 'bg-gradient-to-br from-teal-400 to-purple-600'
-              "
+              class="absolute top-2 right-2 w-2 h-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full opacity-0 group-hover/nav-item:opacity-100 group-hover/nav-item:scale-125 transition-all duration-300"
             ></div>
           </div>
         </div>
@@ -513,7 +494,6 @@ import { useColorMode } from "#imports";
 
 // i18n
 const { locale } = useI18n();
-
 const switchLocalePath = useSwitchLocalePath();
 
 // Dark mode
@@ -612,10 +592,21 @@ const handleClickOutside = (event: Event) => {
   }
 };
 
+// Force re-render on color mode change to ensure consistent dark mode application
+watch(
+  () => colorMode.value,
+  () => {
+    // Trigger a re-render by updating a reactive property
+    isScrolled.value = isScrolled.value;
+  }
+);
+
 onMounted(() => {
   window.addEventListener("scroll", handleScroll, { passive: true });
   document.addEventListener("click", handleClickOutside);
   handleScroll();
+  // Ensure initial color mode is applied
+  colorMode.preference = colorMode.value;
 });
 
 onUnmounted(() => {
@@ -623,3 +614,82 @@ onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
 </script>
+
+<style scoped>
+/* Custom Animations (matching Hero and Footer) */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+@keyframes float-delayed {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(-2deg);
+  }
+  66% {
+    transform: translateY(8px) rotate(1deg);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
+}
+
+.animate-slide-up-delayed {
+  animation: slide-up 0.8s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-delayed-3 {
+  animation: slide-up 0.8s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* Dark mode transitions */
+.dark * {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, transform 0.3s ease;
+}
+</style>

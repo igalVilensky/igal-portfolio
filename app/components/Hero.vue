@@ -29,11 +29,11 @@
     </div>
 
     <div
-      class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 min-h-screen flex items-center"
+      class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 sm:pb-16 min-h-screen flex items-center"
     >
       <div class="w-full text-center">
-        <!-- Profile Image with enhanced styling -->
-        <div class="mb-8 relative inline-block group">
+        <!-- Profile Image with styling -->
+        <div class="sm:mb-8 relative inline-block group">
           <div class="relative">
             <!-- Animated ring around profile -->
             <div
@@ -48,7 +48,7 @@
               />
             </div>
 
-            <!-- Enhanced status indicator -->
+            <!-- status indicator -->
             <div
               class="absolute bottom-2 right-2 w-7 h-7 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg"
             >
@@ -93,20 +93,11 @@
           </div>
         </div>
 
-        <!-- Description -->
-        <div class="mb-12">
-          <p
-            class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-4xl mx-auto leading-relaxed animate-slide-up-delayed-3 font-light"
-          >
-            {{ $t("hero.subtitle") }}
-          </p>
-        </div>
-
         <!-- Action Buttons -->
         <div
-          class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12 animate-slide-up-delayed-4"
+          class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8 sm:mb-12 animate-slide-up-delayed-4"
         >
-          <!-- Primary CTA with enhanced styling -->
+          <!-- Primary CTA with styling -->
           <NuxtLink
             to="#projects"
             @click.prevent="scrollToSection('projects')"
@@ -175,8 +166,8 @@
           </a>
         </div>
 
-        <!-- Enhanced Scroll Indicator -->
-        <div class="flex justify-center animate-bounce-soft">
+        <!-- Scroll Indicator -->
+        <div class="hidden sm:flex justify-center animate-bounce-soft">
           <button
             @click="scrollToSection('about')"
             class="group flex flex-col items-center space-y-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-300"
@@ -198,7 +189,6 @@
 </template>
 
 <script setup lang="ts">
-// Social links with enhanced styling
 const socialLinks = [
   {
     name: "GitHub",
@@ -217,17 +207,18 @@ const socialLinks = [
   },
 ];
 
-// Get social hover colors
-const getSocialHoverColor = (socialName: string) => {
-  const colors = {
-    GitHub: "hover:bg-slate-800 dark:hover:bg-slate-700",
-    LinkedIn: "hover:bg-blue-600",
-    Email: "hover:bg-emerald-600",
-  };
-  return colors[socialName] || "hover:bg-slate-600";
+type SocialName = "LinkedIn" | "GitHub" | "Facebook";
+
+const colors: Record<SocialName, string> = {
+  LinkedIn: "hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/25",
+  GitHub: "hover:bg-purple-600 hover:shadow-lg hover:shadow-purple-500/25",
+  Facebook: "hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25",
 };
 
-// Enhanced scroll to section function
+const getSocialHoverColor = (socialName: string) => {
+  return colors[socialName as SocialName] || "hover:bg-slate-600";
+};
+
 const scrollToSection = (sectionId: string) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -271,7 +262,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Custom Animations */
 @keyframes float {
   0%,
   100% {
@@ -376,7 +366,6 @@ onMounted(() => {
   }
 }
 
-/* Animation Classes */
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -454,8 +443,6 @@ onMounted(() => {
 .bg-gradient-radial {
   background: radial-gradient(var(--tw-gradient-stops));
 }
-
-/* Removed old typing CSS - now handled by JavaScript */
 
 /* Responsive adjustments */
 @media (max-width: 640px) {

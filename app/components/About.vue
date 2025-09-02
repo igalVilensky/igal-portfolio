@@ -36,11 +36,6 @@
             >
               <p>{{ $t("about.description1") }}</p>
               <p>{{ $t("about.description2") }}</p>
-              <p class="text-sm text-slate-500 dark:text-slate-500">
-                Currently focused on modern web technologies, cloud
-                architecture, and building scalable solutions that solve real
-                business problems.
-              </p>
             </div>
           </div>
 
