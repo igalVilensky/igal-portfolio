@@ -1,145 +1,164 @@
 <template>
-  <section id="projects" class="py-20 px-4">
-    <div class="max-w-7xl mx-auto text-center">
-      <h2
-        class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 mt-8"
-      >
-        {{ $t("projects.title") }}
-        <span class="text-teal-500">{{ $t("projects.my") }}</span>
-      </h2>
-      <div
-        class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full mb-12"
-      ></div>
-
-      <!-- Projects Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- Project Card -->
-        <div
-          v-for="project in projects"
-          :key="project.id"
-          class="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col transform hover:-translate-y-2"
+  <section
+    id="projects"
+    class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
+  >
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+      <!-- Section Header -->
+      <div class="text-center mb-12">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
         >
-          <!-- Gradient Border Effect -->
-          <div
-            class="absolute inset-0 bg-gradient-to-br from-teal-500 via-teal-400 to-purple-600 rounded-2xl p-[2px] group-hover:p-[3px] transition-all duration-300"
-          >
-            <div
-              class="bg-white dark:bg-gray-800 rounded-2xl h-full w-full"
-            ></div>
-          </div>
-
-          <!-- Content Container -->
-          <div class="relative z-10 flex flex-col h-full">
-            <!-- Image Section -->
-            <div class="relative p-3 pb-0">
-              <div
-                class="relative overflow-hidden rounded-xl h-48 bg-gradient-to-br from-teal-500/5 to-purple-600/5"
-              >
-                <img
-                  :src="project.image"
-                  :alt="$t(`projects.${project.titleKey}.title`)"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <!-- Subtle overlay for consistency -->
-                <div
-                  class="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent group-hover:from-black/0 transition-all duration-300"
-                ></div>
-
-                <!-- Floating gradient accent -->
-                <div
-                  class="absolute top-2 right-2 w-3 h-3 bg-gradient-to-br from-teal-400 to-purple-600 rounded-full opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all duration-300"
-                ></div>
-              </div>
-            </div>
-
-            <!-- Content Section -->
-            <div class="p-6 pt-4 flex flex-col flex-grow text-left">
-              <!-- Title with gradient underline -->
-              <div class="mb-3">
-                <h3
-                  class="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors duration-300"
-                >
-                  {{ $t(`projects.${project.titleKey}.title`) }}
-                </h3>
-                <div
-                  class="w-0 h-0.5 bg-gradient-to-r from-teal-500 to-purple-600 group-hover:w-12 transition-all duration-500 ease-out"
-                ></div>
-              </div>
-
-              <p
-                class="text-gray-600 dark:text-gray-300 text-sm mb-5 line-height-relaxed"
-              >
-                {{ $t(`projects.${project.titleKey}.description`) }}
-              </p>
-
-              <!-- Tech Stack -->
-              <div class="flex flex-wrap gap-2 mb-6">
-                <span
-                  v-for="tech in project.technologies"
-                  :key="tech"
-                  class="px-3 py-1.5 bg-gradient-to-r from-teal-500/10 to-purple-600/10 text-teal-700 dark:text-teal-300 rounded-full text-xs font-semibold border border-teal-500/20 group-hover:from-teal-500/20 group-hover:to-purple-600/20 group-hover:border-teal-500/30 transition-all duration-300"
-                >
-                  {{ tech }}
-                </span>
-              </div>
-
-              <!-- CTA -->
-              <div class="mt-auto text-center">
-                <a
-                  :href="project.link"
-                  target="_blank"
-                  class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-teal-500/10 to-purple-600/10 hover:from-teal-500/20 hover:to-purple-600/20 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-semibold rounded-lg border border-teal-500/20 hover:border-teal-500/40 transition-all duration-300 group/link"
-                >
-                  <i
-                    class="fas fa-external-link-alt mr-2 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200"
-                  ></i>
-                  {{ $t("projects.viewProject") }}
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Subtle background pattern -->
-          <div
-            class="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none"
-          >
-            <div
-              class="absolute inset-0 bg-gradient-to-br from-teal-500 to-purple-600"
-            ></div>
-          </div>
-        </div>
+          {{ $t("projects.title") }}
+          <span class="text-blue-600 dark:text-blue-400">{{
+            $t("projects.my")
+          }}</span>
+        </h2>
+        <div
+          class="w-16 h-1 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full mb-6"
+        ></div>
+        <p
+          class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed"
+        >
+          A selection of projects that showcase my technical skills and
+          problem-solving approach.
+        </p>
       </div>
 
-      <!-- See All Projects Button -->
-      <div class="mt-12 flex justify-center">
-        <div class="relative group">
-          <!-- Gradient border frame -->
+      <!-- Projects Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <article
+          v-for="project in projects"
+          :key="project.id"
+          class="group bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+        >
+          <!-- Project Image -->
           <div
-            class="absolute inset-0 bg-gradient-to-r from-teal-500 via-teal-400 to-purple-600 rounded-full p-[2px] group-hover:p-[3px] transition-all duration-300"
+            class="relative h-48 bg-slate-100 dark:bg-slate-800 overflow-hidden"
           >
-            <div
-              class="bg-gradient-to-r from-teal-500 to-purple-600 rounded-full h-full w-full"
-            ></div>
+            <img
+              :src="project.image"
+              :alt="$t(`projects.${project.titleKey}.title`)"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+            <!-- Status indicator for live projects -->
+            <div class="absolute top-3 right-3 flex items-center space-x-2">
+              <div
+                class="w-2 h-2 bg-green-500 rounded-full animate-pulse"
+              ></div>
+              <span
+                class="text-xs font-medium text-white bg-black/50 px-2 py-1 rounded-md backdrop-blur-sm"
+              >
+                Live
+              </span>
+            </div>
           </div>
 
-          <!-- Glowing background effect -->
-          <div
-            class="absolute inset-0 bg-gradient-to-r from-teal-400/20 to-purple-600/20 rounded-full blur-lg opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
-          ></div>
+          <!-- Project Content -->
+          <div class="p-6">
+            <!-- Project Title -->
+            <h3
+              class="text-lg font-semibold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200"
+            >
+              {{ $t(`projects.${project.titleKey}.title`) }}
+            </h3>
 
+            <!-- Project Description -->
+            <p
+              class="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed"
+            >
+              {{ $t(`projects.${project.titleKey}.description`) }}
+            </p>
+
+            <!-- Technology Stack -->
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span
+                v-for="tech in project.technologies"
+                :key="tech"
+                class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md text-xs font-medium border border-slate-200 dark:border-slate-700"
+              >
+                {{ tech }}
+              </span>
+            </div>
+
+            <!-- Project Links -->
+            <div
+              class="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700"
+            >
+              <a
+                :href="project.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  ></path>
+                </svg>
+                {{ $t("projects.viewProject") }}
+              </a>
+
+              <!-- GitHub link (if available) -->
+              <a
+                v-if="project.github"
+                :href="project.github"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-200"
+                aria-label="View source code"
+              >
+                <i class="fab fa-github text-lg"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Call to Action -->
+      <div class="text-center">
+        <div class="space-y-4">
+          <!-- Primary CTA -->
           <NuxtLink
             to="/projects"
-            class="relative z-10 group/btn bg-gradient-to-r from-teal-500 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-3"
+            class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
           >
-            <i
-              class="fas fa-rocket group-hover/btn:animate-bounce group-hover/btn:text-yellow-200 transition-colors duration-300"
-            ></i>
-            <span
-              class="group-hover/btn:tracking-wide transition-all duration-300"
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              {{ $t("projects.viewAllProjects") }}
-            </span>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0l-4 4m4-4l-4-4"
+              ></path>
+            </svg>
+            {{ $t("projects.viewAllProjects") }}
           </NuxtLink>
+
+          <!-- Secondary Info -->
+          <p class="text-sm text-slate-600 dark:text-slate-400">
+            Interested in working together?
+            <NuxtLink
+              to="#contact"
+              @click.prevent="scrollToSection('contact')"
+              class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline-offset-4 hover:underline transition-colors duration-200"
+            >
+              Let's discuss your project
+            </NuxtLink>
+          </p>
         </div>
       </div>
     </div>
@@ -147,6 +166,7 @@
 </template>
 
 <script setup lang="ts">
+// Props definition
 defineProps<{
   projects: {
     id: number | string;
@@ -154,6 +174,18 @@ defineProps<{
     image: string;
     technologies: string[];
     link: string;
+    github?: string; // Optional GitHub link
   }[];
 }>();
+
+// Scroll to section function
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const navbar = document.querySelector("nav");
+    const navbarHeight = navbar?.offsetHeight || 64;
+    const elementPosition = element.offsetTop - navbarHeight - 20;
+    window.scrollTo({ top: elementPosition, behavior: "smooth" });
+  }
+};
 </script>

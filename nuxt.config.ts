@@ -11,7 +11,6 @@ export default defineNuxtConfig({
       { code: "ru", iso: "ru-RU", file: "ru.json", name: "Русский 🇷🇺" },
     ],
     defaultLocale: "en",
-    // vueI18n: "./i18n.config.ts",
   },
   colorMode: {
     preference: "system",

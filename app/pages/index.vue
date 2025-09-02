@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { useColorMode } from "#imports";
+import { useI18n } from "vue-i18n";
 import Navbar from "../components/Navbar.vue";
 import Hero from "../components/Hero.vue";
 import About from "../components/About.vue";
@@ -30,7 +31,7 @@ import Education from "../components/Education.vue";
 import Footer from "../components/Footer.vue";
 
 const colorMode = useColorMode();
-
+const { t } = useI18n();
 // Featured projects data with corrected titleKey
 const featuredProjects = [
   {
@@ -54,17 +55,18 @@ const featuredProjects = [
     technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
     link: "https://clean-links.netlify.app/",
   },
-  {
-    id: "securityPlayground",
-    titleKey: "securityPlayground",
-    image: "/security.jpeg", // ⚡️ Add a cool lock/glitch-themed image in /public
-    technologies: ["Nuxt", "Vue 3", "Web Security"],
-    link: "/projects/security", // 👈 Internal Nuxt route
-  },
+  // {
+  //   id: "securityPlayground",
+  //   titleKey: "securityPlayground",
+  //   image: "/security.jpeg", // ⚡️ Add a cool lock/glitch-themed image in /public
+  //   technologies: ["Nuxt", "Vue 3", "Web Security"],
+  //   link: "/projects/security", // 👈 Internal Nuxt route
+  // },
 ];
 
 // Add Google Fonts for Poppins and Font Awesome
 useHead({
+  title: t("seo.title"),
   link: [
     {
       rel: "stylesheet",
@@ -77,23 +79,3 @@ useHead({
   ],
 });
 </script>
-
-<style>
-@keyframes tilt {
-  0%,
-  50%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(0.5deg);
-  }
-  75% {
-    transform: rotate(-0.5deg);
-  }
-}
-
-.animate-tilt {
-  animation: tilt 10s infinite linear;
-}
-</style>

@@ -1,208 +1,298 @@
 <template>
-  <section id="about" class="py-20 px-4 relative rounded-lg">
-    <!-- Background elements -->
-    <div
-      class="absolute top-10 left-10 w-64 h-64 bg-teal-400/5 rounded-full blur-3xl"
-    ></div>
-    <div
-      class="absolute bottom-10 right-10 w-80 h-80 bg-purple-400/5 rounded-full blur-3xl"
-    ></div>
-
-    <div class="max-w-7xl mx-auto relative">
-      <!-- Enhanced Header -->
-      <div class="text-center mb-16">
-        <div class="inline-block group">
-          <h2
-            class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 mt-8"
-          >
-            {{ $t("about.title") }}
-            <span class="text-teal-500 relative">
-              {{ $t("about.me") }}
-              <!-- Animated underline -->
-              <div
-                class="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-teal-500 to-purple-600 opacity-40 rounded-full group-hover:opacity-70 transition-opacity duration-300"
-              ></div>
-            </span>
-          </h2>
-        </div>
+  <section
+    id="about"
+    class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
+  >
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+      <!-- Section Header -->
+      <div class="text-center mb-12">
+        <h2
+          class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
+        >
+          {{ $t("about.title") }}
+          <span class="text-blue-600 dark:text-blue-400">{{
+            $t("about.me")
+          }}</span>
+        </h2>
         <div
-          class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full group-hover:w-32 transition-all duration-500"
+          class="w-16 h-1 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full"
         ></div>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-12 items-center">
-        <!-- Enhanced Content Section -->
-        <div class="relative group">
-          <!-- Gradient border frame -->
+      <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
+        <!-- Main Content - 2/3 width -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Professional Summary -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-teal-500/20 via-transparent to-purple-600/20 rounded-2xl p-[1px] group-hover:from-teal-500/30 group-hover:to-purple-600/30 transition-all duration-500"
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
           >
+            <h3
+              class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              Professional Summary
+            </h3>
             <div
-              class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl h-full w-full"
-            ></div>
-          </div>
-
-          <div class="relative z-10 p-8 space-y-6">
-            <!-- Description paragraphs with enhanced styling -->
-            <div class="space-y-6">
-              <p
-                class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300"
-              >
-                {{ $t("about.description1") }}
-              </p>
-              <p
-                class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300"
-              >
-                {{ $t("about.description2") }}
+              class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed"
+            >
+              <p>{{ $t("about.description1") }}</p>
+              <p>{{ $t("about.description2") }}</p>
+              <p class="text-sm text-slate-500 dark:text-slate-500">
+                Currently focused on modern web technologies, cloud
+                architecture, and building scalable solutions that solve real
+                business problems.
               </p>
             </div>
-
-            <!-- Enhanced Quick Stats -->
-            <div class="grid grid-cols-2 gap-6 mt-8">
-              <!-- Years Experience Card -->
-              <div class="relative group/stat">
-                <!-- Gradient border -->
-                <div
-                  class="absolute inset-0 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-[2px] group-hover/stat:p-[3px] transition-all duration-300"
-                >
-                  <div
-                    class="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/40 dark:to-teal-800/40 rounded-xl h-full w-full"
-                  ></div>
-                </div>
-
-                <div class="relative z-10 text-center p-4">
-                  <div
-                    class="text-3xl font-black text-teal-600 dark:text-teal-400 group-hover/stat:scale-110 transition-transform duration-300"
-                  >
-                    3+
-                  </div>
-                  <div
-                    class="text-sm font-semibold text-gray-700 dark:text-gray-300"
-                  >
-                    {{ $t("about.yearsExperience") }}
-                  </div>
-                </div>
-
-                <!-- Floating accent -->
-                <div
-                  class="absolute top-2 right-2 w-2 h-2 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full opacity-60 group-hover/stat:opacity-100 group-hover/stat:scale-125 transition-all duration-300"
-                ></div>
-              </div>
-
-              <!-- Projects Completed Card -->
-              <div class="relative group/stat">
-                <!-- Gradient border -->
-                <div
-                  class="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-[2px] group-hover/stat:p-[3px] transition-all duration-300"
-                >
-                  <div
-                    class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/40 dark:to-purple-800/40 rounded-xl h-full w-full"
-                  ></div>
-                </div>
-
-                <div class="relative z-10 text-center p-4">
-                  <div
-                    class="text-3xl font-black text-purple-600 dark:text-purple-400 group-hover/stat:scale-110 transition-transform duration-300"
-                  >
-                    50+
-                  </div>
-                  <div
-                    class="text-sm font-semibold text-gray-700 dark:text-gray-300"
-                  >
-                    {{ $t("about.projectsCompleted") }}
-                  </div>
-                </div>
-
-                <!-- Floating accent -->
-                <div
-                  class="absolute top-2 right-2 w-2 h-2 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-60 group-hover/stat:opacity-100 group-hover/stat:scale-125 transition-all duration-300"
-                ></div>
-              </div>
-            </div>
           </div>
-        </div>
 
-        <!-- Enhanced Skills Section -->
-        <div class="relative group">
-          <!-- Gradient border frame -->
+          <!-- Core Technologies -->
           <div
-            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-transparent to-teal-600/20 rounded-2xl p-[1px] group-hover:from-purple-500/30 group-hover:to-teal-600/30 transition-all duration-500"
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
           >
-            <div
-              class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl h-full w-full"
-            ></div>
-          </div>
-
-          <div class="relative z-10 p-8">
-            <!-- Enhanced section title -->
-            <div class="mb-6">
-              <h3
-                class="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors duration-300"
-              >
-                {{ $t("about.coreTechnologies") }}
-              </h3>
-              <!-- Animated underline -->
+            <h3
+              class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              {{ $t("about.coreTechnologies") }}
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div
-                class="w-0 h-0.5 bg-gradient-to-r from-teal-500 to-purple-600 group-hover:w-16 transition-all duration-500 ease-out mt-1"
-              ></div>
-            </div>
-
-            <!-- Enhanced technology tags -->
-            <div class="flex flex-wrap gap-3">
-              <span
                 v-for="(tech, index) in technologies"
-                :key="index"
-                class="relative px-4 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-default group/tech"
-                :class="
-                  index % 2 === 0
-                    ? 'bg-gradient-to-r from-teal-500/10 to-teal-600/10 text-teal-700 dark:text-teal-300 border border-teal-500/20 hover:from-teal-500/20 hover:to-teal-600/20 hover:border-teal-500/40'
-                    : 'bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 hover:from-purple-500/20 hover:to-purple-600/20 hover:border-purple-500/40'
-                "
+                :key="tech"
+                class="flex items-center px-3 py-2 rounded-md border transition-colors duration-200"
+                :class="getTechStyle(index)"
               >
-                {{ tech }}
-
-                <!-- Floating accent dot for each tech -->
-                <div
-                  class="absolute -top-1 -right-1 w-2 h-2 rounded-full opacity-0 group-hover/tech:opacity-100 transition-all duration-300"
-                  :class="
-                    index % 2 === 0
-                      ? 'bg-gradient-to-br from-teal-400 to-teal-600'
-                      : 'bg-gradient-to-br from-purple-400 to-purple-600'
-                  "
-                ></div>
-              </span>
+                <i
+                  :class="getTechIcon(tech)"
+                  class="w-4 h-4 mr-2 flex-shrink-0"
+                ></i>
+                <span class="text-sm font-medium">{{ tech }}</span>
+              </div>
             </div>
+          </div>
 
-            <!-- Skills section floating accent -->
-            <div
-              class="absolute top-4 right-4 w-3 h-3 bg-gradient-to-br from-purple-400 to-teal-600 rounded-full opacity-40 group-hover:opacity-70 group-hover:scale-125 transition-all duration-500"
-            ></div>
+          <!-- Current Focus -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+          >
+            <h3
+              class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              Current Focus Areas
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div
+                v-for="focus in focusAreas"
+                :key="focus.title"
+                class="flex items-start space-x-3"
+              >
+                <div
+                  class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                >
+                  <i
+                    :class="focus.icon"
+                    class="text-blue-600 dark:text-blue-400 text-sm"
+                  ></i>
+                </div>
+                <div>
+                  <h4
+                    class="font-semibold text-slate-900 dark:text-white text-sm"
+                  >
+                    {{ focus.title }}
+                  </h4>
+                  <p
+                    class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed"
+                  >
+                    {{ focus.description }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Subtle background pattern -->
-      <div
-        class="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none"
-      >
-        <div
-          class="absolute inset-0 bg-gradient-to-br from-teal-500 to-purple-600"
-        ></div>
+        <!-- Sidebar - 1/3 width -->
+        <div class="space-y-6">
+          <!-- Quick Stats -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+          >
+            <h3
+              class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              Quick Stats
+            </h3>
+            <div class="space-y-4">
+              <div
+                class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg"
+              >
+                <div
+                  class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                >
+                  3+
+                </div>
+                <div
+                  class="text-sm text-slate-600 dark:text-slate-400 font-medium"
+                >
+                  {{ $t("about.yearsExperience") }}
+                </div>
+              </div>
+              <div
+                class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg"
+              >
+                <div
+                  class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                >
+                  50+
+                </div>
+                <div
+                  class="text-sm text-slate-600 dark:text-slate-400 font-medium"
+                >
+                  {{ $t("about.projectsCompleted") }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Availability -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+          >
+            <h3
+              class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              Availability
+            </h3>
+            <div class="flex items-center space-x-3 mb-3">
+              <div
+                class="w-3 h-3 bg-green-500 rounded-full animate-pulse"
+              ></div>
+              <span class="text-sm font-medium text-slate-900 dark:text-white"
+                >Available for projects</span
+              >
+            </div>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mb-4">
+              Open to freelance work and interesting full-time opportunities
+            </p>
+            <NuxtLink
+              to="#contact"
+              @click.prevent="scrollToSection('contact')"
+              class="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
+            >
+              Get in touch
+              <svg
+                class="w-4 h-4 ml-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </NuxtLink>
+          </div>
+
+          <!-- Location & Work Style -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+          >
+            <h3
+              class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              Work Preferences
+            </h3>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-map-marker-alt text-slate-400 w-4"></i>
+                <span class="text-sm text-slate-600 dark:text-slate-400"
+                  >Leipzig, Germany</span
+                >
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-laptop text-slate-400 w-4"></i>
+                <span class="text-sm text-slate-600 dark:text-slate-400"
+                  >Remote-first</span
+                >
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-users text-slate-400 w-4"></i>
+                <span class="text-sm text-slate-600 dark:text-slate-400"
+                  >Team collaboration</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-// Initialize i18n
-
-// Technologies list (not translated, as they are proper nouns)
+// Technologies list with enhanced organization
 const technologies = [
   "JavaScript",
   "TypeScript",
   "Vue.js",
   "React",
   "Node.js",
-  "Nuxt",
+  "Nuxt.js",
 ];
+
+// Current focus areas for professional development
+const focusAreas = [
+  {
+    title: "Cloud Architecture",
+    description: "AWS, Docker, Kubernetes for scalable deployments",
+    icon: "fas fa-cloud",
+  },
+  {
+    title: "Performance Optimization",
+    description: "Core Web Vitals, bundle optimization, caching strategies",
+    icon: "fas fa-tachometer-alt",
+  },
+  {
+    title: "Developer Experience",
+    description: "Tooling, CI/CD, and workflow improvements",
+    icon: "fas fa-tools",
+  },
+  {
+    title: "Security Best Practices",
+    description: "Authentication, authorization, and secure coding",
+    icon: "fas fa-shield-alt",
+  },
+];
+
+// Get technology icon based on tech name
+const getTechIcon = (tech: string): string => {
+  const icons: Record<string, string> = {
+    JavaScript: "fab fa-js-square",
+    TypeScript: "fas fa-code",
+    "Vue.js": "fab fa-vuejs",
+    React: "fab fa-react",
+    "Node.js": "fab fa-node-js",
+    "Nuxt.js": "fas fa-layer-group",
+  };
+  return icons[tech] || "fas fa-code";
+};
+
+// Get consistent styling for tech items
+const getTechStyle = (index: number): string => {
+  const baseClasses =
+    "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20";
+  return baseClasses;
+};
+
+// Scroll to section function
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const navbar = document.querySelector("nav");
+    const navbarHeight = navbar?.offsetHeight || 64;
+    const elementPosition = element.offsetTop - navbarHeight - 20;
+    window.scrollTo({ top: elementPosition, behavior: "smooth" });
+  }
+};
 </script>

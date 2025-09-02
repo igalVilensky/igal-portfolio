@@ -14,7 +14,7 @@
   "hero": {
     "title": "Igal",
     "lastName": "Vilensky",
-    "subtitle": "Web and software developer with 3+ years of experience building modern digital solutions.",
+    "subtitle": "Full-stack developer with 3+ years of experience building scalable web applications. Specialized in modern JavaScript frameworks, cloud architecture, and developer experience optimization.",
     "viewProjects": "View Projects",
     "downloadCV": "Download CV"
   },
@@ -218,5 +218,8 @@
     "phone": "+49 1783099433",
     "email": "vilenskyigalgmail.com",
     "copyright": "&copy; 2025 Igal Vilensky. Crafted with ❤️ and lots of ☕"
+  },
+  "seo": {
+    "title": "Igal Vilensky - Web Developer Portfolio"
   }
 }

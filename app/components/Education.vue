@@ -1,270 +1,266 @@
 <template>
-  <section id="education" class="py-20 px-4 relative overflow-hidden">
-    <!-- Background Effects -->
-    <div
-      class="absolute top-0 right-0 w-96 h-96 bg-teal-400/5 rounded-full blur-3xl"
-    ></div>
-    <div
-      class="absolute bottom-0 left-0 w-80 h-80 bg-purple-400/5 rounded-full blur-3xl"
-    ></div>
+  <section
+    id="education"
+    class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
+  >
+    <!-- Subtle background pattern -->
+    <div class="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]">
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,_theme(colors.slate.400)_1px,_transparent_0)] bg-[length:24px_24px]"
+      ></div>
+    </div>
 
-    <div class="max-w-7xl mx-auto relative">
-      <div class="text-center mb-16">
+    <div
+      class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24"
+    >
+      <!-- Section Header -->
+      <div class="text-center mb-12">
         <h2
-          class="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 mt-8"
+          class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4"
         >
-          <span class="text-teal-500">{{ $t("education.title") }}</span>
+          <span class="text-blue-600 dark:text-blue-400">{{
+            $t("education.title")
+          }}</span>
           {{ $t("education.and") }}
-          <span class="text-purple-500">{{ $t("education.second") }}</span>
+          <span class="text-blue-600 dark:text-blue-400">{{
+            $t("education.second")
+          }}</span>
         </h2>
         <div
-          class="w-24 h-1 bg-gradient-to-r from-teal-500 to-purple-600 mx-auto rounded-full"
+          class="w-16 h-1 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full mb-6"
         ></div>
         <p
-          class="text-gray-600 dark:text-gray-300 text-lg mt-6 max-w-2xl mx-auto"
+          class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed"
         >
           {{ $t("education.subtitle") }}
         </p>
       </div>
 
-      <div class="grid md:grid-cols-1 gap-8">
-        <div class="relative group">
+      <!-- Main Education Card -->
+      <div
+        class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-6 md:p-8 mb-8"
+      >
+        <!-- Institution Header -->
+        <div class="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
+          <!-- Institution Icon -->
           <div
-            class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-gray-100 dark:border-gray-700"
+            class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0"
           >
-            <!-- Institution Header -->
-            <div class="flex flex-col gap-6 mb-8">
-              <div>
-                <div
-                  class="flex flex-col sm:flex-row sm:items-center gap-4 mb-4"
+            <svg
+              class="w-8 h-8 text-blue-600 dark:text-blue-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              ></path>
+            </svg>
+          </div>
+
+          <!-- Institution Info -->
+          <div class="flex-1 min-w-0">
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+              {{ $t("education.certification") }}
+            </h3>
+            <p class="text-base text-slate-600 dark:text-slate-400 mb-3">
+              {{ $t("education.certificationSub") }}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 text-sm">
+              <div class="flex items-center space-x-2">
+                <svg
+                  class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <div
-                    class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-teal-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
-                  >
-                    <i
-                      class="fas fa-graduation-cap text-white text-lg sm:text-2xl"
-                    ></i>
-                  </div>
-                  <div class="min-w-0 flex-1">
-                    <h3
-                      class="text-xl sm:text-2xl lg:text-3xl font-black text-gray-900 dark:text-white mb-2 break-words"
-                    >
-                      {{ $t("education.certification") }}
-                    </h3>
-                    <p
-                      class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-medium uppercase tracking-wider"
-                    >
-                      {{ $t("education.certificationSub") }}
-                    </p>
-                  </div>
-                </div>
-                <div
-                  class="flex flex-col sm:flex-row gap-2 sm:gap-4 text-sm sm:text-base lg:text-lg"
-                >
-                  <div class="flex items-center gap-2">
-                    <i
-                      class="fas fa-university text-teal-500 flex-shrink-0"
-                    ></i>
-                    <span
-                      class="text-gray-700 dark:text-gray-300 font-medium min-w-0"
-                    >
-                      {{ $t("education.institution") }}
-                    </span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <i
-                      class="fas fa-calendar-alt text-purple-500 flex-shrink-0"
-                    ></i>
-                    <span class="text-teal-600 dark:text-teal-400 font-bold">
-                      {{ $t("education.period") }}
-                    </span>
-                  </div>
-                </div>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  ></path>
+                </svg>
+                <span class="text-slate-700 dark:text-slate-300">
+                  {{ $t("education.institution") }}
+                </span>
               </div>
-              <div class="flex justify-center sm:justify-start">
-                <!-- Enhanced Button with Hero Styling -->
-                <div class="relative group">
-                  <!-- Gradient border frame -->
-                  <div
-                    class="absolute inset-0 bg-gradient-to-r from-teal-500 via-purple-400 to-purple-600 rounded-full p-[2px] group-hover:p-[3px] transition-all duration-300"
-                  >
-                    <div
-                      class="bg-gradient-to-r from-teal-500 to-purple-600 rounded-full h-full w-full"
-                    ></div>
-                  </div>
+              <div class="flex items-center space-x-2">
+                <svg
+                  class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+                <span class="text-blue-600 dark:text-blue-400 font-medium">
+                  {{ $t("education.period") }}
+                </span>
+              </div>
+            </div>
+          </div>
 
-                  <!-- Glowing background effect -->
-                  <div
-                    class="absolute inset-0 bg-gradient-to-r from-teal-400/20 to-purple-600/20 rounded-full blur-lg opacity-75 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
-                  ></div>
+          <!-- Download Certificate Button -->
+          <div class="flex-shrink-0">
+            <a
+              href="/DCI_Igal Vilensky.pdf"
+              target="_blank"
+              class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200 text-sm"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                ></path>
+              </svg>
+              {{ $t("education.downloadCertificate") }}
+            </a>
+          </div>
+        </div>
 
-                  <a
-                    href="/DCI_Igal Vilensky.pdf"
-                    target="_blank"
-                    class="relative z-10 group/btn bg-gradient-to-r from-teal-500 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold shadow-xl hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 flex items-center gap-3 text-sm sm:text-base lg:text-lg"
+        <!-- Program Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              14
+            </div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">
+              {{ $t("education.months") }}
+            </div>
+          </div>
+          <div class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              1200+
+            </div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">
+              {{ $t("education.hours") }}
+            </div>
+          </div>
+          <div class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              15+
+            </div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">
+              {{ $t("education.technologiesCount") }}
+            </div>
+          </div>
+          <div class="text-center p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              10+
+            </div>
+            <div class="text-sm text-slate-600 dark:text-slate-400">
+              {{ $t("education.projectsCount") }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-2 gap-8">
+          <!-- Technical Curriculum -->
+          <div>
+            <div class="flex items-center space-x-3 mb-6">
+              <div
+                class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                  ></path>
+                </svg>
+              </div>
+              <h4 class="text-xl font-semibold text-slate-900 dark:text-white">
+                {{ $t("education.technicalCurriculum") }}
+              </h4>
+            </div>
+            <div class="space-y-3">
+              <div
+                v-for="(item, index) in technicalCurriculum"
+                :key="index"
+                class="flex items-start space-x-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
+              >
+                <div
+                  class="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="font-semibold text-slate-900 dark:text-white text-sm"
                   >
-                    <i
-                      class="fas fa-download group-hover/btn:animate-pulse group-hover/btn:text-purple-200 transition-colors duration-300"
-                    ></i>
-                    <span
-                      class="group-hover/btn:tracking-wide transition-all duration-300"
-                    >
-                      {{ $t("education.downloadCertificate") }}
-                    </span>
-                  </a>
+                    {{ item.title }}
+                  </span>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                    {{ $t(`education.${item.descKey}`) }}
+                  </p>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Program Stats -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+          <!-- Key Achievements -->
+          <div>
+            <div class="flex items-center space-x-3 mb-6">
               <div
-                class="text-center p-3 sm:p-4 bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/20 dark:to-teal-800/20 rounded-xl"
+                class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center"
               >
-                <div
-                  class="text-xl sm:text-2xl font-black text-teal-600 dark:text-teal-400"
+                <svg
+                  class="w-4 h-4 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  14
-                </div>
-                <div
-                  class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-                >
-                  {{ $t("education.months") }}
-                </div>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                  ></path>
+                </svg>
               </div>
-              <div
-                class="text-center p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl"
-              >
-                <div
-                  class="text-xl sm:text-2xl font-black text-purple-600 dark:text-purple-400"
-                >
-                  1200+
-                </div>
-                <div
-                  class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-                >
-                  {{ $t("education.hours") }}
-                </div>
-              </div>
-              <div
-                class="text-center p-3 sm:p-4 bg-gradient-to-br from-teal-50 to-purple-50 dark:from-teal-900/10 dark:to-purple-900/10 rounded-xl"
-              >
-                <div
-                  class="text-xl sm:text-2xl font-black text-gray-700 dark:text-gray-300"
-                >
-                  15+
-                </div>
-                <div
-                  class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-                >
-                  {{ $t("education.technologiesCount") }}
-                </div>
-              </div>
-              <div
-                class="text-center p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-teal-50 dark:from-purple-900/10 dark:to-teal-900/10 rounded-xl"
-              >
-                <div
-                  class="text-xl sm:text-2xl font-black text-gray-700 dark:text-gray-300"
-                >
-                  10+
-                </div>
-                <div
-                  class="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-                >
-                  {{ $t("education.projectsCount") }}
-                </div>
-              </div>
+              <h4 class="text-xl font-semibold text-slate-900 dark:text-white">
+                {{ $t("education.keyAchievements") }}
+              </h4>
             </div>
-
-            <!-- Main Content Grid -->
-            <div class="grid lg:grid-cols-2 gap-6 sm:gap-8">
-              <!-- Technical Curriculum -->
-              <div class="space-y-4 sm:space-y-6">
-                <div class="flex items-center gap-3 mb-4 sm:mb-6">
-                  <div
-                    class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-teal-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"
+            <div class="space-y-3">
+              <div
+                v-for="(achievement, index) in keyAchievements"
+                :key="index"
+                class="flex items-start space-x-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
+              >
+                <div
+                  class="w-1.5 h-1.5 bg-blue-600 dark:bg-blue-400 rounded-full mt-2 flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="font-semibold text-slate-900 dark:text-white text-sm"
                   >
-                    <i class="fas fa-code text-white text-sm sm:text-base"></i>
-                  </div>
-                  <h4
-                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
-                  >
-                    {{ $t("education.technicalCurriculum") }}
-                  </h4>
-                </div>
-                <div class="space-y-3 sm:space-y-4">
-                  <div
-                    v-for="(item, index) in technicalCurriculum"
-                    :key="index"
-                    class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl"
-                    :class="
-                      index % 2 === 0
-                        ? 'bg-gradient-to-r from-teal-50 to-teal-100/50 dark:from-teal-900/10 dark:to-teal-800/10 border border-teal-200/50 dark:border-teal-700/30'
-                        : 'bg-gradient-to-r from-purple-50 to-purple-100/50 dark:from-purple-900/10 dark:to-purple-800/10 border border-purple-200/50 dark:border-purple-700/30'
-                    "
-                  >
-                    <i
-                      class="fas fa-check-circle mt-1 text-sm sm:text-lg flex-shrink-0"
-                      :class="
-                        index % 2 === 0 ? 'text-teal-500' : 'text-purple-500'
-                      "
-                    ></i>
-                    <div class="min-w-0">
-                      <span
-                        class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
-                      >
-                        {{ item.title }}
-                      </span>
-                      <p
-                        class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
-                      >
-                        {{ $t(`education.${item.descKey}`) }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Key Achievements -->
-              <div class="space-y-4 sm:space-y-6">
-                <div class="flex items-center gap-3 mb-4 sm:mb-6">
-                  <div
-                    class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"
-                  >
-                    <i
-                      class="fas fa-trophy text-white text-sm sm:text-base"
-                    ></i>
-                  </div>
-                  <h4
-                    class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white"
-                  >
-                    {{ $t("education.keyAchievements") }}
-                  </h4>
-                </div>
-                <div class="space-y-3 sm:space-y-4">
-                  <div
-                    v-for="(achievement, index) in keyAchievements"
-                    :key="index"
-                    class="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl"
-                    :class="achievementClasses[index]"
-                  >
-                    <i
-                      class="fas mt-1 text-sm sm:text-lg flex-shrink-0"
-                      :class="achievementIcons[index]"
-                    ></i>
-                    <div class="min-w-0">
-                      <span
-                        class="font-semibold text-gray-800 dark:text-gray-200 text-sm sm:text-base"
-                      >
-                        {{ $t(`education.${achievement.titleKey}`) }}
-                      </span>
-                      <p
-                        class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1"
-                      >
-                        {{ $t(`education.${achievement.descKey}`) }}
-                      </p>
-                    </div>
-                  </div>
+                    {{ $t(`education.${achievement.titleKey}`) }}
+                  </span>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                    {{ $t(`education.${achievement.descKey}`) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -296,25 +292,5 @@ const keyAchievements = computed(() => [
   { titleKey: "responsiveDesignEdu", descKey: "responsiveDesignEduDesc" },
   { titleKey: "security", descKey: "securityDesc" },
   { titleKey: "databaseDevelopment", descKey: "databaseDevelopmentDesc" },
-]);
-
-// Achievement classes for styling
-const achievementClasses = computed(() => [
-  "bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-amber-900/10 dark:to-amber-800/10 border border-amber-200/50 dark:border-amber-700/30",
-  "bg-gradient-to-r from-emerald-50 to-emerald-100/50 dark:from-emerald-900/10 dark:to-emerald-800/10 border border-emerald-200/50 dark:border-emerald-700/30",
-  "bg-gradient-to-r from-blue-50 to-blue-100/50 dark:from-blue-900/10 dark:to-blue-800/10 border border-blue-200/50 dark:border-blue-700/30",
-  "bg-gradient-to-r from-rose-50 to-rose-100/50 dark:from-rose-900/10 dark:to-rose-800/10 border border-rose-200/50 dark:border-rose-700/30",
-  "bg-gradient-to-r from-violet-50 to-violet-100/50 dark:from-violet-900/10 dark:to-violet-800/10 border border-violet-200/50 dark:border-violet-700/30",
-  "bg-gradient-to-r from-indigo-50 to-indigo-100/50 dark:from-indigo-900/10 dark:to-indigo-800/10 border border-indigo-200/50 dark:border-indigo-700/30",
-]);
-
-// Achievement icons for styling
-const achievementIcons = computed(() => [
-  "fa-star text-amber-500",
-  "fa-project-diagram text-emerald-500",
-  "fa-language text-blue-500",
-  "fa-mobile-alt text-rose-500",
-  "fa-shield-alt text-violet-500",
-  "fa-database text-indigo-500",
 ]);
 </script>
