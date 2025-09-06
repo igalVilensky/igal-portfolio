@@ -193,44 +193,83 @@
 
           <!-- Dark Mode Toggle -->
           <div class="relative group/dark-toggle">
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-500/30 rounded-full p-[2px] group-hover/dark-toggle:p-[3px] transition-all duration-300"
-            >
-              <div
-                class="rounded-full h-full w-full"
-                :class="
-                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
-                "
-              ></div>
-            </div>
-
             <button
               @click="toggleColorMode"
-              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-transform duration-500 group-hover/dark-toggle:scale-110 group-hover/dark-toggle:rotate-12 animate-slide-up-delayed-3"
+              class="relative w-8 h-8 rounded-full p-1 transition-all duration-700 ease-in-out transform hover:scale-110"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 text-yellow-400'
-                  : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-500',
+                  ? 'bg-gradient-to-br from-indigo-600 to-purple-700 shadow-lg shadow-purple-500/25'
+                  : 'bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/25',
               ]"
               :title="
                 colorMode.value === 'dark'
-                  ? $t('nav.switchToLight')
-                  : $t('nav.switchToDark')
+                  ? 'Switch to Light Mode'
+                  : 'Switch to Dark Mode'
               "
-              aria-label="Toggle dark mode"
             >
-              <i
-                :class="
-                  colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'
-                "
-                class="text-lg group-hover/dark-toggle:animate-pulse transition-all duration-300"
-              ></i>
-            </button>
+              <div
+                class="relative w-full h-full flex items-center justify-center"
+              >
+                <!-- Sun Icon -->
+                <div
+                  class="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out"
+                  :class="[
+                    colorMode.value === 'dark'
+                      ? 'opacity-0 rotate-180 scale-50'
+                      : 'opacity-100 rotate-0 scale-100',
+                  ]"
+                >
+                  <i class="fas fa-sun text-white text-lg animate-pulse"></i>
+                  <!-- Sun rays -->
+                  <div class="absolute inset-0">
+                    <div
+                      v-for="i in 8"
+                      :key="`ray-${i}`"
+                      class="absolute w-0.5 h-2 bg-white rounded-full opacity-60"
+                      :style="{
+                        transform: `rotate(${i * 45}deg)`,
+                        top: '-4px',
+                        left: '50%',
+                        marginLeft: '-1px',
+                      }"
+                    ></div>
+                  </div>
+                </div>
 
-            <!-- Animated ring -->
-            <div
-              class="absolute -inset-1 bg-gradient-to-r from-yellow-500 to-blue-500 rounded-full blur opacity-0 group-hover/dark-toggle:opacity-30 transition-opacity duration-500 animate-pulse-slow"
-            ></div>
+                <!-- Moon Icon -->
+                <div
+                  class="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out"
+                  :class="[
+                    colorMode.value === 'dark'
+                      ? 'opacity-100 rotate-0 scale-100'
+                      : 'opacity-0 -rotate-180 scale-50',
+                  ]"
+                >
+                  <i class="fas fa-moon text-yellow-300 text-lg"></i>
+                  <!-- Stars around moon -->
+                  <div
+                    v-for="star in 3"
+                    :key="`star-${star}`"
+                    class="absolute w-1 h-1 bg-yellow-300 rounded-full animate-twinkle"
+                    :style="{
+                      top: `${15 + star * 10}%`,
+                      right: `${10 + star * 8}%`,
+                      animationDelay: `${star * 0.5}s`,
+                    }"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Hover glow effect -->
+              <div
+                class="absolute -inset-2 rounded-full opacity-0 group-hover/dark-toggle:opacity-100 transition-opacity duration-500 blur-sm"
+                :class="[
+                  colorMode.value === 'dark'
+                    ? 'bg-purple-500/30'
+                    : 'bg-amber-400/30',
+                ]"
+              ></div>
+            </button>
           </div>
         </div>
 
@@ -326,39 +365,83 @@
 
           <!-- Mobile Dark Mode Toggle -->
           <div class="relative group/dark-toggle">
-            <div
-              class="absolute inset-0 bg-gradient-to-r from-yellow-500/30 to-blue-500/30 rounded-full p-[1px] group-hover/dark-toggle:p-[2px] transition-all duration-300"
-            >
-              <div
-                class="rounded-full h-full w-full"
-                :class="
-                  colorMode.value === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'
-                "
-              ></div>
-            </div>
-
             <button
               @click="toggleColorMode"
-              class="relative z-10 w-10 h-10 flex items-center justify-center rounded-full transition-transform duration-300 group-hover/dark-toggle:scale-110 group-hover/dark-toggle:rotate-12 animate-slide-up-delayed"
+              class="relative w-6 h-6 rounded-full p-2 transition-all duration-700 ease-in-out transform hover:scale-110"
               :class="[
                 colorMode.value === 'dark'
-                  ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 text-yellow-400'
-                  : 'bg-gradient-to-r from-blue-400/20 to-blue-500/20 text-blue-500',
+                  ? 'bg-gradient-to-br from-indigo-600 to-purple-700 shadow-lg shadow-purple-500/25'
+                  : 'bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/25',
               ]"
-              aria-label="Toggle dark mode"
+              :title="
+                colorMode.value === 'dark'
+                  ? 'Switch to Light Mode'
+                  : 'Switch to Dark Mode'
+              "
             >
-              <i
-                :class="
-                  colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'
-                "
-                class="text-lg group-hover/dark-toggle:animate-pulse"
-              ></i>
-            </button>
+              <div
+                class="relative w-full h-full flex items-center justify-center"
+              >
+                <!-- Sun Icon -->
+                <div
+                  class="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out"
+                  :class="[
+                    colorMode.value === 'dark'
+                      ? 'opacity-0 rotate-180 scale-50'
+                      : 'opacity-100 rotate-0 scale-100',
+                  ]"
+                >
+                  <i class="fas fa-sun text-white text-lg animate-pulse"></i>
+                  <!-- Sun rays -->
+                  <div class="absolute inset-0">
+                    <div
+                      v-for="i in 8"
+                      :key="`ray-${i}`"
+                      class="absolute w-0.5 h-2 bg-white rounded-full opacity-60"
+                      :style="{
+                        transform: `rotate(${i * 45}deg)`,
+                        top: '-4px',
+                        left: '50%',
+                        marginLeft: '-1px',
+                      }"
+                    ></div>
+                  </div>
+                </div>
 
-            <!-- Animated ring -->
-            <div
-              class="absolute -inset-1 bg-gradient-to-r from-yellow-500 to-blue-500 rounded-full blur opacity-0 group-hover/dark-toggle:opacity-30 transition-opacity duration-500 animate-pulse-slow"
-            ></div>
+                <!-- Moon Icon -->
+                <div
+                  class="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out"
+                  :class="[
+                    colorMode.value === 'dark'
+                      ? 'opacity-100 rotate-0 scale-100'
+                      : 'opacity-0 -rotate-180 scale-50',
+                  ]"
+                >
+                  <i class="fas fa-moon text-yellow-300 text-lg"></i>
+                  <!-- Stars around moon -->
+                  <div
+                    v-for="star in 3"
+                    :key="`star-${star}`"
+                    class="absolute w-1 h-1 bg-yellow-300 rounded-full animate-twinkle"
+                    :style="{
+                      top: `${15 + star * 10}%`,
+                      right: `${10 + star * 8}%`,
+                      animationDelay: `${star * 0.5}s`,
+                    }"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Hover glow effect -->
+              <div
+                class="absolute -inset-2 rounded-full opacity-0 group-hover/dark-toggle:opacity-100 transition-opacity duration-500 blur-sm"
+                :class="[
+                  colorMode.value === 'dark'
+                    ? 'bg-purple-500/30'
+                    : 'bg-amber-400/30',
+                ]"
+              ></div>
+            </button>
           </div>
 
           <!-- Hamburger Button -->
@@ -691,5 +774,99 @@ onUnmounted(() => {
 .dark * {
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease, transform 0.3s ease;
+}
+/* Custom animations for the toggles */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes float-up {
+  0%,
+  100% {
+    transform: translateY(0) opacity(1);
+  }
+  50% {
+    transform: translateY(-8px) opacity(0.7);
+  }
+}
+
+@keyframes float-down {
+  0%,
+  100% {
+    transform: translateY(0) opacity(1);
+  }
+  50% {
+    transform: translateY(8px) opacity(0.7);
+  }
+}
+
+/* Utility classes */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-0 {
+  transform: rotateY(0deg);
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.animate-float-up {
+  animation: float-up 2s ease-in-out infinite;
+}
+
+.animate-float-down {
+  animation: float-down 2s ease-in-out infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .w-16 {
+    width: 3.5rem;
+  }
+  .h-16 {
+    height: 3.5rem;
+  }
+  .w-14 {
+    width: 3rem;
+  }
+  .h-14 {
+    height: 3rem;
+  }
 }
 </style>

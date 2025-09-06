@@ -55,13 +55,28 @@ const featuredProjects = [
     technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
     link: "https://clean-links.netlify.app/",
   },
-  // {
-  //   id: "securityPlayground",
-  //   titleKey: "securityPlayground",
-  //   image: "/security.jpeg", // ⚡️ Add a cool lock/glitch-themed image in /public
-  //   technologies: ["Nuxt", "Vue 3", "Web Security"],
-  //   link: "/projects/security", // 👈 Internal Nuxt route
-  // },
+  {
+    id: "securityPlayground",
+    titleKey: "securityPlayground",
+    image: "/security.jpeg",
+    technologies: ["Nuxt", "Vue 3", "Web Security"],
+    link: "/projects/security",
+  },
+  {
+    id: "orderSystem",
+    titleKey: "orderSystem",
+    image: "/canOrderSystem.jpeg",
+    technologies: ["TypeScript", "Next", "React", "Tailwind CSS"],
+    link: "https://canordersystem.netlify.app/",
+  },
+  {
+    id: "portfolio",
+    titleKey: "portfolio",
+    description: "portfolio",
+    image: "/portfolio.jpeg",
+    technologies: ["Nuxt", "Tailwind CSS", "TypeScript"],
+    link: "#",
+  },
 ];
 
 // Add Google Fonts for Poppins and Font Awesome

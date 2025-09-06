@@ -109,6 +109,14 @@
       "title": "Immobilienverwaltungssystem",
       "description": "Ein umfassendes Immobilienverwaltungssystem mit erweiterten Suchfiltern, virtuellen Touren und Marktanalysen."
     },
+    "securityPlayground": {
+      "title": "Sicherheits-Spielplatz",
+      "description": "Eine interaktive Plattform zur Demonstration und zum Testen verschiedener Web-Sicherheitstechniken und -praktiken."
+    },
+    "orderSystem": {
+      "title": "Cannabus Order System",
+      "description": "Ein Bestellsystem für Cannabis mit TypeScript, Next.js, React und Tailwind CSS."
+    },
     "viewProject": "Projekt ansehen",
     "seo": {
       "title": "Projekte | Igal Vilensky - Webentwickler-Portfolio",
