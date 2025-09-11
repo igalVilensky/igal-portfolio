@@ -112,7 +112,7 @@
           <!-- Download Certificate Button -->
           <div class="flex-shrink-0">
             <a
-              href="/DCI_Igal Vilensky.pdf"
+              href="/certificate.pdf"
               target="_blank"
               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200 text-sm"
             >
