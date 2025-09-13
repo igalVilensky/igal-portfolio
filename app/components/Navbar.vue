@@ -4,8 +4,8 @@
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="[
       colorMode.value === 'dark'
-        ? 'bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 text-slate-300'
-        : 'bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 text-slate-700',
+        ? 'bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 text-white'
+        : 'bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 text-black',
       isScrolled
         ? 'backdrop-blur-lg shadow-xl border-b-2 border-slate-200/50 dark:border-slate-700/50'
         : 'backdrop-blur-md shadow-lg border-b border-slate-200/30 dark:border-slate-700/30',
@@ -16,12 +16,12 @@
         <!-- Logo/Brand -->
         <div class="flex-shrink-0 group/logo">
           <NuxtLink
-            to="#"
-            @click="scrollToSection('top')"
+            to="/"
             class="text-2xl font-bold tracking-tight"
             :class="
               colorMode.value === 'dark' ? 'text-white' : 'text-slate-900'
             "
+            @click="isMobileMenuOpen = false"
           >
             <span
               class="bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent relative group-hover/logo:scale-105 transition-transform duration-300"
@@ -57,29 +57,30 @@
                 ></div>
               </div>
 
-              <button
-                @click="scrollToSection(item.id)"
+              <NuxtLink
+                :to="item.path"
                 class="relative z-10 px-4 py-2 rounded-xl text-sm font-medium transition-transform duration-300 group-hover/nav-item:scale-105 flex items-center gap-2"
                 :class="[
                   colorMode.value === 'dark'
                     ? 'text-slate-300 hover:text-white'
                     : 'text-slate-700 hover:text-slate-900',
-                  activeSection === item.id
+                  route.path === item.path
                     ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-600 dark:text-blue-400'
                     : '',
                 ]"
+                @click="isMobileMenuOpen = false"
               >
                 <i
                   :class="item.icon"
                   class="transition-all duration-300"
                   :style="
-                    activeSection === item.id ? 'color: rgb(59, 130, 246)' : ''
+                    route.path === item.path ? 'color: rgb(59, 130, 246)' : ''
                   "
                 ></i>
                 <span class="transition-all duration-300 whitespace-nowrap">
                   {{ $t(`nav.${item.id}`) }}
                 </span>
-              </button>
+              </NuxtLink>
 
               <!-- Floating accent dot -->
               <div
@@ -122,10 +123,7 @@
               >
                 {{
                   languages
-                    .find(
-                      (lang: { code: LanguageCode; name: string }) =>
-                        lang.code === locale
-                    )
+                    .find((lang) => lang.code === locale)
                     ?.code.toUpperCase()
                 }}
               </span>
@@ -203,8 +201,8 @@
               ]"
               :title="
                 colorMode.value === 'dark'
-                  ? 'Switch to Light Mode'
-                  : 'Switch to Dark Mode'
+                  ? $t('nav.switchToLight')
+                  : $t('nav.switchToDark')
               "
             >
               <div
@@ -375,8 +373,8 @@
               ]"
               :title="
                 colorMode.value === 'dark'
-                  ? 'Switch to Light Mode'
-                  : 'Switch to Dark Mode'
+                  ? $t('nav.switchToLight')
+                  : $t('nav.switchToDark')
               "
             >
               <div
@@ -520,7 +518,7 @@
             <div
               class="absolute inset-0 rounded-xl p-[1px] transition-all duration-300"
               :class="[
-                activeSection === item.id
+                route.path === item.path
                   ? 'bg-gradient-to-r from-blue-500 to-cyan-500 opacity-100'
                   : 'bg-gradient-to-r from-blue-500/50 to-cyan-500/50 opacity-0 group-hover/nav-item:opacity-100',
               ]"
@@ -533,23 +531,24 @@
               ></div>
             </div>
 
-            <button
-              @click="handleMobileNavClick(item.id)"
+            <NuxtLink
+              :to="item.path"
               class="relative z-10 w-full text-left flex items-center px-4 py-4 rounded-xl text-base font-medium transition-transform duration-300 group-hover/nav-item:scale-105"
               :class="[
                 colorMode.value === 'dark'
                   ? 'text-slate-300 hover:text-white'
                   : 'text-slate-700 hover:text-slate-900',
-                activeSection === item.id
+                route.path === item.path
                   ? 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-600 dark:text-blue-400'
                   : '',
               ]"
+              @click="isMobileMenuOpen = false"
             >
               <i
                 :class="item.icon"
                 class="mr-4 w-5 transition-all duration-300"
                 :style="
-                  activeSection === item.id ? 'color: rgb(59, 130, 246)' : ''
+                  route.path === item.path ? 'color: rgb(59, 130, 246)' : ''
                 "
               ></i>
               <span
@@ -557,7 +556,7 @@
               >
                 {{ $t(`nav.${item.id}`) }}
               </span>
-            </button>
+            </NuxtLink>
 
             <!-- Floating accent -->
             <div
@@ -574,6 +573,8 @@
 import { useI18n } from "vue-i18n";
 import { useSwitchLocalePath } from "#i18n";
 import { useColorMode } from "#imports";
+import { useRoute } from "vue-router";
+import gsap from "gsap";
 
 // i18n
 const { locale } = useI18n();
@@ -582,20 +583,23 @@ const switchLocalePath = useSwitchLocalePath();
 // Dark mode
 const colorMode = useColorMode();
 
+// Route
+const route = useRoute();
+
 // State
 const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
-const activeSection = ref("");
 const isLanguageMenuOpen = ref(false);
 
 // Navigation items
 const navigationItems = [
-  { id: "about", icon: "fas fa-user" },
-  { id: "skills", icon: "fas fa-code" },
-  { id: "projects", icon: "fas fa-folder-open" },
-  { id: "experience", icon: "fas fa-briefcase" },
-  { id: "education", icon: "fas fa-graduation-cap" },
-  { id: "contact", icon: "fas fa-envelope" },
+  { id: "home", path: "/", icon: "fas fa-home" },
+  { id: "about", path: "/about", icon: "fas fa-user" },
+  { id: "skills", path: "/skills", icon: "fas fa-code" },
+  { id: "projects", path: "/projects", icon: "fas fa-folder-open" },
+  { id: "education", path: "/education", icon: "fas fa-graduation-cap" },
+  { id: "experience", path: "/experience", icon: "fas fa-briefcase" },
+  { id: "contact", path: "/contact", icon: "fas fa-envelope" },
 ];
 
 // Available languages (sync with nuxt.config.ts i18n.locales)
@@ -616,53 +620,10 @@ const toggleLanguageMenu = () => {
   isLanguageMenuOpen.value = !isLanguageMenuOpen.value;
 };
 
-// Scroll to section
-const scrollToSection = (sectionId: string) => {
-  if (sectionId === "top") {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    return;
-  }
-  const element = document.getElementById(sectionId);
-  if (element) {
-    const navbar = document.querySelector("nav");
-    const navbarHeight = navbar?.offsetHeight || 64;
-    const elementPosition = element.offsetTop - navbarHeight - 20;
-    window.scrollTo({ top: elementPosition, behavior: "smooth" });
-  }
-};
-
-// Handle mobile nav click
-const handleMobileNavClick = (sectionId: string) => {
-  scrollToSection(sectionId);
-  isMobileMenuOpen.value = false;
-};
-
-// Scroll detection
+// Scroll detection for navbar shadow
 const handleScroll = () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   isScrolled.value = scrollTop > 10;
-
-  const sections = navigationItems.map((item) => item.id);
-  const navbar = document.querySelector("nav");
-  const navbarHeight = navbar?.offsetHeight || 64;
-
-  for (let i = sections.length - 1; i >= 0; i--) {
-    const sectionId = sections[i];
-    if (sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        const sectionTop = section.offsetTop - navbarHeight - 100;
-        if (scrollTop >= sectionTop && sections[i]) {
-          const currentSection = sections[i];
-          if (currentSection) {
-            activeSection.value = currentSection;
-            break;
-          }
-        }
-      }
-    }
-  }
-  if (scrollTop < 100) activeSection.value = "";
 };
 
 // Close menus when clicking outside
@@ -675,12 +636,11 @@ const handleClickOutside = (event: Event) => {
   }
 };
 
-// Force re-render on color mode change to ensure consistent dark mode application
+// Watch color mode for consistent rendering
 watch(
   () => colorMode.value,
   () => {
-    // Trigger a re-render by updating a reactive property
-    isScrolled.value = isScrolled.value;
+    isScrolled.value = isScrolled.value; // Trigger re-render
   }
 );
 
@@ -688,8 +648,6 @@ onMounted(() => {
   window.addEventListener("scroll", handleScroll, { passive: true });
   document.addEventListener("click", handleClickOutside);
   handleScroll();
-  // Ensure initial color mode is applied
-  colorMode.preference = colorMode.value;
 });
 
 onUnmounted(() => {
@@ -699,83 +657,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Custom Animations (matching Hero and Footer) */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-10px) rotate(2deg);
-  }
-  66% {
-    transform: translateY(5px) rotate(-1deg);
-  }
-}
-
-@keyframes float-delayed {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-15px) rotate(-2deg);
-  }
-  66% {
-    transform: translateY(8px) rotate(1deg);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-slow {
-  0%,
-  100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
-}
-
-/* Animation Classes */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float-delayed 8s ease-in-out infinite;
-}
-
-.animate-slide-up-delayed {
-  animation: slide-up 0.8s ease-out 0.2s forwards;
-  opacity: 0;
-}
-
-.animate-slide-up-delayed-3 {
-  animation: slide-up 0.8s ease-out 0.6s forwards;
-  opacity: 0;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-/* Dark mode transitions */
-.dark * {
-  transition: background-color 0.3s ease, color 0.3s ease,
-    border-color 0.3s ease, transform 0.3s ease;
-}
-/* Custom animations for the toggles */
+/* Custom Animations */
 @keyframes spin-slow {
   from {
     transform: rotate(0deg);
@@ -797,47 +679,7 @@ onUnmounted(() => {
   }
 }
 
-@keyframes float-up {
-  0%,
-  100% {
-    transform: translateY(0) opacity(1);
-  }
-  50% {
-    transform: translateY(-8px) opacity(0.7);
-  }
-}
-
-@keyframes float-down {
-  0%,
-  100% {
-    transform: translateY(0) opacity(1);
-  }
-  50% {
-    transform: translateY(8px) opacity(0.7);
-  }
-}
-
-/* Utility classes */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.transform-style-preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-0 {
-  transform: rotateY(0deg);
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
+/* Animation Classes */
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
 }
@@ -846,12 +688,10 @@ onUnmounted(() => {
   animation: twinkle 2s ease-in-out infinite;
 }
 
-.animate-float-up {
-  animation: float-up 2s ease-in-out infinite;
-}
-
-.animate-float-down {
-  animation: float-down 2s ease-in-out infinite;
+/* Dark mode transitions */
+.dark * {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, transform 0.3s ease;
 }
 
 /* Responsive adjustments */

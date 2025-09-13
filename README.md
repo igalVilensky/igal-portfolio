@@ -55,7 +55,7 @@ npm run preview
 │ └── fonts.ts # Google Fonts and Font Awesome
 ├── public/
 │ ├── profile.jpeg # Profile image
-│ └── IgalVilensky_CV.pdf # CV file
+│ └── IgalVilensky.pdf # CV file
 ├── nuxt.config.ts # Nuxt configuration
 ├── tailwind.config.js # Tailwind CSS configuration
 ├── .gitignore

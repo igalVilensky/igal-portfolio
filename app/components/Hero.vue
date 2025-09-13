@@ -2,6 +2,8 @@
   <section
     class="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden transition-all duration-500"
   >
+    <Particles class="opacity-30" />
+
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
       <!-- Floating geometric shapes -->
@@ -99,8 +101,7 @@
         >
           <!-- Primary CTA with styling -->
           <NuxtLink
-            to="#projects"
-            @click.prevent="scrollToSection('projects')"
+            to="/projects"
             class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
           >
             <!-- Button background animation -->
@@ -127,7 +128,7 @@
 
           <!-- Secondary CTA with glassmorphism effect -->
           <NuxtLink
-            to="/IgalVilensky_CV.pdf"
+            to="/IgalVilensky.pdf"
             target="_blank"
             class="group relative inline-flex items-center px-8 py-4 bg-white/10 dark:bg-slate-800/50 backdrop-blur-lg text-slate-700 dark:text-slate-200 font-semibold rounded-xl border border-slate-200/50 dark:border-slate-600/50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:bg-white/20 dark:hover:bg-slate-700/50"
           >
@@ -164,24 +165,6 @@
           >
             <i :class="social.icon" class="text-xl"></i>
           </a>
-        </div>
-
-        <!-- Scroll Indicator -->
-        <div class="hidden sm:flex justify-center animate-bounce-soft">
-          <button
-            @click="scrollToSection('about')"
-            class="group flex flex-col items-center space-y-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-300"
-            aria-label="Scroll to next section"
-          >
-            <span class="text-sm font-medium tracking-wide">Scroll Down</span>
-            <div
-              class="w-6 h-10 border-2 border-current rounded-full flex justify-center pt-2 group-hover:border-slate-600 dark:group-hover:border-slate-300"
-            >
-              <div
-                class="w-1 h-2 bg-current rounded-full animate-scroll-indicator"
-              ></div>
-            </div>
-          </button>
         </div>
       </div>
     </div>

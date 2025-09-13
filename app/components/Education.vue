@@ -3,6 +3,9 @@
     id="education"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
+    <Particles class="opacity-30" />
+    <!-- <KnowledgeNodes class="opacity-30" /> -->
+
     <!-- Subtle background pattern -->
     <div class="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]">
       <div

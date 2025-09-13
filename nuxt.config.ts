@@ -13,8 +13,8 @@ export default defineNuxtConfig({
     defaultLocale: "en",
   },
   colorMode: {
-    preference: "system",
-    fallback: "light",
+    preference: "dark",
+    fallback: "dark",
     classSuffix: "",
   },
 });

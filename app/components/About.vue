@@ -3,6 +3,8 @@
     id="about"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
+    <LiquidInk class="opacity-5" />
+
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
       <!-- Section Header -->
       <div class="text-center mb-12">
@@ -226,6 +228,8 @@
 </template>
 
 <script setup lang="ts">
+import Particles from "./Particles.vue";
+
 // Technologies list with enhanced organization
 const technologies = [
   "JavaScript",

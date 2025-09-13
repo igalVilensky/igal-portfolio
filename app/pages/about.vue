@@ -1,7 +1,7 @@
 <template>
-  <div class="relative pt-16">
-    <Orb stage="home" />
-    <Hero />
+  <div class="relative pt-12">
+    <Orb stage="about" />
+    <AboutContent />
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
 import Orb from "~/components/Orb.vue";
-import Hero from "~/components/Hero.vue";
+import AboutContent from "~/components/About.vue";
 
 definePageMeta({
   layout: "default",
@@ -19,16 +19,15 @@ definePageMeta({
 const { t } = useI18n();
 
 useHead({
-  title: t("seo.title"),
+  title: t("seo.about"),
 });
 
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  gsap.from(".hero-content", {
-    duration: 1,
-    y: 50,
+  gsap.from(".about-section", {
+    duration: 1.5,
     opacity: 0,
-    stagger: 0.2,
+    y: 100,
     ease: "power2.inOut",
   });
 });

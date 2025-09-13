@@ -1,7 +1,8 @@
+<!-- app/pages/experience.vue -->
 <template>
-  <div class="relative pt-16">
-    <Orb stage="home" />
-    <Hero />
+  <div class="relative pt-12">
+    <Orb stage="experience" />
+    <ExperienceContent />
   </div>
 </template>
 
@@ -10,7 +11,7 @@ import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
 import Orb from "~/components/Orb.vue";
-import Hero from "~/components/Hero.vue";
+import ExperienceContent from "~/components/Experience.vue";
 
 definePageMeta({
   layout: "default",
@@ -19,17 +20,17 @@ definePageMeta({
 const { t } = useI18n();
 
 useHead({
-  title: t("seo.title"),
+  title: t("seo.experience"),
 });
 
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  gsap.from(".hero-content", {
+  gsap.from(".experience-item", {
     duration: 1,
-    y: 50,
     opacity: 0,
+    y: 50,
     stagger: 0.2,
-    ease: "power2.inOut",
+    ease: "easeInOut",
   });
 });
 </script>

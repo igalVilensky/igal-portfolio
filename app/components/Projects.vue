@@ -1,8 +1,11 @@
+<!-- app/components/ProjectsContent.vue -->
 <template>
   <section
     id="projects"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
+    <RainbowBackground class="opacity-5" />
+
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
       <!-- Section Header -->
       <div class="text-center mb-12">
@@ -30,7 +33,7 @@
         <article
           v-for="project in projects"
           :key="project.id"
-          class="group bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+          class="project-card group bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
         >
           <!-- Project Image -->
           <div
@@ -129,7 +132,7 @@
         <div class="space-y-4">
           <!-- Primary CTA -->
           <NuxtLink
-            to="/projects"
+            to="/contact"
             class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
           >
             <svg
@@ -145,18 +148,16 @@
                 d="M19 11H5m14 0l-4 4m4-4l-4-4"
               ></path>
             </svg>
-            {{ $t("projects.viewAllProjects") }}
+            {{ $t("projects.contactCta") }}
           </NuxtLink>
-
           <!-- Secondary Info -->
           <p class="text-sm text-slate-600 dark:text-slate-400">
-            Interested in working together?
+            {{ $t("projects.interested") }}
             <NuxtLink
-              to="#contact"
-              @click.prevent="scrollToSection('contact')"
+              to="/contact"
               class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline-offset-4 hover:underline transition-colors duration-200"
             >
-              Let's discuss your project
+              {{ $t("projects.discuss") }}
             </NuxtLink>
           </p>
         </div>
@@ -166,26 +167,14 @@
 </template>
 
 <script setup lang="ts">
-// Props definition
 defineProps<{
   projects: {
-    id: number | string;
+    id: string | number;
     titleKey: string;
     image: string;
     technologies: string[];
     link: string;
-    github?: string; // Optional GitHub link
+    github?: string;
   }[];
 }>();
-
-// Scroll to section function
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    const navbar = document.querySelector("nav");
-    const navbarHeight = navbar?.offsetHeight || 64;
-    const elementPosition = element.offsetTop - navbarHeight - 20;
-    window.scrollTo({ top: elementPosition, behavior: "smooth" });
-  }
-};
 </script>
