@@ -127,8 +127,8 @@
           </NuxtLink>
 
           <!-- Secondary CTA with glassmorphism effect -->
-          <NuxtLink
-            to="/IgalVilensky.pdf"
+          <a
+            href="/certificate.pdf"
             target="_blank"
             class="group relative inline-flex items-center px-8 py-4 bg-white/10 dark:bg-slate-800/50 backdrop-blur-lg text-slate-700 dark:text-slate-200 font-semibold rounded-xl border border-slate-200/50 dark:border-slate-600/50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:bg-white/20 dark:hover:bg-slate-700/50"
           >
@@ -146,7 +146,7 @@
               ></path>
             </svg>
             {{ $t("hero.downloadCV") }}
-          </NuxtLink>
+          </a>
         </div>
 
         <!-- Social Links -->
