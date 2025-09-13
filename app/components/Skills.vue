@@ -275,7 +275,26 @@
 </template>
 
 <script setup lang="ts">
-const isDesktop = ref(window.innerWidth >= 1024);
+// Initialize isDesktop safely
+const isDesktop = ref(process.client ? window.innerWidth >= 1024 : false);
+
+// Update isDesktop on window resize
+const handleResize = () => {
+  isDesktop.value = window.innerWidth >= 1024;
+};
+
+onMounted(() => {
+  if (process.client) {
+    isDesktop.value = window.innerWidth >= 1024; // Set initial value
+    window.addEventListener("resize", handleResize);
+  }
+});
+
+onBeforeUnmount(() => {
+  if (process.client) {
+    window.removeEventListener("resize", handleResize);
+  }
+});
 
 // Frontend skills
 const frontendSkills = [
