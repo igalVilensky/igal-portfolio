@@ -2,7 +2,7 @@
   <section
     class="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden transition-all duration-500"
   >
-    <Particles class="opacity-30" />
+    <Particles v-if="isDesktop" class="opacity-30" />
 
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
@@ -197,6 +197,8 @@ const colors: Record<SocialName, string> = {
   GitHub: "hover:bg-purple-600 hover:shadow-lg hover:shadow-purple-500/25",
   Facebook: "hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25",
 };
+
+const isDesktop = ref(window.innerWidth >= 1024);
 
 const getSocialHoverColor = (socialName: string) => {
   return colors[socialName as SocialName] || "hover:bg-slate-600";

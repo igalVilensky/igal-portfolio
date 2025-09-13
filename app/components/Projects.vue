@@ -4,7 +4,7 @@
     id="projects"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
-    <RainbowBackground class="opacity-5" />
+    <RainbowBackground v-if="isDesktop" class="opacity-5" />
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
       <!-- Section Header -->
@@ -177,4 +177,6 @@ defineProps<{
     github?: string;
   }[];
 }>();
+
+const isDesktop = ref(window.innerWidth >= 1024);
 </script>

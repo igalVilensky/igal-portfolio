@@ -3,7 +3,7 @@
     id="skills"
     class="relative bg-white dark:bg-slate-900 transition-colors duration-300"
   >
-    <Constellation class="absolute inset-0 mix-blend-screen opacity-10" />
+    <Constellation v-if="isDesktop" class="opacity-10" />
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
       <!-- Section Header -->
@@ -275,6 +275,8 @@
 </template>
 
 <script setup lang="ts">
+const isDesktop = ref(window.innerWidth >= 1024);
+
 // Frontend skills
 const frontendSkills = [
   { title: "TypeScript / JavaScript", descKey: "typescriptDesc" },

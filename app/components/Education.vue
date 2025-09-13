@@ -3,7 +3,7 @@
     id="education"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
-    <Particles class="opacity-30" />
+    <Particles v-if="isDesktop" class="opacity-30" />
     <!-- <KnowledgeNodes class="opacity-30" /> -->
 
     <!-- Subtle background pattern -->
@@ -276,6 +276,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+const isDesktop = ref(window.innerWidth >= 1024);
 
 // Technical curriculum (titles are static, descriptions are translated)
 const technicalCurriculum = computed(() => [
