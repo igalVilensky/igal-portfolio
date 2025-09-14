@@ -19,13 +19,29 @@
     "downloadCV": "Download CV"
   },
   "about": {
-    "title": "About",
-    "me": "Me",
-    "description1": "Web and Software Developer with 3+ years in SaaS and web projects. Skilled in JavaScript/TypeScript, React, Vue/Nuxt, Node.js, and Directus.",
-    "description2": "I'm passionate about creating beautiful, functional digital experiences that solve real-world problems and delight users.",
-    "yearsExperience": "Years Experience",
+    "title": "Hey, I'm Igal!",
+    "me": "Nice to meet you",
+    "subtitle": "I’m a full-stack developer with a knack for improvisation, a love for creating tools that make life easier, and a colorful life story that spans continents and stages. Based in Leipzig, Germany, I blend code with creativity to build apps that people love to use.",
+    "personalTitle": "A Bit About Me",
+    "personalDesc1": "My journey in tech started in 2019, when I moved from Israel to Germany, just as I was about to dive into a dev course back home. By 2020, I was studying web development in Leipzig, and I haven’t looked back since. I love building things that make people’s lives easier—whether it’s a sleek SaaS platform or a responsive web app. I’ve worked on projects like Flowplace, where I crafted features with Vue.js and Directus, and LeanERA, where I helped transition a startup to a product-focused company with scalable codebases. At ARI Motors, I built user-friendly interfaces for a comparison portal for electric vehicles, making complex info feel simple and accessible.",
+    "personalDesc2": "Before coding, I was in the startup world at Myfxbook and Cashdo in Israel, managing web and social media channels with a creative flair. But my life’s been anything but ordinary. I spent a year and a half in Russia’s far north, Yamalo-Nenets, braving -60°C winters. Oh, and did I mention I was an actor? From TV series and films to commercials and even the Israeli opera (no singing, just acting!), I’ve always loved telling stories—now I do it through code.",
+    "personalDesc3": "Outside the tech world, I’m a dad who cherishes time with my kids, a piano player who improvises melodies, and a curious soul studying Kabbalah to explore life’s deeper meanings. Leipzig’s my home now, where I enjoy cozy cafés and the occasional hike, though I’ll admit travel’s lost a bit of its spark lately. I approach life like I approach coding: with curiosity, adaptability, and a touch of improvisation.",
+    "yearsExperience": "Years in Tech",
     "projectsCompleted": "Projects Completed",
-    "coreTechnologies": "Core Technologies"
+    "coreTechnologies": "Core Technologies",
+    "skillsTitle": "What I Bring to the Table",
+    "exploringTitle": "What I’m Exploring",
+    "currentlyLearning": "Currently Learning",
+    "areasOfInterest": "Areas of Interest",
+    "glanceTitle": "At a Glance",
+    "funFactsTitle": "Fun Facts",
+    "funFactActing": "Acted in TV series, films, and even the Israeli opera",
+    "funFactYamalo": "Survived -60°C winters in Yamalo-Nenets, Russia",
+    "funFactBrothers": "One of five brothers—never a dull moment growing up!",
+    "funFactPiano": "Love improvising on the piano to unwind",
+    "connectTitle": "Let’s Connect",
+    "available": "Available for projects",
+    "availableDesc": "Open to freelance gigs, remote collabs, or just a chat over coffee (virtual or otherwise)."
   },
   "skills": {
     "title": "My",
@@ -221,7 +237,7 @@
     "learnMore": "Learn More About Me",
     "phone": "+49 1783099433",
     "email": "vilenskyigalgmail.com",
-    "copyright": "&copy; 2025 Igal Vilensky. Crafted with ❤️ ",
+    "copyright": "&copy; 2025 Igal Vilensky. Crafted with ",
     "copyright2": "and lots of ☕"
   },
   "seo": {

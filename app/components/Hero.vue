@@ -1,32 +1,30 @@
 <template>
   <section
-    class="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 overflow-hidden transition-all duration-500"
+    class="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-[#0D0F12] dark:via-[#1B2432] dark:to-[#0D0F12] overflow-hidden transition-all duration-500"
   >
-    <Particles v-if="isDesktop" class="opacity-30" />
-
-    <!-- Animated background elements -->
+    <!-- Animated background elements matching navbar aesthetic -->
     <div class="absolute inset-0 overflow-hidden">
-      <!-- Floating geometric shapes -->
+      <!-- Floating geometric shapes with navbar colors -->
       <div
-        class="absolute top-20 left-10 w-20 h-20 bg-blue-200/20 dark:bg-blue-500/10 rounded-full blur-xl animate-float"
+        class="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-[#809FFF]/20 to-[#F41A81]/20 dark:from-[#809FFF]/10 dark:to-[#F41A81]/10 rounded-full blur-xl animate-float"
       ></div>
       <div
-        class="absolute top-40 right-20 w-32 h-32 bg-purple-200/20 dark:bg-purple-500/10 rounded-full blur-xl animate-float-delayed"
+        class="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 dark:from-blue-500/10 dark:to-cyan-500/10 rounded-full blur-xl animate-float-delayed"
       ></div>
       <div
-        class="absolute bottom-40 left-1/4 w-24 h-24 bg-cyan-200/20 dark:bg-cyan-500/10 rounded-full blur-xl animate-float-slow"
+        class="absolute bottom-40 left-1/4 w-24 h-24 bg-gradient-to-r from-purple-500/20 to-pink-500/20 dark:from-purple-500/10 dark:to-pink-500/10 rounded-full blur-xl animate-float-slow"
       ></div>
 
-      <!-- Grid pattern -->
+      <!-- Grid pattern matching navbar style -->
       <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.08]">
         <div
           class="absolute inset-0 bg-[linear-gradient(90deg,_theme(colors.slate.400)_1px,_transparent_1px),_linear-gradient(180deg,_theme(colors.slate.400)_1px,_transparent_1px)] bg-[length:60px_60px]"
         ></div>
       </div>
 
-      <!-- Subtle spotlight effect -->
+      <!-- Spotlight effect with navbar color scheme -->
       <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-radial from-blue-100/30 via-transparent to-transparent dark:from-blue-900/20 blur-3xl"
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-radial from-blue-100/30 via-transparent to-transparent dark:from-[#809FFF]/20 blur-3xl"
       ></div>
     </div>
 
@@ -34,25 +32,25 @@
       class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 sm:pb-16 min-h-screen flex items-center"
     >
       <div class="w-full text-center">
-        <!-- Profile Image with styling -->
-        <div class="sm:mb-8 relative inline-block group">
+        <!-- Profile Image with navbar-style gradient frames -->
+        <div class="sm:mb-8 relative inline-block group/profile">
           <div class="relative">
-            <!-- Animated ring around profile -->
+            <!-- Gradient border frame matching navbar -->
             <div
-              class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse-slow"
+              class="absolute -inset-2 bg-gradient-to-r from-[#809FFF] via-[#F41A81] to-[#809FFF] rounded-full blur opacity-30 group-hover/profile:opacity-50 transition-opacity duration-500 animate-pulse-slow"
             ></div>
 
-            <div class="relative bg-white dark:bg-slate-800 p-1 rounded-full">
+            <div class="relative bg-white dark:bg-[#1B2432] p-1 rounded-full">
               <img
                 src="/profile.jpeg"
                 :alt="$t('hero.title') + ' ' + $t('hero.lastName')"
-                class="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full object-cover shadow-xl group-hover:scale-105 transition-transform duration-300"
+                class="w-28 h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full object-cover shadow-xl group-hover/profile:scale-105 transition-transform duration-300"
               />
             </div>
 
-            <!-- status indicator -->
+            <!-- Status indicator with navbar accent color -->
             <div
-              class="absolute bottom-2 right-2 w-7 h-7 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg"
+              class="absolute bottom-2 right-2 w-7 h-7 bg-gradient-to-r from-[#809FFF] to-[#F41A81] rounded-full flex items-center justify-center shadow-lg"
             >
               <div
                 class="w-3 h-3 bg-white rounded-full animate-ping absolute"
@@ -62,28 +60,32 @@
           </div>
         </div>
 
-        <!-- Animated Main Heading -->
+        <!-- Main Heading with navbar typography style -->
         <div class="mb-8 space-y-4">
           <div>
             <h1
-              class="text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-slate-900 via-blue-800 to-slate-900 dark:from-white dark:via-blue-300 dark:to-white bg-clip-text text-transparent mb-4 tracking-tight animate-slide-up leading-tight"
+              class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight mb-4 animate-slide-up"
             >
-              {{ $t("hero.title") }}
               <span
-                class="block md:inline bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent animate-slide-up-delayed"
+                class="bg-gradient-to-r from-slate-900 via-blue-800 to-slate-900 dark:from-white dark:via-[#809FFF] dark:to-white bg-clip-text text-transparent"
+              >
+                {{ $t("hero.title") }}
+              </span>
+              <span
+                class="block md:inline bg-gradient-to-r from-[#809FFF] via-[#F41A81] to-[#809FFF] bg-clip-text text-transparent animate-slide-up-delayed"
               >
                 {{ $t("hero.lastName") }}
               </span>
             </h1>
           </div>
 
-          <!-- Animated typing effect for role -->
+          <!-- Typing effect with navbar-style indicator -->
           <div>
             <div
               class="inline-flex items-center space-x-2 animate-slide-up-delayed-2"
             >
               <div
-                class="w-2 h-2 bg-green-400 rounded-full animate-pulse"
+                class="w-2 h-2 bg-gradient-to-r from-[#809FFF] to-[#F41A81] rounded-full animate-pulse"
               ></div>
               <p
                 class="text-xl md:text-2xl lg:text-3xl font-medium text-slate-600 dark:text-slate-300 tracking-wide"
@@ -95,76 +97,105 @@
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Action Buttons with navbar styling -->
         <div
           class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8 sm:mb-12 animate-slide-up-delayed-4"
         >
-          <!-- Primary CTA with styling -->
-          <NuxtLink
-            to="/projects"
-            class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
-          >
-            <!-- Button background animation -->
+          <!-- Primary CTA with navbar gradient -->
+          <div class="group/btn-primary relative">
             <div
-              class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            ></div>
-            <div class="relative flex items-center">
-              <svg
-                class="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform duration-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 11H5m14 0l-4 4m4-4l-4-4"
-                ></path>
-              </svg>
-              {{ $t("hero.viewProjects") }}
-            </div>
-          </NuxtLink>
-
-          <!-- Secondary CTA with glassmorphism effect -->
-          <a
-            href="/certificate.pdf"
-            target="_blank"
-            class="group relative inline-flex items-center px-8 py-4 bg-white/10 dark:bg-slate-800/50 backdrop-blur-lg text-slate-700 dark:text-slate-200 font-semibold rounded-xl border border-slate-200/50 dark:border-slate-600/50 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:bg-white/20 dark:hover:bg-slate-700/50"
-          >
-            <svg
-              class="w-5 h-5 mr-3 group-hover:-translate-y-1 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-primary:opacity-100 transition-all duration-300 bg-gradient-to-r from-[#809FFF] to-[#F41A81]"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-            {{ $t("hero.downloadCV") }}
-          </a>
+              <div
+                class="rounded-xl h-full w-full bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 dark:bg-[#0D0F12]/95"
+              ></div>
+            </div>
+
+            <NuxtLink
+              to="/projects"
+              class="relative z-10 inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#809FFF] to-[#F41A81] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover/btn-primary:opacity-100 transition-opacity duration-300"
+              ></div>
+              <div class="relative flex items-center">
+                <i
+                  class="fas fa-rocket mr-3 group-hover/btn-primary:translate-x-1 transition-transform duration-300"
+                ></i>
+                {{ $t("hero.viewProjects") }}
+              </div>
+
+              <!-- Floating accent dot -->
+              <div
+                class="absolute top-1 right-1 w-2 h-2 bg-white rounded-full opacity-0 group-hover/btn-primary:opacity-100 group-hover/btn-primary:scale-125 transition-all duration-300"
+              ></div>
+            </NuxtLink>
+          </div>
+
+          <!-- Secondary CTA with glassmorphism matching navbar -->
+          <div class="group/btn-secondary relative">
+            <div
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-secondary:opacity-100 transition-all duration-300 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-cyan-500/30"
+            >
+              <div
+                class="rounded-xl h-full w-full bg-white/95 dark:bg-[#1B2432]/95"
+              ></div>
+            </div>
+
+            <a
+              href="/Igal_Vilensky.pdf"
+              target="_blank"
+              class="relative z-10 inline-flex items-center px-8 py-4 bg-white/10 dark:bg-[#1B2432]/50 backdrop-blur-lg text-slate-700 dark:text-slate-200 font-semibold rounded-xl border border-slate-200/50 dark:border-[#809FFF]/20 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:bg-white/20 dark:hover:bg-[#1B2432]/70"
+            >
+              <i
+                class="fas fa-download mr-3 group-hover/btn-secondary:-translate-y-1 transition-transform duration-300"
+              ></i>
+              {{ $t("hero.downloadCV") }}
+
+              <!-- Floating accent dot -->
+              <div
+                class="absolute top-1 right-1 w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 dark:bg-[#F41A81] rounded-full opacity-0 group-hover/btn-secondary:opacity-100 group-hover/btn-secondary:scale-125 transition-all duration-300"
+              ></div>
+            </a>
+          </div>
         </div>
 
-        <!-- Social Links -->
+        <!-- Social Links with navbar-style frames -->
         <div
           class="flex justify-center space-x-6 mb-16 animate-slide-up-delayed-5"
         >
-          <a
+          <div
             v-for="social in socialLinks"
             :key="social.name"
-            :href="social.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group w-12 h-12 flex items-center justify-center rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200/50 dark:border-slate-700/50 text-slate-600 dark:text-slate-400 hover:text-white hover:border-transparent shadow-lg transition-all duration-300 transform hover:scale-110 hover:rotate-3"
-            :class="getSocialHoverColor(social.name)"
-            :aria-label="social.name"
+            class="relative group/social"
           >
-            <i :class="social.icon" class="text-xl"></i>
-          </a>
+            <!-- Gradient border frame -->
+            <div
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/social:opacity-100 transition-all duration-300"
+              :class="social.gradientBorder"
+            >
+              <div
+                class="rounded-xl h-full w-full bg-white/95 dark:bg-[#1B2432]/95"
+              ></div>
+            </div>
+
+            <a
+              :href="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="relative z-10 w-12 h-12 flex items-center justify-center rounded-xl bg-white/80 dark:bg-[#1B2432]/80 backdrop-blur-sm border border-slate-200/50 dark:border-[#809FFF]/20 text-slate-600 dark:text-slate-400 shadow-lg transition-all duration-300 transform hover:scale-110 hover:rotate-3 hover:text-white hover:border-transparent"
+              :class="social.hoverBg"
+              :aria-label="social.name"
+            >
+              <i :class="social.icon" class="text-xl"></i>
+
+              <!-- Floating accent dot -->
+              <div
+                class="absolute top-1 right-1 w-2 h-2 rounded-full opacity-0 group-hover/social:opacity-100 group-hover/social:scale-125 transition-all duration-300"
+                :class="social.accentDot"
+              ></div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -177,80 +208,39 @@ const socialLinks = [
     name: "GitHub",
     icon: "fab fa-github",
     url: "https://github.com/igalvilensky",
+    hoverBg: "hover:bg-gradient-to-r hover:from-[#809FFF] hover:to-[#F41A81]",
+    gradientBorder: "bg-gradient-to-r from-[#809FFF]/30 to-[#F41A81]/30",
+    accentDot: "bg-[#F41A81]",
   },
   {
     name: "LinkedIn",
     icon: "fab fa-linkedin",
     url: "https://linkedin.com/in/igalvilensky",
+    hoverBg: "hover:bg-gradient-to-r hover:from-blue-500 hover:to-cyan-500",
+    gradientBorder: "bg-gradient-to-r from-blue-500/30 to-cyan-500/30",
+    accentDot: "bg-gradient-to-r from-blue-500 to-cyan-500",
   },
   {
     name: "Email",
     icon: "fas fa-envelope",
     url: "mailto:igal@example.com",
+    hoverBg: "hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500",
+    gradientBorder: "bg-gradient-to-r from-purple-500/30 to-pink-500/30",
+    accentDot: "bg-gradient-to-r from-purple-500 to-pink-500",
   },
 ];
 
-type SocialName = "LinkedIn" | "GitHub" | "Facebook";
-
-const colors: Record<SocialName, string> = {
-  LinkedIn: "hover:bg-blue-600 hover:shadow-lg hover:shadow-blue-500/25",
-  GitHub: "hover:bg-purple-600 hover:shadow-lg hover:shadow-purple-500/25",
-  Facebook: "hover:bg-cyan-600 hover:shadow-lg hover:shadow-cyan-500/25",
-};
-
-// Initialize isDesktop safely
-const isDesktop = ref(process.client ? window.innerWidth >= 1024 : false);
-
-// Update isDesktop on window resize
-const handleResize = () => {
-  isDesktop.value = window.innerWidth >= 1024;
-};
-
+// Typing effect
 onMounted(() => {
-  if (process.client) {
-    isDesktop.value = window.innerWidth >= 1024; // Set initial value
-    window.addEventListener("resize", handleResize);
-  }
-});
-
-onBeforeUnmount(() => {
-  if (process.client) {
-    window.removeEventListener("resize", handleResize);
-  }
-});
-
-const getSocialHoverColor = (socialName: string) => {
-  return colors[socialName as SocialName] || "hover:bg-slate-600";
-};
-
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    const navbar = document.querySelector("nav");
-    const navbarHeight = navbar?.offsetHeight || 64;
-    const elementPosition = element.offsetTop - navbarHeight - 20;
-
-    window.scrollTo({
-      top: elementPosition,
-      behavior: "smooth",
-    });
-  }
-};
-
-// Add page load animations and typing effect
-onMounted(() => {
-  // Start typing animation after slide-up animation is complete
   setTimeout(() => {
     const typingText = document.querySelector(".typing-text");
     const typingCursor = document.querySelector(".typing-cursor");
     const textToType = "Full-stack Developer";
 
     if (typingText && typingCursor) {
-      // Make cursor visible and start blinking
       typingCursor.classList.remove("opacity-0");
       typingCursor.classList.add("animate-blink");
 
-      // Type text character by character
       let currentIndex = 0;
       const typingInterval = setInterval(() => {
         if (currentIndex <= textToType.length) {
@@ -259,13 +249,14 @@ onMounted(() => {
         } else {
           clearInterval(typingInterval);
         }
-      }, 100); // Type a character every 100ms
+      }, 100);
     }
-  }, 1000); // Start after 1 second (after the slide-up animations)
+  }, 1000);
 });
 </script>
 
 <style scoped>
+/* Animations matching navbar style */
 @keyframes float {
   0%,
   100% {
@@ -308,42 +299,6 @@ onMounted(() => {
     transform: translateY(30px);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes bounce-soft {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes scroll-indicator {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 0.5;
-    transform: translateY(8px);
-  }
-  100% {
     opacity: 1;
     transform: translateY(0);
   }
@@ -397,11 +352,6 @@ onMounted(() => {
   opacity: 0;
 }
 
-.animate-slide-up-delayed-3 {
-  animation: slide-up 0.8s ease-out 0.6s forwards;
-  opacity: 0;
-}
-
 .animate-slide-up-delayed-4 {
   animation: slide-up 0.8s ease-out 0.8s forwards;
   opacity: 0;
@@ -410,29 +360,6 @@ onMounted(() => {
 .animate-slide-up-delayed-5 {
   animation: slide-up 0.8s ease-out 1s forwards;
   opacity: 0;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out 0.6s forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-up-delayed {
-  animation: fade-in-up 0.8s ease-out 0.8s forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-up-delayed-2 {
-  animation: fade-in-up 0.8s ease-out 1s forwards;
-  opacity: 0;
-}
-
-.animate-bounce-soft {
-  animation: bounce-soft 2s ease-in-out infinite;
-}
-
-.animate-scroll-indicator {
-  animation: scroll-indicator 2s ease-in-out infinite;
 }
 
 .animate-pulse-slow {
@@ -448,29 +375,21 @@ onMounted(() => {
   background: radial-gradient(var(--tw-gradient-stops));
 }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .typing-text {
-    animation: typing 3s steps(18) 1s both;
-  }
-
-  @keyframes typing {
-    from {
-      width: 0;
-    }
-    to {
-      width: 100%;
-    }
-  }
-}
-
 /* Dark mode transitions */
 .dark * {
   transition: background-color 0.3s ease, color 0.3s ease,
     border-color 0.3s ease;
 }
 
-/* Custom scrollbar for webkit browsers */
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #809fff;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }

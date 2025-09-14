@@ -1,5 +1,5 @@
 <template>
-  <div class="relative pt-16">
+  <div class="relative pt-12">
     <Orb stage="home" />
     <Hero />
   </div>

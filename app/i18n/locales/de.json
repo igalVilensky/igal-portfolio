@@ -6,31 +6,47 @@
     "experience": "Erfahrung",
     "education": "Ausbildung",
     "contact": "Kontakt",
-    "switchToLight": "Zum hellen Modus wechseln",
-    "switchToDark": "Zum dunklen Modus wechseln",
+    "switchToLight": "Zum Hellen Modus wechseln",
+    "switchToDark": "Zum Dunklen Modus wechseln",
     "backToHome": "Zurück zur Startseite",
     "home": "Startseite"
   },
   "hero": {
     "title": "Igal",
     "lastName": "Vilensky",
-    "subtitle": "Web- und Softwareentwickler mit über 3 Jahren Erfahrung in der Entwicklung moderner digitaler Lösungen.",
+    "subtitle": "Full-Stack-Entwickler mit über 3 Jahren Erfahrung in der Entwicklung skalierbarer Webanwendungen. Spezialisiert auf moderne JavaScript-Frameworks, Cloud-Architektur und Optimierung der Entwicklererfahrung.",
     "viewProjects": "Projekte ansehen",
     "downloadCV": "Lebenslauf herunterladen"
   },
   "about": {
-    "title": "Über",
-    "me": "Mich",
-    "description1": "Web- und Softwareentwickler mit über 3 Jahren Erfahrung in SaaS- und Webprojekten. Versiert in JavaScript/TypeScript, React, Vue/Nuxt, Node.js und Directus.",
-    "description2": "Ich bin leidenschaftlich daran interessiert, schöne, funktionale digitale Erlebnisse zu schaffen, die reale Probleme lösen und Nutzer begeistern.",
-    "yearsExperience": "Jahre Erfahrung",
+    "title": "Hallo, ich bin Igal!",
+    "me": "Freut mich, dich kennenzulernen",
+    "subtitle": "Ich bin ein Full-Stack-Entwickler mit einem Talent für Improvisation, einer Liebe zur Entwicklung nützlicher Tools und einer bunten Lebensgeschichte, die Kontinente und Bühnen umspannt. Mit Sitz in Leipzig, Deutschland, verbinde ich Code mit Kreativität, um Anwendungen zu entwickeln, die Menschen lieben.",
+    "personalTitle": "Ein wenig über mich",
+    "personalDesc1": "Meine Reise in die Technik begann 2019, als ich von Israel nach Deutschland zog, kurz bevor ich in Israel einen Entwicklerkurs starten wollte. Ab 2020 studierte ich Webentwicklung in Leipzig und habe seitdem nicht zurückgeschaut. Ich liebe es, Dinge zu entwickeln, die das Leben der Menschen erleichtern – sei es eine elegante SaaS-Plattform oder eine responsive Web-App. Ich habe an Projekten wie Flowplace gearbeitet, wo ich Funktionen mit Vue.js und Directus entwickelt habe, und bei LeanERA, wo ich einem Startup half, mit skalierbaren Codebasen zu einem produktorientierten Unternehmen zu werden. Bei ARI Motors habe ich benutzerfreundliche Schnittstellen für ein Vergleichsportal für Elektrofahrzeuge entwickelt, das komplexe Informationen einfach und zugänglich macht.",
+    "personalDesc2": "Vor dem Programmieren war ich in der Startup-Welt bei Myfxbook und Cashdo in Israel tätig, wo ich Web- und Social-Media-Kanäle mit kreativem Flair verwaltete. Aber mein Leben war alles andere als gewöhnlich. Ich verbrachte anderthalb Jahre im hohen Norden Russlands, in Jamalo-Nenzen, und überstand Winter bei -60°C. Oh, und habe ich erwähnt, dass ich Schauspieler war? Von TV-Serien und Filmen bis hin zu Werbespots und sogar der israelischen Oper (kein Gesang, nur Schauspiel!) habe ich immer Geschichten geliebt – jetzt erzähle ich sie durch Code.",
+    "personalDesc3": "Außerhalb der Tech-Welt bin ich ein Vater, der die Zeit mit meinen Kindern schätzt, ein Pianist, der Melodien improvisiert, und eine neugierige Seele, die Kabbala studiert, um die tieferen Bedeutungen des Lebens zu erkunden. Leipzig ist jetzt mein Zuhause, wo ich gemütliche Cafés und gelegentliche Wanderungen genieße, obwohl ich zugeben muss, dass Reisen in letzter Zeit etwas von ihrem Glanz verloren hat. Ich gehe das Leben an wie das Programmieren: mit Neugier, Anpassungsfähigkeit und einem Hauch von Improvisation.",
+    "yearsExperience": "Jahre in der Technik",
     "projectsCompleted": "Abgeschlossene Projekte",
-    "coreTechnologies": "Kerntechnologien"
+    "coreTechnologies": "Kerntechnologien",
+    "skillsTitle": "Was ich mitbringe",
+    "exploringTitle": "Was ich erkunde",
+    "currentlyLearning": "Derzeit lerne ich",
+    "areasOfInterest": "Interessensbereiche",
+    "glanceTitle": "Auf einen Blick",
+    "funFactsTitle": "Wissenswertes",
+    "funFactActing": "Schauspiel in TV-Serien, Filmen und sogar in der israelischen Oper",
+    "funFactYamalo": "Überstand Winter bei -60°C in Jamalo-Nenzen, Russland",
+    "funFactBrothers": "Einer von fünf Brüdern – nie ein langweiliger Moment in der Kindheit!",
+    "funFactPiano": "Liebe es, am Klavier zu improvisieren, um zu entspannen",
+    "connectTitle": "Lass uns verbinden",
+    "available": "Verfügbar für Projekte",
+    "availableDesc": "Offen für Freelance-Aufträge, Remote-Zusammenarbeit oder einfach ein Gespräch bei einem Kaffee (virtuell oder anders)."
   },
   "skills": {
     "title": "Meine",
     "my": "Fähigkeiten",
-    "subtitle": "Entwicklung skalierbarer, benutzerorientierter Lösungen mit modernen Technologien und agilen Methoden",
+    "subtitle": "Erstellung skalierbarer, nutzerzentrierter Lösungen mit modernen Technologien und agilen Methoden",
     "frontendMobile": "Frontend & Mobile",
     "backend": "Backend",
     "devopsTools": "DevOps & Tools",
@@ -44,7 +60,7 @@
     "cssFrameworks": "CSS-Frameworks",
     "cssFrameworksDesc": "TailwindCSS, Bootstrap, SCSS",
     "responsiveDesign": "Responsives Design",
-    "responsiveDesignDesc": "Mobile-First, Ionic",
+    "responsiveDesignDesc": "Mobile-first, Ionic",
     "nodejs": "Node.js / Express.js",
     "nodejsDesc": "Serverseitiges JavaScript",
     "mongodb": "MongoDB / Mongoose",
@@ -60,11 +76,11 @@
     "git": "Git / GitHub",
     "gitDesc": "Team-Workflow, Versionskontrolle",
     "agile": "Agile & Scrum",
-    "agileDesc": "Projektmethodologien",
+    "agileDesc": "Projektmethodiken",
     "english": "Englisch",
     "englishLevel": "C1 - Fortgeschritten",
     "german": "Deutsch",
-    "germanLevel": "B2 - Oberstufe",
+    "germanLevel": "B2 - Oberes Mittelstufe",
     "russian": "Russisch",
     "russianLevel": "Muttersprachler",
     "hebrew": "Hebräisch",
@@ -77,7 +93,7 @@
     "subtitleHighlight": "innovative Lösungen",
     "filterByTech": "Nach Technologie filtern",
     "allProjects": "Alle Projekte",
-    "showingProjects": "{filteredCount} von {totalCount} Projekten anzeigen",
+    "showingProjects": "Zeige {filteredCount} von {totalCount} Projekten",
     "forTech": "für '{selectedTech}'",
     "live": "Live",
     "viewLive": "Live ansehen",
@@ -86,12 +102,12 @@
     "noProjectsMatch": "Keine Projekte entsprechen dem ausgewählten Technologie-Filter.",
     "viewAllProjects": "Alle Projekte ansehen",
     "sunlitTales": {
-      "title": "Sonnenlicht-Geschichten",
+      "title": "Sonnige Geschichten",
       "description": "Tauchen Sie ein in die Welt der Poesie, wo jedes Wort ein Lichtstrahl ist, der die Tiefen der Seele erhellt."
     },
     "psyBlog": {
-      "title": "Ihr Weg zum persönlichen Wachstum",
-      "description": "Psy-Blog verbindet Kabbala und Psychologie zu einer 10-wöchigen Reise durch den Baum des Selbst. Täglicher Fortschritt bringt Punkte, Level und Balance, geleitet von der Energie des Tages."
+      "title": "Dein Weg zum persönlichen Wachstum",
+      "description": "Psy-Blog verbindet Kabbala und Psychologie zu einer 10-wöchigen Reise durch den Baum des Selbst. Täglicher Fortschritt bringt Punkte, Level und Ausgleich, geleitet von der Energie des Tages."
     },
     "urlShortener": {
       "title": "URL-Verkürzer",
@@ -103,24 +119,24 @@
     },
     "blogPlatform": {
       "title": "Blog-Plattform",
-      "description": "Eine Headless-CMS-basierte Blogplattform mit Rich-Text-Bearbeitung, SEO-Optimierung und Unterstützung für mehrere Autoren."
+      "description": "Eine Headless-CMS-basierte Blog-Plattform mit Rich-Text-Bearbeitung, SEO-Optimierung und Unterstützung für mehrere Autoren."
     },
     "propertyManagement": {
       "title": "Immobilienverwaltungssystem",
       "description": "Ein umfassendes Immobilienverwaltungssystem mit erweiterten Suchfiltern, virtuellen Touren und Marktanalysen."
     },
     "securityPlayground": {
-      "title": "Sicherheits-Spielplatz",
-      "description": "Eine interaktive Plattform zur Demonstration und zum Testen verschiedener Web-Sicherheitstechniken und -praktiken."
+      "title": "Sicherheitsspielplatz",
+      "description": "Eine interaktive Demo gängiger Websicherheitsprobleme (XSS, Missbrauch von LocalStorage, SQLi-Simulation) und deren Behebung."
     },
     "orderSystem": {
-      "title": "Cannabus Order System",
-      "description": "Ein Bestellsystem für Cannabis mit TypeScript, Next.js, React und Tailwind CSS."
+      "title": "Cannabus-Bestellsystem",
+      "description": "Ein Cannabis-Bestellsystem, entwickelt mit TypeScript, Next.js, React und Tailwind CSS."
     },
     "viewProject": "Projekt ansehen",
     "seo": {
       "title": "Projekte | Igal Vilensky - Webentwickler-Portfolio",
-      "description": "Entdecken Sie innovative Web- und Softwareentwicklungsprojekte von Igal Vilensky. Von E-Commerce-Plattformen bis hin zu kollaborativen Tools – lernen Sie modernste Lösungen kennen, die mit aktuellen Technologien entwickelt wurden.",
+      "description": "Entdecken Sie innovative Web- und Softwareentwicklungsprojekte von Igal Vilensky. Von E-Commerce-Plattformen bis hin zu kollaborativen Tools, entdecken Sie modernste Lösungen mit aktuellen Technologien.",
       "keywords": "Webentwicklung, Portfolio, Projekte, Vue.js, React, Node.js, TypeScript, Nuxt",
       "ogTitle": "Projekte | Igal Vilensky - Webentwickler",
       "ogDescription": "Entdecken Sie innovative Webentwicklungsprojekte, die moderne Technologien und kreative Lösungen präsentieren."
@@ -132,12 +148,12 @@
     "description": "Meine berufliche Reise in der Softwareentwicklung",
     "flowplace": {
       "period": "2023 - Heute",
-      "title": "Full-Stack Entwickler",
+      "title": "Full-Stack-Entwickler",
       "company": "Flowplace, Leipzig",
       "responsibilities": {
         "1": "Entwicklung von SaaS-Funktionen mit Vue.js/Nuxt.js & Directus",
         "2": "Implementierung responsiver UI-Designs",
-        "3": "Verbesserung der Benutzbarkeit, Barrierefreiheit und Konsistenz der Plattform",
+        "3": "Verbesserung von Benutzbarkeit, Barrierefreiheit und Konsistenz der Plattform",
         "4": "Integration von REST APIs & Optimierung von UI-Workflows"
       }
     },
@@ -148,22 +164,22 @@
       "responsibilities": {
         "1": "Entwicklung dynamischer Webanwendungen mit Vue 3, Nuxt 3, TypeScript & Tailwind CSS",
         "2": "Zusammenarbeit mit funktionsübergreifenden Teams zur Auswahl optimaler Technologien",
-        "3": "Etablierung eines sauberen, skalierbaren Codes für produktorientierten Übergang"
+        "3": "Aufbau eines sauberen, skalierbaren Codebases für den Übergang zu einem produktorientierten Unternehmen"
       }
     },
     "ari_motors": {
       "period": "2021 - 2022",
-      "title": "Full-Stack Webentwickler",
+      "title": "Full-Stack-Webentwickler",
       "company": "ARI Motors GmbH, Leipzig",
       "responsibilities": {
         "1": "Entwicklung eines Vergleichsportals für elektrische Nutzfahrzeuge",
         "2": "Verbesserung der Benutzerfunktionalität und -erfahrung auf mehreren Websites",
-        "3": "Verwaltung der Website-Administration und Wartung der Backend-Systeme"
+        "3": "Verwaltung der Website-Administration und Wartung von Back-End-Systemen"
       }
     },
     "myfxbook": {
       "period": "2017 - 2019",
-      "title": "Social Media & Web Koordinator",
+      "title": "Social-Media- und Webkoordinator",
       "company": "Myfxbook Ltd (Cashdo)",
       "responsibilities": {
         "1": "Verwaltung der Unternehmenswebsite und Social-Media-Kanäle",
@@ -177,7 +193,7 @@
     "second": "Zertifizierung",
     "subtitle": "Umfassende Schulung in modernen Webentwicklungstechnologien und -methoden",
     "certification": "Web- und Softwareentwickler/in",
-    "certificationSub": "Zertifizierung als Web- & Softwareentwickler",
+    "certificationSub": "Zertifizierung als Web- und Softwareentwickler",
     "institution": "Digital Career Institute (DCI), Leipzig",
     "period": "2020 - 2022",
     "downloadCertificate": "Zertifikat herunterladen",
@@ -185,7 +201,7 @@
     "hours": "Stunden",
     "technologiesCount": "Technologien",
     "projectsCount": "Projekte",
-    "technicalCurriculum": "Technisches Curriculum",
+    "technicalCurriculum": "Technischer Lehrplan",
     "htmlCss": "HTML5 & CSS3",
     "htmlCssDesc": "Semantisches Markup, responsives Design, CSS Grid & Flexbox",
     "jsTs": "JavaScript ES2015+ & TypeScript",
@@ -199,30 +215,30 @@
     "gitSkills": "Git, GitHub & Agile Methodologien",
     "gitSkillsDesc": "Versionskontrolle, kollaborative Entwicklung",
     "keyAchievements": "Wichtige Erfolge",
-    "programExcellence": "Programmauszeichnung",
+    "programExcellence": "Programmexzellenz",
     "programExcellenceDesc": "Erfolgreicher Abschluss eines umfassenden 14-monatigen Intensivprogramms",
     "capstoneProject": "Abschlussprojekt",
     "capstoneProjectDesc": "Entwicklung von 'Plantastic' - einer Full-Stack-Pflanzenpflegeanwendung",
     "languageProficiency": "Sprachkenntnisse",
-    "languageProficiencyDesc": "Verbesserte berufliche Deutschkenntnisse",
+    "languageProficiencyDesc": "Verbesserung der beruflichen Deutschkenntnisse",
     "responsiveDesignEdu": "Responsives Design",
     "responsiveDesignEduDesc": "Beherrschung moderner Frameworks und responsivem Webdesign",
     "security": "Sicherheit & Authentifizierung",
     "securityDesc": "JWT-Implementierung und Sicherheitsbest Practices",
     "databaseDevelopment": "Datenbankentwicklung",
-    "databaseDevelopmentDesc": "Fortgeschrittene Datenbankdesign- und Optimierungstechniken"
+    "databaseDevelopmentDesc": "Fortgeschrittene Techniken zur Datenbankgestaltung und -optimierung"
   },
   "contact": {
     "title": "Lass uns",
-    "lets": "Verbinden",
-    "subtitle": "Haben Sie ein Projekt im Kopf?",
-    "description": "Lassen Sie uns zusammenarbeiten und Ihre Ideen mit modernsten Webtechnologien zum Leben erwecken.",
+    "lets": "verbinden",
+    "subtitle": "Hast du ein Projekt im Kopf?",
+    "description": "Lass uns zusammenarbeiten und deine Ideen mit modernsten Webtechnologien zum Leben erwecken.",
     "getInTouch": "Kontakt aufnehmen",
     "learnMore": "Mehr über mich erfahren",
     "phone": "+49 1783099433",
     "email": "vilenskyigalgmail.com",
-    "copyright": "&copy; 2025 Igal Vilensky. Mit ",
-    "copyright2": "und viel ☕ gestaltet"
+    "copyright": "&copy; 2025 Igal Vilensky. Erstellt mit ",
+    "copyright2": "und viel ☕"
   },
   "seo": {
     "title": "Igal Vilensky - Webentwickler-Portfolio"

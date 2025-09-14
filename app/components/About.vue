@@ -3,7 +3,7 @@
     id="about"
     class="relative bg-slate-50 dark:bg-slate-800 transition-colors duration-300"
   >
-    <LiquidInk v-if="isDesktop" class="opacity-5" />
+    <!-- <LiquidInk v-if="isDesktop" class="opacity-5" /> -->
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
       <!-- Section Header -->
@@ -17,90 +17,227 @@
           }}</span>
         </h2>
         <div
-          class="w-16 h-1 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full"
+          class="w-16 h-1 bg-blue-600 dark:bg-blue-400 mx-auto rounded-full mb-6"
         ></div>
+        <p
+          class="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed"
+        >
+          {{ $t("about.subtitle") }}
+        </p>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
         <!-- Main Content - 2/3 width -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- Professional Summary -->
+          <!-- About Me (Personal + Professional) -->
           <div
             class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
           >
             <h3
               class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
             >
-              Professional Summary
+              {{ $t("about.personalTitle") }}
             </h3>
             <div
               class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed"
             >
-              <p>{{ $t("about.description1") }}</p>
-              <p>{{ $t("about.description2") }}</p>
+              <p>{{ $t("about.personalDesc1") }}</p>
+              <p>{{ $t("about.personalDesc2") }}</p>
+              <p>{{ $t("about.personalDesc3") }}</p>
             </div>
           </div>
 
-          <!-- Core Technologies -->
+          <!-- My Skills -->
           <div
             class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
           >
             <h3
               class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
             >
-              {{ $t("about.coreTechnologies") }}
+              {{ $t("about.skillsTitle") }}
             </h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-              <div
-                v-for="(tech, index) in technologies"
-                :key="tech"
-                class="flex items-center px-3 py-2 rounded-md border transition-colors duration-200"
-                :class="getTechStyle(index)"
-              >
-                <i
-                  :class="getTechIcon(tech)"
-                  class="w-4 h-4 mr-2 flex-shrink-0"
-                ></i>
-                <span class="text-sm font-medium">{{ tech }}</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Frontend & Mobile -->
+              <div>
+                <div class="flex items-center mb-3">
+                  <div
+                    class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3"
+                  >
+                    <i
+                      class="fas fa-laptop-code text-blue-600 dark:text-blue-400"
+                    ></i>
+                  </div>
+                  <h4
+                    class="text-base font-semibold text-slate-900 dark:text-white"
+                  >
+                    {{ $t("skills.frontendMobile") }}
+                  </h4>
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="(skill, index) in frontendSkills"
+                    :key="index"
+                    class="flex items-start space-x-2"
+                  >
+                    <i
+                      :class="getSkillIcon(skill.title)"
+                      class="w-4 h-4 mt-0.5 text-blue-600 dark:text-blue-400"
+                    ></i>
+                    <span>{{ skill.title }}</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- Backend -->
+              <div>
+                <div class="flex items-center mb-3">
+                  <div
+                    class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3"
+                  >
+                    <i
+                      class="fas fa-server text-green-600 dark:text-green-400"
+                    ></i>
+                  </div>
+                  <h4
+                    class="text-base font-semibold text-slate-900 dark:text-white"
+                  >
+                    {{ $t("skills.backend") }}
+                  </h4>
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="(skill, index) in backendSkills"
+                    :key="index"
+                    class="flex items-start space-x-2"
+                  >
+                    <i
+                      :class="getSkillIcon(skill.title)"
+                      class="w-4 h-4 mt-0.5 text-green-600 dark:text-green-400"
+                    ></i>
+                    <span>{{ skill.title }}</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- DevOps & Tools -->
+              <div>
+                <div class="flex items-center mb-3">
+                  <div
+                    class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3"
+                  >
+                    <i
+                      class="fas fa-tools text-purple-600 dark:text-purple-400"
+                    ></i>
+                  </div>
+                  <h4
+                    class="text-base font-semibold text-slate-900 dark:text-white"
+                  >
+                    {{ $t("skills.devopsTools") }}
+                  </h4>
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="(skill, index) in devopsSkills"
+                    :key="index"
+                    class="flex items-start space-x-2"
+                  >
+                    <i
+                      :class="getSkillIcon(skill.title)"
+                      class="w-4 h-4 mt-0.5 text-purple-600 dark:text-purple-400"
+                    ></i>
+                    <span>{{ skill.title }}</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- Languages -->
+              <div>
+                <div class="flex items-center mb-3">
+                  <div
+                    class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3"
+                  >
+                    <i
+                      class="fas fa-language text-orange-600 dark:text-orange-400"
+                    ></i>
+                  </div>
+                  <h4
+                    class="text-base font-semibold text-slate-900 dark:text-white"
+                  >
+                    {{ $t("skills.languages") }}
+                  </h4>
+                </div>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="(language, index) in languageSkills"
+                    :key="index"
+                    class="flex items-start space-x-2"
+                  >
+                    <i
+                      class="fas fa-globe w-4 h-4 mt-0.5 text-orange-600 dark:text-orange-400"
+                    ></i>
+                    <span>{{ $t(`skills.${language.titleKey}`) }}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <!-- Current Focus -->
+          <!-- Current Focus & Interests -->
           <div
             class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
           >
             <h3
               class="text-xl font-semibold text-slate-900 dark:text-white mb-4"
             >
-              Current Focus Areas
+              {{ $t("about.exploringTitle") }}
             </h3>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div
-                v-for="focus in focusAreas"
-                :key="focus.title"
-                class="flex items-start space-x-3"
-              >
-                <div
-                  class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+            <div class="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4
+                  class="text-base font-semibold text-slate-900 dark:text-white mb-3"
                 >
-                  <i
-                    :class="focus.icon"
-                    class="text-blue-600 dark:text-blue-400 text-sm"
-                  ></i>
-                </div>
-                <div>
-                  <h4
-                    class="font-semibold text-slate-900 dark:text-white text-sm"
+                  {{ $t("about.currentlyLearning") }}
+                </h4>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="item in currentlyLearning"
+                    :key="item"
+                    class="flex items-center space-x-2"
                   >
-                    {{ focus.title }}
-                  </h4>
-                  <p
-                    class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed"
+                    <div
+                      class="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-pulse"
+                    ></div>
+                    <span>{{ item }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="text-base font-semibold text-slate-900 dark:text-white mb-3"
+                >
+                  {{ $t("about.areasOfInterest") }}
+                </h4>
+                <ul
+                  class="space-y-2 text-sm text-slate-600 dark:text-slate-400"
+                >
+                  <li
+                    v-for="interest in interests"
+                    :key="interest"
+                    class="flex items-center space-x-2"
                   >
-                    {{ focus.description }}
-                  </p>
-                </div>
+                    <div
+                      class="w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full"
+                    ></div>
+                    <span>{{ interest }}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -115,7 +252,7 @@
             <h3
               class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
             >
-              Quick Stats
+              {{ $t("about.glanceTitle") }}
             </h3>
             <div class="space-y-4">
               <div
@@ -149,6 +286,35 @@
             </div>
           </div>
 
+          <!-- Personal Tidbits -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
+          >
+            <h3
+              class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
+            >
+              {{ $t("about.funFactsTitle") }}
+            </h3>
+            <div class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-film w-4"></i>
+                <span>{{ $t("about.funFactActing") }}</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-snowflake w-4"></i>
+                <span>{{ $t("about.funFactYamalo") }}</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-users w-4"></i>
+                <span>{{ $t("about.funFactBrothers") }}</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <i class="fas fa-music w-4"></i>
+                <span>{{ $t("about.funFactPiano") }}</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Availability -->
           <div
             class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
@@ -156,25 +322,26 @@
             <h3
               class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
             >
-              Availability
+              {{ $t("about.connectTitle") }}
             </h3>
             <div class="flex items-center space-x-3 mb-3">
               <div
                 class="w-3 h-3 bg-green-500 rounded-full animate-pulse"
               ></div>
-              <span class="text-sm font-medium text-slate-900 dark:text-white"
-                >Available for projects</span
+              <span
+                class="text-sm font-medium text-slate-900 dark:text-white"
+                >{{ $t("about.available") }}</span
               >
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400 mb-4">
-              Open to freelance work and interesting full-time opportunities
+              {{ $t("about.availableDesc") }}
             </p>
             <NuxtLink
               to="#contact"
               @click.prevent="scrollToSection('contact')"
               class="inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200"
             >
-              Get in touch
+              {{ $t("contact.getInTouch") }}
               <svg
                 class="w-4 h-4 ml-1"
                 fill="none"
@@ -190,37 +357,6 @@
               </svg>
             </NuxtLink>
           </div>
-
-          <!-- Location & Work Style -->
-          <div
-            class="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-6 shadow-sm"
-          >
-            <h3
-              class="text-lg font-semibold text-slate-900 dark:text-white mb-4"
-            >
-              Work Preferences
-            </h3>
-            <div class="space-y-3">
-              <div class="flex items-center space-x-3">
-                <i class="fas fa-map-marker-alt text-slate-400 w-4"></i>
-                <span class="text-sm text-slate-600 dark:text-slate-400"
-                  >Leipzig, Germany</span
-                >
-              </div>
-              <div class="flex items-center space-x-3">
-                <i class="fas fa-laptop text-slate-400 w-4"></i>
-                <span class="text-sm text-slate-600 dark:text-slate-400"
-                  >Remote-first</span
-                >
-              </div>
-              <div class="flex items-center space-x-3">
-                <i class="fas fa-users text-slate-400 w-4"></i>
-                <span class="text-sm text-slate-600 dark:text-slate-400"
-                  >Team collaboration</span
-                >
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -228,6 +364,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
 // Initialize isDesktop safely
 const isDesktop = ref(process.client ? window.innerWidth >= 1024 : false);
 
@@ -238,7 +376,7 @@ const handleResize = () => {
 
 onMounted(() => {
   if (process.client) {
-    isDesktop.value = window.innerWidth >= 1024; // Set initial value
+    isDesktop.value = window.innerWidth >= 1024;
     window.addEventListener("resize", handleResize);
   }
 });
@@ -249,58 +387,73 @@ onBeforeUnmount(() => {
   }
 });
 
-// Technologies list with enhanced organization
-const technologies = [
-  "JavaScript",
-  "TypeScript",
-  "Vue.js",
-  "React",
-  "Node.js",
-  "Nuxt.js",
+// Frontend skills
+const frontendSkills = [
+  { title: "TypeScript / JavaScript" },
+  { title: "React / React Native" },
+  { title: "Vue.js / Nuxt.js" },
+  { title: "CSS Frameworks" },
+  { title: "Responsive Design" },
 ];
 
-// Current focus areas for professional development
-const focusAreas = [
-  {
-    title: "Cloud Architecture",
-    description: "AWS, Docker, Kubernetes for scalable deployments",
-    icon: "fas fa-cloud",
-  },
-  {
-    title: "Performance Optimization",
-    description: "Core Web Vitals, bundle optimization, caching strategies",
-    icon: "fas fa-tachometer-alt",
-  },
-  {
-    title: "Developer Experience",
-    description: "Tooling, CI/CD, and workflow improvements",
-    icon: "fas fa-tools",
-  },
-  {
-    title: "Security Best Practices",
-    description: "Authentication, authorization, and secure coding",
-    icon: "fas fa-shield-alt",
-  },
+// Backend skills
+const backendSkills = [
+  { title: "Node.js / Express.js" },
+  { title: "MongoDB / Mongoose" },
+  { title: "Directus CMS" },
+  { title: "REST APIs" },
 ];
 
-// Get technology icon based on tech name
-const getTechIcon = (tech: string): string => {
+// DevOps skills
+const devopsSkills = [
+  { title: "CI/CD Pipelines" },
+  { title: "Docker" },
+  { title: "Git / GitHub" },
+  { title: "Agile & Scrum" },
+];
+
+// Language skills
+const languageSkills = [
+  { titleKey: "english", levelKey: "englishLevel" },
+  { titleKey: "german", levelKey: "germanLevel" },
+  { titleKey: "russian", levelKey: "russianLevel" },
+  { titleKey: "hebrew", levelKey: "hebrewLevel" },
+];
+
+// Currently learning
+const currentlyLearning = [
+  "AWS Cloud Architecture",
+  "Kubernetes",
+  "GraphQL",
+  "Rust Programming",
+];
+
+// Areas of interest
+const interests = [
+  "Machine Learning",
+  "Web3 Technologies",
+  "Performance Optimization",
+  "Developer Experience",
+];
+
+// Get skill icon based on skill name
+const getSkillIcon = (skill: string): string => {
   const icons: Record<string, string> = {
-    JavaScript: "fab fa-js-square",
-    TypeScript: "fas fa-code",
-    "Vue.js": "fab fa-vuejs",
-    React: "fab fa-react",
-    "Node.js": "fab fa-node-js",
-    "Nuxt.js": "fas fa-layer-group",
+    "TypeScript / JavaScript": "fab fa-js-square",
+    "React / React Native": "fab fa-react",
+    "Vue.js / Nuxt.js": "fab fa-vuejs",
+    "CSS Frameworks": "fas fa-paint-brush",
+    "Responsive Design": "fas fa-mobile-alt",
+    "Node.js / Express.js": "fab fa-node-js",
+    "MongoDB / Mongoose": "fas fa-database",
+    "Directus CMS": "fas fa-cogs",
+    "REST APIs": "fas fa-exchange-alt",
+    "CI/CD Pipelines": "fas fa-tools",
+    Docker: "fab fa-docker",
+    "Git / GitHub": "fab fa-github",
+    "Agile & Scrum": "fas fa-users",
   };
-  return icons[tech] || "fas fa-code";
-};
-
-// Get consistent styling for tech items
-const getTechStyle = (index: number): string => {
-  const baseClasses =
-    "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-200 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20";
-  return baseClasses;
+  return icons[skill] || "fas fa-code";
 };
 
 // Scroll to section function
