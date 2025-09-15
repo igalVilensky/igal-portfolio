@@ -44,7 +44,7 @@
         </div>
 
         <!-- Desktop Navigation -->
-        <div class="hidden md:block">
+        <div class="hidden lg:block">
           <div class="ml-10 flex items-center space-x-6">
             <div
               v-for="item in navigationItems"
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Desktop Right Side -->
-        <div class="hidden md:flex items-center space-x-4">
+        <div class="hidden lg:flex items-center space-x-4">
           <!-- Language Switcher -->
           <div class="relative group/lang-selector">
             <div
@@ -312,7 +312,7 @@
         </div>
 
         <!-- Mobile Menu Controls -->
-        <div class="md:hidden flex items-center space-x-3">
+        <div class="lg:hidden flex items-center space-x-3">
           <!-- Mobile Language Switcher -->
           <div class="relative group/lang-selector">
             <div

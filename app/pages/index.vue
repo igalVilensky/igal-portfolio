@@ -1,6 +1,5 @@
 <template>
   <div class="relative pt-12">
-    <Orb stage="home" />
     <Hero />
   </div>
 </template>
@@ -9,7 +8,6 @@
 import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
-import Orb from "~/components/Orb.vue";
 import Hero from "~/components/Hero.vue";
 
 definePageMeta({
