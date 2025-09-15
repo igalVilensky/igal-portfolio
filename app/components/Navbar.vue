@@ -4,7 +4,7 @@
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     :class="[
       colorMode.value === 'dark'
-        ? 'bg-[#0D0F12]/95 text-white border-b border-[#1B2432]/50'
+        ? 'bg-[#0D0F12]/95 text-white border-b border-[#1B2432]'
         : 'bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 text-black border-b border-slate-200/30',
       isScrolled ? 'backdrop-blur-lg shadow-xl' : 'backdrop-blur-md shadow-lg',
     ]"

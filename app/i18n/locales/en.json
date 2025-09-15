@@ -19,6 +19,9 @@
     "downloadCV": "Download CV"
   },
   "about": {
+    "learnMore": "Learn More",
+    "journeyTitle": "My Journey",
+    "beyondCodeTitle": "Beyond Code",
     "title": "Hey, I'm Igal!",
     "me": "Nice to meet you",
     "subtitle": "I’m a full-stack developer with a knack for improvisation, a love for creating tools that make life easier, and a colorful life story that spans continents and stages. Based in Leipzig, Germany, I blend code with creativity to build apps that people love to use.",
@@ -241,6 +244,9 @@
     "copyright2": "and lots of ☕"
   },
   "seo": {
-    "title": "Igal Vilensky - Web Developer Portfolio"
+    "title": "Igal Vilensky - Web Developer Portfolio",
+    "about": "About",
+    "education": "Education",
+    "experience": "Experience"
   }
 }

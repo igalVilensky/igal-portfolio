@@ -1,7 +1,7 @@
 <template>
   <footer
     id="contact"
-    class="relative bg-[#0D0F12] dark:bg-[#0D0F12] text-white overflow-hidden transition-all duration-500"
+    class="border-t border-[#1B2432] backdrop-blur-md shadow-lg relative bg-[#0D0F12] dark:bg-[#0D0F12] text-white overflow-hidden transition-all duration-500"
   >
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
@@ -37,7 +37,7 @@
       <div class="mb-16 animate-slide-up">
         <div class="text-center mb-12">
           <h2 class="text-4xl md:text-5xl font-bold text-[#809FFF] mb-4">
-            {{ $t("contact.title") || "Get In Touch" }}
+            {{ $t("contact.title") }} {{ $t("contact.lets") }}
           </h2>
           <p class="text-xl text-slate-300 max-w-3xl mx-auto">
             {{
@@ -140,9 +140,6 @@
 
       <!-- Social Links -->
       <div class="mb-16 animate-slide-up-delayed-4">
-        <h3 class="text-2xl font-semibold text-[#F41A81] text-center mb-8">
-          Connect With Me
-        </h3>
         <div class="flex justify-center space-x-8">
           <a
             v-for="social in socialLinks"
