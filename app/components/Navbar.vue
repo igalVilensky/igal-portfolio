@@ -674,10 +674,10 @@ const isLanguageMenuOpen = ref(false);
 // Navigation items
 const navigationItems = [
   { id: "home", path: "/", icon: "fas fa-home" },
-  { id: "about", path: "/about", icon: "fas fa-user" },
   { id: "projects", path: "/projects", icon: "fas fa-folder-open" },
-  { id: "education", path: "/education", icon: "fas fa-graduation-cap" },
   { id: "experience", path: "/experience", icon: "fas fa-briefcase" },
+  { id: "education", path: "/education", icon: "fas fa-graduation-cap" },
+  { id: "about", path: "/about", icon: "fas fa-user" },
 ];
 
 // Available languages
