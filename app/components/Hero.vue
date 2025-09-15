@@ -1,6 +1,6 @@
 <template>
   <section
-    class="relative min-h-screen overflow-hidden transition-all duration-500"
+    class="relative min-h-screen overflow-hidden transition-all duration-500 -mb-12"
     :style="{
       background: isCustomized
         ? isDarkMode
@@ -281,9 +281,9 @@
     </div>
 
     <div
-      class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16 min-h-screen flex items-center"
+      class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center"
     >
-      <div class="w-full text-center">
+      <div class="w-full text-center mb-8 sm:mb-16">
         <!-- Profile Image with dynamic gradient frames -->
         <div
           class="sm:mb-8 relative inline-block group/profile"

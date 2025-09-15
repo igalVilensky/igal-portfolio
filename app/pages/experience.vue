@@ -1,7 +1,7 @@
 <!-- app/pages/experience.vue -->
 <template>
   <div class="relative pt-12">
-    <Orb stage="experience" />
+    <Orb stage="experience" class="hidden lg:block" />
     <ExperienceContent />
   </div>
 </template>

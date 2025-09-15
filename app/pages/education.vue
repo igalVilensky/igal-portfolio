@@ -1,7 +1,7 @@
 <!-- app/pages/education.vue -->
 <template>
   <div class="relative pt-12">
-    <Orb stage="education" />
+    <Orb stage="education" class="hidden lg:block" />
     <EducationContent />
   </div>
 </template>
