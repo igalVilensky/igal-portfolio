@@ -211,7 +211,7 @@
                           : 'text-blue-600 bg-blue-50/30'
                         : '',
                     ]"
-                    @click="isLanguageMenuOpen = false"
+                    @click="handleLanguageSwitch(lang.code)"
                   >
                     {{ lang.name }}
                     <div
@@ -399,7 +399,7 @@
                           : 'text-blue-600 bg-blue-50/30'
                         : '',
                     ]"
-                    @click="isLanguageMenuOpen = false"
+                    @click="handleLanguageSwitch(lang.code)"
                   >
                     {{ lang.name }}
                     <div
@@ -657,7 +657,7 @@ import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
 
 // i18n
-const { locale } = useI18n();
+const { locale, setLocale } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
 
 // Dark mode
@@ -680,13 +680,21 @@ const navigationItems = [
   { id: "experience", path: "/experience", icon: "fas fa-briefcase" },
 ];
 
-// Available languages (sync with nuxt.config.ts i18n.locales)
+// Available languages
 type LanguageCode = "en" | "de" | "ru";
 const languages: { code: LanguageCode; name: string }[] = [
   { code: "en", name: "English 🇬🇧" },
   { code: "de", name: "Deutsch 🇩🇪" },
   { code: "ru", name: "Русский 🇷🇺" },
 ];
+
+// Initialize locale from localStorage
+const initLocale = () => {
+  const savedLocale = localStorage.getItem("i18n_locale");
+  if (savedLocale && ["en", "de", "ru"].includes(savedLocale)) {
+    setLocale(savedLocale as LanguageCode);
+  }
+};
 
 // Dark mode toggle
 const toggleColorMode = () => {
@@ -696,6 +704,14 @@ const toggleColorMode = () => {
 // Toggle language menu
 const toggleLanguageMenu = () => {
   isLanguageMenuOpen.value = !isLanguageMenuOpen.value;
+};
+
+// Handle language switch
+const handleLanguageSwitch = async (langCode: LanguageCode) => {
+  await setLocale(langCode); // Update i18n locale
+
+  localStorage.setItem("i18n_locale", langCode); // Save to localStorage
+  isLanguageMenuOpen.value = false;
 };
 
 // Scroll detection for navbar shadow
@@ -714,15 +730,16 @@ const handleClickOutside = (event: Event) => {
   }
 };
 
-// Watch color mode for consistent rendering
+// Watch route changes to sync locale
 watch(
-  () => colorMode.value,
+  () => route.path,
   () => {
-    isScrolled.value = isScrolled.value; // Trigger re-render
+    initLocale(); // Re-sync locale on route change
   }
 );
 
 onMounted(() => {
+  initLocale(); // Set initial locale
   window.addEventListener("scroll", handleScroll, { passive: true });
   document.addEventListener("click", handleClickOutside);
   handleScroll();

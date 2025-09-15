@@ -1,4 +1,3 @@
-// nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
@@ -11,6 +10,12 @@ export default defineNuxtConfig({
       { code: "ru", iso: "ru-RU", file: "ru.json", name: "Русский 🇷🇺" },
     ],
     defaultLocale: "en",
+    vueI18n: "./i18n.config.ts",
+    detectBrowserLanguage: {
+      useCookie: false, // Disable cookie-based persistence
+      redirectOn: "root",
+      alwaysRedirect: false,
+    },
   },
   colorMode: {
     preference: "dark",

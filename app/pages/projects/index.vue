@@ -7,23 +7,6 @@
         : 'bg-white text-gray-900'
     "
   >
-    <!-- Navbar -->
-    <Navbar />
-
-    <!-- Back to Home Button -->
-    <div class="fixed top-4 left-4 z-50">
-      <NuxtLink
-        to="/"
-        class="group bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-1 sm:gap-2 backdrop-blur-sm bg-opacity-95"
-      >
-        <i
-          class="fas fa-home group-hover:animate-bounce text-xs sm:text-sm"
-        ></i>
-        <span class="hidden xs:inline">{{ $t("nav.backToHome") }}</span>
-        <span class="xs:hidden">{{ $t("nav.home") }}</span>
-      </NuxtLink>
-    </div>
-
     <!-- Enhanced Projects Header -->
     <header class="relative pt-20 pb-8 sm:pb-12 sm:pt-32 px-4 overflow-hidden">
       <!-- Animated Background Elements -->
@@ -50,7 +33,7 @@
         <!-- Title Section -->
         <div class="text-center mb-8 sm:mb-12">
           <h1
-            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-4 leading-tight animate-slide-up"
+            class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4 leading-tight animate-slide-up"
           >
             {{ $t("projects.title") }}
             <span
