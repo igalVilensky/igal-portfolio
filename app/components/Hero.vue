@@ -658,14 +658,20 @@ const mouseTrail = ref<
   { x: number; y: number; size: number; alpha: number; color: string }[]
 >([]);
 
-// Detect dark mode
+// Detect dark mode safely
 const isDarkMode = computed(() => {
-  return document.documentElement.classList.contains("dark");
+  if (process.client) {
+    return document.documentElement.classList.contains("dark");
+  }
+  return true; // Default to dark mode during SSR/prerendering
 });
 
-// Detect reduced motion preference
+// Detect reduced motion preference safely
 const prefersReducedMotion = computed(() => {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (process.client) {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+  return false; // Default to no reduced motion during SSR/prerendering
 });
 
 // Themes with separate light and dark backgrounds
@@ -797,7 +803,7 @@ const setTheme = (theme) => {
 };
 
 const triggerEffect = (effect: string) => {
-  if (window.innerWidth < 640) {
+  if (process.client && window.innerWidth < 640) {
     showControls.value = false;
   }
   if (effect === "shake") {
@@ -860,7 +866,7 @@ const triggerTitleAnimation = () => {
 };
 
 const createClickEffect = (event: MouseEvent) => {
-  if (prefersReducedMotion.value) return;
+  if (prefersReducedMotion.value || !process.client) return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
 
@@ -913,7 +919,7 @@ const createClickEffect = (event: MouseEvent) => {
 };
 
 const handleMouseMove = throttle((event: MouseEvent) => {
-  if (prefersReducedMotion.value) return;
+  if (prefersReducedMotion.value || !process.client) return;
 
   // Update parallax offset
   if (enableParallax.value) {
@@ -946,7 +952,8 @@ const handleMouseMove = throttle((event: MouseEvent) => {
 }, 50);
 
 const drawMouseTrail = () => {
-  if (prefersReducedMotion.value || !enableMouseTrail.value) return;
+  if (prefersReducedMotion.value || !enableMouseTrail.value || !process.client)
+    return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
 
@@ -1014,6 +1021,7 @@ const startTypingEffect = () => {
 
 // Setup canvas
 const setupCanvas = () => {
+  if (!process.client) return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
 
@@ -1032,7 +1040,7 @@ const setupCanvas = () => {
 
 // Watch for mouse trail toggle
 watch(enableMouseTrail, (newValue) => {
-  if (prefersReducedMotion.value) return;
+  if (prefersReducedMotion.value || !process.client) return;
   if (newValue) {
     drawMouseTrail();
   } else {
@@ -1054,10 +1062,12 @@ onMounted(() => {
 
 // Watch for animation speed changes
 watch(animationSpeed, (newSpeed) => {
-  document.documentElement.style.setProperty(
-    "--animation-speed",
-    newSpeed.toString()
-  );
+  if (process.client) {
+    document.documentElement.style.setProperty(
+      "--animation-speed",
+      newSpeed.toString()
+    );
+  }
 });
 
 // Respect reduced motion
@@ -1072,7 +1082,7 @@ watch(prefersReducedMotion, (reduceMotion) => {
 });
 
 const closeControlsOnMobile = () => {
-  if (window.innerWidth < 640) {
+  if (process.client && window.innerWidth < 640) {
     showControls.value = false;
   }
 };
