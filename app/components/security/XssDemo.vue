@@ -1,18 +1,22 @@
 <template>
-  <div class="max-w-6xl mx-auto space-y-8">
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8"
+  >
     <!-- Header Section -->
-    <div class="text-center space-y-4">
+    <div class="text-center space-y-3 sm:space-y-4">
       <div
-        class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full mb-4"
+        class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full mb-3 sm:mb-4"
       >
-        <i class="fas fa-code text-white text-2xl"></i>
+        <i class="fas fa-code text-white text-xl sm:text-2xl"></i>
       </div>
       <h1
-        class="text-3xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent"
+        class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent"
       >
         Cross-Site Scripting (XSS) Demo
       </h1>
-      <p class="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+      <p
+        class="text-gray-600 dark:text-gray-300 text-sm sm:text-base max-w-xl mx-auto"
+      >
         Learn about XSS vulnerabilities by testing malicious payloads in a safe
         environment. See the difference between vulnerable and secure
         implementations.
@@ -22,41 +26,43 @@
     <!-- Security Level Indicator -->
     <div class="flex justify-center">
       <div
-        class="inline-flex items-center px-6 py-3 rounded-full border-2 transition-all duration-300"
+        class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 rounded-full border-2 transition-all duration-300 text-sm sm:text-base"
         :class="securityStatusClass"
       >
-        <i class="fas mr-2" :class="securityStatusIcon"></i>
+        <i class="fas mr-1 sm:mr-2" :class="securityStatusIcon"></i>
         <span class="font-semibold">{{ securityStatusText }}</span>
       </div>
     </div>
 
     <!-- Input Section -->
     <div
-      class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700"
+      class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700"
     >
-      <div class="flex items-center justify-between mb-4">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 sm:mb-4 gap-3"
+      >
         <label
-          class="block font-semibold text-lg text-gray-800 dark:text-gray-200"
+          class="block font-semibold text-base sm:text-lg text-gray-800 dark:text-gray-200"
         >
-          <i class="fas fa-keyboard mr-2 text-blue-500"></i>
+          <i class="fas fa-keyboard mr-1 sm:mr-2 text-blue-500"></i>
           Test Your XSS Payload
         </label>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2">
           <button
             @click="insertSamplePayload('basic')"
-            class="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 rounded-full transition-colors"
+            class="px-3 py-1 text-xs sm:text-sm bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 rounded-full transition-colors touch-manipulation"
           >
             Basic Script
           </button>
           <button
             @click="insertSamplePayload('image')"
-            class="px-3 py-1 text-xs bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 rounded-full transition-colors"
+            class="px-3 py-1 text-xs sm:text-sm bg-purple-100 hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800 text-purple-700 dark:text-purple-300 rounded-full transition-colors touch-manipulation"
           >
             Image XSS
           </button>
           <button
             @click="insertSamplePayload('advanced')"
-            class="px-3 py-1 text-xs bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:hover:bg-orange-800 text-orange-700 dark:text-orange-300 rounded-full transition-colors"
+            class="px-3 py-1 text-xs sm:text-sm bg-orange-100 hover:bg-orange-200 dark:bg-orange-900 dark:hover:bg-orange-800 text-orange-700 dark:text-orange-300 rounded-full transition-colors touch-manipulation"
           >
             Advanced
           </button>
@@ -66,7 +72,7 @@
       <div class="relative">
         <textarea
           v-model="userInput"
-          class="w-full p-4 border-2 rounded-xl dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 font-mono text-sm resize-none"
+          class="w-full p-3 sm:p-4 border-2 rounded-xl dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 font-mono text-xs sm:text-sm resize-none"
           :class="inputBorderClass"
           placeholder="Enter XSS payload to test..."
           rows="3"
@@ -74,13 +80,16 @@
         />
 
         <!-- Threat Level Indicator -->
-        <div v-if="threatLevel > 0" class="absolute top-3 right-3">
-          <div class="flex items-center space-x-1">
+        <div
+          v-if="threatLevel > 0"
+          class="absolute top-2 sm:top-3 right-2 sm:right-3"
+        >
+          <div class="flex items-center space-x-1 sm:space-x-2">
             <div class="flex space-x-1">
               <div
                 v-for="i in 5"
                 :key="i"
-                class="w-2 h-6 rounded-full transition-all duration-300"
+                class="w-1.5 h-4 sm:w-2 sm:h-6 rounded-full transition-all duration-300"
                 :class="
                   i <= threatLevel
                     ? threatLevelColor
@@ -89,7 +98,7 @@
               ></div>
             </div>
             <span
-              class="ml-2 text-xs font-semibold px-2 py-1 rounded-full"
+              class="ml-1 sm:ml-2 text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full"
               :class="threatLevelTextClass"
             >
               {{ threatLevelText }}
@@ -99,16 +108,18 @@
       </div>
 
       <!-- Detected Patterns -->
-      <div v-if="detectedPatterns.length > 0" class="mt-3">
-        <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+      <div v-if="detectedPatterns.length > 0" class="mt-2 sm:mt-3">
+        <div
+          class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1 sm:mb-2"
+        >
           <i class="fas fa-search mr-1"></i>
           Detected patterns:
         </div>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-1 sm:gap-2">
           <span
             v-for="pattern in detectedPatterns"
             :key="pattern"
-            class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs rounded-full"
+            class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs rounded-full"
           >
             {{ pattern }}
           </span>
@@ -117,12 +128,12 @@
 
       <!-- Character Counter -->
       <div
-        class="flex justify-between items-center mt-3 text-sm text-gray-500 dark:text-gray-400"
+        class="flex justify-between items-center mt-2 sm:mt-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400"
       >
         <span>{{ userInput.length }}/500 characters</span>
         <button
           @click="reset"
-          class="px-3 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 rounded-lg transition-colors"
+          class="px-2 sm:px-3 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 rounded-lg transition-colors touch-manipulation"
         >
           <i class="fas fa-trash mr-1"></i>
           Clear
@@ -131,25 +142,27 @@
     </div>
 
     <!-- Demo Sections -->
-    <div class="grid lg:grid-cols-2 gap-6">
+    <div class="grid gap-4 sm:gap-6 lg:grid-cols-2">
       <!-- Vulnerable Section -->
       <div
         class="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-2xl shadow-lg border-2 border-red-200 dark:border-red-800 overflow-hidden"
       >
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-4">
+        <div class="p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-3 sm:mb-4">
             <h3
-              class="font-bold text-xl text-red-700 dark:text-red-400 flex items-center"
+              class="font-bold text-lg sm:text-xl text-red-700 dark:text-red-400 flex items-center"
             >
               <div
-                class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-3"
+                class="w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-full flex items-center justify-center mr-2 sm:mr-3"
               >
-                <i class="fas fa-unlock text-white text-sm"></i>
+                <i class="fas fa-unlock text-white text-xs sm:text-sm"></i>
               </div>
               Vulnerable Rendering
             </h3>
-            <div class="flex items-center space-x-2">
-              <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            <div class="flex items-center space-x-1 sm:space-x-2">
+              <div
+                class="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full animate-pulse"
+              ></div>
               <span class="text-xs font-medium text-red-600 dark:text-red-400"
                 >LIVE DANGER</span
               >
@@ -157,9 +170,11 @@
           </div>
 
           <div
-            class="text-sm text-red-600 dark:text-red-400 mb-3 flex items-start space-x-2"
+            class="text-xs sm:text-sm text-red-600 dark:text-red-400 mb-2 sm:mb-3 flex items-start space-x-1 sm:space-x-2"
           >
-            <i class="fas fa-exclamation-triangle mt-1 flex-shrink-0"></i>
+            <i
+              class="fas fa-exclamation-triangle mt-0.5 sm:mt-1 flex-shrink-0"
+            ></i>
             <span
               >This renders user input directly with
               <code class="bg-red-200 dark:bg-red-800 px-1 rounded"
@@ -175,14 +190,14 @@
               v-if="threatLevel > 3"
             ></div>
             <div
-              class="p-4 bg-white dark:bg-gray-900 rounded-lg border-2 border-red-300 dark:border-red-700 min-h-[100px] transition-all duration-300 relative overflow-auto"
+              class="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border-2 border-red-300 dark:border-red-700 min-h-[80px] sm:min-h-[100px] transition-all duration-300 relative overflow-auto text-xs sm:text-sm"
               :class="{ 'ring-4 ring-red-500/50': threatLevel > 3 }"
               v-html="userInput || defaultOutput"
             ></div>
           </div>
 
           <div
-            class="mt-3 text-xs text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-2 rounded"
+            class="mt-2 sm:mt-3 text-xs text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-2 rounded"
           >
             <i class="fas fa-code mr-1"></i>
             Code: <code>&lt;div v-html="userInput"&gt;&lt;/div&gt;</code>
@@ -194,20 +209,22 @@
       <div
         class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl shadow-lg border-2 border-green-200 dark:border-green-800 overflow-hidden"
       >
-        <div class="p-6">
-          <div class="flex items-center justify-between mb-4">
+        <div class="p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-3 sm:mb-4">
             <h3
-              class="font-bold text-xl text-green-700 dark:text-green-400 flex items-center"
+              class="font-bold text-lg sm:text-xl text-green-700 dark:text-green-400 flex items-center"
             >
               <div
-                class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3"
+                class="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center mr-2 sm:mr-3"
               >
-                <i class="fas fa-lock text-white text-sm"></i>
+                <i class="fas fa-lock text-white text-xs sm:text-sm"></i>
               </div>
               Safe Rendering
             </h3>
-            <div class="flex items-center space-x-2">
-              <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div class="flex items-center space-x-1 sm:space-x-2">
+              <div
+                class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"
+              ></div>
               <span
                 class="text-xs font-medium text-green-600 dark:text-green-400"
                 >PROTECTED</span
@@ -216,9 +233,9 @@
           </div>
 
           <div
-            class="text-sm text-green-600 dark:text-green-400 mb-3 flex items-start space-x-2"
+            class="text-xs sm:text-sm text-green-600 dark:text-green-400 mb-2 sm:mb-3 flex items-start space-x-1 sm:space-x-2"
           >
-            <i class="fas fa-shield-alt mt-1 flex-shrink-0"></i>
+            <i class="fas fa-shield-alt mt-0.5 sm:mt-1 flex-shrink-0"></i>
             <span
               >This escapes HTML automatically with text interpolation
               <code class="bg-green-200 dark:bg-green-800 px-1 rounded"
@@ -228,13 +245,13 @@
           </div>
 
           <div
-            class="p-4 bg-white dark:bg-gray-900 rounded-lg border-2 border-green-300 dark:border-green-700 min-h-[100px] whitespace-pre-wrap break-words font-mono text-sm"
+            class="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border-2 border-green-300 dark:border-green-700 min-h-[80px] sm:min-h-[100px] whitespace-pre-wrap break-words font-mono text-xs sm:text-sm"
           >
             {{ userInput || "Output will appear here..." }}
           </div>
 
           <div
-            class="mt-3 text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-2 rounded"
+            class="mt-2 sm:mt-3 text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 p-2 rounded"
           >
             <i class="fas fa-code mr-1"></i>
             Code:
@@ -247,47 +264,53 @@
     </div>
 
     <!-- Educational Cards -->
-    <div class="grid md:grid-cols-3 gap-4">
+    <div class="grid gap-3 sm:gap-4 md:grid-cols-3">
       <div
-        class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-800"
+        class="bg-blue-50 dark:bg-blue-900/20 p-3 sm:p-4 rounded-xl border border-blue-200 dark:border-blue-800"
       >
         <div class="flex items-center mb-2">
-          <i class="fas fa-lightbulb text-blue-500 mr-2"></i>
-          <h4 class="font-semibold text-blue-800 dark:text-blue-400">
+          <i class="fas fa-lightbulb text-blue-500 mr-1 sm:mr-2"></i>
+          <h4
+            class="font-semibold text-sm sm:text-base text-blue-800 dark:text-blue-400"
+          >
             What is XSS?
           </h4>
         </div>
-        <p class="text-sm text-blue-700 dark:text-blue-300">
+        <p class="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
           Cross-Site Scripting allows attackers to inject malicious scripts into
           web pages viewed by other users.
         </p>
       </div>
 
       <div
-        class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-800"
+        class="bg-purple-50 dark:bg-purple-900/20 p-3 sm:p-4 rounded-xl border border-purple-200 dark:border-purple-800"
       >
         <div class="flex items-center mb-2">
-          <i class="fas fa-bug text-purple-500 mr-2"></i>
-          <h4 class="font-semibold text-purple-800 dark:text-purple-400">
+          <i class="fas fa-bug text-purple-500 mr-1 sm:mr-2"></i>
+          <h4
+            class="font-semibold text-sm sm:text-base text-purple-800 dark:text-purple-400"
+          >
             Impact
           </h4>
         </div>
-        <p class="text-sm text-purple-700 dark:text-purple-300">
+        <p class="text-xs sm:text-sm text-purple-700 dark:text-purple-300">
           XSS can steal cookies, hijack sessions, deface websites, or redirect
           users to malicious sites.
         </p>
       </div>
 
       <div
-        class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800"
+        class="bg-emerald-50 dark:bg-emerald-900/20 p-3 sm:p-4 rounded-xl border border-emerald-200 dark:border-emerald-800"
       >
         <div class="flex items-center mb-2">
-          <i class="fas fa-shield-alt text-emerald-500 mr-2"></i>
-          <h4 class="font-semibold text-emerald-800 dark:text-emerald-400">
+          <i class="fas fa-shield-alt text-emerald-500 mr-1 sm:mr-2"></i>
+          <h4
+            class="font-semibold text-sm sm:text-base text-emerald-800 dark:text-emerald-400"
+          >
             Prevention
           </h4>
         </div>
-        <p class="text-sm text-emerald-700 dark:text-emerald-300">
+        <p class="text-xs sm:text-sm text-emerald-700 dark:text-emerald-300">
           Always escape user input, validate data, use CSP headers, and avoid
           innerHTML/v-html with user data.
         </p>
@@ -296,15 +319,15 @@
 
     <!-- Sample Payloads -->
     <details
-      class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700"
+      class="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-gray-700"
     >
       <summary
-        class="font-semibold text-gray-800 dark:text-gray-200 cursor-pointer flex items-center"
+        class="font-semibold text-sm sm:text-base text-gray-800 dark:text-gray-200 cursor-pointer flex items-center"
       >
-        <i class="fas fa-code mr-2 text-gray-500"></i>
+        <i class="fas fa-code mr-1 sm:mr-2 text-gray-500"></i>
         Common XSS Payloads (Educational)
       </summary>
-      <div class="mt-4 space-y-3">
+      <div class="mt-3 sm:mt-4 space-y-3">
         <div
           v-for="(payload, index) in samplePayloads"
           :key="index"
@@ -312,12 +335,12 @@
         >
           <div class="flex items-center justify-between mb-2">
             <span
-              class="font-medium text-sm text-gray-700 dark:text-gray-300"
+              class="font-medium text-xs sm:text-sm text-gray-700 dark:text-gray-300"
               >{{ payload.name }}</span
             >
             <button
               @click="userInput = payload.code"
-              class="px-2 py-1 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 text-xs rounded transition-colors"
+              class="px-2 py-1 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 text-xs rounded transition-colors touch-manipulation"
             >
               Try it
             </button>
@@ -355,7 +378,7 @@ export default {
         },
         {
           name: "SVG with onload",
-          code: "<svg onload='alert(\"SVG XSS\")'>",
+          code: "<svg onload='alert(\"SVG XSS\")'></svg>",
           description: "SVG element with JavaScript in onload attribute",
         },
         {
@@ -516,5 +539,14 @@ code::-webkit-scrollbar-thumb {
 
 code::-webkit-scrollbar-thumb:hover {
   background: rgb(107, 114, 128);
+}
+
+/* Improve touch interactions */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-manipulation {
+  touch-action: manipulation;
 }
 </style>

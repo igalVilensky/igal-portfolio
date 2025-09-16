@@ -14,6 +14,7 @@
       '--accent-color': currentTheme.accent,
     }"
     @mousemove="handleMouseMove"
+    @scroll="handleScroll"
   >
     <Orb stage="contact" />
 
@@ -22,10 +23,9 @@
       class="fixed top-20 right-4 z-50 transition-all duration-300"
       :class="{ 'translate-x-full': !showControls }"
     >
-      <!-- Toggle Button -->
       <button
         @click="toggleControls"
-        class="absolute -left-12 top-4 w-10 h-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-l-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+        class="absolute -left-12 top-4 w-10 h-10 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-l-xl shadow-lg hover:shadow-xl hover:scale-110 transition-transform duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
         :style="{ color: currentTheme.primary }"
       >
         <i
@@ -34,7 +34,6 @@
         ></i>
       </button>
 
-      <!-- Control Panel -->
       <div
         class="w-72 max-h-[calc(100vh-6rem)] bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl shadow-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 overflow-y-auto sm:overflow-y-visible"
       >
@@ -48,7 +47,6 @@
           Interactive Controls
         </h3>
 
-        <!-- Theme Selector -->
         <div class="mb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -59,7 +57,7 @@
               v-for="(theme, key) in themes"
               :key="key"
               @click="setTheme(theme)"
-              class="h-12 rounded-lg border-2 transition-all duration-200 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              class="h-12 rounded-lg border-2 hover:scale-105 transition-transform duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
               :class="
                 currentTheme === theme
                   ? 'border-gray-800 dark:border-white shadow-lg'
@@ -74,7 +72,6 @@
           </div>
         </div>
 
-        <!-- Animation Speed -->
         <div class="mb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -87,7 +84,7 @@
             min="0.5"
             max="3"
             step="0.1"
-            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
             :style="{
               background: `linear-gradient(to right, ${
                 currentTheme.primary
@@ -100,7 +97,6 @@
           />
         </div>
 
-        <!-- Particle Count -->
         <div class="mb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -111,20 +107,19 @@
             v-model="particleCount"
             type="range"
             min="3"
-            max="15"
+            max="20"
             step="1"
-            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
             :style="{
               background: `linear-gradient(to right, ${
                 currentTheme.secondary
               } 0%, ${currentTheme.secondary} ${
-                ((particleCount - 3) / 12) * 100
-              }%, #e5e7eb ${((particleCount - 3) / 12) * 100}%, #e5e7eb 100%)`,
+                ((particleCount - 3) / 17) * 100
+              }%, #e5e7eb ${((particleCount - 3) / 17) * 100}%, #e5e7eb 100%)`,
             }"
           />
         </div>
 
-        <!-- Interactive Toggles -->
         <div class="mb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -141,7 +136,7 @@
                 >Mouse Trail</span
               >
             </label>
-            <label class="flex items-center space-x-2">
+            <label v-if="isDesktop" class="flex items-center space-x-2">
               <input
                 v-model="enableParallax"
                 type="checkbox"
@@ -164,7 +159,6 @@
           </div>
         </div>
 
-        <!-- Fun Effects -->
         <div class="mb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -173,36 +167,30 @@
           <div class="space-y-2">
             <button
               @click="triggerEffect('shake')"
-              class="w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              class="w-full py-2 px-4 rounded-lg font-medium text-white hover:scale-105 transition-transform duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
               :style="{
                 background: `linear-gradient(45deg, ${currentTheme.primary}, ${currentTheme.secondary})`,
-                color: 'white',
               }"
             >
-              <i class="fas fa-bolt mr-2"></i>
-              Shake Effect
+              <i class="fas fa-bolt mr-2"></i> Shake Effect
             </button>
             <button
               @click="triggerEffect('rainbow')"
-              class="w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              class="w-full py-2 px-4 rounded-lg font-medium text-white hover:scale-105 transition-transform duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
               :style="{
                 background: `linear-gradient(45deg, ${currentTheme.secondary}, ${currentTheme.accent})`,
-                color: 'white',
               }"
             >
-              <i class="fas fa-rainbow mr-2"></i>
-              Rainbow Mode
+              <i class="fas fa-rainbow mr-2"></i> Rainbow Mode
             </button>
           </div>
         </div>
 
-        <!-- Reset Button -->
         <button
           @click="resetSettings"
-          class="w-full py-2 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+          class="w-full py-2 px-4 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
         >
-          <i class="fas fa-undo mr-2"></i>
-          Reset to Default
+          <i class="fas fa-undo mr-2"></i> Reset to Default
         </button>
       </div>
     </div>
@@ -224,51 +212,92 @@
       ></div>
     </div>
 
-    <!-- Click Effect Canvas (for mouse trail and click effects) -->
+    <!-- Click Effect Canvas -->
     <canvas
       ref="clickCanvas"
       @click="createClickEffect"
       class="absolute inset-0 pointer-events-none"
-      :class="{ 'pointer-events-auto': enableMouseTrail || true }"
+      :class="{ 'pointer-events-auto': enableMouseTrail }"
     ></canvas>
 
     <!-- Animated background elements -->
     <div class="absolute inset-0 overflow-hidden">
-      <!-- Dynamic floating geometric shapes -->
       <div
-        v-for="i in particleCount"
+        class="absolute inset-0 bg-gradient-to-br opacity-20"
+        :class="{ 'parallax-bg': enableParallax && !prefersReducedMotion }"
+        :style="{
+          background: isCustomized
+            ? `radial-gradient(circle at center, ${currentTheme.accent}33, transparent 70%)`
+            : isDarkMode
+            ? 'radial-gradient(circle at center, #00D4FF33, transparent 70%)'
+            : 'radial-gradient(circle at center, #3B82F633, transparent 70%)',
+          transform:
+            enableParallax && !prefersReducedMotion
+              ? `translate(${parallaxOffset.x * 0.5}px, ${
+                  parallaxOffset.y * 0.5 + scrollOffset * 0.1
+                }px) scale(1.2)`
+              : 'none',
+          willChange: 'transform',
+        }"
+      ></div>
+
+      <div
+        class="absolute inset-0 opacity-30"
+        :class="{ 'parallax-mid': enableParallax && !prefersReducedMotion }"
+        :style="{
+          background: isCustomized
+            ? `radial-gradient(circle at 30% 30%, ${currentTheme.secondary}20, transparent 60%)`
+            : isDarkMode
+            ? 'radial-gradient(circle at 30% 30%, #F41A8120, transparent 60%)'
+            : 'radial-gradient(circle at 30% 30%, #EC489920, transparent 60%)',
+          transform:
+            enableParallax && !prefersReducedMotion
+              ? `translate(${parallaxOffset.x * 1.5}px, ${
+                  parallaxOffset.y * 1.5 + scrollOffset * 0.3
+                }px) scale(1.1)`
+              : 'none',
+          willChange: 'transform',
+        }"
+      ></div>
+
+      <div
+        v-for="i in computedParticleCount"
         :key="`particle-${i}`"
         class="absolute rounded-full blur-xl transition-all duration-1000"
         :class="[
           `animate-float-${i % 3}`,
           { 'animate-shake': shakeEffect && !prefersReducedMotion },
           { 'animate-rainbow': rainbowEffect && !prefersReducedMotion },
-          { parallax: enableParallax && !prefersReducedMotion },
+          { 'parallax-fg': enableParallax && !prefersReducedMotion },
         ]"
         :style="{
           top: `${Math.random() * 80 + 10}%`,
           left: `${Math.random() * 80 + 10}%`,
-          width: `${Math.random() * 80 + 40}px`,
-          height: `${Math.random() * 80 + 40}px`,
+          width: `${Math.random() * (40 + particleCount * 4) + 20}px`,
+          height: `${Math.random() * (40 + particleCount * 4) + 20}px`,
           background: isCustomized
             ? `linear-gradient(45deg, ${currentTheme.primary}33, ${currentTheme.secondary}33)`
             : `linear-gradient(45deg, ${
                 isDarkMode ? '#809FFF20' : '#809FFF33'
               }, ${isDarkMode ? '#F41A8120' : '#F41A8133'})`,
-          animationDuration: `${6 / animationSpeed}s`,
+          animationDuration: `calc(${6 / animationSpeed}s)`,
           animationDelay: `${Math.random() * 2}s`,
           transform:
             enableParallax && !prefersReducedMotion
-              ? `translate(${parallaxOffset.x * 10}px, ${
-                  parallaxOffset.y * 2
+              ? `translate(${
+                  parallaxOffset.x * (3 + i * 0.3) * animationSpeed
+                }px, ${
+                  (parallaxOffset.y * (3 + i * 0.3) + scrollOffset * 0.5) *
+                  animationSpeed
                 }px)`
               : 'none',
+          willChange: 'transform',
         }"
       ></div>
 
-      <!-- Grid pattern -->
       <div
         class="absolute inset-0 opacity-[0.03] dark:opacity-[0.08] transition-opacity duration-500"
+        :class="{ 'parallax-grid': enableParallax && !prefersReducedMotion }"
         :style="{
           backgroundImage: isCustomized
             ? `linear-gradient(90deg, ${currentTheme.primary} 1px, transparent 1px), linear-gradient(180deg, ${currentTheme.primary} 1px, transparent 1px)`
@@ -278,6 +307,13 @@
                 isDarkMode ? '#809FFF' : '#94A3B8'
               } 1px, transparent 1px)`,
           backgroundSize: '60px 60px',
+          transform:
+            enableParallax && !prefersReducedMotion
+              ? `translate(${parallaxOffset.x * 0.8}px, ${
+                  parallaxOffset.y * 0.8 + scrollOffset * 0.2
+                }px)`
+              : 'none',
+          willChange: 'transform',
         }"
       ></div>
     </div>
@@ -286,20 +322,11 @@
       class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex items-center"
     >
       <div class="w-full text-center mb-8 sm:mb-16">
-        <!-- Profile Image with dynamic gradient frames -->
         <div
           class="sm:mb-8 relative inline-block group/profile"
-          :style="{
-            transform:
-              enableParallax && !prefersReducedMotion
-                ? `translate(${parallaxOffset.x * 3}px, ${
-                    parallaxOffset.y * 0.3
-                  }px)`
-                : 'none',
-          }"
+          :style="parallaxStyle(4, 0.4)"
         >
           <div class="relative">
-            <!-- Dynamic gradient border frame -->
             <div
               class="absolute -inset-2 rounded-full blur opacity-30 group-hover/profile:opacity-50 transition-opacity duration-500"
               :class="{
@@ -316,7 +343,7 @@
                     }, ${isDarkMode ? '#F41A81' : '#F41A81'}, ${
                       isDarkMode ? '#809FFF' : '#809FFF'
                     }, ${isDarkMode ? '#809FFF' : '#809FFF'})`,
-                animationDuration: `${4 / animationSpeed}s`,
+                animationDuration: `calc(${4 / animationSpeed}s)`,
               }"
             ></div>
 
@@ -335,7 +362,6 @@
               />
             </div>
 
-            <!-- Dynamic status indicator -->
             <div
               class="absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
               :style="{
@@ -363,7 +389,6 @@
           </div>
         </div>
 
-        <!-- Main Heading with dynamic colors -->
         <div class="mb-8 space-y-4">
           <div>
             <h1
@@ -372,6 +397,7 @@
                 'animate-shake': shakeEffect && !prefersReducedMotion,
                 'animate-pulse': titleClicked && !prefersReducedMotion,
               }"
+              :style="parallaxStyle(2, 0.3)"
               @click="triggerTitleAnimation"
             >
               <span
@@ -405,10 +431,10 @@
             </h1>
           </div>
 
-          <!-- Typing effect with dynamic indicator -->
           <div>
             <div
               class="inline-flex items-center space-x-2 animate-slide-up-delayed-2"
+              :style="parallaxStyle(1.5, 0.2)"
             >
               <div
                 class="w-2 h-2 rounded-full animate-pulse"
@@ -440,21 +466,14 @@
           </div>
         </div>
 
-        <!-- Action Buttons with dynamic styling -->
         <div
           class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-8 sm:mb-12 animate-slide-up-delayed-4"
+          :style="parallaxStyle(2.5, 0.35)"
         >
-          <!-- Primary CTA -->
           <div class="group/btn-primary relative">
             <div
-              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-primary:opacity-100 transition-all duration-300"
-              :style="{
-                background: isCustomized
-                  ? `linear-gradient(45deg, ${currentTheme.primary}, ${currentTheme.secondary})`
-                  : `linear-gradient(45deg, ${
-                      isDarkMode ? '#809FFF' : '#809FFF'
-                    }, ${isDarkMode ? '#F41A81' : '#F41A81'})`,
-              }"
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-primary:opacity-100 transition-opacity duration-300"
+              :style="{ background: gradientStyle }"
             >
               <div
                 class="rounded-xl h-full w-full bg-gradient-to-br from-slate-50/95 via-white/95 to-blue-50/95 dark:bg-[#0D0F12]/95"
@@ -462,14 +481,8 @@
             </div>
             <NuxtLink
               to="/projects"
-              class="relative z-10 inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
-              :style="{
-                background: isCustomized
-                  ? `linear-gradient(45deg, ${currentTheme.primary}, ${currentTheme.secondary})`
-                  : `linear-gradient(45deg, ${
-                      isDarkMode ? '#809FFF' : '#809FFF'
-                    }, ${isDarkMode ? '#F41A81' : '#F41A81'})`,
-              }"
+              class="relative z-10 inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              :style="{ background: gradientStyle }"
               :class="{ 'animate-shake': shakeEffect && !prefersReducedMotion }"
               @click="closeControlsOnMobile"
             >
@@ -485,17 +498,10 @@
             </NuxtLink>
           </div>
 
-          <!-- Secondary CTA -->
           <div class="group/btn-secondary relative">
             <div
-              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-secondary:opacity-100 transition-all duration-300"
-              :style="{
-                background: isCustomized
-                  ? `linear-gradient(45deg, ${currentTheme.primary}30, ${currentTheme.secondary}30)`
-                  : `linear-gradient(45deg, ${
-                      isDarkMode ? '#809FFF30' : '#3B82F630'
-                    }, ${isDarkMode ? '#F41A8130' : '#EC489930'})`,
-              }"
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/btn-secondary:opacity-100 transition-opacity duration-300"
+              :style="{ background: gradientStyleSecondary }"
             >
               <div
                 class="rounded-xl h-full w-full bg-white/95 dark:bg-[#1B2432]/95"
@@ -504,7 +510,7 @@
             <a
               href="/Igal_Vilensky.pdf"
               target="_blank"
-              class="relative z-10 inline-flex items-center px-8 py-4 backdrop-blur-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              class="relative z-10 inline-flex items-center px-8 py-4 backdrop-blur-lg font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
               :style="{
                 backgroundColor: isCustomized
                   ? 'rgba(255, 255, 255, 0.1)'
@@ -543,23 +549,17 @@
           </div>
         </div>
 
-        <!-- Social Links with dynamic frames -->
-        <div class="flex justify-center space-x-6 animate-slide-up-delayed-5">
+        <div
+          class="flex justify-center space-x-6 animate-slide-up-delayed-5"
+          :style="parallaxStyle(-3, 0.25)"
+        >
           <div
             v-for="social in socialLinks"
             :key="social.name"
             class="relative group/social"
-            :style="{
-              transform:
-                enableParallax && !prefersReducedMotion
-                  ? `translate(${parallaxOffset.x * -3}px, ${
-                      parallaxOffset.y * -2
-                    }px)`
-                  : 'none',
-            }"
           >
             <div
-              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/social:opacity-100 transition-all duration-300"
+              class="absolute inset-0 rounded-xl p-[1px] opacity-0 group-hover/social:opacity-100 transition-opacity duration-300"
               :style="{
                 background: isCustomized
                   ? social.gradientBorder
@@ -576,7 +576,7 @@
               :href="social.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="relative z-10 w-12 h-12 flex items-center justify-center rounded-xl backdrop-blur-sm shadow-lg transition-all duration-300 transform hover:scale-110 hover:rotate-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
+              class="relative z-10 w-12 h-12 flex items-center justify-center rounded-xl backdrop-blur-sm shadow-lg hover:scale-110 hover:rotate-3 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]"
               :style="{
                 backgroundColor: isCustomized
                   ? 'rgba(255, 255, 255, 0.1)'
@@ -628,19 +628,17 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, watch, nextTick, computed } from "vue";
 
-// Throttle function to limit mousemove event frequency
 const throttle = (func: Function, limit: number) => {
   let inThrottle: boolean;
-  return function (...args: any[]) {
+  return (...args: any[]) => {
     if (!inThrottle) {
-      func.apply(this, args);
+      func(...args);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
   };
 };
 
-// Reactive state
 const showControls = ref(false);
 const animationSpeed = ref(1);
 const particleCount = ref(6);
@@ -651,32 +649,41 @@ const clickCanvas = ref<HTMLCanvasElement | null>(null);
 const isCustomized = ref(false);
 const enableMouseTrail = ref(false);
 const enableParallax = ref(false);
-const enableMusicVisualizer = ref(false);
+const enableMusicVisualizer = ref(true); // Enable by default
 const profileClicked = ref(false);
 const statusClicked = ref(false);
 const titleClicked = ref(false);
 const parallaxOffset = ref({ x: 0, y: 0 });
+const scrollOffset = ref(0);
 const mouseTrail = ref<
   { x: number; y: number; size: number; alpha: number; color: string }[]
 >([]);
 
-// Detect dark mode safely
-const isDarkMode = computed(() => {
-  if (process.client) {
-    return document.documentElement.classList.contains("dark");
-  }
-  return true; // Default to dark mode during SSR/prerendering
-});
+const isDarkMode = computed(
+  () => process.client && document.documentElement.classList.contains("dark")
+);
+const isDesktop = computed(() => process.client && window.innerWidth >= 640);
+const prefersReducedMotion = computed(
+  () =>
+    process.client &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+);
+const computedParticleCount = computed(() => Math.min(particleCount.value, 20));
+const gradientStyle = computed(() =>
+  isCustomized.value
+    ? `linear-gradient(45deg, ${currentTheme.value.primary}, ${currentTheme.value.secondary})`
+    : `linear-gradient(45deg, ${isDarkMode.value ? "#809FFF" : "#809FFF"}, ${
+        isDarkMode.value ? "#F41A81" : "#F41A81"
+      })`
+);
+const gradientStyleSecondary = computed(() =>
+  isCustomized.value
+    ? `linear-gradient(45deg, ${currentTheme.value.primary}30, ${currentTheme.value.secondary}30)`
+    : `linear-gradient(45deg, ${
+        isDarkMode.value ? "#809FFF30" : "#3B82F630"
+      }, ${isDarkMode.value ? "#F41A8130" : "#EC489930"})`
+);
 
-// Detect reduced motion preference safely
-const prefersReducedMotion = computed(() => {
-  if (process.client) {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
-  return false; // Default to no reduced motion during SSR/prerendering
-});
-
-// Themes with separate light and dark backgrounds
 const themes = reactive({
   default: {
     primary: "#809FFF",
@@ -745,7 +752,6 @@ const themes = reactive({
 
 const currentTheme = ref(themes.default);
 
-// Social links
 const socialLinks = reactive([
   {
     name: "GitHub",
@@ -794,7 +800,6 @@ const socialLinks = reactive([
   },
 ]);
 
-// Functions
 const toggleControls = () => {
   showControls.value = !showControls.value;
 };
@@ -805,25 +810,19 @@ const setTheme = (theme) => {
 };
 
 const triggerEffect = (effect: string) => {
-  if (process.client && window.innerWidth < 640) {
-    showControls.value = false;
-  }
+  if (process.client && window.innerWidth < 640) showControls.value = false;
   if (effect === "shake") {
     shakeEffect.value = true;
-    setTimeout(() => {
-      shakeEffect.value = false;
-    }, 1000);
+    setTimeout(() => (shakeEffect.value = false), 1000);
   } else if (effect === "rainbow") {
     rainbowEffect.value = true;
     let colorIndex = 0;
     const rainbowColors = Object.values(themes);
-
     const rainbowInterval = setInterval(() => {
       currentTheme.value = rainbowColors[colorIndex % rainbowColors.length];
       isCustomized.value = true;
       colorIndex++;
     }, 500);
-
     setTimeout(() => {
       clearInterval(rainbowInterval);
       rainbowEffect.value = false;
@@ -840,38 +839,31 @@ const resetSettings = () => {
   isCustomized.value = false;
   enableMouseTrail.value = false;
   enableParallax.value = false;
-  enableMusicVisualizer.value = false;
+  enableMusicVisualizer.value = true;
 };
 
 const triggerProfileBounce = () => {
   if (prefersReducedMotion.value) return;
   profileClicked.value = true;
-  setTimeout(() => {
-    profileClicked.value = false;
-  }, 500);
+  setTimeout(() => (profileClicked.value = false), 500);
 };
 
 const triggerStatusFeedback = () => {
   if (prefersReducedMotion.value) return;
   statusClicked.value = true;
-  setTimeout(() => {
-    statusClicked.value = false;
-  }, 1000);
+  setTimeout(() => (statusClicked.value = false), 1000);
 };
 
 const triggerTitleAnimation = () => {
   if (prefersReducedMotion.value) return;
   titleClicked.value = true;
-  setTimeout(() => {
-    titleClicked.value = false;
-  }, 1000);
+  setTimeout(() => (titleClicked.value = false), 1000);
 };
 
 const createClickEffect = (event: MouseEvent) => {
   if (prefersReducedMotion.value || !process.client) return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
-
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
@@ -881,12 +873,9 @@ const createClickEffect = (event: MouseEvent) => {
 
   let radius = 0;
   const maxRadius = 100;
-  const duration = 800;
-
   const animate = (timestamp: number) => {
     radius += 2;
     const alpha = 1 - radius / maxRadius;
-
     if (alpha > 0) {
       ctx.globalAlpha = alpha;
       ctx.strokeStyle = isCustomized.value
@@ -916,23 +905,32 @@ const createClickEffect = (event: MouseEvent) => {
       if (enableMouseTrail.value) drawMouseTrail();
     }
   };
-
   requestAnimationFrame(animate);
 };
 
+const parallaxStyle = (mouseFactor: number, scrollFactor: number) => ({
+  transform:
+    enableParallax.value && !prefersReducedMotion.value
+      ? `translate(${
+          parallaxOffset.value.x * mouseFactor * animationSpeed.value
+        }px, ${
+          (parallaxOffset.value.y * mouseFactor +
+            scrollOffset.value * scrollFactor) *
+          animationSpeed.value
+        }px)`
+      : "none",
+  willChange: "transform",
+});
+
 const handleMouseMove = throttle((event: MouseEvent) => {
   if (prefersReducedMotion.value || !process.client) return;
-
-  // Update parallax offset
   if (enableParallax.value) {
     const rect = document.documentElement.getBoundingClientRect();
     parallaxOffset.value = {
-      x: Math.min(Math.max((event.clientX - rect.width / 2) / 10, -20), 20),
-      y: Math.min(Math.max((event.clientY - rect.height / 2) / 10, -20), 20),
+      x: Math.min(Math.max((event.clientX - rect.width / 2) / 50, -20), 20),
+      y: Math.min(Math.max((event.clientY - rect.height / 2) / 50, -20), 20),
     };
   }
-
-  // Add mouse trail particle
   if (enableMouseTrail.value) {
     const rect = clickCanvas.value?.getBoundingClientRect();
     if (!rect) return;
@@ -947,9 +945,17 @@ const handleMouseMove = throttle((event: MouseEvent) => {
         ? "#00D4FF"
         : "#00D4FF",
     });
-    if (mouseTrail.value.length > 15) {
-      mouseTrail.value.shift();
-    }
+    if (mouseTrail.value.length > 15) mouseTrail.value.shift();
+  }
+}, 50);
+
+const handleScroll = throttle(() => {
+  if (prefersReducedMotion.value || !process.client) return;
+  if (enableParallax.value) {
+    scrollOffset.value = Math.min(
+      (window.scrollY || window.pageYOffset) / 2,
+      200
+    );
   }
 }, 50);
 
@@ -958,32 +964,26 @@ const drawMouseTrail = () => {
     return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
-
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   mouseTrail.value.forEach((particle, index) => {
     particle.alpha -= 0.05;
     particle.size *= 0.96;
-
     if (particle.alpha <= 0) {
       mouseTrail.value.splice(index, 1);
       return;
     }
-
     ctx.beginPath();
     ctx.arc(particle.x, particle.y, particle.size, 0, 2 * Math.PI);
     ctx.fillStyle = particle.color;
     ctx.globalAlpha = particle.alpha;
     ctx.fill();
   });
-
   requestAnimationFrame(drawMouseTrail);
 };
 
-// Typing effect with multiple titles
 const startTypingEffect = () => {
   const titles = ["Full-stack Developer", "UI/UX Enthusiast", "Tech Innovator"];
   let currentTitleIndex = 0;
@@ -995,52 +995,49 @@ const startTypingEffect = () => {
       typedText.value = titles[0];
       return;
     }
-
     const currentTitle = titles[currentTitleIndex];
-
-    if (isDeleting) {
-      typedText.value = currentTitle.substring(0, currentIndex - 1);
-      currentIndex--;
-    } else {
-      typedText.value = currentTitle.substring(0, currentIndex + 1);
-      currentIndex++;
-    }
+    typedText.value = currentTitle.substring(
+      0,
+      isDeleting ? currentIndex - 1 : currentIndex + 1
+    );
+    currentIndex = isDeleting ? currentIndex - 1 : currentIndex + 1;
 
     if (!isDeleting && currentIndex === currentTitle.length + 1) {
-      setTimeout(() => {
-        isDeleting = true;
-      }, 1000);
+      setTimeout(() => (isDeleting = true), 1000);
     } else if (isDeleting && currentIndex === 0) {
       isDeleting = false;
       currentTitleIndex = (currentTitleIndex + 1) % titles.length;
     }
-
     setTimeout(type, isDeleting ? 50 : 100);
   };
-
   setTimeout(type, 1000);
 };
 
-// Setup canvas
 const setupCanvas = () => {
   if (!process.client) return;
   const canvas = clickCanvas.value;
   if (!canvas) return;
-
   const updateCanvasSize = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   };
-
   updateCanvasSize();
   window.addEventListener("resize", updateCanvasSize);
-
-  if (enableMouseTrail.value) {
-    drawMouseTrail();
-  }
+  if (enableMouseTrail.value) drawMouseTrail();
 };
 
-// Watch for mouse trail toggle
+onMounted(() => {
+  startTypingEffect();
+  nextTick(() => {
+    setupCanvas();
+    if (process.client) window.addEventListener("scroll", handleScroll);
+  });
+});
+
+onUnmounted(() => {
+  if (process.client) window.removeEventListener("scroll", handleScroll);
+});
+
 watch(enableMouseTrail, (newValue) => {
   if (prefersReducedMotion.value || !process.client) return;
   if (newValue) {
@@ -1048,31 +1045,19 @@ watch(enableMouseTrail, (newValue) => {
   } else {
     mouseTrail.value = [];
     const canvas = clickCanvas.value;
-    if (canvas) {
-      const ctx = canvas.getContext("2d");
-      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    if (canvas && canvas.getContext("2d"))
+      canvas.getContext("2d")!.clearRect(0, 0, canvas.width, canvas.height);
   }
 });
 
-onMounted(() => {
-  startTypingEffect();
-  nextTick(() => {
-    setupCanvas();
-  });
-});
-
-// Watch for animation speed changes
 watch(animationSpeed, (newSpeed) => {
-  if (process.client) {
+  if (process.client)
     document.documentElement.style.setProperty(
       "--animation-speed",
       newSpeed.toString()
     );
-  }
 });
 
-// Respect reduced motion
 watch(prefersReducedMotion, (reduceMotion) => {
   if (reduceMotion) {
     enableParallax.value = false;
@@ -1080,48 +1065,49 @@ watch(prefersReducedMotion, (reduceMotion) => {
     enableMusicVisualizer.value = false;
     shakeEffect.value = false;
     rainbowEffect.value = false;
+    scrollOffset.value = 0;
   }
 });
 
+watch(enableMusicVisualizer, () => {
+  nextTick(() => {
+    // Force DOM update to ensure visualizer renders
+  });
+});
+
 const closeControlsOnMobile = () => {
-  if (process.client && window.innerWidth < 640) {
-    showControls.value = false;
-  }
+  if (process.client && window.innerWidth < 640) showControls.value = false;
 };
 </script>
 
 <style scoped>
-/* Enhanced animations */
 @keyframes float-0 {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(calc(-15px * var(--animation-speed)));
   }
 }
-
 @keyframes float-1 {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-15px);
+    transform: translateY(calc(-20px * var(--animation-speed)));
   }
 }
-
 @keyframes float-2 {
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(calc(-25px * var(--animation-speed)));
   }
 }
-
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -1132,7 +1118,6 @@ const closeControlsOnMobile = () => {
     transform: translateY(0);
   }
 }
-
 @keyframes pulse-slow {
   0%,
   100% {
@@ -1142,7 +1127,6 @@ const closeControlsOnMobile = () => {
     opacity: 0.5;
   }
 }
-
 @keyframes pulse-fast {
   0%,
   100% {
@@ -1154,7 +1138,6 @@ const closeControlsOnMobile = () => {
     opacity: 0.7;
   }
 }
-
 @keyframes blink {
   0%,
   50% {
@@ -1165,7 +1148,6 @@ const closeControlsOnMobile = () => {
     opacity: 0;
   }
 }
-
 @keyframes shake {
   0%,
   100% {
@@ -1176,16 +1158,15 @@ const closeControlsOnMobile = () => {
   50%,
   70%,
   90% {
-    transform: translateX(-2px);
+    transform: translateX(-3px);
   }
   20%,
   40%,
   60%,
   80% {
-    transform: translateX(2px);
+    transform: translateX(3px);
   }
 }
-
 @keyframes rainbow {
   0% {
     filter: hue-rotate(0deg);
@@ -1194,7 +1175,6 @@ const closeControlsOnMobile = () => {
     filter: hue-rotate(360deg);
   }
 }
-
 @keyframes bounce {
   0%,
   100% {
@@ -1204,14 +1184,13 @@ const closeControlsOnMobile = () => {
     transform: scale(1.2);
   }
 }
-
 @keyframes visualizer {
   0%,
   100% {
-    transform: scaleY(1);
+    transform: scaleX(1);
   }
   50% {
-    transform: scaleY(1.2);
+    transform: scaleX(calc(1.3 * var(--animation-speed)));
   }
 }
 
@@ -1263,8 +1242,19 @@ const closeControlsOnMobile = () => {
   animation: bounce 0.5s ease-in-out;
 }
 
-/* Custom slider styles */
-.slider::-webkit-slider-thumb {
+.parallax-bg,
+.parallax-mid,
+.parallax-fg,
+.parallax-grid,
+.parallax-profile,
+.parallax-title,
+.parallax-text,
+.parallax-buttons,
+.parallax-social {
+  transition: transform 0.2s ease-out;
+}
+
+input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 16px;
   height: 16px;
@@ -1274,7 +1264,7 @@ const closeControlsOnMobile = () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.slider::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -1284,12 +1274,6 @@ const closeControlsOnMobile = () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Transitions */
-* {
-  transition: all 0.3s ease;
-}
-
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-float-0,
   .animate-float-1,
@@ -1305,7 +1289,15 @@ const closeControlsOnMobile = () => {
   .animate-shake,
   .animate-rainbow,
   .animate-bounce,
-  .parallax,
+  .parallax-bg,
+  .parallax-mid,
+  .parallax-fg,
+  .parallax-grid,
+  .parallax-profile,
+  .parallax-title,
+  .parallax-text,
+  .parallax-buttons,
+  .parallax-social,
   [class*="animate-"] {
     animation: none !important;
     transform: none !important;
@@ -1313,43 +1305,22 @@ const closeControlsOnMobile = () => {
   }
 }
 
-/* Focus styles */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-  border-radius: 8px;
+  @apply outline outline-2 outline-offset-2 outline-[var(--primary-color)] rounded-lg;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   @apply bg-slate-100 dark:bg-slate-800;
 }
-
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-300 dark:bg-slate-600 rounded-full;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-400 dark:bg-slate-500;
-}
-
-/* Mobile optimization */
-@media (max-width: 640px) {
-  .w-72 {
-    width: 100%;
-    max-width: 300px;
-    right: 0;
-  }
-  .fixed.bottom-4.right-4 {
-    bottom: 2rem;
-    right: 1rem;
-    transform: scale(0.8);
-  }
 }
 </style>
