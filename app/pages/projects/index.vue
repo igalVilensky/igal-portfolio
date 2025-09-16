@@ -1,5 +1,7 @@
 <template>
   <div class="min-h-screen font-['Poppins'] bg-[#0D0F12] text-white">
+    <Orb stage="contact" />
+
     <!-- Compact Header -->
     <header class="relative pt-24 pb-8 px-4 overflow-hidden">
       <!-- Animated background elements -->
@@ -23,11 +25,21 @@
       </div>
 
       <div class="relative max-w-6xl mx-auto text-center">
-        <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">
+        <h2
+          class="text-2xl md:text-3xl font-bold mb-4"
+          :class="
+            colorMode.value === 'dark'
+              ? 'text-white'
+              : 'bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent'
+          "
+        >
           {{ $t("projects.title") }}
           <span class="text-[#809FFF]">{{ $t("projects.my") }}</span>
-        </h1>
-        <div class="w-12 h-0.5 bg-[#809FFF] mx-auto mb-6"></div>
+        </h2>
+        <div
+          class="w-24 h-1 mx-auto rounded-full mb-6"
+          :class="colorMode.value === 'dark' ? 'bg-[#809FFF]' : 'bg-blue-600'"
+        ></div>
 
         <!-- Responsive Filter -->
         <div

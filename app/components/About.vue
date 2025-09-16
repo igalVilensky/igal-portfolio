@@ -8,11 +8,12 @@
         : 'bg-gradient-to-br from-slate-50 via-white to-blue-50'
     "
   >
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+    <Orb stage="experience" />
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Section Header -->
       <div class="text-center mb-12">
         <h2
-          class="text-3xl md:text-4xl font-bold mb-4"
+          class="text-2xl md:text-3xl font-bold mb-4"
           :class="
             colorMode.value === 'dark'
               ? 'text-white'
@@ -30,11 +31,7 @@
         </h2>
         <div
           class="w-24 h-1 mx-auto rounded-full mb-6"
-          :class="
-            colorMode.value === 'dark'
-              ? 'bg-gradient-to-r from-[#809FFF] to-[#F41A81]'
-              : 'bg-gradient-to-r from-blue-500 to-cyan-500'
-          "
+          :class="colorMode.value === 'dark' ? 'bg-[#809FFF]' : 'bg-blue-600'"
         ></div>
         <p
           class="text-lg max-w-3xl mx-auto leading-relaxed"

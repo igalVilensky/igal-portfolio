@@ -6,46 +6,6 @@
   >
     <!-- Main Orb System -->
     <div ref="orbSystem" class="relative">
-      <!-- Core Orb -->
-      <div
-        ref="coreOrb"
-        class="core-orb relative rounded-full backdrop-blur-sm border border-white/20"
-        :style="coreOrbStyle"
-      >
-        <!-- Rotating Inner Energy -->
-        <div
-          ref="innerEnergy"
-          class="absolute inset-2 rounded-full animate-spin-slow opacity-60"
-          :style="innerEnergyStyle"
-        />
-
-        <!-- Pulsing Core -->
-        <div
-          ref="pulsingCore"
-          class="absolute inset-4 rounded-full animate-pulse opacity-80"
-          :style="pulsingCoreStyle"
-        />
-
-        <!-- Floating Particles -->
-        <div
-          v-for="(particle, index) in particles"
-          :key="`particle-${index}`"
-          ref="particleElements"
-          class="absolute w-1 h-1 rounded-full"
-          :style="getParticleStyle(index)"
-        />
-
-        <!-- Stage Icon -->
-        <div
-          v-if="currentConfig.icon"
-          ref="stageIcon"
-          class="absolute inset-0 flex items-center justify-center text-white font-bold pointer-events-none select-none stage-icon z-10"
-          :style="{ fontSize: `${currentConfig.size * 0.25}px` }"
-        >
-          {{ currentConfig.icon }}
-        </div>
-      </div>
-
       <!-- Orbital Rings -->
       <div
         v-for="(ring, ringIndex) in currentConfig.rings"

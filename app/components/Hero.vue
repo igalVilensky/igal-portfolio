@@ -15,6 +15,8 @@
     }"
     @mousemove="handleMouseMove"
   >
+    <Orb stage="contact" />
+
     <!-- Interactive Control Panel -->
     <div
       class="fixed top-20 right-4 z-50 transition-all duration-300"
