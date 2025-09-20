@@ -256,6 +256,14 @@ const projects: Project[] = [
     link: "/projects/security",
     github: "https://github.com/igalVilensky/igal-portfolio",
   },
+  {
+    id: 7,
+    titleKey: "i18nLint",
+    image: "/i18n-lint-cli.jpeg",
+    technologies: ["Node.js", "TypeScript", "CLI", "npm"],
+    link: "https://www.npmjs.com/package/i18n-lint-cli",
+    github: "https://github.com/igalVilensky/i18n-lint-cli",
+  },
 ];
 
 // Unique technologies for filters
