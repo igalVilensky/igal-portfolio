@@ -264,6 +264,22 @@ const projects: Project[] = [
     link: "https://www.npmjs.com/package/i18n-lint-cli",
     github: "https://github.com/igalVilensky/i18n-lint-cli",
   },
+  {
+    id: 8,
+    titleKey: "familySpace",
+    image: "/family-space.jpeg",
+    technologies: ["Nuxt", "Vue 3", "TypeScript", "Tailwind CSS", "Firebase"],
+    link: "https://my-nest.netlify.app/",
+    github: "https://github.com/igalVilensky/family-app",
+  },
+  {
+    id: 9,
+    titleKey: "globalCommunityMap",
+    image: "/comap.jpeg",
+    technologies: ["Next", "React", "TypeScript", "Tailwind CSS", "Firebase"],
+    link: "https://commoodmap.netlify.app/",
+    github: "https://github.com/igalVilensky/Global-Community-Map",
+  },
 ];
 
 // Unique technologies for filters

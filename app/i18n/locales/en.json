@@ -140,6 +140,14 @@
       "title": "i18n Linter CLI",
       "description": "A CLI tool to validate translation files for missing keys, extra keys, and placeholder mismatches."
     },
+    "familySpace": {
+      "title": "Family Space",
+      "description": "A CLI tool to validate translation files for missing keys, extra keys, and placeholder mismatches."
+    },
+    "globalCommunityMap": {
+      "title": "Global Community Map",
+      "description": "A CLI tool to validate translation files for missing keys, extra keys, and placeholder mismatches."
+    },
     "viewProject": "View Project",
     "seo": {
       "title": "Projects | Igal Vilensky - Web Developer Portfolio",
