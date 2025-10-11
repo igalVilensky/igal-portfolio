@@ -148,6 +148,10 @@
       "title": "Global Community Map",
       "description": "A CLI tool to validate translation files for missing keys, extra keys, and placeholder mismatches."
     },
+    "pageScope": {
+      "title": "PageScope: Анализ и сводка веб-страниц",
+      "description": "Локальное расширение для Chrome, которое анализирует любой сайт прямо в браузере. Мгновенно получайте краткое содержание, метаданные и техническую информацию — без отправки данных наружу."
+    },
     "viewProject": "Посмотреть проект",
     "seo": {
       "title": "Проекты | Игаль Виленский - Портфолио веб-разработчика",

@@ -148,6 +148,10 @@
       "title": "Global Community Map",
       "description": "A CLI tool to validate translation files for missing keys, extra keys, and placeholder mismatches."
     },
+    "pageScope": {
+      "title": "PageScope – Website-Analyse & Zusammenfassungs-Tool",
+      "description": "Eine lokale Chrome-Erweiterung, die jede Website direkt im Browser analysiert. Erhalte sofort Zusammenfassungen, Metadaten und technische Einblicke – ohne dass Daten dein Gerät verlassen."
+    },
     "viewProject": "Projekt ansehen",
     "seo": {
       "title": "Projekte | Igal Vilensky - Webentwickler-Portfolio",

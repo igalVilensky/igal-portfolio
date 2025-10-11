@@ -280,6 +280,20 @@ const projects: Project[] = [
     link: "https://commoodmap.netlify.app/",
     github: "https://github.com/igalVilensky/Global-Community-Map",
   },
+  {
+    id: 10,
+    titleKey: "pageScope",
+    image: "/pagescope.jpeg",
+    technologies: [
+      "Chrome Extensions",
+      "JavaScript",
+      "Manifest V3",
+      "HTML",
+      "CSS",
+    ],
+    link: "https://github.com/igalVilensky/pagescope",
+    github: "https://github.com/igalVilensky/pagescope",
+  },
 ];
 
 // Unique technologies for filters

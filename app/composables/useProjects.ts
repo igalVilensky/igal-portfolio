@@ -45,6 +45,19 @@ export const useProjects = () => {
       technologies: ["React", "Node.js", "MongoDB", "Stripe"],
       link: "https://example.com/realestate",
     },
+    {
+      id: "pageScope",
+      titleKey: "pageScope",
+      image: "/pagescope.jpeg",
+      technologies: [
+        "Chrome Extensions",
+        "JavaScript",
+        "Manifest V3",
+        "HTML",
+        "CSS",
+      ],
+      link: "https://github.com/igalVilensky/pagescope",
+    },
   ]);
 
   const featuredProjects = ref([
@@ -68,6 +81,19 @@ export const useProjects = () => {
       image: "/url-shortener.jpeg",
       technologies: ["Nuxt", "Tailwind CSS", "Node.js", "MongoDB", "express"],
       link: "https://clean-links.netlify.app/",
+    },
+    {
+      id: "pageScope",
+      titleKey: "pageScope",
+      image: "/pagescope.jpeg",
+      technologies: [
+        "Chrome Extensions",
+        "JavaScript",
+        "Manifest V3",
+        "HTML",
+        "CSS",
+      ],
+      link: "https://github.com/igalVilensky/pagescope",
     },
   ]);
 
