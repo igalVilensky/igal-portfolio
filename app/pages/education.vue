@@ -1,7 +1,6 @@
 <!-- app/pages/education.vue -->
 <template>
   <div class="relative pt-12">
-    <Orb stage="education" class="hidden lg:block" />
     <EducationContent />
   </div>
 </template>
@@ -10,7 +9,6 @@
 import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
-import Orb from "~/components/Orb.vue";
 import EducationContent from "~/components/Education.vue";
 
 definePageMeta({

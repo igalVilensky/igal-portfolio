@@ -1,23 +1,17 @@
 <!-- app/layouts/default.vue -->
 <template>
   <div
-    class="min-h-screen font-['Poppins']"
-    :class="
-      colorMode.value === 'dark'
-        ? 'bg-gray-900 text-gray-100'
-        : 'bg-white text-gray-900'
-    "
+    class="min-h-screen font-sans bg-neutral-50 text-neutral-900 dark:bg-secondary-900 dark:text-neutral-100 transition-colors duration-300"
   >
     <Navbar />
-    <slot />
+    <main class="flex-1">
+      <slot />
+    </main>
     <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useColorMode } from "#imports";
 import Navbar from "~/components/Navbar.vue";
 import Footer from "~/components/Footer.vue";
-
-const colorMode = useColorMode();
 </script>

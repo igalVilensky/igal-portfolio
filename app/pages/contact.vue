@@ -1,7 +1,6 @@
 <!-- app/pages/contact.vue -->
 <template>
   <div class="relative pt-12">
-    <Orb stage="contact" />
     <ContactContent />
   </div>
 </template>
@@ -10,7 +9,6 @@
 import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
-import Orb from "~/components/Orb.vue";
 import ContactContent from "~/components/Contact.vue";
 
 definePageMeta({

@@ -1,32 +1,613 @@
 <template>
-  <div class="relative pt-12">
-    <AboutContent />
-  </div>
+  <section class="section-y bg-neutral-50 dark:bg-secondary-600 px-4 pt-8">
+    <div class="container-custom">
+      <div class="max-w-5xl mx-auto">
+        <!-- Section Header -->
+        <div class="py-12 md:py-16">
+          <span
+            class="inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider mb-4"
+          >
+            About Me
+          </span>
+          <h2
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display text-secondary-900 dark:text-white mb-4 md:mb-6 leading-tight"
+          >
+            My Story
+          </h2>
+          <p
+            class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl"
+          >
+            {{ $t("about.subtitle") }}
+          </p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8 lg:gap-12 pb-16">
+          <!-- Main Content Column (2/3) -->
+          <div class="lg:col-span-2 space-y-12">
+            <!-- Introduction Card -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
+                <h3
+                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.personalTitle") }}
+                </h3>
+              </div>
+              <p
+                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
+              >
+                {{ $t("about.personalDesc1") }}
+              </p>
+              <button
+                @click="openModal('introduction')"
+                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
+              >
+                <span>Read more</span>
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Journey Card -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
+                <h3
+                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.journeyTitle") }}
+                </h3>
+              </div>
+              <p
+                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
+              >
+                {{ $t("about.personalDesc2") }}
+              </p>
+              <button
+                @click="openModal('journey')"
+                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
+              >
+                <span>Read more</span>
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Beyond Code Card -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
+                <h3
+                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.beyondCodeTitle") }}
+                </h3>
+              </div>
+              <p
+                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
+              >
+                {{ $t("about.personalDesc3") }}
+              </p>
+              <button
+                @click="openModal('beyondCode')"
+                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
+              >
+                <span>Read more</span>
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Skills Section -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm"
+            >
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
+                <h3
+                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.skillsTitle") }}
+                </h3>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-6">
+                <!-- Frontend & Mobile -->
+                <div class="space-y-3">
+                  <h4
+                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
+                  >
+                    <i class="fas fa-laptop-code text-primary-500"></i>
+                    {{ $t("skills.frontendMobile") }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li
+                      v-for="(skill, index) in frontendSkills"
+                      :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
+                      ></span>
+                      <span>{{ skill.title }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Backend -->
+                <div class="space-y-3">
+                  <h4
+                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
+                  >
+                    <i class="fas fa-server text-accent-500"></i>
+                    {{ $t("skills.backend") }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li
+                      v-for="(skill, index) in backendSkills"
+                      :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"
+                      ></span>
+                      <span>{{ skill.title }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- DevOps & Tools -->
+                <div class="space-y-3">
+                  <h4
+                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
+                  >
+                    <i class="fas fa-tools text-secondary-500"></i>
+                    {{ $t("skills.devopsTools") }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li
+                      v-for="(skill, index) in devopsSkills"
+                      :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"
+                      ></span>
+                      <span>{{ skill.title }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Languages -->
+                <div class="space-y-3">
+                  <h4
+                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
+                  >
+                    <i class="fas fa-globe text-primary-500"></i>
+                    {{ $t("skills.languages") }}
+                  </h4>
+                  <ul class="space-y-2">
+                    <li
+                      v-for="(language, index) in languageSkills"
+                      :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
+                      ></span>
+                      <span>{{ $t(`skills.${language.titleKey}`) }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar Column (1/3) -->
+          <div class="space-y-8">
+            <!-- Profile Picture -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm text-center"
+            >
+              <div class="mb-4">
+                <img
+                  src="/profile.jpeg"
+                  alt="Igal Vilensky - Creative Technologist"
+                  class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-primary-100 dark:border-primary-900 shadow-lg"
+                />
+              </div>
+              <h3
+                class="text-xl font-display text-secondary-900 dark:text-white mb-2"
+              >
+                Igal Vilensky
+              </h3>
+              <p class="text-primary-500 font-medium mb-3">
+                Creative Technologist
+              </p>
+              <p
+                class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
+              >
+                Bridging technology, creativity, and business to solve complex
+                problems
+              </p>
+            </div>
+
+            <!-- Current Focus -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
+                <h3
+                  class="text-xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.exploringTitle") }}
+                </h3>
+              </div>
+
+              <!-- Currently Learning -->
+              <div class="mb-6">
+                <h4
+                  class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2"
+                >
+                  <i class="fas fa-book-reader text-primary-500"></i>
+                  {{ $t("about.currentlyLearning") }}
+                </h4>
+                <ul class="space-y-2">
+                  <li
+                    v-for="item in currentlyLearning"
+                    :key="item"
+                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
+                    ></span>
+                    <span>{{ item }}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Areas of Interest -->
+              <div>
+                <h4
+                  class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2"
+                >
+                  <i class="fas fa-lightbulb text-accent-500"></i>
+                  {{ $t("about.areasOfInterest") }}
+                </h4>
+                <ul class="space-y-2">
+                  <li
+                    v-for="interest in interests"
+                    :key="interest"
+                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+                  >
+                    <span
+                      class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"
+                    ></span>
+                    <span>{{ interest }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Fun Facts -->
+            <div
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
+                <h3
+                  class="text-xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.funFactsTitle") }}
+                </h3>
+              </div>
+              <ul class="space-y-3">
+                <li
+                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
+                >
+                  <i
+                    class="fas fa-theater-masks text-primary-500 mt-0.5 flex-shrink-0"
+                  ></i>
+                  <span>{{ $t("about.funFactActing") }}</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
+                >
+                  <i
+                    class="fas fa-snowflake text-accent-500 mt-0.5 flex-shrink-0"
+                  ></i>
+                  <span>{{ $t("about.funFactYamalo") }}</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
+                >
+                  <i
+                    class="fas fa-users text-secondary-500 mt-0.5 flex-shrink-0"
+                  ></i>
+                  <span>{{ $t("about.funFactBrothers") }}</span>
+                </li>
+                <li
+                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
+                >
+                  <i
+                    class="fas fa-music text-primary-500 mt-0.5 flex-shrink-0"
+                  ></i>
+                  <span>{{ $t("about.funFactPiano") }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Availability -->
+            <div
+              class="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-500 dark:to-secondary-900 rounded-lg p-6 shadow-sm border border-primary-100 dark:border-primary-800"
+            >
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
+                <h3
+                  class="text-xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.connectTitle") }}
+                </h3>
+              </div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="relative flex h-3 w-3">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"
+                  ></span>
+                </span>
+                <span
+                  class="text-sm font-medium text-secondary-900 dark:text-white"
+                >
+                  {{ $t("about.available") }}
+                </span>
+              </div>
+              <p class="text-sm text-neutral-600 dark:text-neutral-300 mb-4">
+                {{ $t("about.availableDesc") }}
+              </p>
+              <button
+                @click="scrollToContact"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors w-full justify-center group"
+              >
+                <span>{{ $t("contact.getInTouch") }}</span>
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <Transition name="fade">
+          <div
+            v-if="showModal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            @click="closeModal"
+          >
+            <div
+              class="relative max-w-2xl w-full max-h-[85vh] overflow-y-auto bg-white dark:bg-secondary-800 rounded-xl shadow-2xl"
+              @click.stop
+            >
+              <div
+                class="sticky top-0 bg-white dark:bg-secondary-800 border-b border-neutral-200 dark:border-secondary-900 px-6 py-4 flex items-center justify-between"
+              >
+                <h3
+                  class="text-xl font-display text-secondary-900 dark:text-white"
+                >
+                  {{
+                    activeModal === "introduction"
+                      ? $t("about.personalTitle")
+                      : activeModal === "journey"
+                      ? $t("about.journeyTitle")
+                      : $t("about.beyondCodeTitle")
+                  }}
+                </h3>
+                <button
+                  @click="closeModal"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-secondary-900 transition-colors"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="p-6">
+                <div v-if="activeModal === 'introduction'">
+                  <p
+                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                  >
+                    {{ $t("about.personalDesc1") }}
+                  </p>
+                </div>
+
+                <div v-if="activeModal === 'journey'">
+                  <p
+                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                  >
+                    {{ $t("about.personalDesc2") }}
+                  </p>
+                </div>
+
+                <div v-if="activeModal === 'beyondCode'">
+                  <p
+                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                  >
+                    {{ $t("about.personalDesc3") }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import gsap from "gsap";
+import { ref } from "vue";
+import { useColorMode, useHead } from "#imports";
 import { useI18n } from "vue-i18n";
-import AboutContent from "~/components/About.vue";
+
+const { t } = useI18n();
+const colorMode = useColorMode();
+
+// Modal state
+const showModal = ref(false);
+const activeModal = ref<string | null>(null);
+
+// Skills data
+const frontendSkills = [
+  { title: "TypeScript / JavaScript" },
+  { title: "React / React Native" },
+  { title: "Vue.js / Nuxt.js" },
+  { title: "CSS Frameworks" },
+  { title: "Responsive Design" },
+];
+
+const backendSkills = [
+  { title: "Node.js / Express.js" },
+  { title: "MongoDB / Mongoose" },
+  { title: "Directus CMS" },
+  { title: "REST APIs" },
+];
+
+const devopsSkills = [
+  { title: "CI/CD Pipelines" },
+  { title: "Docker" },
+  { title: "Git / GitHub" },
+  { title: "Agile & Scrum" },
+];
+
+const languageSkills = [
+  { titleKey: "english", levelKey: "englishLevel" },
+  { titleKey: "german", levelKey: "germanLevel" },
+  { titleKey: "russian", levelKey: "russianLevel" },
+  { titleKey: "hebrew", levelKey: "hebrewLevel" },
+];
+
+const currentlyLearning = [
+  "AWS Cloud Architecture",
+  "Kubernetes",
+  "GraphQL",
+  "Rust Programming",
+];
+
+const interests = [
+  "Machine Learning",
+  "Web3 Technologies",
+  "Performance Optimization",
+  "Developer Experience",
+];
+
+// Modal controls
+const openModal = (modalType: string) => {
+  activeModal.value = modalType;
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  activeModal.value = null;
+  showModal.value = false;
+};
+
+// Smooth scroll to contact section
+const scrollToContact = () => {
+  const contactElement = document.getElementById("contact");
+  if (contactElement) {
+    const navbar = document.querySelector("nav");
+    const navbarHeight = navbar?.offsetHeight || 64;
+    const elementPosition = contactElement.offsetTop - navbarHeight - 20;
+
+    window.scrollTo({
+      top: elementPosition,
+      behavior: "smooth",
+    });
+  }
+};
 
 definePageMeta({
   layout: "default",
 });
 
-const { t } = useI18n();
-
 useHead({
   title: t("seo.about"),
 });
-
-onMounted(() => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  gsap.from(".about-section", {
-    duration: 1.5,
-    opacity: 0,
-    y: 100,
-    ease: "power2.inOut",
-  });
-});
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

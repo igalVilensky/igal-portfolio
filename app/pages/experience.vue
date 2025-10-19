@@ -1,7 +1,6 @@
 <!-- app/pages/experience.vue -->
 <template>
   <div class="relative pt-12">
-    <Orb stage="experience" class="hidden lg:block" />
     <ExperienceContent />
   </div>
 </template>
@@ -10,7 +9,6 @@
 import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
-import Orb from "~/components/Orb.vue";
 import ExperienceContent from "~/components/Experience.vue";
 
 definePageMeta({
