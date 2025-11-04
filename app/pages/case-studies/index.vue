@@ -190,7 +190,7 @@ const caseStudies: CaseStudy[] = [
     titleKey: "psyBlog",
     image: "/psy.jpeg",
     technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
-    link: "https://psy-blog.netlify.app/",
+    link: "https://www.mindqlab.com/",
     github: "https://github.com/igalvilensky/psy-blog",
   },
   {

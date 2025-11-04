@@ -15,7 +15,7 @@ export const useProjects = () => {
       titleKey: "psyBlog",
       image: "/psy.jpeg",
       technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
-      link: "https://psy-blog.netlify.app/",
+      link: "https://www.mindqlab.com/",
     },
     {
       id: "urlShortener",
@@ -73,7 +73,7 @@ export const useProjects = () => {
       titleKey: "psyBlog",
       image: "/psy.jpeg",
       technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
-      link: "https://psy-blog.netlify.app/",
+      link: "https://www.mindqlab.com/",
     },
     {
       id: "urlShortener",
