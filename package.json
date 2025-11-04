@@ -20,6 +20,7 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "i18n-lint-cli": "^0.1.0"
   }
 }
