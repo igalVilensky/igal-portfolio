@@ -1,6 +1,6 @@
 <!-- app/pages/contact.vue -->
 <template>
-  <div class="relative pt-12">
+  <div>
     <ContactContent />
   </div>
 </template>

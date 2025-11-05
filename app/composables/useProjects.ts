@@ -13,7 +13,7 @@ export const useProjects = () => {
     {
       id: "psyBlog",
       titleKey: "psyBlog",
-      image: "/psy.jpeg",
+      image: "/mindQlab.jpeg",
       technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
       link: "https://www.mindqlab.com/",
     },
@@ -71,7 +71,7 @@ export const useProjects = () => {
     {
       id: "psyBlog",
       titleKey: "psyBlog",
-      image: "/psy.jpeg",
+      image: "/mindQlab.jpeg",
       technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
       link: "https://www.mindqlab.com/",
     },

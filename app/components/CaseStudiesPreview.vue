@@ -9,76 +9,90 @@
             <span
               class="text-secondary-400 font-semibold text-sm uppercase tracking-wider"
             >
-              Portfolio
+              Recent Work
             </span>
           </div>
           <h2
             class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
-            Selected Work
+            Projects I'm Building
           </h2>
           <p
             class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
           >
-            Projects that demonstrate cross-functional problem-solving
+            Creating solutions that make a difference through collaboration and
+            thoughtful design
           </p>
         </div>
 
         <!-- Projects Grid -->
-        <div class="space-y-12 md:space-y-16 mb-16 md:mb-20">
-          <!-- Family Space Project -->
-          <div class="group">
-            <div class="mb-6">
+        <div class="space-y-20 md:space-y-24 mb-16 md:mb-20">
+          <!-- PsyBlog Project -->
+          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <!-- Image Container - Always on top on mobile -->
+            <div class="order-1">
               <div
-                class="h-64 md:h-80 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden"
+                class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
               >
-                <img
-                  :src="projects.familySpace.image"
-                  :alt="projects.familySpace.title"
-                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                <div
+                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden"
+                >
+                  <img
+                    :src="projects.psyBlog.image"
+                    :alt="projects.psyBlog.title"
+                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <!-- Browser frame decoration -->
+                <div class="absolute top-2 left-2 flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
               </div>
             </div>
-            <div class="space-y-4">
+
+            <!-- Content - Below image on mobile, right side on desktop -->
+            <div class="order-2 space-y-6">
               <div class="flex items-center gap-4">
-                <div class="w-10 h-0.5 bg-primary-500"></div>
+                <div class="w-12 h-1 bg-primary-500"></div>
                 <h3
                   class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
                 >
-                  {{ projects.familySpace.title }}
+                  {{ projects.psyBlog.title }}
                 </h3>
               </div>
               <p
-                class="text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
               >
-                {{ projects.familySpace.description }}
+                {{ projects.psyBlog.description }}
               </p>
-              <div class="flex flex-wrap gap-2">
+              <div class="flex flex-wrap gap-3">
                 <span
-                  v-for="tech in projects.familySpace.technologies"
+                  v-for="tech in projects.psyBlog.technologies"
                   :key="tech"
-                  class="px-3 py-1.5 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-md text-sm font-medium border border-primary-200 dark:border-primary-800"
+                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm"
                 >
                   {{ tech }}
                 </span>
               </div>
-              <div class="flex gap-4 mt-4">
+              <div class="flex gap-6 pt-2">
                 <a
-                  :href="projects.familySpace.link"
+                  :href="projects.psyBlog.link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
                 >
-                  <span>Live Demo</span>
+                  <span>Visit Website</span>
                   <span class="group-hover:translate-x-1 transition-transform"
                     >→</span
                   >
                 </a>
                 <a
-                  :href="projects.familySpace.github"
+                  :href="projects.psyBlog.github"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
                 >
                   <span>GitHub</span>
                   <span class="group-hover:translate-x-1 transition-transform"
@@ -89,48 +103,61 @@
             </div>
           </div>
 
-          <!-- Cannabis Order System -->
-          <div class="group">
-            <div class="mb-6">
+          <!-- Family Space Project -->
+          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <!-- Image Container - Always on top on mobile -->
+            <div class="order-1 md:order-2">
               <div
-                class="h-64 md:h-80 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center overflow-hidden"
+                class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
               >
-                <img
-                  :src="projects.orderSystem.image"
-                  :alt="projects.orderSystem.title"
-                  class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                <div
+                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden"
+                >
+                  <img
+                    :src="projects.familySpace.image"
+                    :alt="projects.familySpace.title"
+                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <!-- Browser frame decoration -->
+                <div class="absolute top-2 left-2 flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
               </div>
             </div>
-            <div class="space-y-4">
+
+            <!-- Content - Below image on mobile, left side on desktop -->
+            <div class="order-2 md:order-1 space-y-6">
               <div class="flex items-center gap-4">
-                <div class="w-10 h-0.5 bg-accent-500"></div>
+                <div class="w-12 h-1 bg-accent-500"></div>
                 <h3
                   class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
                 >
-                  {{ projects.orderSystem.title }}
+                  {{ projects.familySpace.title }}
                 </h3>
               </div>
               <p
-                class="text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
+                class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
               >
-                {{ projects.orderSystem.description }}
+                {{ projects.familySpace.description }}
               </p>
-              <div class="flex flex-wrap gap-2">
+              <div class="flex flex-wrap gap-3">
                 <span
-                  v-for="tech in projects.orderSystem.technologies"
+                  v-for="tech in projects.familySpace.technologies"
                   :key="tech"
-                  class="px-3 py-1.5 bg-white dark:bg-secondary-900 text-accent-700 dark:text-accent-300 rounded-md text-sm font-medium border border-accent-200 dark:border-accent-800"
+                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-accent-700 dark:text-accent-300 rounded-lg text-sm font-medium border border-accent-200 dark:border-accent-800 shadow-sm"
                 >
                   {{ tech }}
                 </span>
               </div>
-              <div class="flex gap-4 mt-4">
+              <div class="flex gap-6 pt-2">
                 <a
-                  :href="projects.orderSystem.link"
+                  :href="projects.familySpace.link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
                 >
                   <span>Live Demo</span>
                   <span class="group-hover:translate-x-1 transition-transform"
@@ -138,10 +165,10 @@
                   >
                 </a>
                 <a
-                  :href="projects.orderSystem.github"
+                  :href="projects.familySpace.github"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
                 >
                   <span>GitHub</span>
                   <span class="group-hover:translate-x-1 transition-transform"
@@ -159,7 +186,7 @@
             to="/case-studies"
             class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg border-b-2 border-primary-500 pb-1"
           >
-            <span>View all case studies</span>
+            <span>Explore more projects</span>
             <span class="group-hover:translate-x-1 transition-transform"
               >→</span
             >
@@ -173,23 +200,23 @@
 <script setup lang="ts">
 // Project data with images
 const projects = {
+  psyBlog: {
+    title: "MindQ Lab",
+    image: "/mindQlab.jpeg",
+    link: "https://www.mindqlab.com/",
+    github: "https://github.com/igalvilensky/psy-blog",
+    description:
+      "A psychology blog platform designed to make mental health resources more accessible. Built with modern web technologies to create an engaging and supportive community space.",
+    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
+  },
   familySpace: {
     title: "Family Space",
     image: "/family-space.jpeg",
     link: "https://my-nest.netlify.app/",
     github: "https://github.com/igalVilensky/family-app",
     description:
-      "A comprehensive family organization app featuring shared calendars, task management, and family messaging. Built with modern web technologies and real-time Firebase integration for seamless family coordination.",
+      "A family organization app featuring shared calendars, task management, and messaging. Created to help families coordinate and stay connected in their daily lives.",
     technologies: ["Nuxt", "Vue 3", "TypeScript", "Tailwind CSS", "Firebase"],
-  },
-  orderSystem: {
-    title: "Cannabis Order System",
-    image: "/canOrderSystem.jpeg",
-    link: "https://canordersystem.netlify.app/",
-    github: "https://github.com/igalvilensky/order-system",
-    description:
-      "A specialized e-commerce platform for cannabis products featuring product catalog, shopping cart, and order management. Built with modern React ecosystem and responsive design for optimal user experience.",
-    technologies: ["TypeScript", "Next.js", "React", "Tailwind CSS"],
   },
 };
 </script>

@@ -14,39 +14,39 @@
           <h2
             class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
-            Case Studies
+            Project Explorations
           </h2>
           <p
             class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
           >
-            In-depth explorations of my work, showcasing technical innovation,
-            creative solutions, and measurable impact.
+            Detailed journeys through my projects, highlighting technical
+            approaches, creative problem-solving, and real-world impact.
           </p>
         </div>
 
         <!-- Filter -->
-        <div class="mb-12">
-          <div class="flex flex-wrap gap-2">
+        <div class="mb-16">
+          <div class="flex flex-wrap gap-3">
             <button
               @click="selectedTech = ''"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
               :class="
                 selectedTech === ''
-                  ? 'bg-primary-500 text-white'
-                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-100 dark:hover:bg-primary-900'
+                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
               "
             >
-              All
+              All Projects
             </button>
             <button
               v-for="tech in technologies"
               :key="tech"
               @click="selectedTech = tech"
-              class="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
               :class="
                 selectedTech === tech
-                  ? 'bg-primary-500 text-white'
-                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-100 dark:hover:bg-primary-900'
+                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
               "
             >
               {{ tech }}
@@ -55,24 +55,29 @@
         </div>
 
         <!-- Case Studies Grid -->
-        <div class="space-y-12 md:space-y-16 mb-16">
+        <div class="grid gap-12 md:gap-16 pb-20">
           <div
             v-if="filteredCaseStudies.length === 0"
-            class="text-center py-16"
+            class="text-center py-20"
           >
-            <h3
-              class="text-xl font-semibold text-secondary-900 dark:text-white mb-4"
+            <div
+              class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center"
             >
-              No case studies found
+              <span class="text-4xl">🔍</span>
+            </div>
+            <h3
+              class="text-2xl font-semibold text-secondary-900 dark:text-white mb-4"
+            >
+              No projects found
             </h3>
-            <p class="text-neutral-600 dark:text-neutral-300 mb-6">
+            <p class="text-neutral-600 dark:text-neutral-300 mb-8 text-lg">
               Try selecting a different technology filter
             </p>
             <button
               @click="selectedTech = ''"
-              class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors text-lg"
+              class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors text-lg border-b-2 border-primary-500 pb-1"
             >
-              <span>View all case studies</span>
+              <span>View all projects</span>
               <span class="group-hover:translate-x-1 transition-transform"
                 >→</span
               >
@@ -80,53 +85,86 @@
           </div>
 
           <div
-            v-for="caseStudy in filteredCaseStudies"
+            v-for="(caseStudy, index) in filteredCaseStudies"
             :key="caseStudy.id"
-            class="group"
+            class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+            :class="index % 2 === 1 ? 'md:grid-flow-dense' : ''"
           >
-            <div class="mb-6">
+            <!-- Image Container -->
+            <div
+              class="order-1"
+              :class="index % 2 === 1 ? 'md:order-2 md:col-start-2' : ''"
+            >
               <div
-                class="h-64 md:h-80 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900 dark:to-primary-800 rounded-lg flex items-center justify-center overflow-hidden"
+                class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-3"
               >
-                <img
-                  :src="caseStudy.image"
-                  :alt="$t(`projects.${caseStudy.titleKey}.title`)"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
+                <div
+                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600"
+                >
+                  <img
+                    :src="caseStudy.image"
+                    :alt="$t(`projects.${caseStudy.titleKey}.title`)"
+                    class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <!-- Browser frame decoration -->
+                <div class="absolute top-4 left-4 flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
               </div>
             </div>
-            <div class="space-y-4">
-              <div class="flex items-center gap-4">
-                <div class="w-10 h-0.5 bg-primary-500"></div>
-                <h3
-                  class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
+
+            <!-- Content -->
+            <div
+              class="order-2 space-y-6"
+              :class="
+                index % 2 === 1
+                  ? 'md:order-1 md:col-start-1 md:row-start-1'
+                  : ''
+              "
+            >
+              <div class="space-y-4">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-1"
+                    :class="
+                      index % 2 === 0 ? 'bg-primary-500' : 'bg-accent-500'
+                    "
+                  ></div>
+                  <h3
+                    class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
+                  >
+                    {{ $t(`projects.${caseStudy.titleKey}.title`) }}
+                  </h3>
+                </div>
+                <p
+                  class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
-                  {{ $t(`projects.${caseStudy.titleKey}.title`) }}
-                </h3>
+                  {{ $t(`projects.${caseStudy.titleKey}.description`) }}
+                </p>
               </div>
-              <p
-                class="text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
-              >
-                {{ $t(`projects.${caseStudy.titleKey}.description`) }}
-              </p>
-              <div class="flex flex-wrap gap-2">
+
+              <div class="flex flex-wrap gap-3">
                 <span
                   v-for="tech in caseStudy.technologies"
                   :key="tech"
-                  class="px-3 py-1.5 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-md text-sm font-medium border border-primary-200 dark:border-primary-800"
+                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm"
                 >
                   {{ tech }}
                 </span>
               </div>
-              <div class="flex flex-wrap gap-4">
+
+              <div class="flex flex-wrap gap-6 pt-2">
                 <a
-                  v-if="caseStudy.link"
+                  v-if="caseStudy.link && caseStudy.link !== '#'"
                   :href="caseStudy.link"
                   target="_blank"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
                 >
-                  <span>Visit live site</span>
+                  <span>Visit Live Site</span>
                   <span class="group-hover:translate-x-1 transition-transform"
                     >→</span
                   >
@@ -135,7 +173,7 @@
                   v-if="caseStudy.github"
                   :href="caseStudy.github"
                   target="_blank"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg"
+                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
                 >
                   <svg
                     class="w-5 h-5"
@@ -149,7 +187,7 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <span>View source</span>
+                  <span>View Source</span>
                 </a>
               </div>
             </div>
@@ -188,8 +226,8 @@ const caseStudies: CaseStudy[] = [
   {
     id: 2,
     titleKey: "psyBlog",
-    image: "/psy.jpeg",
-    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
+    image: "/mindQlab.jpeg",
+    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS", "Sanity"],
     link: "https://www.mindqlab.com/",
     github: "https://github.com/igalvilensky/psy-blog",
   },
@@ -228,7 +266,7 @@ const caseStudies: CaseStudy[] = [
   {
     id: 7,
     titleKey: "i18nLint",
-    image: "/i18n-lint-cli.jpeg",
+    image: "/i18-lint-cli.jpeg",
     technologies: ["Node.js", "TypeScript", "CLI", "npm"],
     link: "https://www.npmjs.com/package/i18n-lint-cli",
     github: "https://github.com/igalVilensky/i18n-lint-cli",
