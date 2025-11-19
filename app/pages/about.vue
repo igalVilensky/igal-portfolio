@@ -576,19 +576,9 @@ const closeModal = () => {
   showModal.value = false;
 };
 
-// Smooth scroll to contact section
+// Navigate to contact page
 const scrollToContact = () => {
-  const contactElement = document.getElementById("contact");
-  if (contactElement) {
-    const navbar = document.querySelector("nav");
-    const navbarHeight = navbar?.offsetHeight || 64;
-    const elementPosition = contactElement.offsetTop - navbarHeight - 20;
-
-    window.scrollTo({
-      top: elementPosition,
-      behavior: "smooth",
-    });
-  }
+  return navigateTo("/contact");
 };
 
 definePageMeta({

@@ -1,125 +1,106 @@
 <!-- app/components/Footer.vue -->
 <template>
   <footer
-    class="bg-neutral-50 dark:bg-secondary-900 border-t border-neutral-200 dark:border-secondary-700 px-4"
+    class="bg-secondary-50 dark:bg-dark-bg border-t border-secondary-200 dark:border-white/5 pt-20 pb-10"
   >
-    <div class="container-custom py-12">
-      <div class="max-w-5xl mx-auto">
-        <!-- Main Footer Content -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-          <!-- Left Column: Brand & Contact -->
-          <div class="space-y-6">
-            <div>
-              <h2
-                class="text-2xl font-display text-secondary-900 dark:text-white mb-2"
-              >
-                Igal Vilensky
-              </h2>
-              <p class="text-base text-neutral-600 dark:text-neutral-300">
-                Creative Technologist
-              </p>
-            </div>
-
-            <div class="space-y-3">
-              <a
-                href="mailto:vilenskyigal@gmail.com"
-                class="flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
-              >
-                <span class="text-sm">vilenskyigal@gmail.com</span>
-                <span
-                  class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
-                  >→</span
-                >
-              </a>
-
-              <a
-                href="tel:+491783099433"
-                class="flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-colors group"
-              >
-                <span class="text-sm">+49 178 3099433</span>
-                <span
-                  class="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
-                  >→</span
-                >
-              </a>
-
-              <p class="text-sm text-neutral-600 dark:text-neutral-300">
-                Leipzig, Germany
-              </p>
-            </div>
-          </div>
-
-          <!-- Right Column: Navigation -->
-          <div>
-            <h3
-              class="text-lg font-semibold text-secondary-900 dark:text-white mb-4"
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+        <!-- Brand Column -->
+        <div class="md:col-span-5 space-y-6">
+          <NuxtLink to="/" class="inline-block">
+            <span class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
+              Igal Vilensky
+            </span>
+          </NuxtLink>
+          <p class="text-secondary-600 dark:text-secondary-400 max-w-sm text-lg leading-relaxed">
+            Crafting digital products with a focus on aesthetics, functionality, and user experience.
+          </p>
+          <div class="flex gap-4 pt-2">
+            <a
+              v-for="social in socialLinks"
+              :key="social.name"
+              :href="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-12 h-12 rounded-full bg-secondary-100 dark:bg-white/5 flex items-center justify-center text-secondary-600 dark:text-secondary-400 hover:bg-primary-500 hover:text-white dark:hover:bg-primary-500 dark:hover:text-white transition-all duration-300 group"
+              :aria-label="social.name"
             >
-              Navigate
-            </h3>
-            <nav class="space-y-2">
+              <i :class="social.icon" class="text-xl group-hover:scale-110 transition-transform"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Navigation Columns -->
+        <div class="md:col-span-3 md:col-start-7">
+          <h4 class="text-secondary-900 dark:text-white font-bold mb-6">Sitemap</h4>
+          <ul class="space-y-4">
+            <li v-for="item in navigationItems" :key="item.id">
               <NuxtLink
-                v-for="item in navigationItems"
-                :key="item.id"
                 :to="item.path"
-                class="block text-sm text-neutral-600 dark:text-neutral-300 hover:text-secondary-900 dark:hover:text-white transition-colors"
+                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
               >
                 {{ item.label }}
               </NuxtLink>
-            </nav>
-          </div>
+            </li>
+          </ul>
         </div>
 
-        <!-- Bottom Section: Social & Copyright -->
-        <div class="pt-8 border-t border-neutral-200 dark:border-secondary-700">
-          <div
-            class="flex flex-col md:flex-row justify-between items-center gap-6"
-          >
-            <!-- Social Links -->
-            <div class="flex items-center gap-4">
+        <div class="md:col-span-3">
+          <h4 class="text-secondary-900 dark:text-white font-bold mb-6">Contact</h4>
+          <ul class="space-y-4">
+            <li>
               <a
-                v-for="social in socialLinks"
-                :key="social.name"
-                :href="social.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-10 h-10 flex items-center justify-center rounded-full text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-secondary-800 transition-all"
-                :aria-label="social.name"
+                href="mailto:vilenskyigal@gmail.com"
+                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
               >
-                <i :class="social.icon" class="text-lg"></i>
+                vilenskyigal@gmail.com
               </a>
-            </div>
-
-            <!-- Copyright -->
-            <div class="text-center md:text-right">
-              <p class="text-sm text-neutral-500 dark:text-neutral-400">
-                © {{ currentYear }} Igal Vilensky. All rights reserved.
-              </p>
-            </div>
-          </div>
+            </li>
+            <li>
+              <a
+                href="tel:+491783099433"
+                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+              >
+                +49 178 3099433
+              </a>
+            </li>
+            <li class="text-secondary-500 dark:text-secondary-500">
+              Leipzig, Germany
+            </li>
+          </ul>
         </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-8 border-t border-secondary-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-secondary-500 dark:text-secondary-500 text-sm">
+          © {{ currentYear }} Igal Vilensky. All rights reserved.
+        </p>
+        <p class="text-secondary-500 dark:text-secondary-500 text-sm flex items-center gap-2">
+          <span>Designed & Built with</span>
+          <i class="fas fa-heart text-accent-500 animate-pulse"></i>
+          <span>in Nuxt 3</span>
+        </p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-// Current year
 const currentYear = new Date().getFullYear();
 
-// Navigation items matching navbar
 const navigationItems = [
   { id: "home", path: "/", label: "Home" },
-  { id: "case-studies", path: "/case-studies", label: "Case Studies" },
+  { id: "case-studies", path: "/case-studies", label: "Work" },
   { id: "writing", path: "/writing", label: "Writing" },
   { id: "about", path: "/about", label: "About" },
   { id: "contact", path: "/contact", label: "Contact" },
 ];
 
-// Social links
 const socialLinks = [
   {
     name: "LinkedIn",
-    icon: "fab fa-linkedin",
+    icon: "fab fa-linkedin-in",
     url: "https://www.linkedin.com/in/igalvilensky/",
   },
   {
@@ -134,10 +115,3 @@ const socialLinks = [
   },
 ];
 </script>
-
-<style scoped>
-/* Smooth transitions */
-a {
-  transition: all 0.2s ease;
-}
-</style>

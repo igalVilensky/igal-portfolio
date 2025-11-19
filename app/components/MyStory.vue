@@ -75,7 +75,7 @@
                 <span
                   class="text-lg md:text-xl font-semibold text-secondary-900 dark:text-white"
                 >
-                  2020 – 2024
+                  2020 – Present
                 </span>
               </div>
               <div class="relative">
@@ -86,7 +86,7 @@
                   <span
                     class="text-lg font-semibold text-secondary-900 dark:text-white"
                   >
-                    2020 – 2024
+                    2020 – Present
                   </span>
                 </div>
                 <h3

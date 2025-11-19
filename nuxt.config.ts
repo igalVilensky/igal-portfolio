@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  css: ["~/assets/css/main.css"],
   modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "@nuxtjs/i18n"],
   i18n: {
     strategy: "prefix_except_default",
