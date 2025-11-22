@@ -1,33 +1,55 @@
 <template>
-  <section class="section-y bg-neutral-50 dark:bg-secondary-600 px-4 pt-8">
+  <section class="section-y bg-neutral-50 dark:bg-secondary-600 px-4 pt-8 overflow-hidden">
     <div class="container-custom">
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="py-12 md:py-16">
-          <span
-            class="inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider mb-4"
-          >
-            About Me
-          </span>
+          <div class="inline-block mb-4">
+            <span
+              v-for="item in aboutMeChars"
+              :key="item.id"
+              class="about-me-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider"
+            >
+              {{ item.char }}
+            </span>
+          </div>
           <h2
             class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display text-secondary-900 dark:text-white mb-4 md:mb-6 leading-tight"
           >
-            My Story
+            <span
+              v-for="item in myStoryChars"
+              :key="item.id"
+              class="my-story-char inline-block"
+            >
+              {{ item.char }}
+            </span>
           </h2>
           <p
             class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl"
           >
-            {{ $t("about.subtitle") }}
+            <span 
+              v-for="word in subtitleWords" 
+              :key="word.id" 
+              class="inline-block whitespace-nowrap mr-2"
+            >
+              <span 
+                v-for="char in word.chars" 
+                :key="char.id" 
+                class="subtitle-char inline-block"
+              >
+                {{ char.char }}
+              </span>
+            </span>
           </p>
         </div>
 
         <!-- Main Content Grid -->
         <div class="grid lg:grid-cols-3 gap-8 lg:gap-12 pb-16">
           <!-- Main Content Column (2/3) -->
-          <div class="lg:col-span-2 space-y-12">
+          <div class="lg:col-span-2 space-y-12 about-cards-container">
             <!-- Introduction Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
@@ -65,7 +87,7 @@
 
             <!-- Journey Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
@@ -103,7 +125,7 @@
 
             <!-- Beyond Code Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
@@ -141,7 +163,7 @@
 
             <!-- Skills Section -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm skills-section-anim"
             >
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
@@ -153,7 +175,7 @@
               </div>
               <div class="grid sm:grid-cols-2 gap-6">
                 <!-- Frontend & Mobile -->
-                <div class="space-y-3">
+                <div class="space-y-3 skill-group-anim">
                   <h4
                     class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
                   >
@@ -175,7 +197,7 @@
                 </div>
 
                 <!-- Backend -->
-                <div class="space-y-3">
+                <div class="space-y-3 skill-group-anim">
                   <h4
                     class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
                   >
@@ -197,7 +219,7 @@
                 </div>
 
                 <!-- DevOps & Tools -->
-                <div class="space-y-3">
+                <div class="space-y-3 skill-group-anim">
                   <h4
                     class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
                   >
@@ -219,7 +241,7 @@
                 </div>
 
                 <!-- Languages -->
-                <div class="space-y-3">
+                <div class="space-y-3 skill-group-anim">
                   <h4
                     class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
                   >
@@ -244,10 +266,10 @@
           </div>
 
           <!-- Sidebar Column (1/3) -->
-          <div class="space-y-8">
+          <div class="space-y-8 sidebar-container">
             <!-- Profile Picture -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm text-center"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm text-center sidebar-anim"
             >
               <div class="mb-4">
                 <img
@@ -274,7 +296,7 @@
 
             <!-- Current Focus -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
@@ -332,7 +354,7 @@
 
             <!-- Fun Facts -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm"
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
@@ -380,7 +402,7 @@
 
             <!-- Availability -->
             <div
-              class="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-500 dark:to-secondary-900 rounded-lg p-6 shadow-sm border border-primary-100 dark:border-primary-800"
+              class="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-500 dark:to-secondary-900 rounded-lg p-6 shadow-sm border border-primary-100 dark:border-primary-800 sidebar-anim"
             >
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
@@ -432,14 +454,18 @@
         </div>
 
         <!-- Modal -->
-        <Transition name="fade">
+        <Transition
+          @enter="onModalEnter"
+          @leave="onModalLeave"
+          :css="false"
+        >
           <div
             v-if="showModal"
             class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             @click="closeModal"
           >
             <div
-              class="relative max-w-2xl w-full max-h-[85vh] overflow-y-auto bg-white dark:bg-secondary-800 rounded-xl shadow-2xl"
+              class="relative w-[90%] md:w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-secondary-800 rounded-xl shadow-2xl modal-content"
               @click.stop
             >
               <div
@@ -510,9 +536,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useColorMode, useHead } from "#imports";
 import { useI18n } from "vue-i18n";
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const { t } = useI18n();
 const colorMode = useColorMode();
@@ -576,10 +606,255 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+// Modal Animations
+const onModalEnter = (el: Element, done: () => void) => {
+  const modalContent = el.querySelector('.modal-content');
+  
+  gsap.set(el, { opacity: 0 });
+  gsap.set(modalContent, { 
+    scale: 0.5, 
+    rotationX: 45, 
+    y: 100, 
+    opacity: 0,
+    transformPerspective: 1000
+  });
+
+  const tl = gsap.timeline({ onComplete: done });
+  
+  tl.to(el, { opacity: 1, duration: 0.3 })
+    .to(modalContent, { 
+      scale: 1, 
+      rotationX: 0, 
+      y: 0, 
+      opacity: 1, 
+      duration: 0.6, 
+      ease: "back.out(1.7)" 
+    }, "-=0.2");
+};
+
+const onModalLeave = (el: Element, done: () => void) => {
+  const modalContent = el.querySelector('.modal-content');
+  
+  const tl = gsap.timeline({ onComplete: done });
+  
+  tl.to(modalContent, { 
+      scale: 0.8, 
+      opacity: 0, 
+      y: -50, 
+      duration: 0.4, 
+      ease: "power2.in" 
+    })
+    .to(el, { opacity: 0, duration: 0.3 }, "-=0.2");
+};
+
 // Navigate to contact page
 const scrollToContact = () => {
   return navigateTo("/contact");
 };
+
+// Helper to split text
+const splitText = (text: string) => {
+  return text.split('').map((char, index) => ({
+    char: char === ' ' ? '\u00A0' : char,
+    id: index
+  }));
+};
+
+// Helper to split paragraph into words and then chars (preserves wrapping)
+const splitParagraph = (text: string) => {
+  return text.split(' ').map((word, wordIndex) => ({
+    id: wordIndex,
+    chars: word.split('').map((char, charIndex) => ({
+      char,
+      id: `${wordIndex}-${charIndex}`
+    }))
+  }));
+};
+
+const aboutMeChars = computed(() => splitText("About Me"));
+const myStoryChars = computed(() => splitText("My Story"));
+const subtitleWords = computed(() => splitParagraph(t("about.subtitle")));
+
+onMounted(() => {
+  // 1. Particle Text Animation
+  
+  // Animate "About Me" chars
+  gsap.from('.about-me-char', {
+    duration: 1.5,
+    opacity: 0,
+    x: () => (Math.random() - 0.5) * 200,
+    y: () => (Math.random() - 0.5) * 200,
+    z: () => (Math.random() - 0.5) * 200,
+    rotation: () => Math.random() * 360,
+    scale: 0,
+    stagger: {
+      amount: 0.5,
+      from: "random"
+    },
+    ease: "power3.out"
+  });
+
+  // Animate "My Story" chars
+  gsap.from('.my-story-char', {
+    duration: 1.5,
+    opacity: 0,
+    x: () => (Math.random() - 0.5) * 300,
+    y: () => (Math.random() - 0.5) * 300,
+    z: () => (Math.random() - 0.5) * 300,
+    rotation: () => Math.random() * 360,
+    scale: 0,
+    delay: 0.3,
+    stagger: {
+      amount: 0.6,
+      from: "random"
+    },
+    ease: "power3.out"
+  });
+
+  // Animate Subtitle chars (Particle Effect)
+  gsap.from('.subtitle-char', {
+    duration: 2,
+    opacity: 0,
+    x: () => (Math.random() - 0.5) * 400,
+    y: () => (Math.random() - 0.5) * 400,
+    z: () => (Math.random() - 0.5) * 400,
+    rotation: () => Math.random() * 360,
+    scale: 0,
+    delay: 0.5,
+    stagger: {
+      amount: 1.5,
+      from: "random"
+    },
+    ease: "power3.out"
+  });
+
+  // 2. 3D Blur Materialize Effect for Cards
+  const cards = document.querySelectorAll('.about-card-anim');
+  cards.forEach((card) => {
+    // Set initial state for 3D effect
+    gsap.set(card, { 
+      transformPerspective: 1000,
+      transformStyle: "preserve-3d"
+    });
+
+    gsap.fromTo(card, 
+      { 
+        opacity: 0,
+        scale: 0.8,
+        z: -100,
+        rotationX: 10,
+        filter: 'blur(10px)'
+      },
+      {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+          end: "top 50%",
+          toggleActions: "play none none reverse",
+          scrub: false
+        },
+        opacity: 1,
+        scale: 1,
+        z: 0,
+        rotationX: 0,
+        filter: 'blur(0px)',
+        duration: 1.2,
+        ease: "power2.out"
+      }
+    );
+
+    // 3. Scroll-tied Exit Animation (Dissolve)
+    gsap.to(card, {
+      scrollTrigger: {
+        trigger: card,
+        start: "top -10%",
+        end: "top -50%",
+        scrub: 1
+      },
+      opacity: 0,
+      scale: 0.9,
+      filter: 'blur(10px)',
+      y: -50
+    });
+  });
+
+  // Skills Section 3D Reveal
+  const skillsSection = document.querySelector('.skills-section-anim');
+  if (skillsSection) {
+    gsap.set(skillsSection, { transformPerspective: 1000 });
+    gsap.fromTo(skillsSection,
+      {
+        opacity: 0,
+        y: 100,
+        rotationX: 20,
+        filter: 'blur(10px)'
+      },
+      {
+        scrollTrigger: {
+          trigger: skillsSection,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        },
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        filter: 'blur(0px)',
+        duration: 1.2,
+        ease: "power3.out"
+      }
+    );
+  }
+
+  // Sidebar 3D Reveal
+  const sidebarItems = document.querySelectorAll('.sidebar-anim');
+  sidebarItems.forEach((item, index) => {
+    gsap.set(item, { transformPerspective: 1000 });
+    gsap.fromTo(item,
+      {
+        opacity: 0,
+        x: 50,
+        rotationY: -15,
+        filter: 'blur(5px)'
+      },
+      {
+        scrollTrigger: {
+          trigger: item, // Changed from .sidebar-container to item
+          start: "top 85%", // Adjusted start position
+          toggleActions: "play none none reverse"
+        },
+        opacity: 1,
+        x: 0,
+        rotationY: 0,
+        filter: 'blur(0px)',
+        duration: 1,
+        // delay: index * 0.15, // Removed delay to let them trigger naturally or keep if needed
+        ease: "power3.out"
+      }
+    );
+  });
+
+  // Hover Effects (Enhanced)
+  cards.forEach((card) => {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(card, { 
+        y: -10, 
+        scale: 1.02,
+        boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.15)', 
+        duration: 0.4, 
+        ease: 'power2.out' 
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, { 
+        y: 0, 
+        scale: 1,
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', 
+        duration: 0.4, 
+        ease: 'power2.out' 
+      });
+    });
+  });
+});
 
 definePageMeta({
   layout: "default",
