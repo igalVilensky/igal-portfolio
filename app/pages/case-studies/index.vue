@@ -4,7 +4,7 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="py-16">
-          <div class="inline-block mb-4">
+          <div class="inline-block mb-4 cs-header-anim">
             <span
               class="text-accent-500 font-semibold text-sm uppercase tracking-wider"
             >
@@ -12,12 +12,12 @@
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
+            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight cs-header-anim"
           >
             Project Explorations
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
+            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl cs-header-anim"
           >
             Detailed journeys through my projects, highlighting technical
             approaches, creative problem-solving, and real-world impact.
@@ -29,7 +29,7 @@
           <div class="flex flex-wrap gap-3">
             <button
               @click="selectedTech = ''"
-              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim"
               :class="
                 selectedTech === ''
                   ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
@@ -42,7 +42,7 @@
               v-for="tech in technologies"
               :key="tech"
               @click="selectedTech = tech"
-              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim"
               :class="
                 selectedTech === tech
                   ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
@@ -87,12 +87,12 @@
           <div
             v-for="(caseStudy, index) in filteredCaseStudies"
             :key="caseStudy.id"
-            class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center"
+            class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center cs-card-anim"
             :class="index % 2 === 1 ? 'md:grid-flow-dense' : ''"
           >
             <!-- Image Container -->
             <div
-              class="order-1"
+              class="order-1 cs-image-anim"
               :class="index % 2 === 1 ? 'md:order-2 md:col-start-2' : ''"
             >
               <div
@@ -119,7 +119,7 @@
 
             <!-- Content -->
             <div
-              class="order-2 space-y-6"
+              class="order-2 space-y-6 cs-content-anim"
               :class="
                 index % 2 === 1
                   ? 'md:order-1 md:col-start-1 md:row-start-1'
@@ -333,4 +333,63 @@ useHead({
     },
   ],
 });
+
+import { onMounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Header Animation
+  gsap.from('.cs-header-anim', {
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Filter Animation
+  gsap.set('.cs-filter-anim', { opacity: 0, y: 20 });
+  gsap.to('.cs-filter-anim', {
+    y: 0,
+    opacity: 1,
+    duration: 0.8,
+    stagger: 0.05,
+    delay: 0.5,
+    ease: 'back.out(1.7)',
+    clearProps: 'all'
+  });
+
+  // Case Study Cards Animation
+  const cards = document.querySelectorAll('.cs-card-anim');
+  cards.forEach((card, index) => {
+    const image = card.querySelector('.cs-image-anim');
+    const content = card.querySelector('.cs-content-anim');
+    const isEven = index % 2 === 0;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 80%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    tl.from(image, {
+      x: isEven ? -50 : 50,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out'
+    })
+    .from(content, {
+      x: isEven ? 50 : -50,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out'
+    }, "-=0.8");
+  });
+});
+
 </script>
