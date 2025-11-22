@@ -5,7 +5,7 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="">
-          <div class="inline-block mb-4">
+          <div class="inline-block mb-4 story-header-anim">
             <span
               class="text-accent-500 font-semibold text-sm uppercase tracking-wider"
             >
@@ -13,12 +13,12 @@
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
+            class="story-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
             My Journey
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl pb-8"
+            class="story-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl pb-8"
           >
             An unconventional path through technology, creativity, and
             entrepreneurship
@@ -26,16 +26,16 @@
         </div>
 
         <!-- Timeline -->
-        <div class="relative pl-8 md:pl-0">
+        <div class="relative pl-8 md:pl-0 timeline-container">
           <!-- Vertical line -->
           <div
-            class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-neutral-300 dark:bg-neutral-600 md:transform md:-translate-x-1/2"
+            class="timeline-line absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-neutral-300 dark:bg-neutral-600 md:transform md:-translate-x-1/2"
           ></div>
 
           <!-- Timeline Items -->
           <div class="space-y-16 md:space-y-20">
             <!-- Current Focus -->
-            <div class="relative md:grid md:grid-cols-2 md:gap-12">
+            <div class="relative md:grid md:grid-cols-2 md:gap-12 timeline-item">
               <div class="hidden md:block text-right pr-12">
                 <span
                   class="inline-block px-4 py-1.5 bg-primary-500 text-white rounded-full text-sm font-semibold shadow-sm"
@@ -70,7 +70,7 @@
             </div>
 
             <!-- Tech Career -->
-            <div class="relative md:grid md:grid-cols-2 md:gap-12">
+            <div class="relative md:grid md:grid-cols-2 md:gap-12 timeline-item">
               <div class="hidden md:block text-right pr-12">
                 <span
                   class="text-lg md:text-xl font-semibold text-secondary-900 dark:text-white"
@@ -122,7 +122,7 @@
             </div>
 
             <!-- Startup & Creative -->
-            <div class="relative md:grid md:grid-cols-2 md:gap-12">
+            <div class="relative md:grid md:grid-cols-2 md:gap-12 timeline-item">
               <div class="hidden md:block text-right pr-12">
                 <span
                   class="text-lg md:text-xl font-semibold text-secondary-900 dark:text-white"
@@ -175,7 +175,7 @@
             </div>
 
             <!-- Early Adventures -->
-            <div class="relative md:grid md:grid-cols-2 md:gap-12">
+            <div class="relative md:grid md:grid-cols-2 md:gap-12 timeline-item">
               <div class="hidden md:block text-right pr-12">
                 <span
                   class="text-lg md:text-xl font-semibold text-secondary-900 dark:text-white"
@@ -213,7 +213,7 @@
 
         <!-- Key Insight -->
         <div class="py-16">
-          <div class="border-l-4 border-primary-500 pl-6 md:pl-8 py-3">
+          <div class="insight-anim border-l-4 border-primary-500 pl-6 md:pl-8 py-3">
             <p
               class="text-xl md:text-2xl text-primary-800 dark:text-primary-200 font-light leading-relaxed italic"
             >
@@ -229,5 +229,67 @@
 </template>
 
 <script setup lang="ts">
-// Component logic can be added here if needed
+import { onMounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+onMounted(() => {
+  // Header Animations
+  gsap.from('.story-header-anim', {
+    scrollTrigger: {
+      trigger: '.story-header-anim',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Timeline Line Animation
+  gsap.from('.timeline-line', {
+    scrollTrigger: {
+      trigger: '.timeline-container',
+      start: 'top 70%',
+      end: 'bottom 70%',
+      scrub: 1
+    },
+    scaleY: 0,
+    transformOrigin: 'top center',
+    ease: 'none'
+  });
+
+  // Timeline Items Animation
+  const items = document.querySelectorAll('.timeline-item');
+  items.forEach((item) => {
+    gsap.from(item, {
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 85%',
+        toggleActions: 'play none none reverse'
+      },
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    });
+  });
+
+  // Key Insight Animation
+  gsap.from('.insight-anim', {
+    scrollTrigger: {
+      trigger: '.insight-anim',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    },
+    x: -30,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out'
+  });
+});
 </script>

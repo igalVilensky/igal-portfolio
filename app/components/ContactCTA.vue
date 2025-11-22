@@ -8,7 +8,7 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="">
-          <div class="inline-block mb-4">
+          <div class="inline-block mb-4 contact-header-anim">
             <span
               class="text-primary-500 font-semibold text-sm uppercase tracking-wider"
             >
@@ -16,20 +16,20 @@
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
+            class="contact-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
             Let's Solve Problems Together
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
+            class="contact-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
           >
             Ready to bring your ideas to life with a cross-functional approach
           </p>
         </div>
 
         <!-- Contact Options -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 py-16">
-          <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 py-16 contact-options-container">
+          <div class="space-y-4 contact-option-anim">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-primary-500"></div>
               <h3
@@ -55,7 +55,7 @@
             </a>
           </div>
 
-          <div class="space-y-4">
+          <div class="space-y-4 contact-option-anim">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-accent-500"></div>
               <h3
@@ -82,7 +82,7 @@
         </div>
 
         <!-- Final Statement -->
-        <div class="border-l-4 border-primary-500 pl-6 md:pl-8 py-3">
+        <div class="contact-statement-anim border-l-4 border-primary-500 pl-6 md:pl-8 py-3">
           <p
             class="text-xl md:text-2xl text-primary-800 dark:text-primary-200 font-light leading-relaxed"
           >
@@ -97,5 +97,52 @@
 </template>
 
 <script setup lang="ts">
-// Component logic
+import { onMounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+onMounted(() => {
+  // Header Animations
+  gsap.from('.contact-header-anim', {
+    scrollTrigger: {
+      trigger: '.contact-header-anim',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Contact Options Animation
+  gsap.from('.contact-option-anim', {
+    scrollTrigger: {
+      trigger: '.contact-options-container',
+      start: 'top 75%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Final Statement Animation
+  gsap.from('.contact-statement-anim', {
+    scrollTrigger: {
+      trigger: '.contact-statement-anim',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    },
+    x: 30,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power3.out'
+  });
+});
 </script>

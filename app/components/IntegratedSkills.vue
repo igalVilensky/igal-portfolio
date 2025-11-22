@@ -5,7 +5,7 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="mb-16 md:mb-20">
-          <div class="inline-block mb-4">
+          <div class="inline-block mb-4 skills-header-anim">
             <span
               class="text-primary-500 font-semibold text-sm uppercase tracking-wider"
             >
@@ -13,21 +13,21 @@
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
+            class="skills-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
             Integrated Skills
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
+            class="skills-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
           >
             A multidisciplinary approach to problem-solving
           </p>
         </div>
 
         <!-- Skills Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 skills-grid">
           <!-- Technical -->
-          <div class="space-y-4">
+          <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-primary-500"></div>
               <h3
@@ -59,7 +59,7 @@
           </div>
 
           <!-- Creative -->
-          <div class="space-y-4">
+          <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-accent-500"></div>
               <h3
@@ -91,7 +91,7 @@
           </div>
 
           <!-- Business -->
-          <div class="space-y-4">
+          <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-secondary-400"></div>
               <h3
@@ -123,7 +123,7 @@
           </div>
 
           <!-- Interpersonal -->
-          <div class="space-y-4">
+          <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-neutral-500"></div>
               <h3
@@ -157,7 +157,7 @@
 
         <!-- Connecting Statement -->
         <div class="mt-20 md:mt-24">
-          <div class="border-l-4 border-accent-500 pl-6 md:pl-8 py-3">
+          <div class="skills-quote-anim border-l-4 border-accent-500 pl-6 md:pl-8 py-3">
             <p
               class="text-xl md:text-2xl text-accent-700 dark:text-accent-200 font-light leading-relaxed italic"
             >
@@ -172,5 +172,52 @@
 </template>
 
 <script setup lang="ts">
-// Component logic
+import { onMounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+onMounted(() => {
+  // Header Animations
+  gsap.from('.skills-header-anim', {
+    scrollTrigger: {
+      trigger: '.skills-header-anim',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Skills Grid Animation
+  gsap.from('.skill-category', {
+    scrollTrigger: {
+      trigger: '.skills-grid',
+      start: 'top 75%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.15,
+    ease: 'power3.out'
+  });
+
+  // Connecting Statement Animation
+  gsap.from('.skills-quote-anim', {
+    scrollTrigger: {
+      trigger: '.skills-quote-anim',
+      start: 'top 85%',
+      toggleActions: 'play none none reverse'
+    },
+    x: 30,
+    opacity: 0,
+    duration: 1,
+    ease: 'power3.out'
+  });
+});
 </script>

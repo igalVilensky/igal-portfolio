@@ -1,7 +1,7 @@
 <!-- app/components/Hero.vue -->
 <template>
   <section
-    class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32"
   >
     <!-- Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="overflow-hidden">
-            <div class="hero-anim-element translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
+            <div class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
               <span class="text-gradient-primary">Technologist</span> &
             </div>
           </div>
@@ -73,9 +73,11 @@
 
     <!-- Scroll Indicator -->
     <div class="absolute bottom-10 left-1/2 -translate-x-1/2 hero-anim-element opacity-0">
-      <div class="flex flex-col items-center gap-2 text-secondary-400 dark:text-secondary-500">
-        <span class="text-xs uppercase tracking-widest">Scroll</span>
-        <div class="w-[1px] h-12 bg-gradient-to-b from-secondary-400/0 via-secondary-400 to-secondary-400/0 dark:from-white/0 dark:via-white/20 dark:to-white/0"></div>
+      <div class="flex flex-col items-center gap-3">
+        <div class="w-[30px] h-[50px] rounded-full border-2 border-secondary-400/30 dark:border-white/20 flex justify-center p-2">
+          <div class="w-1.5 h-1.5 rounded-full bg-secondary-400 dark:bg-white animate-scroll-wheel"></div>
+        </div>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-medium">Scroll</span>
       </div>
     </div>
   </section>
@@ -101,5 +103,20 @@ onMounted(() => {
 <style scoped>
 .text-gradient-primary {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-primary-400 to-accent-500;
+}
+
+@keyframes scroll-wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+.animate-scroll-wheel {
+  animation: scroll-wheel 1.5s ease-in-out infinite;
 }
 </style>

@@ -5,7 +5,7 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="py-16">
-          <div class="inline-block mb-4">
+          <div class="inline-block mb-4 projects-header-anim">
             <span
               class="text-secondary-400 font-semibold text-sm uppercase tracking-wider"
             >
@@ -13,12 +13,12 @@
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
+            class="projects-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
             Projects I'm Building
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
+            class="projects-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
           >
             Creating solutions that make a difference through collaboration and
             thoughtful design
@@ -28,9 +28,9 @@
         <!-- Projects Grid -->
         <div class="space-y-20 md:space-y-24 mb-16 md:mb-20">
           <!-- PsyBlog Project -->
-          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center project-card-anim">
             <!-- Image Container - Always on top on mobile -->
-            <div class="order-1">
+            <div class="order-1 project-image-anim">
               <div
                 class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
               >
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Content - Below image on mobile, right side on desktop -->
-            <div class="order-2 space-y-6">
+            <div class="order-2 space-y-6 project-content-anim">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-1 bg-primary-500"></div>
                 <h3
@@ -104,9 +104,9 @@
           </div>
 
           <!-- Family Space Project -->
-          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center project-card-anim">
             <!-- Image Container - Always on top on mobile -->
-            <div class="order-1 md:order-2">
+            <div class="order-1 md:order-2 project-image-anim">
               <div
                 class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
               >
@@ -129,7 +129,7 @@
             </div>
 
             <!-- Content - Below image on mobile, left side on desktop -->
-            <div class="order-2 md:order-1 space-y-6">
+            <div class="order-2 md:order-1 space-y-6 project-content-anim">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-1 bg-accent-500"></div>
                 <h3
@@ -181,7 +181,7 @@
         </div>
 
         <!-- CTA -->
-        <div class="text-center">
+        <div class="text-center projects-cta-anim">
           <NuxtLink
             to="/case-studies"
             class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg border-b-2 border-primary-500 pb-1"
@@ -198,6 +198,12 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
 // Project data with images
 const projects = {
   psyBlog: {
@@ -219,4 +225,61 @@ const projects = {
     technologies: ["Nuxt", "Vue 3", "TypeScript", "Tailwind CSS", "Firebase"],
   },
 };
+
+onMounted(() => {
+  // Header Animations
+  gsap.from('.projects-header-anim', {
+    scrollTrigger: {
+      trigger: '.projects-header-anim',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  });
+
+  // Project Cards Animation
+  const projects = document.querySelectorAll('.project-card-anim');
+  projects.forEach((project) => {
+    const image = project.querySelector('.project-image-anim');
+    const content = project.querySelector('.project-content-anim');
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: project,
+        start: 'top 75%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    tl.from(image, {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    })
+    .from(content, {
+      x: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.6');
+  });
+
+  // CTA Animation
+  gsap.from('.projects-cta-anim', {
+    scrollTrigger: {
+      trigger: '.projects-cta-anim',
+      start: 'top 90%',
+      toggleActions: 'play none none reverse'
+    },
+    y: 30,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power3.out'
+  });
+});
 </script>
