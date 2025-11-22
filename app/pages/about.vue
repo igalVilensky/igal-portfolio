@@ -25,21 +25,9 @@
             </span>
           </h2>
           <p
-            class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl"
+            class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl subtitle-anim"
           >
-            <span 
-              v-for="word in subtitleWords" 
-              :key="word.id" 
-              class="inline-block whitespace-nowrap mr-2"
-            >
-              <span 
-                v-for="char in word.chars" 
-                :key="char.id" 
-                class="subtitle-char inline-block"
-              >
-                {{ char.char }}
-              </span>
-            </span>
+            {{ $t("about.subtitle") }}
           </p>
         </div>
 
@@ -674,7 +662,6 @@ const splitParagraph = (text: string) => {
 
 const aboutMeChars = computed(() => splitText("About Me"));
 const myStoryChars = computed(() => splitText("My Story"));
-const subtitleWords = computed(() => splitParagraph(t("about.subtitle")));
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
@@ -713,22 +700,16 @@ onMounted(() => {
     ease: "power3.out"
   });
 
-  // Animate Subtitle chars (Particle Effect)
-  gsap.from('.subtitle-char', {
-    duration: 2,
+  // Animate Subtitle (Simple Fade Up)
+  gsap.from('.subtitle-anim', {
+    duration: 1,
     opacity: 0,
-    x: () => (Math.random() - 0.5) * 400,
-    y: () => (Math.random() - 0.5) * 400,
-    z: () => (Math.random() - 0.5) * 400,
-    rotation: () => Math.random() * 360,
-    scale: 0,
-    delay: 0.5,
-    stagger: {
-      amount: 1.5,
-      from: "random"
-    },
+    y: 30,
+    delay: 0.8,
     ease: "power3.out"
   });
+
+
 
   // 2. 3D Blur Materialize Effect for Cards
   const cards = document.querySelectorAll('.about-card-anim');
@@ -752,7 +733,7 @@ onMounted(() => {
           trigger: card,
           start: "top 85%",
           end: "top 50%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play none none none",
           scrub: false
         },
         opacity: 1,
@@ -764,20 +745,6 @@ onMounted(() => {
         ease: "power2.out"
       }
     );
-
-    // 3. Scroll-tied Exit Animation (Dissolve)
-    gsap.to(card, {
-      scrollTrigger: {
-        trigger: card,
-        start: "top -10%",
-        end: "top -50%",
-        scrub: 1
-      },
-      opacity: 0,
-      scale: 0.9,
-      filter: 'blur(10px)',
-      y: -50
-    });
   });
 
   // Skills Section 3D Reveal
@@ -795,7 +762,7 @@ onMounted(() => {
         scrollTrigger: {
           trigger: skillsSection,
           start: "top 80%",
-          toggleActions: "play none none reverse"
+          toggleActions: "play none none none"
         },
         opacity: 1,
         y: 0,
@@ -822,7 +789,7 @@ onMounted(() => {
         scrollTrigger: {
           trigger: item, // Changed from .sidebar-container to item
           start: "top 85%", // Adjusted start position
-          toggleActions: "play none none reverse"
+          toggleActions: "play none none none"
         },
         opacity: 1,
         x: 0,
