@@ -542,7 +542,7 @@ import { useI18n } from "vue-i18n";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+
 
 const { t } = useI18n();
 const colorMode = useColorMode();
@@ -586,6 +586,7 @@ const currentlyLearning = [
   "Kubernetes",
   "GraphQL",
   "Rust Programming",
+  "WebAssembly",
 ];
 
 const interests = [
@@ -676,6 +677,7 @@ const myStoryChars = computed(() => splitText("My Story"));
 const subtitleWords = computed(() => splitParagraph(t("about.subtitle")));
 
 onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
   // 1. Particle Text Animation
   
   // Animate "About Me" chars

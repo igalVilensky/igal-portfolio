@@ -202,7 +202,7 @@ import { onMounted } from 'vue';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+
 
 // Project data with images
 const projects = {
@@ -227,6 +227,7 @@ const projects = {
 };
 
 onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
   // Header Animations
   gsap.from('.projects-header-anim', {
     scrollTrigger: {
