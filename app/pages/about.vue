@@ -27,7 +27,7 @@
           <p
             class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl subtitle-anim"
           >
-            {{ $t("about.subtitle") }}
+            I’m a <span class="text-primary-600 dark:text-primary-400 font-bold">full-stack developer</span> with a knack for <span class="text-secondary-900 dark:text-white font-semibold">improvisation</span>, a love for creating tools that make life easier, and a colorful life story that spans continents and stages. Based in <span class="text-secondary-900 dark:text-white font-semibold">Leipzig, Germany</span>, I blend code with creativity to build apps that people love to use.
           </p>
         </div>
 
@@ -50,27 +50,8 @@
               <p
                 class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
               >
-                {{ $t("about.personalDesc1") }}
+                My journey in tech started in 2019, when I moved from <span class="font-medium text-secondary-800 dark:text-secondary-100">Israel to Germany</span>, just as I was about to dive into a dev course back home. By 2020, I was studying <span class="text-primary-600 dark:text-primary-400 font-semibold">web development</span> in Leipzig, and I haven’t looked back since. I love building things that make people’s lives easier—whether it’s a <span class="italic text-secondary-700 dark:text-secondary-200">sleek SaaS platform</span> or a responsive web app. I’ve worked on projects like <span class="font-bold text-secondary-900 dark:text-white">Flowplace</span>, where I crafted features with <span class="text-accent-500 font-medium">Vue.js and Directus</span>, and <span class="font-bold text-secondary-900 dark:text-white">LeanERA</span>, where I helped transition a startup to a product-focused company with scalable codebases. At <span class="font-bold text-secondary-900 dark:text-white">ARI Motors</span>, I built user-friendly interfaces for a comparison portal for electric vehicles, making complex info feel simple and accessible.
               </p>
-              <button
-                @click="openModal('introduction')"
-                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
-              >
-                <span>Read more</span>
-                <svg
-                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
             </div>
 
             <!-- Journey Card -->
@@ -88,27 +69,8 @@
               <p
                 class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
               >
-                {{ $t("about.personalDesc2") }}
+                Before coding, I was in the startup world at <span class="font-medium">Myfxbook</span> and <span class="font-medium">Cashdo</span> in Israel, managing web and social media channels with a creative flair. But my life’s been anything but ordinary. I spent a year and a half in Russia’s far north, <span class="text-blue-500 font-semibold">Yamalo-Nenets</span>, braving <span class="font-bold text-blue-600 dark:text-blue-400">-60°C winters</span>. Oh, and did I mention I was an <span class="text-accent-500 font-bold font-display tracking-wide">actor</span>? From TV series and films to commercials and even the Israeli opera (no singing, just acting!), I’ve always loved telling stories—now I do it through code.
               </p>
-              <button
-                @click="openModal('journey')"
-                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
-              >
-                <span>Read more</span>
-                <svg
-                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
             </div>
 
             <!-- Beyond Code Card -->
@@ -126,27 +88,8 @@
               <p
                 class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
               >
-                {{ $t("about.personalDesc3") }}
+                Outside the tech world, I’m a <span class="font-medium text-secondary-800 dark:text-secondary-100">dad</span> who cherishes time with my kids, a <span class="font-medium text-secondary-800 dark:text-secondary-100">piano player</span> who improvises melodies, and a curious soul studying <span class="font-medium text-secondary-800 dark:text-secondary-100">Kabbalah</span> to explore life’s deeper meanings. Leipzig’s my home now, where I enjoy cozy cafés and the occasional hike, though I’ll admit travel’s lost a bit of its spark lately. I approach life like I approach coding: with <span class="text-primary-600 dark:text-primary-400 font-semibold">curiosity</span>, <span class="text-accent-500 font-semibold">adaptability</span>, and a touch of <span class="text-secondary-500 font-semibold">improvisation</span>.
               </p>
-              <button
-                @click="openModal('beyondCode')"
-                class="inline-flex items-center gap-2 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors group"
-              >
-                <span>Read more</span>
-                <svg
-                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </button>
             </div>
 
             <!-- Skills Section -->
@@ -441,83 +384,7 @@
           </div>
         </div>
 
-        <!-- Modal -->
-        <Transition
-          @enter="onModalEnter"
-          @leave="onModalLeave"
-          :css="false"
-        >
-          <div
-            v-if="showModal"
-            class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            @click="closeModal"
-          >
-            <div
-              class="relative w-[90%] md:w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-secondary-800 rounded-xl shadow-2xl modal-content"
-              @click.stop
-            >
-              <div
-                class="sticky top-0 bg-white dark:bg-secondary-800 border-b border-neutral-200 dark:border-secondary-900 px-6 py-4 flex items-center justify-between"
-              >
-                <h3
-                  class="text-xl font-display text-secondary-900 dark:text-white"
-                >
-                  {{
-                    activeModal === "introduction"
-                      ? $t("about.personalTitle")
-                      : activeModal === "journey"
-                      ? $t("about.journeyTitle")
-                      : $t("about.beyondCodeTitle")
-                  }}
-                </h3>
-                <button
-                  @click="closeModal"
-                  class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-secondary-900 transition-colors"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
 
-              <div class="p-6">
-                <div v-if="activeModal === 'introduction'">
-                  <p
-                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
-                  >
-                    {{ $t("about.personalDesc1") }}
-                  </p>
-                </div>
-
-                <div v-if="activeModal === 'journey'">
-                  <p
-                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
-                  >
-                    {{ $t("about.personalDesc2") }}
-                  </p>
-                </div>
-
-                <div v-if="activeModal === 'beyondCode'">
-                  <p
-                    class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed"
-                  >
-                    {{ $t("about.personalDesc3") }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Transition>
       </div>
     </div>
   </section>
@@ -534,10 +401,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { t } = useI18n();
 const colorMode = useColorMode();
-
-// Modal state
-const showModal = ref(false);
-const activeModal = ref<string | null>(null);
 
 // Skills data
 const frontendSkills = [
@@ -583,58 +446,6 @@ const interests = [
   "Performance Optimization",
   "Developer Experience",
 ];
-
-// Modal controls
-const openModal = (modalType: string) => {
-  activeModal.value = modalType;
-  showModal.value = true;
-};
-
-const closeModal = () => {
-  activeModal.value = null;
-  showModal.value = false;
-};
-
-// Modal Animations
-const onModalEnter = (el: Element, done: () => void) => {
-  const modalContent = el.querySelector('.modal-content');
-  
-  gsap.set(el, { opacity: 0 });
-  gsap.set(modalContent, { 
-    scale: 0.5, 
-    rotationX: 45, 
-    y: 100, 
-    opacity: 0,
-    transformPerspective: 1000
-  });
-
-  const tl = gsap.timeline({ onComplete: done });
-  
-  tl.to(el, { opacity: 1, duration: 0.3 })
-    .to(modalContent, { 
-      scale: 1, 
-      rotationX: 0, 
-      y: 0, 
-      opacity: 1, 
-      duration: 0.6, 
-      ease: "back.out(1.7)" 
-    }, "-=0.2");
-};
-
-const onModalLeave = (el: Element, done: () => void) => {
-  const modalContent = el.querySelector('.modal-content');
-  
-  const tl = gsap.timeline({ onComplete: done });
-  
-  tl.to(modalContent, { 
-      scale: 0.8, 
-      opacity: 0, 
-      y: -50, 
-      duration: 0.4, 
-      ease: "power2.in" 
-    })
-    .to(el, { opacity: 0, duration: 0.3 }, "-=0.2");
-};
 
 // Navigate to contact page
 const scrollToContact = () => {
