@@ -4,17 +4,25 @@
       <div class="max-w-5xl mx-auto">
         <!-- Section Header -->
         <div class="py-16">
-          <div class="inline-block mb-4 cs-header-anim">
+          <div class="inline-block mb-4">
             <span
-              class="text-accent-500 font-semibold text-sm uppercase tracking-wider"
+              v-for="item in caseStudiesChars"
+              :key="item.id"
+              class="case-studies-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider"
             >
-              Case Studies
+              {{ item.char }}
             </span>
           </div>
           <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight cs-header-anim"
+            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
           >
-            Project Explorations
+            <span
+              v-for="item in projectExplorationsChars"
+              :key="item.id"
+              class="project-explorations-char inline-block"
+            >
+              {{ item.char }}
+            </span>
           </h2>
           <p
             class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl cs-header-anim"
@@ -318,6 +326,17 @@ const filteredCaseStudies = computed(() => {
   );
 });
 
+// Helper to split text
+const splitText = (text: string) => {
+  return text.split('').map((char, index) => ({
+    char: char === ' ' ? '\u00A0' : char,
+    id: index
+  }));
+};
+
+const caseStudiesChars = computed(() => splitText("Case Studies"));
+const projectExplorationsChars = computed(() => splitText("Project Explorations"));
+
 useHead({
   title: "Case Studies - Igal Vilensky",
   meta: [
@@ -342,11 +361,46 @@ onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
   // Header Animation
+  
+  // Animate "Case Studies" chars
+  gsap.from('.case-studies-char', {
+    duration: 1.5,
+    opacity: 0,
+    x: () => (Math.random() - 0.5) * 200,
+    y: () => (Math.random() - 0.5) * 200,
+    z: () => (Math.random() - 0.5) * 200,
+    rotation: () => Math.random() * 360,
+    scale: 0,
+    stagger: {
+      amount: 0.5,
+      from: "random"
+    },
+    ease: "power3.out"
+  });
+
+  // Animate "Project Explorations" chars
+  gsap.from('.project-explorations-char', {
+    duration: 1.5,
+    opacity: 0,
+    x: () => (Math.random() - 0.5) * 300,
+    y: () => (Math.random() - 0.5) * 300,
+    z: () => (Math.random() - 0.5) * 300,
+    rotation: () => Math.random() * 360,
+    scale: 0,
+    delay: 0.3,
+    stagger: {
+      amount: 0.6,
+      from: "random"
+    },
+    ease: "power3.out"
+  });
+
+  // Animate Subtitle (Simple Fade Up)
   gsap.from('.cs-header-anim', {
     y: 50,
     opacity: 0,
     duration: 1,
-    stagger: 0.2,
+    delay: 0.8,
     ease: 'power3.out'
   });
 
