@@ -5,29 +5,24 @@
         <!-- Section Header -->
         <div class="py-12 md:py-16">
           <div class="inline-block mb-4">
-            <span
-              v-for="item in aboutMeChars"
-              :key="item.id"
-              class="about-me-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider"
-            >
+            <span v-for="item in aboutMeChars" :key="item.id"
+              class="about-me-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider">
               {{ item.char }}
             </span>
           </div>
           <h2
-            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display text-secondary-900 dark:text-white mb-4 md:mb-6 leading-tight"
-          >
-            <span
-              v-for="item in myStoryChars"
-              :key="item.id"
-              class="my-story-char inline-block"
-            >
+            class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display text-secondary-900 dark:text-white mb-4 md:mb-6 leading-tight">
+            <span v-for="item in myStoryChars" :key="item.id" class="my-story-char inline-block">
               {{ item.char }}
             </span>
           </h2>
           <p
-            class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl subtitle-anim"
-          >
-            I’m a <span class="text-primary-600 dark:text-primary-400 font-bold">full-stack developer</span> with a knack for <span class="text-secondary-900 dark:text-white font-semibold">improvisation</span>, a love for creating tools that make life easier, and a colorful life story that spans continents and stages. Based in <span class="text-secondary-900 dark:text-white font-semibold">Leipzig, Germany</span>, I blend code with creativity to build apps that people love to use.
+            class="text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-3xl subtitle-anim">
+            I'm a <span class="text-primary-600 dark:text-primary-400 font-bold">full-stack developer</span> based in
+            <span class="text-secondary-900 dark:text-white font-semibold">Leipzig, Germany</span>, focused on building
+            scalable, performant SaaS and web applications. With experience in TypeScript, Vue/Nuxt, React/Next, and
+            Node.js, I deliver maintainable, high-quality code driven by component-based architecture and Agile
+            practices.
           </p>
         </div>
 
@@ -37,91 +32,97 @@
           <div class="lg:col-span-2 space-y-12 about-cards-container">
             <!-- Introduction Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
-            >
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
-                <h3
-                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.personalTitle") }}
                 </h3>
               </div>
-              <p
-                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
-              >
-                My journey in tech started in 2019, when I moved from <span class="font-medium text-secondary-800 dark:text-secondary-100">Israel to Germany</span>, just as I was about to dive into a dev course back home. By 2020, I was studying <span class="text-primary-600 dark:text-primary-400 font-semibold">web development</span> in Leipzig, and I haven’t looked back since. I love building things that make people’s lives easier—whether it’s a <span class="italic text-secondary-700 dark:text-secondary-200">sleek SaaS platform</span> or a responsive web app. I’ve worked on projects like <span class="font-bold text-secondary-900 dark:text-white">Flowplace</span>, where I crafted features with <span class="text-accent-500 font-medium">Vue.js and Directus</span>, and <span class="font-bold text-secondary-900 dark:text-white">LeanERA</span>, where I helped transition a startup to a product-focused company with scalable codebases. At <span class="font-bold text-secondary-900 dark:text-white">ARI Motors</span>, I built user-friendly interfaces for a comparison portal for electric vehicles, making complex info feel simple and accessible.
+              <p class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4">
+                My tech journey started in 2019 when I moved from <span
+                  class="font-medium text-secondary-800 dark:text-secondary-100">Israel to Germany</span>. After
+                completing web development training at <span
+                  class="text-primary-600 dark:text-primary-400 font-semibold">Digital Career Institute</span> in
+                Leipzig (2020-2021), I've been building production applications professionally. At <span
+                  class="font-bold text-secondary-900 dark:text-white">Flowplace</span> (2023-Present), I lead
+                end-to-end development of SaaS features using Vue.js/Nuxt.js and robust backend APIs—the Role Compass
+                talent profile I built reached <span class="text-accent-500 font-bold">5,000+ users within one
+                  month</span>. At <span class="font-bold text-secondary-900 dark:text-white">LeanERA</span>
+                (2022-2023), I built responsive web apps with Vue 3, Nuxt 3, and TypeScript, establishing scalable
+                architecture for the company's digital transition. At <span
+                  class="font-bold text-secondary-900 dark:text-white">ARI Motors</span> (2021-2022), I designed and
+                launched a comparison portal for electric commercial vehicles from scratch to production in <span
+                  class="text-accent-500 font-bold">under 3 months</span>, managing full-stack responsibilities
+                including website, backend, and databases.
               </p>
             </div>
 
             <!-- Journey Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
-            >
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
-                <h3
-                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.journeyTitle") }}
                 </h3>
               </div>
-              <p
-                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
-              >
-                Before coding, I was in the startup world at <span class="font-medium">Myfxbook</span> and <span class="font-medium">Cashdo</span> in Israel, managing web and social media channels with a creative flair. But my life’s been anything but ordinary. I spent a year and a half in Russia’s far north, <span class="text-blue-500 font-semibold">Yamalo-Nenets</span>, braving <span class="font-bold text-blue-600 dark:text-blue-400">-60°C winters</span>. Oh, and did I mention I was an <span class="text-accent-500 font-bold font-display tracking-wide">actor</span>? From TV series and films to commercials and even the Israeli opera (no singing, just acting!), I’ve always loved telling stories—now I do it through code.
+              <p class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4">
+                Before becoming a developer, I was in the startup world at <span class="font-medium">Myfxbook</span> and
+                <span class="font-medium">Cashdo</span> in Israel (2017-2019) as Social Media & Web Coordinator. I
+                scaled Cashdo into one of Israel's top two cashback platforms, driving <span
+                  class="text-accent-500 font-bold">100K+ monthly site visits</span> and partnering with leading
+                credit-card companies to deliver white-label cashback platforms. But my life's been anything but
+                ordinary. I spent a year and a half in Russia's far north, <span
+                  class="text-blue-500 font-semibold">Yamalo-Nenets</span>, braving <span
+                  class="font-bold text-blue-600 dark:text-blue-400">-60°C winters</span>. And yes, I was an <span
+                  class="text-accent-500 font-bold font-display tracking-wide">actor</span>—from TV series and films to
+                commercials and even the Israeli opera. I've always loved telling stories; now I do it through code.
               </p>
             </div>
 
             <!-- Beyond Code Card -->
             <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim"
-            >
+              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm transition-shadow about-card-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
-                <h3
-                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.beyondCodeTitle") }}
                 </h3>
               </div>
-              <p
-                class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4"
-              >
-                Outside the tech world, I’m a <span class="font-medium text-secondary-800 dark:text-secondary-100">dad</span> who cherishes time with my kids, a <span class="font-medium text-secondary-800 dark:text-secondary-100">piano player</span> who improvises melodies, and a curious soul studying <span class="font-medium text-secondary-800 dark:text-secondary-100">Kabbalah</span> to explore life’s deeper meanings. Leipzig’s my home now, where I enjoy cozy cafés and the occasional hike, though I’ll admit travel’s lost a bit of its spark lately. I approach life like I approach coding: with <span class="text-primary-600 dark:text-primary-400 font-semibold">curiosity</span>, <span class="text-accent-500 font-semibold">adaptability</span>, and a touch of <span class="text-secondary-500 font-semibold">improvisation</span>.
+              <p class="text-base text-neutral-600 dark:text-neutral-300 leading-relaxed mb-4">
+                Outside the tech world, I’m a <span
+                  class="font-medium text-secondary-800 dark:text-secondary-100">dad</span> who cherishes time with my
+                kids, a <span class="font-medium text-secondary-800 dark:text-secondary-100">piano player</span> who
+                improvises melodies, and a curious soul studying <span
+                  class="font-medium text-secondary-800 dark:text-secondary-100">Kabbalah</span> to explore life’s
+                deeper meanings. Leipzig’s my home now, where I enjoy cozy cafés and the occasional hike, though I’ll
+                admit travel’s lost a bit of its spark lately. I approach life like I approach coding: with <span
+                  class="text-primary-600 dark:text-primary-400 font-semibold">curiosity</span>, <span
+                  class="text-accent-500 font-semibold">adaptability</span>, and a touch of <span
+                  class="text-secondary-500 font-semibold">improvisation</span>.
               </p>
             </div>
 
             <!-- Skills Section -->
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm skills-section-anim"
-            >
+            <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 md:p-8 shadow-sm skills-section-anim">
               <div class="flex items-center gap-3 mb-6">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
-                <h3
-                  class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl md:text-2xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.skillsTitle") }}
                 </h3>
               </div>
               <div class="grid sm:grid-cols-2 gap-6">
                 <!-- Frontend & Mobile -->
                 <div class="space-y-3 skill-group-anim">
-                  <h4
-                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
-                  >
+                  <h4 class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                     <i class="fas fa-laptop-code text-primary-500"></i>
                     {{ $t("skills.frontendMobile") }}
                   </h4>
                   <ul class="space-y-2">
-                    <li
-                      v-for="(skill, index) in frontendSkills"
-                      :key="index"
-                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                    >
-                      <span
-                        class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
-                      ></span>
+                    <li v-for="(skill, index) in frontendSkills" :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                      <span class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"></span>
                       <span>{{ skill.title }}</span>
                     </li>
                   </ul>
@@ -129,21 +130,14 @@
 
                 <!-- Backend -->
                 <div class="space-y-3 skill-group-anim">
-                  <h4
-                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
-                  >
+                  <h4 class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                     <i class="fas fa-server text-accent-500"></i>
                     {{ $t("skills.backend") }}
                   </h4>
                   <ul class="space-y-2">
-                    <li
-                      v-for="(skill, index) in backendSkills"
-                      :key="index"
-                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                    >
-                      <span
-                        class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"
-                      ></span>
+                    <li v-for="(skill, index) in backendSkills" :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                      <span class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"></span>
                       <span>{{ skill.title }}</span>
                     </li>
                   </ul>
@@ -151,21 +145,14 @@
 
                 <!-- DevOps & Tools -->
                 <div class="space-y-3 skill-group-anim">
-                  <h4
-                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
-                  >
+                  <h4 class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                     <i class="fas fa-tools text-secondary-500"></i>
                     {{ $t("skills.devopsTools") }}
                   </h4>
                   <ul class="space-y-2">
-                    <li
-                      v-for="(skill, index) in devopsSkills"
-                      :key="index"
-                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                    >
-                      <span
-                        class="w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"
-                      ></span>
+                    <li v-for="(skill, index) in devopsSkills" :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                      <span class="w-1.5 h-1.5 rounded-full bg-secondary-500 flex-shrink-0"></span>
                       <span>{{ skill.title }}</span>
                     </li>
                   </ul>
@@ -173,21 +160,14 @@
 
                 <!-- Languages -->
                 <div class="space-y-3 skill-group-anim">
-                  <h4
-                    class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2"
-                  >
+                  <h4 class="text-base font-semibold text-secondary-900 dark:text-white flex items-center gap-2">
                     <i class="fas fa-globe text-primary-500"></i>
                     {{ $t("skills.languages") }}
                   </h4>
                   <ul class="space-y-2">
-                    <li
-                      v-for="(language, index) in languageSkills"
-                      :key="index"
-                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                    >
-                      <span
-                        class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
-                      ></span>
+                    <li v-for="(language, index) in languageSkills" :key="index"
+                      class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                      <span class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"></span>
                       <span>{{ $t(`skills.${language.titleKey}`) }}</span>
                     </li>
                   </ul>
@@ -199,62 +179,41 @@
           <!-- Sidebar Column (1/3) -->
           <div class="space-y-8 sidebar-container">
             <!-- Profile Picture -->
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm text-center sidebar-anim"
-            >
+            <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm text-center sidebar-anim">
               <div class="mb-4">
-                <img
-                  src="/profile.jpeg"
-                  alt="Igal Vilensky - Creative Technologist"
-                  class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-primary-100 dark:border-primary-900 shadow-lg"
-                />
+                <img src="/profile.jpeg" alt="Igal Vilensky - Creative Technologist"
+                  class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-primary-100 dark:border-primary-900 shadow-lg" />
               </div>
-              <h3
-                class="text-xl font-display text-secondary-900 dark:text-white mb-2"
-              >
+              <h3 class="text-xl font-display text-secondary-900 dark:text-white mb-2">
                 Igal Vilensky
               </h3>
               <p class="text-primary-500 font-medium mb-3">
-                Creative Technologist
+                Full-Stack Developer
               </p>
-              <p
-                class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
-              >
-                Bridging technology, creativity, and business to solve complex
-                problems
+              <p class="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                Building scalable SaaS features and web applications with Vue, TypeScript, and Node.js
               </p>
             </div>
 
             <!-- Current Focus -->
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim"
-            >
+            <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
-                <h3
-                  class="text-xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.exploringTitle") }}
                 </h3>
               </div>
 
               <!-- Currently Learning -->
               <div class="mb-6">
-                <h4
-                  class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2"
-                >
+                <h4 class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2">
                   <i class="fas fa-book-reader text-primary-500"></i>
                   {{ $t("about.currentlyLearning") }}
                 </h4>
                 <ul class="space-y-2">
-                  <li
-                    v-for="item in currentlyLearning"
-                    :key="item"
-                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                  >
-                    <span
-                      class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"
-                    ></span>
+                  <li v-for="item in currentlyLearning" :key="item"
+                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary-500 flex-shrink-0"></span>
                     <span>{{ item }}</span>
                   </li>
                 </ul>
@@ -262,21 +221,14 @@
 
               <!-- Areas of Interest -->
               <div>
-                <h4
-                  class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2"
-                >
+                <h4 class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2">
                   <i class="fas fa-lightbulb text-accent-500"></i>
                   {{ $t("about.areasOfInterest") }}
                 </h4>
                 <ul class="space-y-2">
-                  <li
-                    v-for="interest in interests"
-                    :key="interest"
-                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-                  >
-                    <span
-                      class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"
-                    ></span>
+                  <li v-for="interest in interests" :key="interest"
+                    class="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent-500 flex-shrink-0"></span>
                     <span>{{ interest }}</span>
                   </li>
                 </ul>
@@ -284,48 +236,28 @@
             </div>
 
             <!-- Fun Facts -->
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim"
-            >
+            <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm sidebar-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
-                <h3
-                  class="text-xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.funFactsTitle") }}
                 </h3>
               </div>
               <ul class="space-y-3">
-                <li
-                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
-                >
-                  <i
-                    class="fas fa-theater-masks text-primary-500 mt-0.5 flex-shrink-0"
-                  ></i>
+                <li class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300">
+                  <i class="fas fa-theater-masks text-primary-500 mt-0.5 flex-shrink-0"></i>
                   <span>{{ $t("about.funFactActing") }}</span>
                 </li>
-                <li
-                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
-                >
-                  <i
-                    class="fas fa-snowflake text-accent-500 mt-0.5 flex-shrink-0"
-                  ></i>
+                <li class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300">
+                  <i class="fas fa-snowflake text-accent-500 mt-0.5 flex-shrink-0"></i>
                   <span>{{ $t("about.funFactYamalo") }}</span>
                 </li>
-                <li
-                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
-                >
-                  <i
-                    class="fas fa-users text-secondary-500 mt-0.5 flex-shrink-0"
-                  ></i>
+                <li class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300">
+                  <i class="fas fa-users text-secondary-500 mt-0.5 flex-shrink-0"></i>
                   <span>{{ $t("about.funFactBrothers") }}</span>
                 </li>
-                <li
-                  class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300"
-                >
-                  <i
-                    class="fas fa-music text-primary-500 mt-0.5 flex-shrink-0"
-                  ></i>
+                <li class="flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300">
+                  <i class="fas fa-music text-primary-500 mt-0.5 flex-shrink-0"></i>
                   <span>{{ $t("about.funFactPiano") }}</span>
                 </li>
               </ul>
@@ -333,51 +265,32 @@
 
             <!-- Availability -->
             <div
-              class="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-500 dark:to-secondary-900 rounded-lg p-6 shadow-sm border border-primary-100 dark:border-primary-800 sidebar-anim"
-            >
+              class="bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-500 dark:to-secondary-900 rounded-lg p-6 shadow-sm border border-primary-100 dark:border-primary-800 sidebar-anim">
               <div class="flex items-center gap-3 mb-4">
                 <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
-                <h3
-                  class="text-xl font-display text-secondary-900 dark:text-white"
-                >
+                <h3 class="text-xl font-display text-secondary-900 dark:text-white">
                   {{ $t("about.connectTitle") }}
                 </h3>
               </div>
               <div class="flex items-center gap-2 mb-3">
                 <span class="relative flex h-3 w-3">
                   <span
-                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"
-                  ></span>
-                  <span
-                    class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"
-                  ></span>
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
                 </span>
-                <span
-                  class="text-sm font-medium text-secondary-900 dark:text-white"
-                >
+                <span class="text-sm font-medium text-secondary-900 dark:text-white">
                   {{ $t("about.available") }}
                 </span>
               </div>
               <p class="text-sm text-neutral-600 dark:text-neutral-300 mb-4">
                 {{ $t("about.availableDesc") }}
               </p>
-              <button
-                @click="scrollToContact"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors w-full justify-center group"
-              >
+              <button @click="scrollToContact"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg font-medium transition-colors w-full justify-center group">
                 <span>{{ $t("contact.getInTouch") }}</span>
-                <svg
-                  class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                  />
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
               </button>
             </div>
@@ -433,18 +346,18 @@ const languageSkills = [
 ];
 
 const currentlyLearning = [
-  "AWS Cloud Architecture",
-  "Kubernetes",
+  "Advanced Vue Patterns",
+  "Performance Optimization",
+  "Testing Strategies",
   "GraphQL",
-  "Rust Programming",
-  "WebAssembly",
+  "System Design",
 ];
 
 const interests = [
-  "Machine Learning",
-  "Web3 Technologies",
-  "Performance Optimization",
+  "Component Architecture",
   "Developer Experience",
+  "Cognitive Science",
+  "Piano Improvisation",
 ];
 
 // Navigate to contact page
@@ -477,7 +390,7 @@ const myStoryChars = computed(() => splitText("My Story"));
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
   // 1. Particle Text Animation
-  
+
   // Animate "About Me" chars
   gsap.from('.about-me-char', {
     duration: 1.5,
@@ -526,13 +439,13 @@ onMounted(() => {
   const cards = document.querySelectorAll('.about-card-anim');
   cards.forEach((card) => {
     // Set initial state for 3D effect
-    gsap.set(card, { 
+    gsap.set(card, {
       transformPerspective: 1000,
       transformStyle: "preserve-3d"
     });
 
-    gsap.fromTo(card, 
-      { 
+    gsap.fromTo(card,
+      {
         opacity: 0,
         scale: 0.8,
         z: -100,
@@ -616,21 +529,21 @@ onMounted(() => {
   // Hover Effects (Enhanced)
   cards.forEach((card) => {
     card.addEventListener('mouseenter', () => {
-      gsap.to(card, { 
-        y: -10, 
+      gsap.to(card, {
+        y: -10,
         scale: 1.02,
-        boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.15)', 
-        duration: 0.4, 
-        ease: 'power2.out' 
+        boxShadow: '0 20px 30px -10px rgba(0, 0, 0, 0.15)',
+        duration: 0.4,
+        ease: 'power2.out'
       });
     });
     card.addEventListener('mouseleave', () => {
-      gsap.to(card, { 
-        y: 0, 
+      gsap.to(card, {
+        y: 0,
         scale: 1,
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', 
-        duration: 0.4, 
-        ease: 'power2.out' 
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        duration: 0.4,
+        ease: 'power2.out'
       });
     });
   });

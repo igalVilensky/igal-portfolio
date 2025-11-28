@@ -1,12 +1,13 @@
 <!-- app/components/Hero.vue -->
 <template>
-  <section
-    class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32"
-  >
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32">
     <!-- Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-primary-500/20 rounded-full blur-[120px] opacity-30 animate-pulse"></div>
-      <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-accent-500/10 rounded-full blur-[100px] opacity-20"></div>
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-primary-500/20 rounded-full blur-[120px] opacity-30 animate-pulse">
+      </div>
+      <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-accent-500/10 rounded-full blur-[100px] opacity-20">
+      </div>
     </div>
 
     <div class="container mx-auto px-6 relative z-10">
@@ -15,10 +16,9 @@
         <div class="mb-8 overflow-hidden">
           <div class="hero-anim-element translate-y-full opacity-0">
             <span
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/10 text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wider uppercase"
-            >
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/10 text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wider uppercase">
               <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-              Available for new projects
+              Open to Opportunities
             </span>
           </div>
         </div>
@@ -26,46 +26,59 @@
         <!-- Main Heading -->
         <h1 class="font-display font-bold leading-[0.9] tracking-tight mb-8">
           <div class="overflow-hidden">
-            <div class="hero-anim-element translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              Creative
+            <div
+              class="hero-anim-element translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
+              Full-Stack
             </div>
           </div>
           <div class="overflow-hidden">
-            <div class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              <span class="text-gradient-primary">Technologist</span> &
+            <div
+              class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
+              <span class="text-gradient-primary">Developer</span>
             </div>
           </div>
           <div class="overflow-hidden">
-            <div class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              Product Designer
+            <div
+              class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
+              Building SaaS Products
             </div>
           </div>
         </h1>
 
+        <!-- Tech Stack Badge -->
+        <div class="mb-6 overflow-hidden">
+          <div class="hero-anim-element translate-y-full opacity-0">
+            <div class="inline-flex items-center gap-2 text-sm text-secondary-600 dark:text-secondary-400 font-mono">
+              <span class="text-primary-500">$</span>
+              <span>Vue/Nuxt</span>
+              <span class="text-secondary-400 dark:text-secondary-600">•</span>
+              <span>TypeScript</span>
+              <span class="text-secondary-400 dark:text-secondary-600">•</span>
+              <span>Node.js</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Description -->
         <div class="max-w-2xl mb-12 overflow-hidden">
           <p
-            class="hero-anim-element translate-y-full opacity-0 text-lg md:text-xl text-secondary-600 dark:text-secondary-300 leading-relaxed text-balance"
-          >
-            I craft digital experiences that blend <span class="text-secondary-900 dark:text-white font-semibold">technical excellence</span> with <span class="text-secondary-900 dark:text-white font-semibold">visual storytelling</span>. Currently building the future of web interaction.
+            class="hero-anim-element translate-y-full opacity-0 text-lg md:text-xl text-secondary-600 dark:text-secondary-300 leading-relaxed text-balance">
+            Specialized in building <span class="text-secondary-900 dark:text-white font-semibold">scalable SaaS
+              features</span> and <span class="text-secondary-900 dark:text-white font-semibold">performant web
+              applications</span>. From concept to production, I deliver maintainable code that users love.
           </p>
         </div>
 
         <!-- CTA Buttons -->
         <div class="hero-anim-element translate-y-10 opacity-0 flex flex-wrap gap-4">
-          <NuxtLink
-            to="/case-studies"
-            class="btn-primary group flex items-center gap-2"
-          >
-            <span>View Selected Work</span>
+          <NuxtLink to="/case-studies" class="btn-primary group flex items-center gap-2">
+            <span>View Real Projects</span>
             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
           </NuxtLink>
-          
-          <NuxtLink
-            to="/about"
-            class="btn-outline group flex items-center gap-2 text-secondary-900 dark:text-white border-secondary-200 dark:border-white/20 hover:bg-secondary-100 dark:hover:bg-white/10"
-          >
-            <span>More About Me</span>
+
+          <NuxtLink to="/about"
+            class="btn-outline group flex items-center gap-2 text-secondary-900 dark:text-white border-secondary-200 dark:border-white/20 hover:bg-secondary-100 dark:hover:bg-white/10">
+            <span>My Story</span>
           </NuxtLink>
         </div>
       </div>
@@ -74,10 +87,12 @@
     <!-- Scroll Indicator -->
     <div class="absolute bottom-10 left-1/2 -translate-x-1/2 hero-anim-element opacity-0">
       <div class="flex flex-col items-center gap-3">
-        <div class="w-[30px] h-[50px] rounded-full border-2 border-secondary-400/30 dark:border-white/20 flex justify-center p-2">
+        <div
+          class="w-[30px] h-[50px] rounded-full border-2 border-secondary-400/30 dark:border-white/20 flex justify-center p-2">
           <div class="w-1.5 h-1.5 rounded-full bg-secondary-400 dark:bg-white animate-scroll-wheel"></div>
         </div>
-        <span class="text-[10px] uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-medium">Scroll</span>
+        <span
+          class="text-[10px] uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-medium">Scroll</span>
       </div>
     </div>
   </section>
@@ -110,6 +125,7 @@ onMounted(() => {
     transform: translateY(0);
     opacity: 1;
   }
+
   100% {
     transform: translateY(15px);
     opacity: 0;

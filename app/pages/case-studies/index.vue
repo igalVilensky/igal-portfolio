@@ -5,198 +5,208 @@
         <!-- Section Header -->
         <div class="py-16">
           <div class="inline-block mb-4">
-            <span
-              v-for="item in caseStudiesChars"
-              :key="item.id"
-              class="case-studies-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider"
-            >
+            <span v-for="item in caseStudiesChars" :key="item.id"
+              class="case-studies-char inline-block text-accent-500 font-semibold text-sm uppercase tracking-wider">
               {{ item.char }}
             </span>
           </div>
-          <h2
-            class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
-          >
-            <span
-              v-for="item in projectExplorationsChars"
-              :key="item.id"
-              class="project-explorations-char inline-block"
-            >
+          <h2 class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight">
+            <span v-for="item in selectedWorkChars" :key="item.id" class="selected-work-char inline-block">
               {{ item.char }}
             </span>
           </h2>
           <p
-            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl cs-header-anim"
-          >
-            Detailed journeys through my projects, highlighting technical
-            approaches, creative problem-solving, and real-world impact.
+            class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl cs-header-anim">
+            Real projects with measurable impact, from SaaS features to full-stack applications
           </p>
         </div>
 
         <!-- Filter -->
         <div class="mb-16">
           <div class="flex flex-wrap gap-3">
-            <button
-              @click="selectedTech = ''"
-              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim"
-              :class="
-                selectedTech === ''
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
-                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
-              "
-            >
+            <button @click="selectedTech = ''"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim" :class="selectedTech === ''
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
+                ">
               All Projects
             </button>
-            <button
-              v-for="tech in technologies"
-              :key="tech"
-              @click="selectedTech = tech"
-              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim"
-              :class="
-                selectedTech === tech
-                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
-                  : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
-              "
-            >
+            <button v-for="tech in technologies" :key="tech" @click="selectedTech = tech"
+              class="px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cs-filter-anim" :class="selectedTech === tech
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
+                : 'bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:shadow-md'
+                ">
               {{ tech }}
             </button>
           </div>
         </div>
 
-        <!-- Case Studies Grid -->
-        <div class="grid gap-12 md:gap-16 pb-20">
-          <div
-            v-if="filteredCaseStudies.length === 0"
-            class="text-center py-20"
-          >
-            <div
-              class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center"
-            >
-              <span class="text-4xl">🔍</span>
-            </div>
-            <h3
-              class="text-2xl font-semibold text-secondary-900 dark:text-white mb-4"
-            >
-              No projects found
-            </h3>
-            <p class="text-neutral-600 dark:text-neutral-300 mb-8 text-lg">
-              Try selecting a different technology filter
-            </p>
-            <button
-              @click="selectedTech = ''"
-              class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors text-lg border-b-2 border-primary-500 pb-1"
-            >
-              <span>View all projects</span>
-              <span class="group-hover:translate-x-1 transition-transform"
-                >→</span
-              >
-            </button>
-          </div>
-
-          <div
-            v-for="(caseStudy, index) in filteredCaseStudies"
-            :key="caseStudy.id"
-            class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center cs-card-anim"
-            :class="index % 2 === 1 ? 'md:grid-flow-dense' : ''"
-          >
-            <!-- Image Container -->
-            <div
-              class="order-1 cs-image-anim"
-              :class="index % 2 === 1 ? 'md:order-2 md:col-start-2' : ''"
-            >
-              <div
-                class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-3"
-              >
+        <!-- Professional Work Section -->
+        <div class="mb-20">
+          <h3
+            class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white mb-8 flex items-center gap-3">
+            <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
+            Professional Work
+          </h3>
+          <div class="grid gap-12 md:gap-16">
+            <div v-for="(project, index) in professionalProjects" :key="project.id"
+              class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center cs-card-anim"
+              :class="index % 2 === 1 ? 'md:grid-flow-dense' : ''">
+              <!-- Image Container -->
+              <div class="order-1 cs-image-anim" :class="index % 2 === 1 ? 'md:order-2 md:col-start-2' : ''">
                 <div
-                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600"
-                >
-                  <img
-                    :src="caseStudy.image"
-                    :alt="$t(`projects.${caseStudy.titleKey}.title`)"
-                    class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                    loading="lazy"
-                  />
+                  class="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-primary-50 to-accent-50 dark:from-secondary-800 dark:to-secondary-900 p-8 border border-primary-100 dark:border-primary-900">
+                  <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-12 h-12 rounded-lg bg-primary-500 flex items-center justify-center text-white text-xl font-bold">
+                        {{ project.icon }}
+                      </div>
+                      <div>
+                        <div class="text-sm text-secondary-600 dark:text-secondary-400 font-medium">{{ project.company
+                          }}</div>
+                        <div class="text-xs text-secondary-500 dark:text-secondary-500">{{ project.period }}</div>
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="bg-white dark:bg-secondary-900 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-primary-500 mb-1">{{ project.metric1Value }}</div>
+                        <div class="text-xs text-secondary-600 dark:text-secondary-400">{{ project.metric1Label }}</div>
+                      </div>
+                      <div class="bg-white dark:bg-secondary-900 rounded-lg p-4">
+                        <div class="text-2xl font-bold text-accent-500 mb-1">{{ project.metric2Value }}</div>
+                        <div class="text-xs text-secondary-600 dark:text-secondary-400">{{ project.metric2Label }}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <!-- Browser frame decoration -->
-                <div class="absolute top-4 left-4 flex gap-2">
-                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
+              </div>
+
+              <!-- Content -->
+              <div class="order-2 space-y-6 cs-content-anim" :class="index % 2 === 1
+                ? 'md:order-1 md:col-start-1 md:row-start-1'
+                : ''
+                ">
+                <div class="space-y-4">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-1" :class="index % 2 === 0 ? 'bg-primary-500' : 'bg-accent-500'
+                      "></div>
+                    <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
+                      {{ project.title }}
+                    </h3>
+                  </div>
+                  <p class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                    {{ project.description }}
+                  </p>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                  <span v-for="tech in project.technologies" :key="tech"
+                    class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm">
+                    {{ tech }}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap gap-6 pt-2">
+                  <NuxtLink :to="project.link"
+                    class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg">
+                    <span>Read Case Study</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- Content -->
-            <div
-              class="order-2 space-y-6 cs-content-anim"
-              :class="
-                index % 2 === 1
-                  ? 'md:order-1 md:col-start-1 md:row-start-1'
-                  : ''
-              "
-            >
-              <div class="space-y-4">
-                <div class="flex items-center gap-4">
+        <!-- Personal Projects Section -->
+        <div>
+          <h3
+            class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white mb-8 flex items-center gap-3">
+            <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
+            Personal Projects
+          </h3>
+          <div class="grid gap-12 md:gap-16 pb-20">
+            <div v-if="filteredCaseStudies.length === 0" class="text-center py-20">
+              <div
+                class="w-24 h-24 mx-auto mb-6 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                <span class="text-4xl">🔍</span>
+              </div>
+              <h3 class="text-2xl font-semibold text-secondary-900 dark:text-white mb-4">
+                No projects found
+              </h3>
+              <p class="text-neutral-600 dark:text-neutral-300 mb-8 text-lg">
+                Try selecting a different technology filter
+              </p>
+              <button @click="selectedTech = ''"
+                class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors text-lg border-b-2 border-primary-500 pb-1">
+                <span>View all projects</span>
+                <span class="group-hover:translate-x-1 transition-transform">→</span>
+              </button>
+            </div>
+
+            <div v-for="(caseStudy, index) in filteredCaseStudies" :key="caseStudy.id"
+              class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center cs-card-anim"
+              :class="index % 2 === 1 ? 'md:grid-flow-dense' : ''">
+              <!-- Image Container -->
+              <div class="order-1 cs-image-anim" :class="index % 2 === 1 ? 'md:order-2 md:col-start-2' : ''">
+                <div class="relative rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 p-3">
                   <div
-                    class="w-12 h-1"
-                    :class="
-                      index % 2 === 0 ? 'bg-primary-500' : 'bg-accent-500'
-                    "
-                  ></div>
-                  <h3
-                    class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-                  >
-                    {{ $t(`projects.${caseStudy.titleKey}.title`) }}
-                  </h3>
+                    class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                    <img :src="caseStudy.image" :alt="$t(`projects.${caseStudy.titleKey}.title`)"
+                      class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy" />
+                  </div>
+                  <!-- Browser frame decoration -->
+                  <div class="absolute top-4 left-4 flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                  </div>
                 </div>
-                <p
-                  class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
-                >
-                  {{ $t(`projects.${caseStudy.titleKey}.description`) }}
-                </p>
               </div>
 
-              <div class="flex flex-wrap gap-3">
-                <span
-                  v-for="tech in caseStudy.technologies"
-                  :key="tech"
-                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm"
-                >
-                  {{ tech }}
-                </span>
-              </div>
+              <!-- Content -->
+              <div class="order-2 space-y-6 cs-content-anim" :class="index % 2 === 1
+                ? 'md:order-1 md:col-start-1 md:row-start-1'
+                : ''
+                ">
+                <div class="space-y-4">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-1" :class="index % 2 === 0 ? 'bg-primary-500' : 'bg-accent-500'
+                      "></div>
+                    <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
+                      {{ $t(`projects.${caseStudy.titleKey}.title`) }}
+                    </h3>
+                  </div>
+                  <p class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                    {{ $t(`projects.${caseStudy.titleKey}.description`) }}
+                  </p>
+                </div>
 
-              <div class="flex flex-wrap gap-6 pt-2">
-                <a
-                  v-if="caseStudy.link && caseStudy.link !== '#'"
-                  :href="caseStudy.link"
-                  target="_blank"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
-                >
-                  <span>Visit Live Site</span>
-                  <span class="group-hover:translate-x-1 transition-transform"
-                    >→</span
-                  >
-                </a>
-                <a
-                  v-if="caseStudy.github"
-                  :href="caseStudy.github"
-                  target="_blank"
-                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.138 6.839 9.465.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.606-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.983 1.029-2.683-.103-.253-.446-1.27.098-2.646 0 0 .84-.27 2.75 1.025A9.563 9.563 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.376.203 2.393.1 2.646.64.7 1.028 1.592 1.028 2.683 0 3.842-2.339 4.688-4.566 4.936.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span>View Source</span>
-                </a>
+                <div class="flex flex-wrap gap-3">
+                  <span v-for="tech in caseStudy.technologies" :key="tech"
+                    class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm">
+                    {{ tech }}
+                  </span>
+                </div>
+
+                <div class="flex flex-wrap gap-6 pt-2">
+                  <a v-if="caseStudy.link && caseStudy.link !== '#'" :href="caseStudy.link" target="_blank"
+                    class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg">
+                    <span>Visit Live Site</span>
+                    <span class="group-hover:translate-x-1 transition-transform">→</span>
+                  </a>
+                  <a v-if="caseStudy.github" :href="caseStudy.github" target="_blank"
+                    class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fill-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.138 6.839 9.465.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.606-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.983 1.029-2.683-.103-.253-.446-1.27.098-2.646 0 0 .84-.27 2.75 1.025A9.563 9.563 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.376.203 2.393.1 2.646.64.7 1.028 1.592 1.028 2.683 0 3.842-2.339 4.688-4.566 4.936.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .268.18.58.688.482A10.019 10.019 0 0022 12c0-5.523-4.477-10-10-10z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span>View Source</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -221,6 +231,51 @@ interface CaseStudy {
 
 const colorMode = useColorMode();
 const selectedTech = ref<string>("");
+
+const professionalProjects = [
+  {
+    id: 'flowplace',
+    title: 'Flowplace: Role Compass',
+    company: 'Flowplace',
+    period: '2023-Present',
+    description: 'Leading end-to-end SaaS development for a talent profile feature that reached 5,000+ users in the first month. Built with Vue.js/Nuxt.js and Directus in a high-velocity Agile environment.',
+    technologies: ['Vue.js', 'Nuxt.js', 'Directus', 'TypeScript', 'CI/CD'],
+    link: '/case-studies/flowplace',
+    icon: 'F',
+    metric1Value: '5K+',
+    metric1Label: 'Users Month 1',
+    metric2Value: '2023',
+    metric2Label: 'Launch',
+  },
+  {
+    id: 'ari-motors',
+    title: 'ARI Motors: EV Portal',
+    company: 'ARI Motors',
+    period: '2021-2022',
+    description: 'Solo full-stack development of an electric vehicle comparison portal from scratch to production in under 3 months. Managed website, backend, and database architecture.',
+    technologies: ['JavaScript', 'Full-Stack', 'Database', 'Responsive Design'],
+    link: '/case-studies/leanera',
+    icon: 'A',
+    metric1Value: '<3',
+    metric1Label: 'Months',
+    metric2Value: 'Solo',
+    metric2Label: 'Developer',
+  },
+  {
+    id: 'leanera',
+    title: 'LeanERA: Digital Transition',
+    company: 'LeanERA',
+    period: '2022-2023',
+    description: 'Built scalable web applications with Vue 3, Nuxt 3, and TypeScript to support company-wide digital transformation. Established modern architecture for sustainable growth.',
+    technologies: ['Vue 3', 'Nuxt 3', 'TypeScript', 'Tailwind CSS'],
+    link: '/case-studies/cashdo',
+    icon: 'L',
+    metric1Value: 'Vue 3',
+    metric1Label: 'Framework',
+    metric2Value: 'TS',
+    metric2Label: 'Type Safe',
+  },
+];
 
 const caseStudies: CaseStudy[] = [
   {
@@ -335,7 +390,7 @@ const splitText = (text: string) => {
 };
 
 const caseStudiesChars = computed(() => splitText("Case Studies"));
-const projectExplorationsChars = computed(() => splitText("Project Explorations"));
+const selectedWorkChars = computed(() => splitText("Selected Work"));
 
 useHead({
   title: "Case Studies - Igal Vilensky",
@@ -361,7 +416,7 @@ onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
   // Header Animation
-  
+
   // Animate "Case Studies" chars
   gsap.from('.case-studies-char', {
     duration: 1.5,
@@ -378,8 +433,8 @@ onMounted(() => {
     ease: "power3.out"
   });
 
-  // Animate "Project Explorations" chars
-  gsap.from('.project-explorations-char', {
+  // Animate "Selected Work" chars
+  gsap.from('.selected-work-char', {
     duration: 1.5,
     opacity: 0,
     x: () => (Math.random() - 0.5) * 300,
@@ -437,12 +492,12 @@ onMounted(() => {
       duration: 1,
       ease: 'power3.out'
     })
-    .from(content, {
-      x: isEven ? 50 : -50,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out'
-    }, "-=0.8");
+      .from(content, {
+        x: isEven ? 50 : -50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+      }, "-=0.8");
   });
 });
 
