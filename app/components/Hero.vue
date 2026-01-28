@@ -1,24 +1,24 @@
-<!-- app/components/Hero.vue -->
 <template>
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32">
-    <!-- Background Elements -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-primary-500/20 rounded-full blur-[120px] opacity-30 animate-pulse">
+    <!-- Background Layer with Top Mask -->
+    <div class="absolute inset-x-0 top-0 bottom-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity"
+        style="background-image: url('/images/hero-bg.png'); mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);">
       </div>
-      <div class="absolute bottom-0 right-0 w-[800px] h-[800px] bg-accent-500/10 rounded-full blur-[100px] opacity-20">
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-white/10 via-white to-white dark:from-dark-bg/10 dark:via-dark-bg dark:to-dark-bg">
       </div>
     </div>
 
     <div class="container mx-auto px-6 relative z-10">
-      <div class="max-w-5xl mx-auto">
+      <div class="max-w-7xl mx-auto">
         <!-- Intro Tag -->
         <div class="mb-8 overflow-hidden">
           <div class="hero-anim-element translate-y-full opacity-0">
             <span
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/10 text-xs font-medium text-secondary-600 dark:text-secondary-300 tracking-wider uppercase">
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-100/50 dark:bg-white/10 backdrop-blur-md text-xs font-medium text-primary-700 dark:text-secondary-300 tracking-wider uppercase border border-primary-200/50 dark:border-white/5">
               <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-              Open to Opportunities
+              Available for New Projects
             </span>
           </div>
         </div>
@@ -28,33 +28,43 @@
           <div class="overflow-hidden">
             <div
               class="hero-anim-element translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              Full-Stack
+              Creative
             </div>
           </div>
           <div class="overflow-hidden">
             <div
               class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              <span class="text-gradient-primary">Developer</span>
+              <span class="text-gradient-primary">Technologist</span>
             </div>
           </div>
           <div class="overflow-hidden">
             <div
               class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              Building SaaS Products
+              & Product Engineer
             </div>
           </div>
         </h1>
 
-        <!-- Tech Stack Badge -->
-        <div class="mb-6 overflow-hidden">
+        <!-- Tech Stack Scroller -->
+        <div class="mb-12 overflow-hidden">
           <div class="hero-anim-element translate-y-full opacity-0">
-            <div class="inline-flex items-center gap-2 text-sm text-secondary-600 dark:text-secondary-400 font-mono">
-              <span class="text-primary-500">$</span>
-              <span>Vue/Nuxt</span>
-              <span class="text-secondary-400 dark:text-secondary-600">•</span>
-              <span>TypeScript</span>
-              <span class="text-secondary-400 dark:text-secondary-600">•</span>
-              <span>Node.js</span>
+            <div class="flex flex-col gap-4">
+              <span class="text-xs uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-bold">Tech
+                Ecosystem</span>
+              <div class="relative flex overflow-x-hidden group whitespace-nowrap">
+                <div class="animate-marquee py-2 flex items-center gap-8">
+                  <span v-for="(tech, index) in techStack" :key="index"
+                    class="text-sm md:text-base font-mono text-secondary-500 dark:text-secondary-400 flex items-center gap-2">
+                    <span class="text-primary-500/50">#</span>{{ tech }}
+                  </span>
+                </div>
+                <div class="absolute top-0 animate-marquee2 py-2 flex items-center gap-8">
+                  <span v-for="(tech, index) in techStack" :key="'copy-' + index"
+                    class="text-sm md:text-base font-mono text-secondary-500 dark:text-secondary-400 flex items-center gap-2">
+                    <span class="text-primary-500/50">#</span>{{ tech }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -63,54 +73,54 @@
         <div class="max-w-2xl mb-12 overflow-hidden">
           <p
             class="hero-anim-element translate-y-full opacity-0 text-lg md:text-xl text-secondary-600 dark:text-secondary-300 leading-relaxed text-balance">
-            Specialized in building <span class="text-secondary-900 dark:text-white font-semibold">scalable SaaS
-              features</span> and <span class="text-secondary-900 dark:text-white font-semibold">performant web
-              applications</span>. From concept to production, I deliver maintainable code that users love.
+            Engineering robust <span class="text-secondary-900 dark:text-white font-semibold italic">digital
+              experiences</span> with a focus on
+            <span class="text-secondary-900 dark:text-white font-semibold">performance</span>,
+            <span class="text-secondary-900 dark:text-white font-semibold">scalability</span>, and
+            <span class="text-secondary-900 dark:text-white font-semibold">user-centric design</span>.
           </p>
         </div>
 
         <!-- CTA Buttons -->
         <div class="hero-anim-element translate-y-10 opacity-0 flex flex-wrap gap-4">
-          <NuxtLink to="/case-studies" class="btn-primary group flex items-center gap-2">
-            <span>View Real Projects</span>
+          <NuxtLink to="/case-studies" class="btn-primary group flex items-center gap-3 py-4 px-8">
+            <span>Explore Engineering Work</span>
             <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
           </NuxtLink>
 
-          <NuxtLink to="/about"
-            class="btn-outline group flex items-center gap-2 text-secondary-900 dark:text-white border-secondary-200 dark:border-white/20 hover:bg-secondary-100 dark:hover:bg-white/10">
-            <span>My Story</span>
+          <NuxtLink to="/experiments"
+            class="btn-outline group flex items-center gap-3 py-4 px-8 text-secondary-900 dark:text-white border-secondary-200 dark:border-white/20 hover:bg-secondary-100 dark:hover:bg-white/10 backdrop-blur-sm">
+            <i class="fas fa-flask text-primary-500 group-hover:rotate-12 transition-transform"></i>
+            <span>The Lab</span>
           </NuxtLink>
         </div>
       </div>
     </div>
 
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 hero-anim-element opacity-0">
-      <div class="flex flex-col items-center gap-3">
-        <div
-          class="w-[30px] h-[50px] rounded-full border-2 border-secondary-400/30 dark:border-white/20 flex justify-center p-2">
-          <div class="w-1.5 h-1.5 rounded-full bg-secondary-400 dark:bg-white animate-scroll-wheel"></div>
-        </div>
-        <span
-          class="text-[10px] uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-medium">Scroll</span>
-      </div>
-    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import gsap from 'gsap';
+import { onMounted } from "vue";
+import gsap from "gsap";
+import CursorNeuralVisualizer from "~/components/CursorNeuralVisualizer.vue";
+
+const techStack = [
+  "Vue 3", "Nuxt 3", "TypeScript", "Node.js", "React", "Next.js",
+  "Tailwind CSS", "Firebase", "MongoDB", "Sanity", "Express",
+  "Web Security", "Chrome Extensions", "Manifest V3", "npm",
+  "CLI Tools", "App Architecture", "Performance Tuning"
+];
 
 onMounted(() => {
-  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-  tl.to('.hero-anim-element', {
+  tl.to(".hero-anim-element", {
     y: 0,
     opacity: 1,
-    duration: 1,
-    stagger: 0.15,
-    delay: 0.2
+    duration: 1.2,
+    stagger: 0.1,
+    delay: 0.3,
   });
 });
 </script>
@@ -134,5 +144,38 @@ onMounted(() => {
 
 .animate-scroll-wheel {
   animation: scroll-wheel 1.5s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee:hover,
+.animate-marquee2:hover {
+  animation-play-state: paused;
 }
 </style>

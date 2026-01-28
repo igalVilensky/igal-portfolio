@@ -1,25 +1,21 @@
 <!-- app/components/IntegratedSkills.vue -->
 <template>
   <section class="section-y bg-white dark:bg-secondary-900 py-16 px-4">
-    <div class="container-custom">
-      <div class="max-w-5xl mx-auto">
+    <div class="container mx-auto max-w-7xl">
+      <div class="max-w-7xl mx-auto">
         <!-- Section Header -->
         <div class="mb-16 md:mb-20">
           <div class="inline-block mb-4 skills-header-anim">
-            <span
-              class="text-primary-500 font-semibold text-sm uppercase tracking-wider"
-            >
+            <span class="text-primary-500 font-semibold text-sm uppercase tracking-wider">
               Capabilities
             </span>
           </div>
           <h2
-            class="skills-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
-          >
+            class="skills-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight">
             Integrated Skills
           </h2>
           <p
-            class="skills-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
-          >
+            class="skills-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
             A multidisciplinary approach to problem-solving
           </p>
         </div>
@@ -30,30 +26,26 @@
           <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-primary-500"></div>
-              <h3
-                class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-              >
+              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
                 Technical
               </h3>
             </div>
-            <ul
-              class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
-            >
+            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
               <li class="flex items-start gap-3">
                 <span class="text-primary-500">•</span>
-                <span>Full-stack Development</span>
+                <span>Full-stack Engineer (Vue/Nuxt, React/Next)</span>
               </li>
               <li class="flex items-start gap-3">
                 <span class="text-primary-500">•</span>
-                <span>System Architecture</span>
+                <span>System Architecture (Node.js, Express)</span>
               </li>
               <li class="flex items-start gap-3">
                 <span class="text-primary-500">•</span>
-                <span>Cloud Infrastructure</span>
+                <span>Database Design (Firebase, MongoDB, Sanity)</span>
               </li>
               <li class="flex items-start gap-3">
                 <span class="text-primary-500">•</span>
-                <span>DevOps & CI/CD</span>
+                <span>Modern Web Standards (TypeScript, MV3)</span>
               </li>
             </ul>
           </div>
@@ -62,15 +54,11 @@
           <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-accent-500"></div>
-              <h3
-                class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-              >
+              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
                 Creative
               </h3>
             </div>
-            <ul
-              class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
-            >
+            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
               <li class="flex items-start gap-3">
                 <span class="text-accent-500">•</span>
                 <span>UI/UX Design</span>
@@ -94,15 +82,11 @@
           <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-secondary-400"></div>
-              <h3
-                class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-              >
+              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
                 Business
               </h3>
             </div>
-            <ul
-              class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
-            >
+            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
               <li class="flex items-start gap-3">
                 <span class="text-secondary-400">•</span>
                 <span>Product Strategy</span>
@@ -126,15 +110,11 @@
           <div class="space-y-4 skill-category">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-neutral-500"></div>
-              <h3
-                class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-              >
+              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
                 Interpersonal
               </h3>
             </div>
-            <ul
-              class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed"
-            >
+            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
               <li class="flex items-start gap-3">
                 <span class="text-neutral-500">•</span>
                 <span>Communication</span>
@@ -158,9 +138,7 @@
         <!-- Connecting Statement -->
         <div class="mt-20 md:mt-24">
           <div class="skills-quote-anim border-l-4 border-accent-500 pl-6 md:pl-8 py-3">
-            <p
-              class="text-xl md:text-2xl text-accent-700 dark:text-accent-200 font-light leading-relaxed italic"
-            >
+            <p class="text-xl md:text-2xl text-accent-700 dark:text-accent-200 font-light leading-relaxed italic">
               "The intersection of these disciplines is where truly innovative
               solutions emerge"
             </p>

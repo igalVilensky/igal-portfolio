@@ -1,201 +1,88 @@
 <!-- app/components/CaseStudiesPreview.vue -->
 <template>
-  <section class="section-y bg-neutral-50 dark:bg-secondary-600 pb-16 px-4">
-    <div class="container-custom">
-      <div class="max-w-5xl mx-auto">
-        <!-- Section Header -->
-        <div class="py-16">
-          <div class="inline-block mb-4 projects-header-anim">
-            <span
-              class="text-secondary-400 font-semibold text-sm uppercase tracking-wider"
-            >
-              Recent Work
-            </span>
-          </div>
-          <h2
-            class="projects-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight"
-          >
-            Projects I'm Building
-          </h2>
-          <p
-            class="projects-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl"
-          >
-            Creating solutions that make a difference through collaboration and
-            thoughtful design
-          </p>
-        </div>
+  <section class="section-y bg-white dark:bg-dark-bg pb-32 px-6">
+    <div class="container mx-auto max-w-7xl">
+      <!-- Section Header -->
+      <div class="py-24 text-center">
+        <span
+          class="inline-block px-4 py-1.5 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:text-primary-400 mb-6 projects-header-anim">
+          Selected Engineering Work
+        </span>
+        <h2
+          class="text-4xl md:text-6xl font-display font-bold text-secondary-900 dark:text-white mb-8 projects-header-anim">
+          Building Digital <span class="text-gradient-primary">Infrastructure.</span>
+        </h2>
+        <p class="text-xl text-secondary-600 dark:text-secondary-400 max-w-2xl mx-auto projects-header-anim">
+          A selection of projects where I've bridge complex technical requirements with seamless user experiences.
+        </p>
+      </div>
 
-        <!-- Projects Grid -->
-        <div class="space-y-20 md:space-y-24 mb-16 md:mb-20">
-          <!-- PsyBlog Project -->
-          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center project-card-anim">
-            <!-- Image Container - Always on top on mobile -->
-            <div class="order-1 project-image-anim">
-              <div
-                class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
-              >
-                <div
-                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden"
-                >
-                  <img
-                    :src="projects.psyBlog.image"
-                    :alt="projects.psyBlog.title"
-                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <!-- Browser frame decoration -->
-                <div class="absolute top-2 left-2 flex gap-1.5">
-                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-              </div>
-            </div>
+      <!-- Projects Grid -->
+      <div class="space-y-32">
+        <article v-for="(project, key) in projects" :key="key"
+          class="group grid lg:grid-cols-2 gap-16 items-center project-card-anim">
 
-            <!-- Content - Below image on mobile, right side on desktop -->
-            <div class="order-2 space-y-6 project-content-anim">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-1 bg-primary-500"></div>
-                <h3
-                  class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-                >
-                  {{ projects.psyBlog.title }}
-                </h3>
+          <!-- Image Container with Safari-style Frame -->
+          <div :class="['project-image-anim relative', key === 'familySpace' ? 'lg:order-2' : '']">
+            <div
+              class="relative bg-secondary-100 dark:bg-white/5 rounded-2xl p-3 shadow-2xl transition-transform duration-700 group-hover:-translate-y-2">
+              <!-- Browser Header -->
+              <div class="flex items-center gap-1.5 mb-3 px-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                <div class="flex-1"></div>
+                <div class="w-1/2 h-2 bg-secondary-200 dark:bg-white/10 rounded-full opacity-50"></div>
+                <div class="flex-1"></div>
               </div>
-              <p
-                class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
-              >
-                {{ projects.psyBlog.description }}
-              </p>
-              <div class="flex flex-wrap gap-3">
-                <span
-                  v-for="tech in projects.psyBlog.technologies"
-                  :key="tech"
-                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-primary-700 dark:text-primary-300 rounded-lg text-sm font-medium border border-primary-200 dark:border-primary-800 shadow-sm"
-                >
-                  {{ tech }}
-                </span>
-              </div>
-              <div class="flex gap-6 pt-2">
-                <a
-                  :href="projects.psyBlog.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
-                >
-                  <span>Visit Website</span>
-                  <span class="group-hover:translate-x-1 transition-transform"
-                    >→</span
-                  >
-                </a>
-                <a
-                  :href="projects.psyBlog.github"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
-                >
-                  <span>GitHub</span>
-                  <span class="group-hover:translate-x-1 transition-transform"
-                    >→</span
-                  >
-                </a>
+              <!-- Image Content -->
+              <div class="overflow-hidden rounded-xl bg-white dark:bg-dark-surface aspect-video relative">
+                <img :src="project.image" :alt="project.title"
+                  class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
               </div>
             </div>
           </div>
 
-          <!-- Family Space Project -->
-          <div class="group grid md:grid-cols-2 gap-8 md:gap-12 items-center project-card-anim">
-            <!-- Image Container - Always on top on mobile -->
-            <div class="order-1 md:order-2 project-image-anim">
-              <div
-                class="relative rounded-xl overflow-hidden shadow-lg bg-white dark:bg-gray-800 p-2"
-              >
-                <div
-                  class="aspect-[4/3] bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden"
-                >
-                  <img
-                    :src="projects.familySpace.image"
-                    :alt="projects.familySpace.title"
-                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <!-- Browser frame decoration -->
-                <div class="absolute top-2 left-2 flex gap-1.5">
-                  <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-              </div>
+          <!-- Content -->
+          <div :class="['project-content-anim space-y-8', key === 'familySpace' ? 'lg:order-1' : '']">
+            <h3 class="text-3xl md:text-4xl font-display font-bold text-secondary-900 dark:text-white">
+              {{ project.title }}
+            </h3>
+            <p class="text-lg md:text-xl text-secondary-600 dark:text-secondary-400 leading-relaxed">
+              {{ project.description }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span v-for="tech in project.technologies" :key="tech"
+                class="px-4 py-2 rounded-xl bg-secondary-50 dark:bg-white/5 border border-secondary-100 dark:border-white/10 text-xs font-mono text-secondary-500">
+                {{ tech }}
+              </span>
             </div>
-
-            <!-- Content - Below image on mobile, left side on desktop -->
-            <div class="order-2 md:order-1 space-y-6 project-content-anim">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-1 bg-accent-500"></div>
-                <h3
-                  class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white"
-                >
-                  {{ projects.familySpace.title }}
-                </h3>
-              </div>
-              <p
-                class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed"
-              >
-                {{ projects.familySpace.description }}
-              </p>
-              <div class="flex flex-wrap gap-3">
-                <span
-                  v-for="tech in projects.familySpace.technologies"
-                  :key="tech"
-                  class="px-4 py-2 bg-white dark:bg-secondary-900 text-accent-700 dark:text-accent-300 rounded-lg text-sm font-medium border border-accent-200 dark:border-accent-800 shadow-sm"
-                >
-                  {{ tech }}
-                </span>
-              </div>
-              <div class="flex gap-6 pt-2">
-                <a
-                  :href="projects.familySpace.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-all group text-lg"
-                >
-                  <span>Live Demo</span>
-                  <span class="group-hover:translate-x-1 transition-transform"
-                    >→</span
-                  >
-                </a>
-                <a
-                  :href="projects.familySpace.github"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-3 text-neutral-600 dark:text-neutral-300 hover:text-primary-500 dark:hover:text-primary-400 transition-all group text-lg"
-                >
-                  <span>GitHub</span>
-                  <span class="group-hover:translate-x-1 transition-transform"
-                    >→</span
-                  >
-                </a>
-              </div>
+            <div class="flex gap-8 pt-4">
+              <a :href="project.link" target="_blank"
+                class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-500 hover:text-primary-400 transition-colors">
+                View Project <i class="fas fa-external-link-alt text-xs"></i>
+              </a>
+              <a :href="project.github" target="_blank"
+                class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-secondary-400 hover:text-white transition-colors">
+                Repository <i class="fab fa-github"></i>
+              </a>
             </div>
           </div>
-        </div>
+        </article>
+      </div>
 
-        <!-- CTA -->
-        <div class="text-center projects-cta-anim">
-          <NuxtLink
-            to="/case-studies"
-            class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg border-b-2 border-primary-500 pb-1"
-          >
-            <span>Explore more projects</span>
-            <span class="group-hover:translate-x-1 transition-transform"
-              >→</span
-            >
-          </NuxtLink>
-        </div>
+      <!-- CTA -->
+      <div class="mt-32 text-center projects-cta-anim">
+        <NuxtLink to="/case-studies"
+          class="inline-flex items-center gap-4 py-5 px-10 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl transition-all shadow-xl shadow-primary-500/20 group">
+          <span>Explore Architecture Portfolio</span>
+          <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+        </NuxtLink>
       </div>
     </div>
   </section>
 </template>
+
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
@@ -262,12 +149,12 @@ onMounted(() => {
       duration: 0.8,
       ease: 'power3.out'
     })
-    .from(content, {
-      x: 30,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out'
-    }, '-=0.6');
+      .from(content, {
+        x: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.6');
   });
 
   // CTA Animation

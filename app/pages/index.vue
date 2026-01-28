@@ -1,6 +1,7 @@
 <!-- app/pages/index.vue -->
 <template>
   <div>
+
     <Hero />
     <MyStory />
     <IntegratedSkills />

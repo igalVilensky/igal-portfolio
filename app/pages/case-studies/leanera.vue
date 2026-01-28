@@ -7,8 +7,8 @@
                 <div class="absolute top-0 left-0 w-[600px] h-[600px] bg-accent-500/10 rounded-full blur-[120px]"></div>
             </div>
 
-            <div class="container-custom relative z-10">
-                <div class="max-w-4xl mx-auto">
+            <div class="container mx-auto px-6 relative z-10 max-w-7xl">
+                <div class="max-w-7xl mx-auto">
                     <!-- Back button -->
                     <NuxtLink to="/case-studies"
                         class="inline-flex items-center gap-2 text-sm text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 mb-8 transition-colors">
@@ -57,8 +57,8 @@
 
         <!-- Content sections -->
         <section class="pb-20 px-4">
-            <div class="container-custom">
-                <div class="max-w-4xl mx-auto space-y-12">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="max-w-7xl mx-auto space-y-12">
 
                     <!-- Challenge -->
                     <div class="bg-white dark:bg-secondary-900 rounded-lg p-8 shadow-sm">
