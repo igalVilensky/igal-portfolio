@@ -1,16 +1,6 @@
 <template>
-  <div
-    class="min-h-screen bg-white dark:bg-dark-bg transition-colors duration-500 pt-32 pb-24 overflow-hidden relative">
-    <!-- Abstract Background Elements -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-20 dark:opacity-40">
-      <div
-        class="absolute top-0 right-0 w-1/2 h-full bg-[radial-gradient(circle_at_80%_20%,#0ea5e908_0,transparent_50%)]">
-      </div>
-      <div
-        class="absolute bottom-0 left-0 w-1/2 h-full bg-[radial-gradient(circle_at_20%_80%,#f43f5e08_0,transparent_50%)]">
-      </div>
-    </div>
-
+  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
+    <AboutVisualizer />
     <div class="container mx-auto px-6 relative z-10 max-w-7xl">
       <!-- Section: Meta & Headline -->
       <div class="grid lg:grid-cols-12 gap-12 mb-32 items-end">
@@ -137,6 +127,7 @@ import { onMounted } from "vue";
 import { useHead, navigateTo } from "#imports";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import AboutVisualizer from '~/components/AboutVisualizer.vue';
 
 const frontendSkills = [
   { title: "TypeScript / Vue / Nuxt" },

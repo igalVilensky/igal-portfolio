@@ -93,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+import { useMouse, useWindowSize, useScroll } from '@vueuse/core';
 import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
 
@@ -110,7 +111,8 @@ const navigationItems = [
 ];
 
 const toggleColorMode = () => {
-  colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+  const isDark = colorMode.value === 'dark';
+  colorMode.preference = isDark ? 'light' : 'dark';
 };
 
 const closeMobileMenu = () => {

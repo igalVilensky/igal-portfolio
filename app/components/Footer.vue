@@ -1,74 +1,63 @@
 <!-- app/components/Footer.vue -->
 <template>
-  <footer class="bg-secondary-50 dark:bg-dark-bg border-t border-secondary-200 dark:border-white/5 pt-20 pb-10">
-    <div class="container mx-auto px-6 max-w-7xl">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-        <!-- Brand Column -->
-        <div class="md:col-span-5 space-y-6">
-          <NuxtLink to="/" class="inline-block">
-            <span class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
+  <footer class="relative z-10 py-12 px-6 overflow-hidden">
+    <div class="container mx-auto max-w-7xl relative z-10">
+      <!-- Main Footer Content -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start opacity-80 mb-12">
+
+        <!-- Brand Section -->
+        <div class="md:col-span-5 space-y-4 text-center md:text-left">
+          <NuxtLink to="/" class="inline-block group">
+            <span
+              class="text-2xl font-display font-bold text-secondary-900 dark:text-white group-hover:text-primary-500 transition-colors uppercase tracking-widest">
               Igal Vilensky
             </span>
           </NuxtLink>
-          <p class="text-secondary-600 dark:text-secondary-400 max-w-sm text-lg leading-relaxed">
-            Crafting digital products with a focus on aesthetics, functionality, and user experience.
+          <p class="text-sm text-secondary-600 dark:text-secondary-400 max-w-xs mx-auto md:mx-0 leading-tight">
+            Engineering digital infrastructure // resilient systems.
           </p>
-          <div class="flex gap-4 pt-2">
-            <a v-for="social in socialLinks" :key="social.name" :href="social.url" target="_blank"
-              rel="noopener noreferrer"
-              class="w-12 h-12 rounded-full bg-secondary-100 dark:bg-white/5 flex items-center justify-center text-secondary-600 dark:text-secondary-400 hover:bg-primary-500 hover:text-white dark:hover:bg-primary-500 dark:hover:text-white transition-all duration-300 group"
-              :aria-label="social.name">
-              <i :class="social.icon" class="text-xl group-hover:scale-110 transition-transform"></i>
-            </a>
-          </div>
         </div>
 
-        <!-- Navigation Columns -->
-        <div class="md:col-span-3 md:col-start-7">
-          <h4 class="text-secondary-900 dark:text-white font-bold mb-6">Sitemap</h4>
-          <ul class="space-y-4">
+        <!-- Sitemap -->
+        <div class="md:col-span-3 md:col-start-7 text-center md:text-left">
+          <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary-400 mb-6">Sitemap</h4>
+          <ul class="space-y-2">
             <li v-for="item in navigationItems" :key="item.id">
               <NuxtLink :to="item.path"
-                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
+                class="text-xs text-secondary-600 dark:text-secondary-400 hover:text-primary-500 transition-colors">
                 {{ item.label }}
               </NuxtLink>
             </li>
           </ul>
         </div>
 
-        <div class="md:col-span-3">
-          <h4 class="text-secondary-900 dark:text-white font-bold mb-6">Contact</h4>
-          <ul class="space-y-4">
-            <li>
-              <a href="mailto:vilenskyigal@gmail.com"
-                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
-                vilenskyigal@gmail.com
+        <!-- Contact/Social -->
+        <div class="md:col-span-3 text-center md:text-left">
+          <h4 class="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary-400 mb-6">Connect</h4>
+          <div class="space-y-4">
+            <a href="mailto:vilenskyigal@gmail.com"
+              class="block text-xs text-secondary-600 dark:text-secondary-400 hover:text-primary-500 transition-colors">
+              vilenskyigal@gmail.com
+            </a>
+            <div class="flex justify-center md:justify-start gap-5">
+              <a v-for="social in socialLinks" :key="social.name" :href="social.url" target="_blank"
+                class="text-secondary-400 hover:text-primary-500 transition-colors" :aria-label="social.name">
+                <i :class="social.icon" class="text-base"></i>
               </a>
-            </li>
-            <li>
-              <a href="tel:+491783099433"
-                class="text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
-                +49 178 3099433
-              </a>
-            </li>
-            <li class="text-secondary-500 dark:text-secondary-500">
-              Leipzig, Germany
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Bottom Bar -->
       <div
-        class="pt-8 border-t border-secondary-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-secondary-500 dark:text-secondary-500 text-sm">
-          © {{ currentYear }} Igal Vilensky. All rights reserved.
-        </p>
-        <p class="text-secondary-500 dark:text-secondary-500 text-sm flex items-center gap-2">
-          <span>Designed & Built with</span>
-          <i class="fas fa-heart text-accent-500 animate-pulse"></i>
-          <span>in Nuxt 3</span>
-        </p>
+        class="pt-6 border-t border-secondary-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] uppercase tracking-[0.4em] text-secondary-400/60">
+        <p>© {{ currentYear }} Igal Vilensky</p>
+        <div class="flex items-center gap-3">
+          <span>Nuxt 4</span>
+          <span class="w-1 h-1 rounded-full bg-primary-500/50"></span>
+          <span>SSR</span>
+        </div>
       </div>
     </div>
   </footer>

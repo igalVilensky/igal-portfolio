@@ -1,6 +1,6 @@
 <!-- app/components/CaseStudiesPreview.vue -->
 <template>
-  <section class="section-y bg-white dark:bg-dark-bg pb-32 px-6">
+  <section class="section-y bg-transparent pb-32 px-6">
     <div class="container mx-auto max-w-7xl">
       <!-- Section Header -->
       <div class="py-24 text-center">

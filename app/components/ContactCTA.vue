@@ -1,6 +1,6 @@
 <!-- app/components/ContactCTA.vue -->
 <template>
-  <section id="contact" class="section-y bg-white dark:bg-secondary-900 py-16 px-4">
+  <section id="contact" class="section-y bg-transparent py-16 px-4">
     <div class="container mx-auto max-w-7xl">
       <div class="max-w-7xl mx-auto">
         <!-- Section Header -->

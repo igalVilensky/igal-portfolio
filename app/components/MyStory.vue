@@ -1,7 +1,5 @@
 <template>
-  <section class="section-y bg-white dark:bg-dark-bg pt-24 pb-32 px-6 overflow-hidden relative">
-    <!-- Technical Background Accent -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.03] dark:opacity-[0.07] bg-dot-grid"></div>
+  <section class="section-y bg-transparent pt-24 pb-32 px-6 overflow-hidden relative">
 
     <div class="container mx-auto max-w-7xl">
       <div class="flex flex-col lg:flex-row gap-20">

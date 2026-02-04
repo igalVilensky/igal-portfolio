@@ -1,7 +1,7 @@
 <!-- app/pages/index.vue -->
 <template>
-  <div>
-
+  <div class="relative">
+    <GridSystem />
     <Hero />
     <MyStory />
     <IntegratedSkills />
@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import Hero from "~/components/Hero.vue";
+import GridSystem from "~/components/GridSystem.vue";
 import MyStory from "~/components/MyStory.vue";
 import IntegratedSkills from "~/components/IntegratedSkills.vue";
 import CaseStudiesPreview from "~/components/CaseStudiesPreview.vue";

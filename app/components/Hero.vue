@@ -2,11 +2,8 @@
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32">
     <!-- Background Layer with Top Mask -->
     <div class="absolute inset-x-0 top-0 bottom-0 z-0 overflow-hidden pointer-events-none">
-      <div class="absolute inset-0 z-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity"
+      <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 dark:opacity-20 mix-blend-luminosity"
         style="background-image: url('/images/hero-bg.png'); mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);">
-      </div>
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-white/10 via-white to-white dark:from-dark-bg/10 dark:via-dark-bg dark:to-dark-bg">
       </div>
     </div>
 

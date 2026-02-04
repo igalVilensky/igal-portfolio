@@ -1,7 +1,8 @@
 <!-- app/pages/contact.vue -->
 <template>
-  <div>
-    <ContactContent />
+  <div class="relative min-h-screen bg-transparent pt-24 overflow-hidden">
+    <ContactVisualizer />
+    <ContactContent class="relative z-10" />
   </div>
 </template>
 
@@ -10,6 +11,7 @@ import { onMounted } from "vue";
 import gsap from "gsap";
 import { useI18n } from "vue-i18n";
 import ContactContent from "~/components/Contact.vue";
+import ContactVisualizer from "~/components/ContactVisualizer.vue";
 
 definePageMeta({
   layout: "default",

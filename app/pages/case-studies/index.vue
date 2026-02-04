@@ -1,9 +1,6 @@
 <template>
-  <div
-    class="min-h-screen bg-white dark:bg-dark-bg transition-colors duration-500 pt-32 pb-24 overflow-hidden relative">
-    <!-- Background Patterns -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-[0.03] dark:opacity-[0.07] bg-dot-grid"></div>
-
+  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
+    <CaseStudiesVisualizer />
     <div class="container mx-auto px-6 relative z-10 max-w-7xl">
       <!-- Page Header -->
       <div class="grid lg:grid-cols-12 gap-12 mb-32 items-end">
@@ -126,6 +123,7 @@ import { useColorMode, useHead, onMounted } from "#imports";
 import { ref, computed } from "vue";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import CaseStudiesVisualizer from '~/components/CaseStudiesVisualizer.vue';
 
 interface CaseStudy {
   id: number | string;

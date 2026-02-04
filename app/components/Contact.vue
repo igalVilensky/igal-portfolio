@@ -1,5 +1,5 @@
 <template>
-  <section class="section-y bg-neutral-50 dark:bg-secondary-600 px-4 pt-8">
+  <section class="section-y bg-transparent px-4 pt-8">
     <div class="container mx-auto max-w-7xl">
       <div class="max-w-7xl mx-auto">
         <!-- Section Header -->

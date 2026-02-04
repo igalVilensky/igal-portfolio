@@ -1,16 +1,6 @@
 <template>
-  <div
-    class="min-h-screen bg-secondary-50 dark:bg-dark-bg transition-colors duration-500 pt-32 pb-24 overflow-hidden relative">
-    <!-- Background Patterns -->
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-20 dark:opacity-40">
-      <div
-        class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,#0ea5e910_0,transparent_50%)]">
-      </div>
-      <div
-        class="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_70%,#f43f5e10_0,transparent_50%)]">
-      </div>
-    </div>
-
+  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
+    <ExperimentsVisualizer />
     <div class="container mx-auto px-6 relative z-10 max-w-7xl">
       <!-- Page Header -->
       <div class="max-w-4xl mb-16 px-4">
@@ -89,6 +79,7 @@ import gsap from 'gsap';
 import ArchitectSimulator from '~/components/ArchitectSimulator.vue';
 import JsonToTs from '~/components/lab/JsonToTs.vue';
 import ContrastChecker from '~/components/lab/ContrastChecker.vue';
+import ExperimentsVisualizer from '~/components/ExperimentsVisualizer.vue';
 
 const featuredModule = ref('architect');
 
@@ -108,23 +99,23 @@ const swapModule = (id: string) => {
     scale: 0.98,
     duration: 0.3,
     stagger: 0.05,
-    onComplete: async () => {
+    onComplete: () => {
       featuredModule.value = id;
-      await nextTick();
-
-      // Force visibility and animate in. DO NOT use opacity-0 in template.
-      gsap.fromTo('.lab-mod-anim',
-        { opacity: 0, y: 20, scale: 0.98 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: 'power4.out',
-          clearProps: 'all' // Reset GSAP injected styles to avoid stuck opacity
-        }
-      );
+      nextTick().then(() => {
+        // Force visibility and animate in. DO NOT use opacity-0 in template.
+        gsap.fromTo('.lab-mod-anim',
+          { opacity: 0, y: 20, scale: 0.98 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'power4.out',
+            clearProps: 'all' // Reset GSAP injected styles to avoid stuck opacity
+          }
+        );
+      });
     }
   });
 };
