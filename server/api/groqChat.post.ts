@@ -11,6 +11,13 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event);
+    if (!body) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Empty request body',
+        });
+    }
+
     const {
         prompt: rawPrompt,
         user,
@@ -25,22 +32,23 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    // Build an augmented prompt (safely include user info if present)
     const safeUser = user || {};
-    const userName = safeUser.displayName ?? safeUser.uid ?? "Guest";
-    const userAge = safeUser.age ?? "not specified";
-    const userProfession = safeUser.profession ?? "not specified";
-    const userAbout = safeUser.aboutYourself ?? "not specified";
+    const userName = safeUser.displayName ?? safeUser.uid ?? "Гость";
+    const userAge = safeUser.age ?? "не указан";
+    const userProfession = safeUser.profession ?? "не указана";
+    const userAbout = safeUser.aboutYourself ?? "не указано";
 
     const prompt = `${rawPrompt.trim()}
 
-User Information:
-Name: ${userName}
-Age: ${userAge}
-Profession: ${userProfession}
-About: ${userAbout}
+Информация о пользователе:
+Имя: ${userName}
+Возраст: ${userAge}
+Профессия: ${userProfession}
+О себе: ${userAbout}
 
 ${systemPrompt}
-In the final output, leave no more than ${maxLines} lines (line breaks).`;
+В конечном выводе оставь не более ${maxLines} строк (line breaks).`;
 
     try {
         const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -56,13 +64,34 @@ In the final output, leave no more than ${maxLines} lines (line breaks).`;
             }),
         });
 
+        const groqText = await groqRes.text();
+
         if (!groqRes.ok) {
-            const errorText = await groqRes.text();
-            return { error: errorText || "Groq API error", statusCode: groqRes.status };
+            console.error("Groq API returned non-OK:", groqRes.status, groqText);
+            return { error: groqText || "Groq API error", statusCode: groqRes.status };
         }
 
-        const groqJson = await groqRes.json();
-        let assistantContent = groqJson?.choices?.[0]?.message?.content || "";
+        let groqJson;
+        try {
+            groqJson = JSON.parse(groqText);
+        } catch (e) {
+            console.error("Failed to parse Groq JSON:", groqText);
+            throw createError({
+                statusCode: 502,
+                statusMessage: "Invalid response from Groq",
+            });
+        }
+
+        let assistantContent = "";
+        if (groqJson?.choices?.[0]?.message?.content) {
+            assistantContent = groqJson.choices[0].message.content;
+        } else if (groqJson?.choices?.[0]?.text) {
+            assistantContent = groqJson.choices[0].text;
+        } else if (typeof groqJson === "string") {
+            assistantContent = groqJson;
+        } else {
+            assistantContent = JSON.stringify(groqJson).slice(0, 1000);
+        }
 
         const lines = assistantContent
             .split(/\r?\n/)

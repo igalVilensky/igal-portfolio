@@ -65,10 +65,13 @@
                             class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">Core
                             Requirement</label>
                         <textarea v-model="project.requirement" :rows="isFeatured ? 3 : 2"
-                            placeholder="Describe a complex feature or system requirement..." :class="[
+                            placeholder="e.g. Real-time collaborative document editing with version history and offline support..."
+                            :class="[
                                 'w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white resize-none',
                                 isFeatured ? 'text-base' : 'text-[10px]'
                             ]"></textarea>
+                        <p class="text-[10px] text-secondary-400 mt-1 italic">Be specific about features, scale, or
+                            technical hurdles.</p>
                     </div>
 
                     <button @click="simulate" :disabled="isLoading || !project.domain || !project.requirement" :class="[
@@ -82,26 +85,75 @@
 
                 <!-- Result View -->
                 <div v-else class="space-y-6 animate-fade-in">
-                    <div class="p-6 bg-primary-500/5 border border-primary-500/20 rounded-2xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-primary-500">System
-                                Recommendation</span>
-                            <button @click="result = null"
-                                class="text-secondary-400 hover:text-primary-500 transition-colors">
-                                <i class="fas fa-undo"></i>
-                            </button>
+                    <!-- Input Summary (The "Context") -->
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <div
+                            class="px-3 py-1 bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-full text-[10px] font-medium text-secondary-600 dark:text-secondary-400">
+                            <span class="opacity-50 uppercase tracking-tighter mr-1">Domain:</span> {{ project.domain }}
                         </div>
                         <div
-                            class="prose prose-sm dark:prose-invert max-w-none text-secondary-700 dark:text-secondary-300 leading-relaxed whitespace-pre-wrap">
-                            {{ result }}
+                            class="px-3 py-1 bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-full text-[10px] font-medium text-secondary-600 dark:text-secondary-400">
+                            <span class="opacity-50 uppercase tracking-tighter mr-1">Constraint:</span> {{
+                                project.constraint }}
+                        </div>
+                        <div v-if="project.requirement"
+                            class="w-full px-3 py-2 bg-secondary-100/50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl text-[10px] font-medium text-secondary-600 dark:text-secondary-400 mt-2">
+                            <span class="opacity-50 uppercase tracking-tighter block mb-1">Requirement:</span>
+                            <span class="italic">"{{ project.requirement }}"</span>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4 text-xs font-mono text-secondary-400">
-                        <span class="flex items-center gap-1"><i class="fas fa-check-circle text-green-500"></i>
-                            Tech-Stack Verified</span>
-                        <span class="flex items-center gap-1"><i class="fas fa-check-circle text-green-500"></i>
-                            Security Validated</span>
+                    <div class="relative group/result">
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-3xl blur opacity-0 group-hover/result:opacity-100 transition duration-500">
+                        </div>
+                        <div
+                            class="relative p-8 bg-white dark:bg-dark-surface border border-secondary-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden">
+                            <!-- Background Accent -->
+                            <div
+                                class="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 -mr-16 -mt-16 rounded-full blur-2xl">
+                            </div>
+
+                            <div class="flex justify-between items-center mb-6">
+                                <h4
+                                    class="text-xs font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
+                                    Architectural Blueprint
+                                </h4>
+                                <button @click="result = null"
+                                    class="w-8 h-8 flex items-center justify-center rounded-xl bg-secondary-50 dark:bg-white/5 text-secondary-400 hover:text-primary-500 hover:bg-primary-500/10 transition-all">
+                                    <i class="fas fa-redo-alt text-sm"></i>
+                                </button>
+                            </div>
+
+                            <div class="prose prose-stone dark:prose-invert max-w-none">
+                                <div class="space-y-8">
+                                    <component :is="'div'" v-for="(section, index) in resultSections" :key="index"
+                                        class="relative pl-6 border-l border-primary-500/20">
+                                        <h5
+                                            class="text-xs font-bold text-secondary-900 dark:text-white uppercase tracking-widest mb-3 flex items-center gap-2">
+                                            <span class="absolute left-0 w-3 h-[1px] bg-primary-500 -ml-3"></span>
+                                            {{ section.title }}
+                                        </h5>
+                                        <div
+                                            class="text-sm text-secondary-600 dark:text-secondary-400 leading-relaxed whitespace-pre-wrap font-sans">
+                                            {{ section.content }}
+                                        </div>
+                                    </component>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 pt-2">
+                        <div class="flex items-center gap-2 text-[10px] font-mono text-secondary-500">
+                            <i class="fas fa-shield-halved text-green-500"></i>
+                            <span class="uppercase tracking-widest">Enterprise Grade Architecture</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-[10px] font-mono text-secondary-500">
+                            <i class="fas fa-bolt text-amber-500"></i>
+                            <span class="uppercase tracking-widest">Optimized for Performance</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,6 +162,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, computed } from 'vue';
+
 const props = withDefaults(defineProps<{
     isFeatured?: boolean
 }>(), {
@@ -125,16 +179,45 @@ const project = reactive({
 const isLoading = ref(false);
 const result = ref<string | null>(null);
 
+const resultSections = computed(() => {
+    if (!result.value) return [];
+
+    const sections: { title: string, content: string }[] = [];
+    const lines = result.value.split('\n');
+    let currentTitle = '';
+    let currentContent: string[] = [];
+
+    lines.forEach(line => {
+        const titleMatch = line.match(/^\d+\.\s+(.+)$/);
+        if (titleMatch && titleMatch[1]) {
+            if (currentTitle) {
+                sections.push({ title: currentTitle, content: currentContent.join('\n').trim() });
+            }
+            currentTitle = titleMatch[1];
+            currentContent = [];
+        } else {
+            currentContent.push(line);
+        }
+    });
+
+    if (currentTitle) {
+        sections.push({ title: currentTitle, content: currentContent.join('\n').trim() });
+    }
+
+    return sections;
+});
+
 const simulate = async () => {
     if (isLoading.value) return;
     isLoading.value = true;
 
     try {
-        const rawPrompt = `Generate a technical architecture recommendation for a project in the ${project.domain} domain. 
+        const rawPrompt = `Generate a professional technical architecture recommendation for a project in the ${project.domain} domain. 
     The primary constraint is ${project.constraint}. 
     Core requirement: ${project.requirement}.
     
-    The recommendation should use Igal Vilensky's tech stack: Nuxt 3, TypeScript, Node.js, Firebase/MongoDB, and Tailwind. 
+    Recommend the most appropriate and industry-standard tech stack for this specific use case. While Nuxt 4 and Node.js are preferred for web-centric layers, feel free to suggest more specialized languages or architectures (e.g. Go, Rust, Python, Spring, Microservices, etc.) if they are better suited for the domain's security, performance, or compliance needs.
+    
     Format the response as:
     1. PROPOSED TECH STACK (list items)
     2. KEY ARCHITECTURAL DECISION (explanation)
@@ -152,12 +235,15 @@ const simulate = async () => {
 
         if (response && response.reply) {
             result.value = response.reply;
+        } else if (response && (response as any).error) {
+            result.value = `API_ERROR: ${(response as any).error}`;
         } else {
             result.value = "Simulation failed. Error in data retrieval.";
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Simulation Error:", error);
-        result.value = "CONNECTION_ERROR: Failed to reach the architect core. Check API configuration.";
+        const errorMsg = error.data?.statusMessage || error.message || "Unknown error";
+        result.value = `CONNECTION_ERROR: ${errorMsg}`;
     } finally {
         isLoading.value = false;
     }
