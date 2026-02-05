@@ -1,10 +1,20 @@
-import fetch from "node-fetch";
+export const handler = async (event, context) => {
+    console.log("--- groqChat Function Started ---");
+    console.log("Method:", event.httpMethod);
+    console.log("API Key present:", !!process.env.GROQ_API_KEY);
 
-export async function handler(event, context) {
     try {
-        // 1) Basic checks
+        // 1) Method check
+        if (event.httpMethod !== "POST") {
+            return {
+                statusCode: 405,
+                body: JSON.stringify({ error: "Method Not Allowed" }),
+            };
+        }
+
+        // 2) API Key check
         if (!process.env.GROQ_API_KEY) {
-            console.error("GROQ_API_KEY is not set");
+            console.error("GROQ_API_KEY is missing from environment variables.");
             return {
                 statusCode: 500,
                 body: JSON.stringify({
@@ -13,6 +23,7 @@ export async function handler(event, context) {
             };
         }
 
+        // 3) Body check
         if (!event || !event.body) {
             return {
                 statusCode: 400,
@@ -20,10 +31,13 @@ export async function handler(event, context) {
             };
         }
 
-        // 2) Safe parse
+        // 4) Parse Body
         let parsed;
         try {
-            parsed = JSON.parse(event.body);
+            const rawBody = event.isBase64Encoded
+                ? Buffer.from(event.body, 'base64').toString('utf8')
+                : event.body;
+            parsed = JSON.parse(rawBody);
         } catch (e) {
             console.error("Invalid JSON body:", event.body);
             return {
@@ -46,7 +60,7 @@ export async function handler(event, context) {
             };
         }
 
-        // 3) Build an augmented prompt (safely include user info if present)
+        // 5) Build Prompt
         const safeUser = user || {};
         const userName = safeUser.displayName ?? safeUser.uid ?? "Гость";
         const userAge = safeUser.age ?? "не указан";
@@ -64,7 +78,7 @@ export async function handler(event, context) {
 ${systemPrompt}
 В конечном выводе оставь не более ${maxLines} строк (line breaks).`;
 
-        // 4) Call Groq
+        console.log("Calling Groq API...");
         const groqRes = await fetch(
             "https://api.groq.com/openai/v1/chat/completions",
             {
@@ -84,57 +98,34 @@ ${systemPrompt}
         const groqText = await groqRes.text();
 
         if (!groqRes.ok) {
-            console.error("Groq API returned non-OK:", groqRes.status, groqText);
-            // Try to include Groq text in error for debugging (careful: may contain sensitive info)
+            console.error("Groq API error:", groqRes.status, groqText);
             return {
                 statusCode: groqRes.status,
-                body: JSON.stringify({ error: groqText || "Groq API error" }),
+                body: JSON.stringify({ error: "Groq API returned an error", details: groqText }),
             };
         }
 
-        // 5) Parse Groq JSON safely
-        let groqJson;
-        try {
-            groqJson = JSON.parse(groqText);
-        } catch (e) {
-            console.error("Failed to parse Groq JSON:", groqText);
-            return {
-                statusCode: 502,
-                body: JSON.stringify({ error: "Invalid response from Groq" }),
-            };
-        }
+        let groqJson = JSON.parse(groqText);
+        let assistantContent = groqJson?.choices?.[0]?.message?.content || JSON.stringify(groqJson);
 
-        // 6) Extract assistant content (support possible shapes)
-        let assistantContent = "";
-        if (groqJson?.choices?.[0]?.message?.content) {
-            assistantContent = groqJson.choices[0].message.content;
-        } else if (groqJson?.choices?.[0]?.text) {
-            assistantContent = groqJson.choices[0].text;
-        } else if (typeof groqJson === "string") {
-            assistantContent = groqJson;
-        } else {
-            assistantContent = JSON.stringify(groqJson).slice(0, 1000);
-        }
-
-        // 7) Truncate to requested max lines (default 10)
         const lines = assistantContent
             .split(/\r?\n/)
             .map((l) => l.trim())
             .filter((l) => l.length > 0)
             .slice(0, maxLines);
 
-        const reply = lines.join("\n");
-
-        // 8) Return a clean reply payload that frontend expects
+        console.log("Function successful.");
         return {
             statusCode: 200,
-            body: JSON.stringify({ reply }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reply: lines.join("\n") }),
         };
     } catch (err) {
-        console.error("Handler error:", err);
+        console.error("CRITICAL HANDLER ERROR:", err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: err.message || "Internal server error" }),
+            body: JSON.stringify({ error: "Internal server error", message: err.message }),
         };
     }
-}
+};
+

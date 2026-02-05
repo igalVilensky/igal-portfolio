@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "i18n-lint-cli": "^0.1.0"
+    "i18n-lint-cli": "^0.1.0",
+    "netlify-cli": "^23.15.1"
   }
 }
