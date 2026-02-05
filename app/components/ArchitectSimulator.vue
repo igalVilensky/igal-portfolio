@@ -224,7 +224,7 @@ const simulate = async () => {
     3. DATA MODEL STRATEGY (brief overview)
     4. SECURITY CONSIDERATIONS (brief overview)`;
 
-        const response = await $fetch<{ reply: string }>('/api/groqChat', {
+        const response = await $fetch<{ reply: string }>('/.netlify/functions/groqChat', {
             method: 'POST',
             body: {
                 prompt: rawPrompt,
