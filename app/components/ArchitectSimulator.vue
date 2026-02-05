@@ -233,6 +233,7 @@ const simulate = async () => {
             }
         });
 
+
         if (response && response.reply) {
             result.value = response.reply;
         } else if (response && (response as any).error) {
