@@ -1,5 +1,6 @@
 // Standalone Netlify Function (no external dependencies required for runtime)
 export const handler = async (event: any, context: any) => {
+    console.log("Function triggered:", event.httpMethod, event.path);
 
     // Only allow POST
     if (event.httpMethod !== 'POST') {
@@ -12,14 +13,30 @@ export const handler = async (event: any, context: any) => {
     const apiKey = process.env.GROQ_API_KEY;
 
     if (!apiKey) {
+        console.error("CRITICAL: GROQ_API_KEY is not set in environment variables.");
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'GROQ_API_KEY is not set' }),
+            body: JSON.stringify({ error: 'Server configuration error: API key missing' }),
         };
     }
 
     try {
-        const body = JSON.parse(event.body || '{}');
+        let body;
+        try {
+            const rawBody = event.isBase64Encoded
+                ? Buffer.from(event.body, 'base64').toString('utf8')
+                : event.body;
+
+            console.log("Raw body received (first 50 chars):", rawBody?.substring(0, 50));
+            body = JSON.parse(rawBody || '{}');
+        } catch (parseErr: any) {
+            console.error("Failed to parse request body:", parseErr);
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: "Invalid JSON in request body", details: parseErr.message }),
+            };
+        }
+
         const {
             prompt: rawPrompt,
             user,
@@ -28,6 +45,7 @@ export const handler = async (event: any, context: any) => {
         } = body;
 
         if (!rawPrompt || typeof rawPrompt !== 'string') {
+            console.warn("Invalid prompt received:", rawPrompt);
             return {
                 statusCode: 400,
                 body: JSON.stringify({ error: "Missing or invalid 'prompt' field" }),
@@ -52,6 +70,7 @@ export const handler = async (event: any, context: any) => {
 ${systemPrompt}
 В конечном выводе оставь не более ${maxLines} строк (line breaks).`;
 
+        console.log("Calling Groq API...");
         const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -71,7 +90,7 @@ ${systemPrompt}
             console.error("Groq API returned non-OK:", groqRes.status, groqText);
             return {
                 statusCode: groqRes.status,
-                body: JSON.stringify({ error: groqText || "Groq API error" }),
+                body: JSON.stringify({ error: "Groq API error", details: groqText }),
             };
         }
 
@@ -103,18 +122,25 @@ ${systemPrompt}
             .filter((l: any) => l.length > 0)
             .slice(0, maxLines);
 
+        console.log("Simulation successful, returning response.");
         return {
             statusCode: 200,
             headers: {
                 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*', // Added for safety though not usually needed for same-domain functions
             },
             body: JSON.stringify({ reply: lines.join("\n") }),
         };
     } catch (err: any) {
-        console.error("Function error:", err);
+        console.error("UNHANDLED FUNCTION ERROR:", err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: err.message || "Internal server error" }),
+            body: JSON.stringify({
+                error: "Internal server error",
+                message: err.message,
+                stack: err.stack ? "Available (see logs)" : "Not available"
+            }),
         };
     }
 };
+
