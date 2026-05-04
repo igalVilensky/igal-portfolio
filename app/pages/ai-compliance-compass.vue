@@ -148,9 +148,10 @@
                 v-else-if="question.type === 'select'"
                 v-model="clarificationAnswers[question.id]"
                 class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
+                style="color: rgb(31, 41, 55); background-color: rgb(249, 250, 251);"
               >
-                <option disabled value="" class="text-secondary-400">Select an answer</option>
-                <option v-for="option in question.options" :key="option.value" :value="option.value">{{ option.label }}</option>
+                <option disabled value="" style="color: rgb(31, 41, 55); background-color: rgb(249, 250, 251);">Select an answer</option>
+                <option v-for="option in question.options" :key="option.value" :value="option.value" style="color: rgb(31, 41, 55); background-color: white;">{{ option.label }}</option>
               </select>
             </div>
           </div>
@@ -384,15 +385,15 @@ const normalizeComplianceData = (data: any) => ({
 const riskTheme = computed(() => {
   const level = (complianceData.value.riskLevel || '').toString().toLowerCase();
   if (level.includes('high')) {
-    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-triangle', label: 'High risk' };
+    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-triangle', label: 'Assessment: High Risk' };
   }
   if (level.includes('limited')) {
-    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-exclamation-circle', label: 'Limited risk' };
+    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-exclamation-circle', label: 'Assessment: Limited Risk' };
   }
   if (level.includes('minimal') || level.includes('low')) {
-    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-shield-alt', label: 'Lower risk' };
+    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-shield-alt', label: 'Assessment: Lower Risk' };
   }
-  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Unclear' };
+  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Need more info' };
 });
 
 const confidenceTheme = computed(() => {
@@ -680,6 +681,9 @@ Return as JSON object with these exact field names.`;
     console.error('Compliance generation error:', error);
   } finally {
     isLoading.value = false;
+    // Merge extracted data into compliance results so clarified values are preserved
+    complianceData.value.role = extractedData.value.role || complianceData.value.role;
+    complianceData.value.confidence = extractedData.value.confidence || complianceData.value.confidence;
   }
 };
 
