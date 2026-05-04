@@ -185,21 +185,33 @@
 
             <!-- Quick Classification -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4 text-center">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Likely Role</div>
-                <div class="text-secondary-900 dark:text-white font-bold text-lg">{{ complianceData.role }}</div>
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">Likely Role</div>
+                <div class="flex items-center justify-center gap-2">
+                  <i class="fas fa-user-gear text-primary-600"></i>
+                  <span class="text-secondary-900 dark:text-white font-bold text-lg">{{ complianceData.role }}</span>
+                </div>
+                <div class="text-sm text-secondary-500 dark:text-secondary-400 mt-2">Role inferred from use case and deployment context.</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4 text-center">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">AI Act Risk Level</div>
-                <div class="text-secondary-900 dark:text-white font-bold text-lg">{{ complianceData.riskLevel }}</div>
+              <div class="rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10" :class="riskTheme.bg">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">AI Act Risk Level</div>
+                <div class="flex items-center justify-center gap-2">
+                  <i :class="riskTheme.icon"></i>
+                  <span class="font-bold text-lg">{{ complianceData.riskLevel }}</span>
+                </div>
+                <div class="text-sm mt-2 opacity-90">{{ riskTheme.label }}</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4 text-center">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Confidence</div>
-                <div class="text-secondary-900 dark:text-white font-bold text-lg">{{ complianceData.confidence }}</div>
+              <div class="rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10" :class="confidenceTheme.bg">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">Confidence</div>
+                <div class="flex items-center justify-center gap-2">
+                  <i :class="confidenceTheme.icon"></i>
+                  <span class="font-bold text-lg">{{ complianceData.confidence }}</span>
+                </div>
+                <div class="text-sm mt-2 opacity-90">How sure the snapshot is based on available information.</div>
               </div>
             </div>
 
-            <div class="text-sm text-secondary-600 dark:text-secondary-400 mb-6">
+            <div class="text-sm text-secondary-600 dark:text-secondary-400 mb-6 leading-relaxed">
               {{ complianceData.reasoning }}
             </div>
           </div>
@@ -287,7 +299,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, computed } from 'vue';
 
 const userDescription = ref('');
 const currentState = ref<'input' | 'understanding' | 'clarification' | 'results'>('input');
@@ -324,6 +336,78 @@ const parseJsonReply = (reply: string) => {
     throw error;
   }
 };
+
+const normalizeExtractedData = (data: any) => ({
+  summary: data.summary ?? '',
+  role: data.role ?? 'unsure',
+  usageType: data.usageType ?? 'unsure',
+  domain: data.domain ?? 'unsure',
+  dataTypes: Array.isArray(data.dataTypes)
+    ? data.dataTypes
+    : typeof data.dataTypes === 'string'
+    ? data.dataTypes.split(',').map((s: string) => s.trim()).filter(Boolean)
+    : ['unsure'],
+  impactOnPeople: data.impactOnPeople ?? 'unsure',
+  userFacing: typeof data.userFacing === 'boolean' ? data.userFacing : false,
+  aiGeneratedContentPublished: typeof data.aiGeneratedContentPublished === 'boolean' ? data.aiGeneratedContentPublished : false,
+  syntheticOrManipulatedContent: typeof data.syntheticOrManipulatedContent === 'boolean' ? data.syntheticOrManipulatedContent : false,
+  externalProviderUsed: typeof data.externalProviderUsed === 'boolean' ? data.externalProviderUsed : false,
+  externalProviderName: data.externalProviderName ?? 'unknown',
+  confidence: data.confidence ?? 'low',
+  missingFields: Array.isArray(data.missingFields) ? data.missingFields : [],
+  redFlags: Array.isArray(data.redFlags) ? data.redFlags : []
+});
+
+const normalizeComplianceData = (data: any) => ({
+  role: data.role || 'Unclear',
+  riskLevel: data.riskLevel || 'Unclear',
+  confidence: data.confidence || 'Low',
+  reasoning: data.reasoning || 'The information available is incomplete, so the risk assessment should be reviewed carefully.',
+  riskExplanation: data.riskExplanation || 'The risk classification is based on the information we have. If the use case is not fully described, the actual risk may differ.',
+  gdprCheck: data.gdprCheck || 'If personal or customer data is involved, GDPR review is recommended. Document the data flow and legal basis.',
+  copyrightCheck: data.copyrightCheck || 'Review whether AI-generated content is based on copyrighted or third-party material and verify provider terms.',
+  transparencyCheck: data.transparencyCheck || 'Keep users informed about AI usage and provide clear disclosures where appropriate.',
+  nextSteps: Array.isArray(data.nextSteps)
+    ? data.nextSteps
+    : [
+        'Clarify how data is collected and used by the AI.',
+        'Identify whether personal data is processed and check GDPR requirements.',
+        'Review the AI provider terms and data handling policies.',
+        'Document the AI use case, scope and intended audience.',
+        'Consider human oversight for important decisions or customer interactions.',
+        'Label AI-generated content clearly where required.',
+        'Track any potential biases or unintended impacts.',
+        'Seek specialized legal advice for high-risk AI applications.'
+      ]
+});
+
+const riskTheme = computed(() => {
+  const level = (complianceData.value.riskLevel || '').toString().toLowerCase();
+  if (level.includes('high')) {
+    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-triangle', label: 'High risk' };
+  }
+  if (level.includes('limited')) {
+    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-exclamation-circle', label: 'Limited risk' };
+  }
+  if (level.includes('minimal') || level.includes('low')) {
+    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-shield-alt', label: 'Lower risk' };
+  }
+  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Unclear' };
+});
+
+const confidenceTheme = computed(() => {
+  const confidence = (complianceData.value.confidence || '').toString().toLowerCase();
+  if (confidence.includes('high')) {
+    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-check-circle', label: 'High confidence' };
+  }
+  if (confidence.includes('medium')) {
+    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-adjust', label: 'Medium confidence' };
+  }
+  if (confidence.includes('low')) {
+    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-circle', label: 'Low confidence' };
+  }
+  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Unknown confidence' };
+});
 
 const isFieldMissing = (field: string) => {
   const value = extractedData.value[field];
@@ -465,10 +549,7 @@ Be conservative - if unsure, use "unsure" values. Focus on extracting what's cle
     if (response && response.reply) {
       try {
         const parsed = parseJsonReply(response.reply);
-        extractedData.value = {
-          ...parsed,
-          missingFields: parsed.missingFields ?? []
-        };
+        extractedData.value = normalizeExtractedData(parsed);
 
         if (needsClarification()) {
           buildClarificationQuestions();
@@ -568,7 +649,7 @@ Return as JSON object with these exact field names.`;
     if (response && response.reply) {
       try {
         const parsed = parseJsonReply(response.reply);
-        complianceData.value = parsed;
+        complianceData.value = normalizeComplianceData(parsed);
       } catch (e) {
         console.error('Failed to parse compliance response:', e);
         console.error('Raw AI reply:', response.reply);
