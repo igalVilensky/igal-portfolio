@@ -149,6 +149,7 @@
                 v-model="clarificationAnswers[question.id]"
                 class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
               >
+                <option disabled value="" class="text-secondary-400">Select an answer</option>
                 <option v-for="option in question.options" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </div>
@@ -324,6 +325,107 @@ const parseJsonReply = (reply: string) => {
   }
 };
 
+const isFieldMissing = (field: string) => {
+  const value = extractedData.value[field];
+  if (field === 'dataTypes') {
+    return !Array.isArray(value) || value.length === 0 || value.includes('unsure');
+  }
+  return !value || value === 'unsure';
+};
+
+const buildClarificationQuestions = () => {
+  clarificationQuestions.value = [];
+  clarificationAnswers.value = {};
+
+  const questions: Array<any> = [];
+
+  if (isFieldMissing('role')) {
+    questions.push({
+      id: 'role',
+      text: 'What is your role in this AI use case?',
+      type: 'select',
+      options: [
+        { value: 'provider', label: 'Provider - I build/provide AI systems' },
+        { value: 'deployer', label: 'Deployer - I use AI systems in my organization' },
+        { value: 'importer', label: 'Importer - I import AI systems into the EU' },
+        { value: 'distributor', label: 'Distributor - I distribute AI systems' },
+        { value: 'product_manufacturer', label: 'Product Manufacturer - I integrate AI into products' }
+      ]
+    });
+  }
+
+  if (isFieldMissing('usageType')) {
+    questions.push({
+      id: 'usageType',
+      text: 'How are you using AI?',
+      type: 'select',
+      options: [
+        { value: 'existing_tool', label: 'Using an existing AI tool (like ChatGPT, Groq)' },
+        { value: 'building_system', label: 'Building/providing my own AI system' },
+        { value: 'integrating_ai', label: 'Integrating AI into a product or service' },
+        { value: 'training_model', label: 'Training or fine-tuning a model' },
+        { value: 'generating_content', label: 'Generating content (text, images, etc.)' },
+        { value: 'automated_decision_support', label: 'Automated decision support' }
+      ]
+    });
+  }
+
+  if (isFieldMissing('domain')) {
+    questions.push({
+      id: 'domain',
+      text: 'Which domain best describes the AI use case?',
+      type: 'select',
+      options: [
+        { value: 'customer_support', label: 'Customer support' },
+        { value: 'marketing', label: 'Marketing or content generation' },
+        { value: 'employment', label: 'Employment/HR' },
+        { value: 'education', label: 'Education' },
+        { value: 'healthcare', label: 'Healthcare' },
+        { value: 'finance', label: 'Finance, credit or insurance' },
+        { value: 'public_services', label: 'Public services' },
+        { value: 'law_enforcement', label: 'Law enforcement' },
+        { value: 'migration', label: 'Migration or asylum' },
+        { value: 'internal_productivity', label: 'Internal productivity' },
+        { value: 'software_development', label: 'Software development' },
+        { value: 'other', label: 'Other / not sure' }
+      ]
+    });
+  }
+
+  if (isFieldMissing('dataTypes')) {
+    questions.push({
+      id: 'dataTypes',
+      text: 'What types of data does the AI process?',
+      type: 'text',
+      placeholder: 'e.g. user messages, emails, CVs, customer data, images, scraped content'
+    });
+  }
+
+  if (isFieldMissing('impactOnPeople')) {
+    questions.push({
+      id: 'impactOnPeople',
+      text: 'How does the AI output affect people?',
+      type: 'select',
+      options: [
+        { value: 'none', label: 'No significant impact on people' },
+        { value: 'suggestions_only', label: 'Provides suggestions only' },
+        { value: 'influences_decisions', label: 'Influences decisions about people' },
+        { value: 'automates_decisions', label: 'Automates decisions about people' },
+        { value: 'affects_essential_access', label: 'Affects access to essential services (education, jobs, healthcare, etc.)' }
+      ]
+    });
+  }
+
+  clarificationQuestions.value = questions.slice(0, 3);
+  clarificationQuestions.value.forEach(question => {
+    clarificationAnswers.value[question.id] = '';
+  });
+};
+
+const needsClarification = () => {
+  return ['role', 'usageType', 'domain', 'dataTypes', 'impactOnPeople'].some(isFieldMissing);
+};
+
 const analyzeDescription = async () => {
   if (isLoading.value || !userDescription.value.trim()) return;
   isLoading.value = true;
@@ -363,8 +465,17 @@ Be conservative - if unsure, use "unsure" values. Focus on extracting what's cle
     if (response && response.reply) {
       try {
         const parsed = parseJsonReply(response.reply);
-        extractedData.value = parsed;
-        currentState.value = 'understanding';
+        extractedData.value = {
+          ...parsed,
+          missingFields: parsed.missingFields ?? []
+        };
+
+        if (needsClarification()) {
+          buildClarificationQuestions();
+          currentState.value = 'clarification';
+        } else {
+          currentState.value = 'understanding';
+        }
       } catch (e) {
         console.error('Failed to parse AI response:', e);
         console.error('Raw AI reply:', response.reply);
@@ -381,7 +492,8 @@ Be conservative - if unsure, use "unsure" values. Focus on extracting what's cle
           missingFields: ['role', 'usageType', 'domain', 'dataTypes', 'impactOnPeople'],
           redFlags: []
         };
-        currentState.value = 'understanding';
+        buildClarificationQuestions();
+        currentState.value = 'clarification';
       }
     }
   } catch (error: any) {
@@ -396,64 +508,7 @@ const proceedToResults = async () => {
 };
 
 const askClarification = () => {
-  clarificationQuestions.value = [];
-  clarificationAnswers.value = {};
-
-  if (!extractedData.value.role || extractedData.value.role === 'unsure') {
-    clarificationQuestions.value.push({
-      id: 'role',
-      text: 'What is your role in this AI use case?',
-      type: 'select',
-      options: [
-        { value: 'provider', label: 'Provider - I build/provide AI systems' },
-        { value: 'deployer', label: 'Deployer - I use AI systems in my organization' },
-        { value: 'importer', label: 'Importer - I import AI systems into the EU' },
-        { value: 'distributor', label: 'Distributor - I distribute AI systems' },
-        { value: 'product_manufacturer', label: 'Product Manufacturer - I integrate AI into products' }
-      ]
-    });
-  }
-
-  if (!extractedData.value.usageType || extractedData.value.usageType === 'unsure') {
-    clarificationQuestions.value.push({
-      id: 'usageType',
-      text: 'How are you using AI?',
-      type: 'select',
-      options: [
-        { value: 'existing_tool', label: 'Using an existing AI tool (like ChatGPT, Groq)' },
-        { value: 'building_system', label: 'Building/providing my own AI system' },
-        { value: 'integrating_ai', label: 'Integrating AI into a product or service' },
-        { value: 'training_model', label: 'Training or fine-tuning a model' },
-        { value: 'generating_content', label: 'Generating content (text, images, etc.)' },
-        { value: 'automated_decision_support', label: 'Automated decision support' }
-      ]
-    });
-  }
-
-  if (!extractedData.value.dataTypes || extractedData.value.dataTypes.includes('unsure')) {
-    clarificationQuestions.value.push({
-      id: 'dataTypes',
-      text: 'What types of data does the AI process?',
-      type: 'text',
-      placeholder: 'e.g. user messages, emails, CVs, customer data, images, scraped content'
-    });
-  }
-
-  if (!extractedData.value.impactOnPeople || extractedData.value.impactOnPeople === 'unsure') {
-    clarificationQuestions.value.push({
-      id: 'impact',
-      text: 'How does the AI output affect people?',
-      type: 'select',
-      options: [
-        { value: 'none', label: 'No significant impact on people' },
-        { value: 'suggestions_only', label: 'Provides suggestions only' },
-        { value: 'influences_decisions', label: 'Influences decisions about people' },
-        { value: 'automates_decisions', label: 'Automates decisions about people' },
-        { value: 'affects_essential_access', label: 'Affects access to essential services (education, jobs, healthcare, etc.)' }
-      ]
-    });
-  }
-
+  buildClarificationQuestions();
   currentState.value = 'clarification';
 };
 
