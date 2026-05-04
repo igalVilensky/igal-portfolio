@@ -107,6 +107,7 @@ const navigationItems = [
   { id: "home", path: "/", label: "Home" },
   { id: "case-studies", path: "/case-studies", label: "Work" },
   { id: "experiments", path: "/experiments", label: "Experiments" },
+  { id: "ai-compliance", path: "/ai-compliance-compass", label: "AI Compass" },
   { id: "about", path: "/about", label: "About" },
 ];
 
