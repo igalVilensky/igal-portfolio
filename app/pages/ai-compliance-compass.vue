@@ -2,15 +2,11 @@
   <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
     <div class="container mx-auto px-6 relative z-10 max-w-4xl">
       <!-- Page Header -->
-      <div class="max-w-4xl mb-16 px-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-xs font-mono text-secondary-500 dark:text-primary-400 mb-6">
-          <span class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span>
-          AI COMPLIANCE COMPASS
-        </div>
-        <h1 class="text-display-lg md:text-display-xl font-display font-bold text-secondary-900 dark:text-white mb-6 leading-tight">
-          AI <span class="text-gradient-primary">Compliance Compass</span>
+      <div class="max-w-4xl mb-12 px-4">
+        <h1 class="text-display-lg md:text-display-xl font-display font-bold text-secondary-900 dark:text-white mb-4 leading-tight">
+          AI Compliance Compass
         </h1>
-        <p class="text-xl text-secondary-600 dark:text-secondary-400 max-w-2xl leading-relaxed">
+        <p class="text-lg text-secondary-600 dark:text-secondary-400 max-w-2xl leading-relaxed">
           Understand your AI use case from a legal and compliance perspective in Germany and the EU. Get practical, educational insights about the AI Act and related regulations.
         </p>
       </div>
@@ -18,20 +14,15 @@
       <!-- Main Content -->
       <div class="space-y-8">
         <!-- Initial Input State -->
-        <div v-if="currentState === 'input'" class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
+        <div v-if="currentState === 'input'" class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-8">
           <div class="space-y-6">
-            <div class="flex items-center gap-4 mb-6">
-              <div class="bg-primary-600 rounded-2xl w-12 h-12 flex items-center justify-center text-white shadow-lg">
-                <i class="fas fa-compass animate-pulse"></i>
-              </div>
-              <div>
-                <h3 class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
-                  Describe Your AI Use Case
-                </h3>
-                <p class="text-secondary-500 dark:text-secondary-400">
-                  Tell us how you use, build, or plan to use AI
-                </p>
-              </div>
+            <div>
+              <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
+                Describe Your AI Use Case
+              </h2>
+              <p class="text-secondary-600 dark:text-secondary-400">
+                Tell us how you use, build, or plan to use AI
+              </p>
             </div>
 
             <div class="space-y-4">
@@ -39,119 +30,104 @@
                 v-model="userDescription"
                 rows="4"
                 placeholder="e.g. We use ChatGPT to summarize customer support tickets.&#10;e.g. We are building an AI hiring tool that ranks applicants.&#10;e.g. We generate marketing images with AI.&#10;e.g. We use Groq to analyze user messages in our web app.&#10;e.g. We train a model on scraped website content."
-                class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white resize-none text-base"
+                class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white resize-none text-base"
               ></textarea>
-              <p class="text-sm text-secondary-400">
-                Be specific about the AI tool, data involved, users affected, and your role (using, building, or providing AI).
+              <p class="text-sm text-secondary-500 dark:text-secondary-400">
+                Be specific about the AI tool, data involved, users affected, and your role.
               </p>
             </div>
 
             <button
               @click="analyzeDescription"
               :disabled="isLoading || !userDescription.trim()"
-              class="w-full bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl py-4 text-base transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <i class="fas fa-search" :class="{ 'fa-spin': isLoading }"></i>
-              <span>{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
+              <span class="ml-2">{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
             </button>
           </div>
         </div>
 
         <!-- Extracted Understanding State -->
         <div v-if="currentState === 'understanding'" class="space-y-6">
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <div class="flex items-center gap-4 mb-6">
-              <div class="bg-green-600 rounded-2xl w-12 h-12 flex items-center justify-center text-white shadow-lg">
-                <i class="fas fa-brain"></i>
-              </div>
-              <div>
-                <h3 class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
-                  I Understood This
-                </h3>
-                <p class="text-secondary-500 dark:text-secondary-400">
-                  Here's what I extracted from your description
-                </p>
-              </div>
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <div class="mb-8">
+              <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
+                Extracted Information
+              </h2>
+              <p class="text-secondary-600 dark:text-secondary-400">
+                Here's what I understood from your description
+              </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Your Role</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.role || 'Unsure' }}</div>
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Role</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.role || 'Unclear' }}</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Usage Type</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.usageType || 'Unsure' }}</div>
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">AI Usage</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.usageType || 'Unclear' }}</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
                 <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Domain</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.domain || 'Unsure' }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.domain || 'Unclear' }}</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Data Involved</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.dataTypes?.join(', ') || 'Unsure' }}</div>
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Data Types</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.dataTypes?.join(', ') || 'Unclear' }}</div>
               </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Impact on People</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.impactOnPeople || 'Unsure' }}</div>
-              </div>
-              <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-4">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">User Transparency</div>
-                <div class="text-secondary-900 dark:text-white font-medium">{{ extractedData.userFacing ? 'Users know about AI' : 'May not know' }}</div>
+              <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Impact</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.impactOnPeople || 'Unclear' }}</div>
               </div>
             </div>
 
-            <div class="flex gap-4">
+            <div class="flex gap-3">
               <button
                 @click="proceedToResults"
-                class="flex-1 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl py-3 text-base transition-all"
+                class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all"
               >
-                This Looks Right
+                Continue
               </button>
               <button
                 @click="askClarification"
-                class="flex-1 bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-2xl py-3 text-base transition-all"
+                class="flex-1 bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-lg py-3 text-base transition-all"
               >
-                Need More Details
+                Clarify
               </button>
             </div>
           </div>
         </div>
 
         <!-- Clarification State -->
-        <div v-if="currentState === 'clarification'" class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="bg-amber-600 rounded-2xl w-12 h-12 flex items-center justify-center text-white shadow-lg">
-              <i class="fas fa-question-circle"></i>
-            </div>
-            <div>
-              <h3 class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
-                Need More Details
-              </h3>
-              <p class="text-secondary-500 dark:text-secondary-400">
-                To give you a reliable compliance overview, I need a bit more information
-              </p>
-            </div>
+        <div v-if="currentState === 'clarification'" class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-8">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
+              Need More Details
+            </h2>
+            <p class="text-secondary-600 dark:text-secondary-400">
+              Please clarify the missing information
+            </p>
           </div>
 
           <div class="space-y-4">
             <div v-for="question in clarificationQuestions" :key="question.id" class="space-y-2">
-              <label class="text-sm font-bold text-secondary-700 dark:text-secondary-300">{{ question.text }}</label>
+              <label class="text-sm font-semibold text-secondary-900 dark:text-white">{{ question.text }}</label>
               <input
                 v-if="question.type === 'text'"
                 v-model="clarificationAnswers[question.id]"
                 type="text"
                 :placeholder="question.placeholder"
-                class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
+                class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
               />
               <select
                 v-else-if="question.type === 'select'"
                 v-model="clarificationAnswers[question.id]"
-                class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
-                style="color: rgb(31, 41, 55); background-color: rgb(249, 250, 251);"
+                class="clarification-select w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
               >
-                <option disabled value="" style="color: rgb(31, 41, 55); background-color: rgb(249, 250, 251);">Select an answer</option>
-                <option v-for="option in question.options" :key="option.value" :value="option.value" style="color: rgb(31, 41, 55); background-color: white;">{{ option.label }}</option>
+                <option disabled value="">Select an option</option>
+                <option v-for="option in question.options" :key="option.value" :value="option.value">{{ option.label }}</option>
               </select>
             </div>
           </div>
@@ -159,30 +135,20 @@
           <button
             @click="submitClarification"
             :disabled="isLoading"
-            class="w-full bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl py-4 text-base transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-6"
           >
             <i class="fas fa-check" :class="{ 'fa-spin': isLoading }"></i>
-            <span>{{ isLoading ? 'Processing...' : 'Continue' }}</span>
+            <span class="ml-2">{{ isLoading ? 'Processing...' : 'Continue' }}</span>
           </button>
         </div>
 
         <!-- Results State -->
         <div v-if="currentState === 'results'" class="space-y-6">
           <!-- Header -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <div class="flex items-center gap-4 mb-6">
-              <div class="bg-primary-600 rounded-2xl w-12 h-12 flex items-center justify-center text-white shadow-lg">
-                <i class="fas fa-compass"></i>
-              </div>
-              <div>
-                <h3 class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
-                  Your AI Usage Compliance Snapshot
-                </h3>
-                <p class="text-secondary-500 dark:text-secondary-400">
-                  Educational overview based on the AI Act and related EU regulations
-                </p>
-              </div>
-            </div>
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-6">
+            <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-4">Compliance Assessment</h2>
+            <p class="text-secondary-600 dark:text-secondary-400">Educational overview based on the AI Act and related EU regulations.</p>
+          </div>
 
             <!-- Quick Classification -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -218,77 +184,72 @@
           </div>
 
           <!-- Risk Explanation -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">AI Act Risk Explanation</h4>
-            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">AI Act Risk Explanation</h3>
+            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
               {{ complianceData.riskExplanation }}
             </div>
           </div>
 
           <!-- Data Protection Check -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">Data Protection Check</h4>
-            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Data Protection Check</h3>
+            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
               {{ complianceData.gdprCheck }}
             </div>
           </div>
 
           <!-- Copyright Check -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">Copyright & Content Check</h4>
-            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Copyright & Content Check</h3>
+            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
               {{ complianceData.copyrightCheck }}
             </div>
           </div>
 
           <!-- Transparency Check -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">Transparency & Labeling Check</h4>
-            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Transparency & Labeling Check</h3>
+            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
               {{ complianceData.transparencyCheck }}
             </div>
           </div>
 
           <!-- AI Literacy -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">AI Literacy & Governance</h4>
-            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">AI Literacy & Governance</h3>
+            <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
               Organisations should ensure people involved in AI use understand the capabilities, limitations, risks, and responsible use of AI systems. This includes human oversight, escalation processes, and regular training.
             </div>
           </div>
 
           <!-- Next Steps -->
-          <div class="glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 p-8 shadow-2xl">
-            <h4 class="text-xl font-bold text-secondary-900 dark:text-white mb-4">Practical Next Steps</h4>
-            <ul class="space-y-2 text-secondary-600 dark:text-secondary-400">
+          <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Practical Next Steps</h3>
+            <ul class="space-y-2 text-secondary-600 dark:text-secondary-400 text-sm">
               <li v-for="step in complianceData.nextSteps" :key="step" class="flex items-start gap-3">
-                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <i class="fas fa-check text-primary-600 mt-0.5 flex-shrink-0"></i>
                 <span>{{ step }}</span>
               </li>
             </ul>
           </div>
 
           <!-- Disclaimer -->
-          <div class="glass bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-3xl p-8">
-            <div class="flex items-start gap-4">
-              <i class="fas fa-exclamation-triangle text-red-500 text-xl mt-1"></i>
-              <div>
-                <h4 class="text-lg font-bold text-red-800 dark:text-red-200 mb-2">Important Disclaimer</h4>
-                <p class="text-red-700 dark:text-red-300 leading-relaxed">
-                  This tool provides an educational, non-binding overview and does not constitute legal advice. For specific compliance decisions, consult a qualified legal professional or the relevant official authorities. The AI Act is complex and interpretations may vary.
-                </p>
-                <p class="text-red-700 dark:text-red-300 leading-relaxed mt-2">
-                  For official guidance, visit the <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" class="underline">Bundesnetzagentur AI Service Desk</a> or use their <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" class="underline">AI Compliance Compass</a>.
-                </p>
-              </div>
-            </div>
+          <div class="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-8">
+            <h3 class="text-lg font-bold text-amber-900 dark:text-amber-100 mb-3">Important Disclaimer</h3>
+            <p class="text-amber-800 dark:text-amber-200 text-sm leading-relaxed mb-3">
+              This tool provides an educational, non-binding overview and does not constitute legal advice. For specific compliance decisions, consult a qualified legal professional or the relevant official authorities. The AI Act is complex and interpretations may vary.
+            </p>
+            <p class="text-amber-800 dark:text-amber-200 text-sm leading-relaxed">
+              For official guidance, visit the <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" class="underline hover:opacity-70">Bundesnetzagentur AI Service Desk</a> or use their <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" class="underline hover:opacity-70">AI Compliance Compass</a>.
+            </p>
           </div>
 
           <!-- Reset Button -->
-          <div class="text-center">
+          <div class="text-center mt-8">
             <button
               @click="reset"
-              class="bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-2xl px-8 py-3 text-base transition-all"
+              class="bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-lg px-8 py-3 text-base transition-all"
             >
               Analyze Another Use Case
             </button>
@@ -296,7 +257,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -336,6 +296,30 @@ const parseJsonReply = (reply: string) => {
     }
     throw error;
   }
+};
+
+const inferFieldsFromDescription = (text: string, data: any) => {
+  const lower = text.toLowerCase();
+
+  if (!data.role || data.role === 'unsure') {
+    if (/(we use|we are using|our team|we use ai|we use chatgpt|using chatgpt|customer support|support tickets|ticket|customer tickets)/.test(lower)) {
+      data.role = 'deployer';
+    }
+  }
+
+  if (!Array.isArray(data.dataTypes) || data.dataTypes.length === 0 || data.dataTypes.includes('unsure') || (data.dataTypes.length === 1 && data.dataTypes[0] === 'none')) {
+    if (/(customer|support ticket|ticket|user message|user data|customer support|customer tickets|customer service|client data)/.test(lower)) {
+      data.dataTypes = ['personal_data'];
+    }
+  }
+
+  if (!data.impactOnPeople || data.impactOnPeople === 'unsure' || data.impactOnPeople === 'none') {
+    if (/(support|customer support|ticket|message|summarize|summary)/.test(lower)) {
+      data.impactOnPeople = 'suggestions_only';
+    }
+  }
+
+  return data;
 };
 
 const normalizeExtractedData = (data: any) => ({
@@ -413,7 +397,12 @@ const confidenceTheme = computed(() => {
 const isFieldMissing = (field: string) => {
   const value = extractedData.value[field];
   if (field === 'dataTypes') {
-    return !Array.isArray(value) || value.length === 0 || value.includes('unsure');
+    return (
+      !Array.isArray(value) ||
+      value.length === 0 ||
+      value.includes('unsure') ||
+      (value.length === 1 && value[0] === 'none')
+    );
   }
   return !value || value === 'unsure';
 };
@@ -518,6 +507,19 @@ const analyzeDescription = async () => {
   try {
     const prompt = `Extract structured information from this AI use case description: "${userDescription.value}"
 
+IMPORTANT: Be intelligent about inferring missing information from context.
+
+For dataTypes: Infer from the description. If it mentions:
+- customer/user interactions, support tickets, messages → includes personal_data
+- employee data, hiring, HR → includes sensitive_data  
+- public content, marketing → may not include sensitive data
+Don't just return "unsure" - extract what's actually implied.
+
+For impactOnPeople: Infer based on how the AI affects decisions or people:
+- If used for support/suggestions → suggests_only
+- If used for hiring, credit, healthcare → influences_decisions or automates_decisions
+- If it's internal/analytical only → none
+
 Return a JSON object with these exact fields:
 {
   "summary": "brief summary",
@@ -536,7 +538,7 @@ Return a JSON object with these exact fields:
   "redFlags": ["array of potential issues"]
 }
 
-Be conservative - if unsure, use "unsure" values. Focus on extracting what's clearly stated.`;
+Be smart - infer from context. Return only valid JSON.`;
 
     const response = await $fetch<{ reply: string }>('/.netlify/functions/groqChat', {
       method: 'POST',
@@ -708,12 +710,5 @@ useHead({
 .glass {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-}
-
-.text-gradient-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 </style>
