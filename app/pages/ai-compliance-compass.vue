@@ -296,6 +296,34 @@ const clarificationQuestions = ref<any[]>([]);
 const clarificationAnswers = ref<any>({});
 const complianceData = ref<any>({});
 
+const sanitizeJsonReply = (reply: string) => {
+  let text = reply.trim();
+
+  const fenceMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (fenceMatch?.[1]) {
+    text = fenceMatch[1].trim();
+  }
+
+  if (text.startsWith('`') && text.endsWith('`')) {
+    text = text.replace(/^`+|`+$/g, '').trim();
+  }
+
+  return text;
+};
+
+const parseJsonReply = (reply: string) => {
+  const cleaned = sanitizeJsonReply(reply);
+  try {
+    return JSON.parse(cleaned);
+  } catch (error) {
+    const looseMatch = cleaned.match(/\{[\s\S]*\}/m);
+    if (looseMatch?.[0]) {
+      return JSON.parse(looseMatch[0]);
+    }
+    throw error;
+  }
+};
+
 const analyzeDescription = async () => {
   if (isLoading.value || !userDescription.value.trim()) return;
   isLoading.value = true;
@@ -334,11 +362,12 @@ Be conservative - if unsure, use "unsure" values. Focus on extracting what's cle
 
     if (response && response.reply) {
       try {
-        const parsed = JSON.parse(response.reply);
+        const parsed = parseJsonReply(response.reply);
         extractedData.value = parsed;
         currentState.value = 'understanding';
       } catch (e) {
         console.error('Failed to parse AI response:', e);
+        console.error('Raw AI reply:', response.reply);
         // Fallback to basic extraction
         extractedData.value = {
           summary: userDescription.value,
@@ -483,9 +512,11 @@ Return as JSON object with these exact field names.`;
 
     if (response && response.reply) {
       try {
-        const parsed = JSON.parse(response.reply);
+        const parsed = parseJsonReply(response.reply);
         complianceData.value = parsed;
       } catch (e) {
+        console.error('Failed to parse compliance response:', e);
+        console.error('Raw AI reply:', response.reply);
         // Fallback compliance data
         complianceData.value = {
           role: extractedData.value.role || 'unsure',
