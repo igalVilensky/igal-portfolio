@@ -1,6 +1,6 @@
 <!-- app/components/ContactCTA.vue -->
 <template>
-  <section id="contact" class="section-y bg-transparent py-16 px-4">
+  <section id="contact" class="section-compact bg-transparent px-6">
     <div class="container mx-auto max-w-7xl">
       <div class="max-w-7xl mx-auto">
         <!-- Section Header -->
@@ -11,27 +11,26 @@
             </span>
           </div>
           <h2
-            class="contact-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight">
-            Let's Solve Problems Together
+            class="contact-header-anim section-title mb-5">
+            Let's build something useful.
           </h2>
           <p
-            class="contact-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
-            Ready to bring your ideas to life with a cross-functional approach
+            class="contact-header-anim text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
+            I am open to full-stack roles, SaaS/product work, AI automation projects, and focused collaborations.
           </p>
         </div>
 
         <!-- Contact Options -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 py-16 contact-options-container">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-10 contact-options-container">
           <div class="space-y-4 contact-option-anim">
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-primary-500"></div>
               <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Project Discussion
+                Product Engineering
               </h3>
             </div>
             <p class="text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-              Let's talk about your project requirements and how we can solve
-              them together
+              Need a developer who can connect frontend UX, backend APIs, data, and deployment?
             </p>
             <a href="mailto:vilenskyigal@gmail.com"
               class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg">
@@ -44,11 +43,11 @@
             <div class="flex items-center gap-4 mb-5">
               <div class="w-10 h-0.5 bg-accent-500"></div>
               <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Quick Chat
+                AI Automations
               </h3>
             </div>
             <p class="text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed mb-5">
-              Prefer a conversation? Let's schedule a call to discuss your needs
+              Exploring agents, LLM APIs, n8n, Make, webhooks, or practical workflow tools?
             </p>
             <a href="tel:+491783099433"
               class="inline-flex items-center gap-3 text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 font-semibold transition-colors group text-lg">
@@ -61,9 +60,7 @@
         <!-- Final Statement -->
         <div class="contact-statement-anim border-l-4 border-primary-500 pl-6 md:pl-8 py-3">
           <p class="text-xl md:text-2xl text-primary-800 dark:text-primary-200 font-light leading-relaxed">
-            Whether you need technical development, creative strategy, or
-            business consulting - I bring a unique perspective to every
-            challenge.
+            The sweet spot: practical software that helps people decide, automate, understand, or move faster.
           </p>
         </div>
       </div>
@@ -80,15 +77,19 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set(['.contact-header-anim', '.contact-option-anim', '.contact-statement-anim'], { x: 0, y: 0 });
+    return;
+  }
+
   // Header Animations
   gsap.from('.contact-header-anim', {
     scrollTrigger: {
       trigger: '.contact-header-anim',
       start: 'top 80%',
-      toggleActions: 'play none none reverse'
+      once: true
     },
-    y: 50,
-    opacity: 0,
+    y: 24,
     duration: 0.8,
     stagger: 0.2,
     ease: 'power3.out'
@@ -99,10 +100,9 @@ onMounted(() => {
     scrollTrigger: {
       trigger: '.contact-options-container',
       start: 'top 75%',
-      toggleActions: 'play none none reverse'
+      once: true
     },
-    y: 50,
-    opacity: 0,
+    y: 24,
     duration: 0.8,
     stagger: 0.2,
     ease: 'power3.out'
@@ -113,10 +113,9 @@ onMounted(() => {
     scrollTrigger: {
       trigger: '.contact-statement-anim',
       start: 'top 90%',
-      toggleActions: 'play none none reverse'
+      once: true
     },
-    x: 30,
-    opacity: 0,
+    x: 20,
     duration: 0.8,
     ease: 'power3.out'
   });

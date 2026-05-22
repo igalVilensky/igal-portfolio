@@ -1,143 +1,154 @@
 <template>
-  <section class="section-y bg-transparent px-4 pt-8">
-    <div class="container mx-auto max-w-7xl">
-      <div class="max-w-7xl mx-auto">
-        <!-- Section Header -->
-        <div class="py-16">
-          <div class="inline-block mb-4">
-            <span class="text-primary-500 font-semibold text-sm uppercase tracking-wider">
-              Get in Touch
-            </span>
-          </div>
-          <h2 class="text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight">
-            Let's Connect
-          </h2>
-          <p class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
-            Ready to collaborate on your next project or discuss how we can work
-            together
-          </p>
+  <section class="page-shell">
+    <div class="page-container">
+      <header class="page-header">
+        <div class="page-header-main">
+        <span class="page-kicker">
+          Contact
+        </span>
+        <h1 class="page-title">
+          Let's talk about developer roles, SaaS products, or practical AI automations.
+        </h1>
         </div>
-
-        <!-- Contact Methods -->
-        <div class="grid md:grid-cols-2 gap-8 md:gap-12 mb-20">
-          <!-- Email Contact -->
-          <div class="group">
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-2xl border border-neutral-200 dark:border-secondary-700 p-8 hover:shadow-2xl transition-all duration-300">
-              <div class="flex items-start gap-6">
-                <div
-                  class="w-16 h-16 bg-primary-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                    </path>
-                  </svg>
-                </div>
-                <div class="flex-1 space-y-3">
-                  <div class="flex items-center gap-4">
-                    <div class="w-8 h-1 bg-primary-500"></div>
-                    <h3 class="text-2xl font-display text-secondary-900 dark:text-white">
-                      Email
-                    </h3>
-                  </div>
-                  <a href="mailto:vilenskyigal@gmail.com"
-                    class="text-lg text-neutral-600 dark:text-neutral-300 hover:text-primary-500 transition-colors duration-300 font-medium block">
-                    vilenskyigal@gmail.com
-                  </a>
-                  <p class="text-neutral-500 dark:text-neutral-400 text-base">
-                    I'll get back to you within 24 hours
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Phone Contact -->
-          <div class="group">
-            <div
-              class="bg-white dark:bg-secondary-900 rounded-2xl border border-neutral-200 dark:border-secondary-700 p-8 hover:shadow-2xl transition-all duration-300">
-              <div class="flex items-start gap-6">
-                <div
-                  class="w-16 h-16 bg-accent-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                  <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
-                    </path>
-                  </svg>
-                </div>
-                <div class="flex-1 space-y-3">
-                  <div class="flex items-center gap-4">
-                    <div class="w-8 h-1 bg-accent-500"></div>
-                    <h3 class="text-2xl font-display text-secondary-900 dark:text-white">
-                      Phone
-                    </h3>
-                  </div>
-                  <a href="tel:+491783099433"
-                    class="text-lg text-neutral-600 dark:text-neutral-300 hover:text-accent-500 transition-colors duration-300 font-medium block">
-                    +49 178 3099433
-                  </a>
-                  <p class="text-neutral-500 dark:text-neutral-400 text-base">
-                    Available Mon-Fri, 9AM-6PM CET
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="page-header-side">
+        <p class="page-intro">
+          I am open to full-stack developer roles, AI automation projects, SaaS/product engineering work, and focused
+          collaborations where shipping useful software matters.
+        </p>
         </div>
+      </header>
 
-        <!-- Social Links -->
-        <div class="pb-20">
-          <div class="text-center mb-12">
-            <div class="inline-block mb-4">
-              <div class="w-12 h-1 bg-primary-500 mx-auto"></div>
-            </div>
-            <h3 class="text-3xl font-display text-secondary-900 dark:text-white mb-8">
-              Find Me Online
-            </h3>
+      <div class="mb-12 grid gap-6 lg:grid-cols-3">
+        <article
+          v-for="item in contactCards"
+          :key="item.title"
+          class="rounded-3xl border border-neutral-200 bg-white/80 p-7 shadow-xl shadow-secondary-900/5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-2xl dark:border-white/10 dark:bg-dark-surface/50"
+        >
+          <div :class="['mb-6 flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg', item.bg]">
+            <i :class="item.icon"></i>
           </div>
-
-          <div class="flex justify-center gap-6">
-            <a v-for="social in socialLinks" :key="social.name" :href="social.url" target="_blank"
-              rel="noopener noreferrer"
-              class="group w-16 h-16 bg-white dark:bg-secondary-900 rounded-2xl flex items-center justify-center text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-secondary-700 hover:shadow-2xl transition-all duration-300 transform hover:scale-110"
-              :class="social.hoverClass">
-              <i :class="social.icon" class="text-2xl group-hover:text-white transition-colors duration-300"></i>
-            </a>
-          </div>
-        </div>
+          <h2 class="mb-3 text-2xl font-display text-secondary-900 dark:text-white">{{ item.title }}</h2>
+          <p class="mb-5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">{{ item.description }}</p>
+          <a
+            :href="item.href"
+            :target="item.external ? '_blank' : undefined"
+            :rel="item.external ? 'noopener noreferrer' : undefined"
+            class="contact-link inline-flex items-center gap-2 font-semibold text-primary-600 transition hover:text-primary-500 dark:text-primary-300"
+          >
+            <span>{{ item.label }}</span>
+            <i :class="item.external ? 'fas fa-external-link-alt text-xs' : 'fas fa-arrow-right text-xs'"></i>
+          </a>
+        </article>
       </div>
+
+      <section class="mb-12 rounded-3xl border border-secondary-100 bg-white/75 p-8 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45">
+        <div class="mb-8">
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+            Best fits
+          </p>
+          <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white">
+            What I would be happy to discuss.
+          </h2>
+        </div>
+        <div class="grid gap-3 md:grid-cols-2">
+          <div
+            v-for="fit in collaborationFits"
+            :key="fit"
+            class="rounded-2xl border border-secondary-100 bg-secondary-50 px-5 py-4 text-secondary-700 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+          >
+            {{ fit }}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="mb-8 text-center">
+          <div class="mx-auto mb-4 h-1 w-12 bg-primary-500"></div>
+          <h2 class="font-display text-3xl text-secondary-900 dark:text-white">
+            Find me online
+          </h2>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-5">
+          <a
+            v-for="social in socialLinks"
+            :key="social.name"
+            :href="social.url"
+            :target="social.external ? '_blank' : undefined"
+            :rel="social.external ? 'noopener noreferrer' : undefined"
+            class="group flex h-14 w-14 items-center justify-center rounded-2xl border border-neutral-200 bg-white text-neutral-600 transition duration-300 hover:-translate-y-1 hover:bg-primary-500 hover:text-white hover:shadow-2xl dark:border-white/10 dark:bg-dark-surface/60 dark:text-neutral-300"
+            :aria-label="social.name"
+          >
+            <i :class="social.icon" class="text-xl"></i>
+          </a>
+        </div>
+      </section>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "default",
-});
+const contactCards = [
+  {
+    title: "Email",
+    description: "Best for roles, project discussions, collaborations, and anything that needs context.",
+    label: "vilenskyigal@gmail.com",
+    href: "mailto:vilenskyigal@gmail.com",
+    icon: "fas fa-envelope",
+    bg: "bg-primary-500",
+    external: false,
+  },
+  {
+    title: "LinkedIn",
+    description: "Good for professional contact, recruiting conversations, and quick introductions.",
+    label: "Connect on LinkedIn",
+    href: "https://www.linkedin.com/in/igalvilensky/",
+    icon: "fab fa-linkedin-in",
+    bg: "bg-[#0A66C2]",
+    external: true,
+  },
+  {
+    title: "GitHub",
+    description: "Review recent projects, source code, experiments, and the way I structure applications.",
+    label: "View repositories",
+    href: "https://github.com/igalVilensky",
+    icon: "fab fa-github",
+    bg: "bg-secondary-800",
+    external: true,
+  },
+];
 
-useHead({
-  title: "Contact - Igal Vilensky",
-});
+const collaborationFits = [
+  "Full-stack developer roles with TypeScript, Vue/Nuxt, React/Next, Node.js, or Python/FastAPI",
+  "AI automation workflows using APIs, webhooks, n8n, Make, LLM APIs, and product interfaces",
+  "SaaS MVPs, dashboards, admin tools, and workflow-heavy product screens",
+  "Practical AI-assisted tools with clear UX, explainable outputs, and human editing in the loop",
+];
 
-// Social links with Tailwind classes
 const socialLinks = [
   {
     name: "LinkedIn",
-    icon: "fab fa-linkedin",
+    icon: "fab fa-linkedin-in",
     url: "https://www.linkedin.com/in/igalvilensky/",
-    hoverClass: "hover:bg-primary-500",
+    external: true,
   },
   {
     name: "GitHub",
     icon: "fab fa-github",
     url: "https://github.com/igalVilensky",
-    hoverClass: "hover:bg-secondary-600",
+    external: true,
   },
   {
-    name: "Facebook",
-    icon: "fab fa-facebook",
-    url: "https://www.facebook.com/afawefaw4496546464/",
-    hoverClass: "hover:bg-accent-500",
+    name: "Email",
+    icon: "fas fa-envelope",
+    url: "mailto:vilenskyigal@gmail.com",
+    external: false,
+  },
+  {
+    name: "Portfolio",
+    icon: "fas fa-globe",
+    url: "https://igalvilensky.netlify.app/",
+    external: true,
   },
 ];
 </script>

@@ -1,64 +1,70 @@
 <template>
-  <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-32">
-    <!-- Background Layer with Top Mask -->
-    <div class="absolute inset-x-0 top-0 bottom-0 z-0 overflow-hidden pointer-events-none">
-      <div class="absolute inset-0 z-0 bg-cover bg-center opacity-10 dark:opacity-20 mix-blend-luminosity"
-        style="background-image: url('/images/hero-bg.png'); mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);">
-      </div>
+  <section class="relative overflow-x-hidden px-4 pb-6 pt-24 sm:px-6 sm:pt-28 md:pb-8 lg:pt-32">
+    <div class="pointer-events-none absolute inset-x-0 top-0 bottom-0 z-0 overflow-hidden">
+      <div
+        class="absolute inset-0 z-0 bg-cover bg-center opacity-10 mix-blend-luminosity dark:opacity-20"
+        style="background-image: url('/images/hero-bg.png'); mask-image: linear-gradient(to bottom, transparent, black 12%, black 86%, transparent);"
+      ></div>
     </div>
 
-    <div class="container mx-auto px-6 relative z-10">
-      <div class="max-w-7xl mx-auto">
-        <!-- Intro Tag -->
-        <div class="mb-8 overflow-hidden">
-          <div class="hero-anim-element translate-y-full opacity-0">
-            <span
-              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-100/50 dark:bg-white/10 backdrop-blur-md text-xs font-medium text-primary-700 dark:text-secondary-300 tracking-wider uppercase border border-primary-200/50 dark:border-white/5">
-              <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-              Available for New Projects
+    <div class="container relative z-10 mx-auto max-w-7xl">
+      <div class="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)] lg:items-start lg:gap-8">
+        <div class="min-w-0">
+          <div class="mb-5 overflow-hidden">
+            <div class="hero-anim-element translate-y-full opacity-0">
+              <span class="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-primary-100/70 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-700 backdrop-blur-md dark:border-white/10 dark:bg-white/10 dark:text-primary-300">
+                <span class="h-2 w-2 rounded-full bg-primary-500"></span>
+                Full-stack developer in Leipzig
+              </span>
+            </div>
+          </div>
+
+          <h1 class="mb-6 max-w-5xl break-words font-display text-4xl font-bold leading-tight tracking-tight text-secondary-900 dark:text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            <span class="hero-anim-element block translate-y-full opacity-0">Building SaaS</span>
+            <span class="hero-anim-element block translate-y-full opacity-0">
+              products and
+              <span class="text-gradient-primary">AI-assisted</span>
             </span>
-          </div>
-        </div>
+            <span class="hero-anim-element block translate-y-full opacity-0">web tools.</span>
+          </h1>
 
-        <!-- Main Heading -->
-        <h1 class="font-display font-bold leading-[0.9] tracking-tight mb-8">
-          <div class="overflow-hidden">
-            <div
-              class="hero-anim-element translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              Creative
-            </div>
+          <div class="mb-8 max-w-3xl overflow-hidden">
+            <p class="hero-anim-element translate-y-full opacity-0 text-base leading-relaxed text-secondary-700 dark:text-secondary-300 md:text-lg">
+              I am Igal Vilensky, a full-stack software developer focused on practical product engineering with
+              TypeScript, Vue/Nuxt, React/Next, Node.js, Python/FastAPI, APIs, and AI-assisted workflows.
+              I am currently expanding that background into AI agents and automations through WBS CODING SCHOOL.
+            </p>
           </div>
-          <div class="overflow-hidden">
-            <div
-              class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              <span class="text-gradient-primary">Technologist</span>
-            </div>
-          </div>
-          <div class="overflow-hidden">
-            <div
-              class="hero-anim-element pb-2 translate-y-full opacity-0 text-display-lg md:text-display-xl lg:text-display-2xl text-secondary-900 dark:text-white">
-              & Product Engineer
-            </div>
-          </div>
-        </h1>
 
-        <!-- Tech Stack Scroller -->
-        <div class="mb-12 overflow-hidden">
-          <div class="hero-anim-element translate-y-full opacity-0">
+          <div class="hero-anim-element mb-8 flex translate-y-10 flex-wrap gap-3 opacity-0">
+            <NuxtLink to="/case-studies" class="btn-primary group inline-flex items-center gap-3 px-7 py-3">
+              <span>View Work</span>
+              <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+            </NuxtLink>
+
+            <NuxtLink
+              to="/contact"
+              class="btn-outline group inline-flex items-center gap-3 border-secondary-300 px-7 py-3 text-secondary-900 backdrop-blur-sm hover:bg-secondary-100 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+            >
+              <i class="fas fa-paper-plane text-primary-500 transition-transform group-hover:-translate-y-0.5"></i>
+              <span>Contact / Collaborate</span>
+            </NuxtLink>
+          </div>
+
+          <div class="hero-anim-element translate-y-10 opacity-0">
             <div class="flex flex-col gap-4">
-              <span class="text-xs uppercase tracking-[0.2em] text-secondary-400 dark:text-secondary-500 font-bold">Tech
-                Ecosystem</span>
-              <div class="relative flex overflow-x-hidden group whitespace-nowrap">
-                <div class="animate-marquee py-2 flex items-center gap-8">
-                  <span v-for="(tech, index) in techStack" :key="index"
-                    class="text-sm md:text-base font-mono text-secondary-500 dark:text-secondary-400 flex items-center gap-2">
-                    <span class="text-primary-500/50">#</span>{{ tech }}
+              <span class="text-xs font-bold uppercase tracking-[0.22em] text-secondary-500 dark:text-secondary-400">
+                Tech ecosystem
+              </span>
+              <div class="relative flex overflow-x-hidden whitespace-nowrap">
+                <div class="animate-marquee flex items-center gap-6 py-2">
+                  <span v-for="tech in techStack" :key="tech" class="flex items-center gap-2 font-mono text-sm text-secondary-500 dark:text-secondary-400 md:text-base">
+                    <span class="text-primary-500/60">#</span>{{ tech }}
                   </span>
                 </div>
-                <div class="absolute top-0 animate-marquee2 py-2 flex items-center gap-8">
-                  <span v-for="(tech, index) in techStack" :key="'copy-' + index"
-                    class="text-sm md:text-base font-mono text-secondary-500 dark:text-secondary-400 flex items-center gap-2">
-                    <span class="text-primary-500/50">#</span>{{ tech }}
+                <div class="animate-marquee2 absolute top-0 flex items-center gap-6 py-2">
+                  <span v-for="tech in techStack" :key="`copy-${tech}`" class="flex items-center gap-2 font-mono text-sm text-secondary-500 dark:text-secondary-400 md:text-base">
+                    <span class="text-primary-500/60">#</span>{{ tech }}
                   </span>
                 </div>
               </div>
@@ -66,58 +72,96 @@
           </div>
         </div>
 
-        <!-- Description -->
-        <div class="max-w-2xl mb-12 overflow-hidden">
-          <p
-            class="hero-anim-element translate-y-full opacity-0 text-lg md:text-xl text-secondary-600 dark:text-secondary-300 leading-relaxed text-balance">
-            Engineering robust <span class="text-secondary-900 dark:text-white font-semibold italic">digital
-              experiences</span> with a focus on
-            <span class="text-secondary-900 dark:text-white font-semibold">performance</span>,
-            <span class="text-secondary-900 dark:text-white font-semibold">scalability</span>, and
-            <span class="text-secondary-900 dark:text-white font-semibold">user-centric design</span>.
-          </p>
-        </div>
+        <aside class="relative z-20 w-full min-w-0 self-start lg:sticky lg:top-28">
+          <div class="w-full min-w-0 rounded-2xl border border-secondary-200 bg-white/85 p-3 shadow-xl shadow-secondary-900/5 backdrop-blur-xl dark:border-white/10 dark:bg-dark-surface/75 sm:p-5">
+            <div class="mb-3 flex min-w-0 items-start justify-between gap-3 sm:mb-4 sm:gap-4">
+              <div class="min-w-0">
+                <p class="text-[10px] font-bold uppercase tracking-[0.28em] text-primary-600 dark:text-primary-300">
+                  Current focus
+                </p>
+                <h2 class="mt-2 break-words font-display text-lg font-bold leading-tight text-secondary-900 dark:text-white sm:text-2xl">
+                  Automation-first product workflows
+                </h2>
+              </div>
+              <div class="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-300 sm:flex">
+                <i class="fas fa-diagram-project"></i>
+              </div>
+            </div>
 
-        <!-- CTA Buttons -->
-        <div class="hero-anim-element translate-y-10 opacity-0 flex flex-wrap gap-4">
-          <NuxtLink to="/case-studies" class="btn-primary group flex items-center gap-3 py-4 px-8">
-            <span>Explore Engineering Work</span>
-            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-          </NuxtLink>
+            <div class="grid min-w-0 grid-cols-2 gap-2 sm:gap-3">
+              <div
+                v-for="item in currentFocus"
+                :key="item.title"
+                class="min-w-0 rounded-xl border border-secondary-100 bg-secondary-50/80 p-2.5 dark:border-white/10 dark:bg-white/5 sm:p-3"
+              >
+                <h3 class="break-words text-xs font-bold leading-snug text-secondary-900 dark:text-white sm:text-sm">{{ item.title }}</h3>
+                <p class="mt-1 break-words text-[11px] leading-relaxed text-secondary-600 dark:text-secondary-400 sm:text-xs">
+                  {{ item.description }}
+                </p>
+              </div>
+            </div>
 
-          <NuxtLink to="/experiments"
-            class="btn-outline group flex items-center gap-3 py-4 px-8 text-secondary-900 dark:text-white border-secondary-200 dark:border-white/20 hover:bg-secondary-100 dark:hover:bg-white/10 backdrop-blur-sm">
-            <i class="fas fa-flask text-primary-500 group-hover:rotate-12 transition-transform"></i>
-            <span>The Lab</span>
-          </NuxtLink>
-        </div>
+            <div class="mt-3 flex min-w-0 flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
+              <span
+                v-for="tag in focusTags"
+                :key="tag"
+                class="max-w-full break-words rounded-full border border-primary-200 bg-primary-50 px-2 py-1 text-[9px] font-bold uppercase leading-tight tracking-wide text-primary-700 dark:border-primary-400/20 dark:bg-primary-400/10 dark:text-primary-200 sm:px-2.5 sm:text-[10px]"
+              >
+                {{ tag }}
+              </span>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
-
   </section>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
 import gsap from "gsap";
-import CursorNeuralVisualizer from "~/components/CursorNeuralVisualizer.vue";
+
+const { currentFocus } = useProjects();
 
 const techStack = [
-  "Vue 3", "Nuxt 3", "TypeScript", "Node.js", "React", "Next.js",
-  "Tailwind CSS", "Firebase", "MongoDB", "Sanity", "Express",
-  "Web Security", "Chrome Extensions", "Manifest V3", "npm",
-  "CLI Tools", "App Architecture", "Performance Tuning"
+  "TypeScript",
+  "Vue",
+  "Nuxt",
+  "React",
+  "Next.js",
+  "Node.js",
+  "Express",
+  "Python",
+  "FastAPI",
+  "PostgreSQL",
+  "Prisma",
+  "Firebase",
+  "Groq API",
+  "LLM APIs",
+  "n8n",
+  "Make",
+  "Webhooks",
+  "Netlify",
+  "Vercel",
+  "Render",
 ];
 
+const focusTags = ["AI agents", "n8n / Make", "LLM APIs", "APIs / webhooks", "practical automations"];
+
 onMounted(() => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set(".hero-anim-element", { y: 0, opacity: 1 });
+    return;
+  }
+
   const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
   tl.to(".hero-anim-element", {
     y: 0,
     opacity: 1,
-    duration: 1.2,
-    stagger: 0.1,
-    delay: 0.3,
+    duration: 1,
+    stagger: 0.08,
+    delay: 0.2,
   });
 });
 </script>
@@ -127,28 +171,12 @@ onMounted(() => {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-primary-400 to-accent-500;
 }
 
-@keyframes scroll-wheel {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateY(15px);
-    opacity: 0;
-  }
-}
-
-.animate-scroll-wheel {
-  animation: scroll-wheel 1.5s ease-in-out infinite;
-}
-
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 42s linear infinite;
 }
 
 .animate-marquee2 {
-  animation: marquee2 40s linear infinite;
+  animation: marquee2 42s linear infinite;
 }
 
 @keyframes marquee {

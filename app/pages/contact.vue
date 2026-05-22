@@ -1,6 +1,6 @@
 <!-- app/pages/contact.vue -->
 <template>
-  <div class="relative min-h-screen bg-transparent pt-24 overflow-hidden">
+  <div class="relative min-h-screen bg-transparent overflow-hidden">
     <ContactVisualizer />
     <ContactContent class="relative z-10" />
   </div>
@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import gsap from "gsap";
-import { useI18n } from "vue-i18n";
 import ContactContent from "~/components/Contact.vue";
 import ContactVisualizer from "~/components/ContactVisualizer.vue";
 
@@ -17,10 +16,15 @@ definePageMeta({
   layout: "default",
 });
 
-const { t } = useI18n();
-
 useHead({
-  title: t("seo.contact"),
+  title: "Contact | Igal Vilensky - Full-Stack Developer",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Contact Igal Vilensky for full-stack developer roles, SaaS/product engineering, AI automation projects, and collaborations.",
+    },
+  ],
 });
 
 onMounted(() => {

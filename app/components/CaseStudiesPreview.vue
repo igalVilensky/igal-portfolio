@@ -1,173 +1,136 @@
-<!-- app/components/CaseStudiesPreview.vue -->
 <template>
-  <section class="section-y bg-transparent pb-32 px-6">
+  <section class="section-compact bg-transparent px-6">
     <div class="container mx-auto max-w-7xl">
-      <!-- Section Header -->
-      <div class="py-24 text-center">
-        <span
-          class="inline-block px-4 py-1.5 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:text-primary-400 mb-6 projects-header-anim">
-          Selected Engineering Work
-        </span>
-        <h2
-          class="text-4xl md:text-6xl font-display font-bold text-secondary-900 dark:text-white mb-8 projects-header-anim">
-          Building Digital <span class="text-gradient-primary">Infrastructure.</span>
-        </h2>
-        <p class="text-xl text-secondary-600 dark:text-secondary-400 max-w-2xl mx-auto projects-header-anim">
-          A selection of projects where I've bridge complex technical requirements with seamless user experiences.
-        </p>
+      <div class="projects-header-anim mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div class="max-w-3xl">
+          <span class="mb-5 inline-block rounded-full border border-secondary-200 bg-secondary-100 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:border-white/10 dark:bg-white/5 dark:text-primary-300">
+            Selected work
+          </span>
+          <h2 class="mb-5 section-title">
+            Recent full-stack and AI-assisted products.
+          </h2>
+          <p class="text-lg leading-relaxed text-secondary-600 dark:text-secondary-400">
+            A quick look at the projects that best show my current direction: SaaS MVPs, AI product UX, practical
+            automations, and production-minded web engineering.
+          </p>
+        </div>
+
+        <NuxtLink to="/case-studies" class="btn-outline inline-flex items-center gap-3 border-secondary-300 text-secondary-900 dark:border-white/20 dark:text-white">
+          <span>Open Work Index</span>
+          <i class="fas fa-arrow-right"></i>
+        </NuxtLink>
       </div>
 
-      <!-- Projects Grid -->
-      <div class="space-y-32">
-        <article v-for="(project, key) in projects" :key="key"
-          class="group grid lg:grid-cols-2 gap-16 items-center project-card-anim">
+      <div class="grid gap-6 lg:grid-cols-2">
+        <article
+          v-for="project in homeFeaturedProjects"
+          :key="project.id"
+          class="project-card-anim group rounded-3xl border border-secondary-100 bg-white/75 p-5 shadow-xl shadow-secondary-900/5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-primary-300/60 dark:border-white/10 dark:bg-dark-surface/45"
+        >
+          <ProjectVisual :project="project" />
 
-          <!-- Image Container with Safari-style Frame -->
-          <div :class="['project-image-anim relative', key === 'familySpace' ? 'lg:order-2' : '']">
-            <div
-              class="relative bg-secondary-100 dark:bg-white/5 rounded-2xl p-3 shadow-2xl transition-transform duration-700 group-hover:-translate-y-2">
-              <!-- Browser Header -->
-              <div class="flex items-center gap-1.5 mb-3 px-2">
-                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                <div class="flex-1"></div>
-                <div class="w-1/2 h-2 bg-secondary-200 dark:bg-white/10 rounded-full opacity-50"></div>
-                <div class="flex-1"></div>
-              </div>
-              <!-- Image Content -->
-              <div class="overflow-hidden rounded-xl bg-white dark:bg-dark-surface aspect-video relative">
-                <img :src="project.image" :alt="project.title"
-                  class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Content -->
-          <div :class="['project-content-anim space-y-8', key === 'familySpace' ? 'lg:order-1' : '']">
-            <h3 class="text-3xl md:text-4xl font-display font-bold text-secondary-900 dark:text-white">
+          <div class="pt-6">
+            <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+              {{ project.category }}
+            </p>
+            <h3 class="mb-4 text-2xl font-display font-bold text-secondary-900 dark:text-white md:text-3xl">
               {{ project.title }}
             </h3>
-            <p class="text-lg md:text-xl text-secondary-600 dark:text-secondary-400 leading-relaxed">
-              {{ project.description }}
+            <p class="mb-5 leading-relaxed text-secondary-600 dark:text-secondary-400">
+              {{ project.shortDescription }}
             </p>
-            <div class="flex flex-wrap gap-2">
-              <span v-for="tech in project.technologies" :key="tech"
-                class="px-4 py-2 rounded-xl bg-secondary-50 dark:bg-white/5 border border-secondary-100 dark:border-white/10 text-xs font-mono text-secondary-500">
-                {{ tech }}
+
+            <div class="mb-6 flex flex-wrap gap-2">
+              <span
+                v-for="tag in project.tags.slice(0, 7)"
+                :key="tag"
+                class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+              >
+                {{ tag }}
               </span>
             </div>
-            <div class="flex gap-8 pt-4">
-              <a :href="project.link" target="_blank"
-                class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-500 hover:text-primary-400 transition-colors">
-                View Project <i class="fas fa-external-link-alt text-xs"></i>
+
+            <div class="flex flex-wrap gap-3">
+              <NuxtLink
+                v-if="project.liveUrl && isInternalUrl(project.liveUrl)"
+                :to="project.liveUrl"
+                class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-600 transition hover:text-primary-500 dark:text-primary-300"
+              >
+                Live tool <i class="fas fa-arrow-right text-xs"></i>
+              </NuxtLink>
+              <a
+                v-else-if="project.liveUrl"
+                :href="project.liveUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary-600 transition hover:text-primary-500 dark:text-primary-300"
+              >
+                Live demo <i class="fas fa-external-link-alt text-xs"></i>
               </a>
-              <a :href="project.github" target="_blank"
-                class="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-secondary-400 hover:text-white transition-colors">
-                Repository <i class="fab fa-github"></i>
+              <a
+                v-if="project.githubUrl"
+                :href="project.githubUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-secondary-500 transition hover:text-secondary-900 dark:text-secondary-400 dark:hover:text-white"
+              >
+                GitHub <i class="fab fa-github"></i>
               </a>
+              <NuxtLink
+                v-if="project.caseStudyUrl"
+                :to="project.caseStudyUrl"
+                class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-secondary-500 transition hover:text-secondary-900 dark:text-secondary-400 dark:hover:text-white"
+              >
+                Case study <i class="fas fa-arrow-right text-xs"></i>
+              </NuxtLink>
             </div>
           </div>
         </article>
-      </div>
-
-      <!-- CTA -->
-      <div class="mt-32 text-center projects-cta-anim">
-        <NuxtLink to="/case-studies"
-          class="inline-flex items-center gap-4 py-5 px-10 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl transition-all shadow-xl shadow-primary-500/20 group">
-          <span>Explore Architecture Portfolio</span>
-          <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-        </NuxtLink>
       </div>
     </div>
   </section>
 </template>
 
-
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { onMounted } from "vue";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+const { homeFeaturedProjects } = useProjects();
 
-
-// Project data with images
-const projects = {
-  psyBlog: {
-    title: "MindQ Lab",
-    image: "/mindQlab.jpeg",
-    link: "https://www.mindqlab.com/",
-    github: "https://github.com/igalvilensky/psy-blog",
-    description:
-      "A psychology blog platform designed to make mental health resources more accessible. Built with modern web technologies to create an engaging and supportive community space.",
-    technologies: ["Nuxt", "TypeScript", "Firebase", "Tailwind CSS"],
-  },
-  familySpace: {
-    title: "Family Space",
-    image: "/family-space.jpeg",
-    link: "https://my-nest.netlify.app/",
-    github: "https://github.com/igalVilensky/family-app",
-    description:
-      "A family organization app featuring shared calendars, task management, and messaging. Created to help families coordinate and stay connected in their daily lives.",
-    technologies: ["Nuxt", "Vue 3", "TypeScript", "Tailwind CSS", "Firebase"],
-  },
-};
+const isInternalUrl = (url: string) => url.startsWith("/");
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
-  // Header Animations
-  gsap.from('.projects-header-anim', {
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set([".projects-header-anim", ".project-card-anim"], { y: 0 });
+    return;
+  }
+
+  gsap.from(".projects-header-anim", {
     scrollTrigger: {
-      trigger: '.projects-header-anim',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
+      trigger: ".projects-header-anim",
+      start: "top 82%",
+      once: true,
     },
-    y: 50,
-    opacity: 0,
+    y: 24,
     duration: 0.8,
-    stagger: 0.2,
-    ease: 'power3.out'
+    ease: "power3.out",
   });
 
-  // Project Cards Animation
-  const projects = document.querySelectorAll('.project-card-anim');
-  projects.forEach((project) => {
-    const image = project.querySelector('.project-image-anim');
-    const content = project.querySelector('.project-content-anim');
-
-    const tl = gsap.timeline({
+  gsap.utils.toArray<HTMLElement>(".project-card-anim").forEach((card, index) => {
+    gsap.from(card, {
       scrollTrigger: {
-        trigger: project,
-        start: 'top 75%',
-        toggleActions: 'play none none reverse'
-      }
-    });
-
-    tl.from(image, {
-      y: 50,
-      opacity: 0,
+        trigger: card,
+        start: "top 88%",
+        once: true,
+      },
+      y: 24,
       duration: 0.8,
-      ease: 'power3.out'
-    })
-      .from(content, {
-        x: 30,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out'
-      }, '-=0.6');
-  });
-
-  // CTA Animation
-  gsap.from('.projects-cta-anim', {
-    scrollTrigger: {
-      trigger: '.projects-cta-anim',
-      start: 'top 90%',
-      toggleActions: 'play none none reverse'
-    },
-    y: 30,
-    opacity: 0,
-    duration: 0.8,
-    ease: 'power3.out'
+      delay: index * 0.04,
+      ease: "power3.out",
+    });
   });
 });
 </script>

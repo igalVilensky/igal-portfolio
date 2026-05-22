@@ -14,7 +14,7 @@
             </span>
           </NuxtLink>
           <p class="text-sm text-secondary-600 dark:text-secondary-400 max-w-xs mx-auto md:mx-0 leading-tight">
-            Engineering digital infrastructure // resilient systems.
+            Full-stack product engineering, AI-assisted tools, and practical automation workflows.
           </p>
         </div>
 
@@ -40,7 +40,9 @@
               vilenskyigal@gmail.com
             </a>
             <div class="flex justify-center md:justify-start gap-5">
-              <a v-for="social in socialLinks" :key="social.name" :href="social.url" target="_blank"
+              <a v-for="social in socialLinks" :key="social.name" :href="social.url"
+                :target="social.external ? '_blank' : undefined"
+                :rel="social.external ? 'noopener noreferrer' : undefined"
                 class="text-secondary-400 hover:text-primary-500 transition-colors" :aria-label="social.name">
                 <i :class="social.icon" class="text-base"></i>
               </a>
@@ -70,6 +72,7 @@ const navigationItems = [
   { id: "home", path: "/", label: "Home" },
   { id: "case-studies", path: "/case-studies", label: "Work" },
   { id: "experiments", path: "/experiments", label: "Experiments" },
+  { id: "ai-compliance", path: "/ai-compliance-compass", label: "AI Compass" },
   { id: "about", path: "/about", label: "About" },
   { id: "contact", path: "/contact", label: "Contact" },
 ];
@@ -79,16 +82,19 @@ const socialLinks = [
     name: "LinkedIn",
     icon: "fab fa-linkedin-in",
     url: "https://www.linkedin.com/in/igalvilensky/",
+    external: true,
   },
   {
     name: "GitHub",
     icon: "fab fa-github",
     url: "https://github.com/igalVilensky",
+    external: true,
   },
   {
     name: "Email",
     icon: "fas fa-envelope",
     url: "mailto:vilenskyigal@gmail.com",
+    external: false,
   },
 ];
 </script>

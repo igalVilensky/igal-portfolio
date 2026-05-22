@@ -1,94 +1,53 @@
 <template>
-  <section class="section-y bg-transparent pt-24 pb-32 px-6 overflow-hidden relative">
-
+  <section class="relative overflow-hidden bg-transparent px-6 pb-12 pt-4 md:pb-14 md:pt-6">
     <div class="container mx-auto max-w-7xl">
-      <div class="flex flex-col lg:flex-row gap-20">
-        <!-- Sticky Header Column -->
-        <div class="lg:w-1/3 lg:sticky lg:top-32 lg:h-fit">
-          <div class="story-header-anim">
-            <span
-              class="inline-block px-4 py-1.5 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:text-primary-400 mb-8">
-              The Background
-            </span>
-            <h2
-              class="text-4xl md:text-5xl font-display font-bold text-secondary-900 dark:text-white mb-8 leading-[1.1]">
-              A Journey of <br />
-              <span class="text-gradient-primary">Resilience</span> & <br />
-              Invention.
-            </h2>
-            <div class="w-16 h-1 bg-primary-500 mb-8"></div>
-            <p class="text-lg text-secondary-600 dark:text-secondary-400 leading-relaxed italic">
-              "My journey is defined by a consistent ability to adapt. I build technical systems with the same
-              resilience required to navigate and scale within diverse global environments."
-            </p>
-          </div>
+      <div class="grid gap-10 lg:grid-cols-12">
+        <div class="story-header-anim lg:col-span-4 lg:sticky lg:top-32 lg:h-fit">
+          <span class="mb-8 inline-block rounded-full border border-secondary-200 bg-secondary-100 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:border-white/10 dark:bg-white/5 dark:text-primary-300">
+            The direction
+          </span>
+          <h2 class="mb-6 section-title">
+            Product engineering with an
+            <span class="text-gradient-primary">AI automation</span>
+            edge.
+          </h2>
+          <div class="mb-8 h-1 w-16 bg-primary-500"></div>
+          <p class="text-lg italic leading-relaxed text-secondary-600 dark:text-secondary-400">
+            I like tools that make complicated choices, workflows, and systems feel usable. The current chapter is
+            connecting that product mindset with agents, automations, APIs, and LLMs.
+          </p>
         </div>
 
-        <!-- Scrollable Content Column -->
-        <div class="lg:w-2/3 space-y-32">
-          <!-- Digital Architect Era -->
-          <div class="timeline-item opacity-0 translate-y-20">
-            <div class="flex items-center gap-4 mb-6">
-              <span class="text-4xl font-display font-bold text-primary-500/20">01</span>
-              <h3 class="text-2xl font-bold text-secondary-900 dark:text-white">The Digital Architect</h3>
-            </div>
-            <p class="text-xl text-secondary-700 dark:text-secondary-300 leading-relaxed mb-8">
-              Leading technical development at <span
-                class="text-secondary-900 dark:text-white font-bold">Flowplace</span> and formerly <span
-                class="text-secondary-900 dark:text-white font-bold">LeanERA</span>.
-              I specialize in building complex SaaS ecosystems where performance and user-centric architecture collide.
-            </p>
-            <div class="grid grid-cols-2 gap-4">
-              <div
-                class="p-4 bg-secondary-50 dark:bg-white/5 rounded-2xl border border-secondary-100 dark:border-white/5">
-                <span class="block text-[10px] font-bold text-primary-500 uppercase tracking-widest mb-1">Impact</span>
-                <span class="text-sm dark:text-secondary-300">5k+ Users in 1 month</span>
-              </div>
-              <div
-                class="p-4 bg-secondary-50 dark:bg-white/5 rounded-2xl border border-secondary-100 dark:border-white/5">
-                <span class="block text-[10px] font-bold text-primary-500 uppercase tracking-widest mb-1">Focus</span>
-                <span class="text-sm dark:text-secondary-300">SaaS Scalability</span>
+        <div class="space-y-6 lg:col-span-8">
+          <article
+            v-for="item in storyItems"
+            :key="item.title"
+            class="timeline-item rounded-3xl border border-secondary-100 bg-white/70 p-7 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45 md:p-9"
+          >
+            <div class="mb-5 flex items-center gap-4">
+              <span class="font-display text-4xl font-bold text-primary-500/25">{{ item.index }}</span>
+              <div>
+                <p class="text-[10px] font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+                  {{ item.kicker }}
+                </p>
+                <h3 class="mt-1 text-2xl font-bold text-secondary-900 dark:text-white">
+                  {{ item.title }}
+                </h3>
               </div>
             </div>
-          </div>
-
-          <!-- Startup & Storytelling Era -->
-          <div class="timeline-item opacity-0 translate-y-20">
-            <div class="flex items-center gap-4 mb-6">
-              <span class="text-4xl font-display font-bold text-primary-500/20">02</span>
-              <h3 class="text-2xl font-bold text-secondary-900 dark:text-white">Growth & Storytelling</h3>
-            </div>
-            <p class="text-xl text-secondary-700 dark:text-secondary-300 leading-relaxed mb-8">
-              Scaling startups like <span class="text-secondary-900 dark:text-white font-bold">Cashdo</span> to 100k+
-              users while pursuing an acting career in TV and Opera.
-              This unique intersection taught me how to bridge technical complexity with human-centered narratives.
+            <p class="text-lg leading-relaxed text-secondary-700 dark:text-secondary-300 md:text-xl">
+              {{ item.description }}
             </p>
-            <div class="flex flex-wrap gap-3">
+            <div class="mt-7 flex flex-wrap gap-3">
               <span
-                class="px-4 py-2 rounded-xl bg-white dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-xs font-mono text-secondary-500 dark:text-secondary-400">Marketing
-                Strategy</span>
-              <span
-                class="px-4 py-2 rounded-xl bg-white dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-xs font-mono text-secondary-500 dark:text-secondary-400">Opera
-                & Film</span>
-              <span
-                class="px-4 py-2 rounded-xl bg-white dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-xs font-mono text-secondary-500 dark:text-secondary-400">Product
-                Growth</span>
+                v-for="tag in item.tags"
+                :key="tag"
+                class="rounded-xl border border-secondary-200 bg-secondary-50 px-4 py-2 font-mono text-xs text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+              >
+                {{ tag }}
+              </span>
             </div>
-          </div>
-
-          <!-- Root Resilience -->
-          <div class="timeline-item opacity-0 translate-y-20">
-            <div class="flex items-center gap-4 mb-6">
-              <span class="text-4xl font-display font-bold text-primary-500/20">03</span>
-              <h3 class="text-2xl font-bold text-secondary-900 dark:text-white">Adaptive Foundations</h3>
-            </div>
-            <p class="text-xl text-secondary-700 dark:text-secondary-300 leading-relaxed">
-              Having lived and worked across diverse global contexts, my journey has been a masterclass in rapid
-              adaptation.
-              Navigating different technical landscapes early on forged an engineering mindset
-              that prioritizes flexibility, robustness, and bridge-building between complex technical requirements.
-            </p>
-          </div>
+          </article>
         </div>
       </div>
     </div>
@@ -96,38 +55,73 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { onMounted } from "vue";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const storyItems = [
+  {
+    index: "01",
+    kicker: "Full-stack product work",
+    title: "Building usable SaaS systems",
+    description:
+      "My core work is product engineering: Vue/Nuxt and React/Next interfaces, Node and Python services, API integrations, data models, deployment, and the everyday decisions that make software usable after launch.",
+    tags: ["SaaS", "TypeScript", "Vue/Nuxt", "React/Next", "Node.js", "FastAPI"],
+  },
+  {
+    index: "02",
+    kicker: "Current specialization",
+    title: "AI agents and automations",
+    description:
+      "I recently started the AI Agents & Automations course at WBS CODING SCHOOL. I am using it to deepen practical skills around LLM APIs, n8n, Make, webhooks, tool use, and automation-first product workflows.",
+    tags: ["LLM APIs", "n8n", "Make", "Webhooks", "AI agents", "Groq API"],
+  },
+  {
+    index: "03",
+    kicker: "Creative systems thinking",
+    title: "A technical path with a human center",
+    description:
+      "Before and alongside engineering I worked in creative, startup, and cross-cultural environments. That background still shapes how I think: clear interfaces, strong narratives, resilient systems, and tools that respect the person using them.",
+    tags: ["Product thinking", "UX", "Storytelling", "Resilience", "Collaboration"],
+  },
+];
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Header Animation
-  gsap.from('.story-header-anim', {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set([".story-header-anim", ".timeline-item"], { y: 0, opacity: 1 });
+    return;
+  }
+
+  gsap.from(".story-header-anim", {
     scrollTrigger: {
-      trigger: '.story-header-anim',
-      start: 'top 85%',
+      trigger: ".story-header-anim",
+      start: "top 85%",
+      once: true,
     },
-    y: 40,
-    opacity: 0,
-    duration: 1.2,
-    ease: 'power4.out'
+    y: 24,
+    duration: 1,
+    ease: "power4.out",
   });
 
-  // Items Animation
-  const items = document.querySelectorAll('.timeline-item');
-  items.forEach((item) => {
-    gsap.to(item, {
+  document.querySelectorAll(".timeline-item").forEach((item) => {
+    gsap.from(item, {
       scrollTrigger: {
         trigger: item,
-        start: 'top 80%',
+        start: "top 82%",
+        once: true,
       },
-      y: 0,
-      opacity: 1,
-      duration: 1.2,
-      ease: 'power4.out'
+      y: 24,
+      duration: 0.9,
+      ease: "power4.out",
     });
   });
 });
 </script>
+
+<style scoped>
+.text-gradient-primary {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-accent-500;
+}
+</style>

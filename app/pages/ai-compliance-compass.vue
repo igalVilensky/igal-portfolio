@@ -1,18 +1,27 @@
 <template>
-  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
-    <div class="container mx-auto px-6 relative z-10 max-w-4xl">
+  <div class="page-shell">
+    <div class="page-container">
       <!-- Page Header -->
-      <div class="max-w-4xl mb-12 px-4">
-        <h1 class="text-display-lg md:text-display-xl font-display font-bold text-secondary-900 dark:text-white mb-4 leading-tight">
+      <header class="page-header">
+        <div class="page-header-main">
+        <div class="page-kicker">
+          <span class="h-1.5 w-1.5 rounded-full bg-primary-500"></span>
+          Responsible AI workflow
+        </div>
+        <h1 class="page-title">
           AI Compliance Compass
         </h1>
-        <p class="text-lg text-secondary-600 dark:text-secondary-400 max-w-2xl leading-relaxed">
-          Understand your AI use case from a legal and compliance perspective in Germany and the EU. Get practical, educational insights about the AI Act and related regulations.
+        </div>
+        <div class="page-header-side">
+        <p class="page-intro">
+          A practical, educational AI use-case checker for Germany and the EU. Describe how AI is used, then get
+          cautious prompts around AI Act risk, data protection, transparency, and next steps.
         </p>
-      </div>
+        </div>
+      </header>
 
       <!-- Main Content -->
-      <div class="space-y-8">
+      <div class="max-w-4xl space-y-8">
         <!-- Initial Input State -->
         <div v-if="currentState === 'input'" class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-8">
           <div class="space-y-6">
@@ -45,6 +54,10 @@
               <i class="fas fa-search" :class="{ 'fa-spin': isLoading }"></i>
               <span class="ml-2">{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
             </button>
+
+            <p v-if="errorMessage" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
+              {{ errorMessage }}
+            </p>
           </div>
         </div>
 
@@ -148,6 +161,9 @@
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-6">
             <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-4">Compliance Assessment</h2>
             <p class="text-secondary-600 dark:text-secondary-400">Educational overview based on the AI Act and related EU regulations.</p>
+            <p v-if="errorMessage" class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
+              {{ errorMessage }}
+            </p>
           </div>
 
             <!-- Quick Classification -->
@@ -241,7 +257,7 @@
               This tool provides an educational, non-binding overview and does not constitute legal advice. For specific compliance decisions, consult a qualified legal professional or the relevant official authorities. The AI Act is complex and interpretations may vary.
             </p>
             <p class="text-amber-800 dark:text-amber-200 text-sm leading-relaxed">
-              For official guidance, visit the <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" class="underline hover:opacity-70">Bundesnetzagentur AI Service Desk</a> or use their <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" class="underline hover:opacity-70">AI Compliance Compass</a>.
+              For official guidance, visit the <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">Bundesnetzagentur AI Service Desk</a> or use their <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">AI Compliance Compass</a>.
             </p>
           </div>
 
@@ -269,6 +285,8 @@ const extractedData = ref<any>({});
 const clarificationQuestions = ref<any[]>([]);
 const clarificationAnswers = ref<any>({});
 const complianceData = ref<any>({});
+const errorMessage = ref('');
+const groqChat = useGroqChat();
 
 const sanitizeJsonReply = (reply: string) => {
   let text = reply.trim();
@@ -503,6 +521,7 @@ const needsClarification = () => {
 const analyzeDescription = async () => {
   if (isLoading.value || !userDescription.value.trim()) return;
   isLoading.value = true;
+  errorMessage.value = '';
 
   try {
     const prompt = `Extract structured information from this AI use case description: "${userDescription.value}"
@@ -540,13 +559,10 @@ Return a JSON object with these exact fields:
 
 Be smart - infer from context. Return only valid JSON.`;
 
-    const response = await $fetch<{ reply: string }>('/.netlify/functions/groqChat', {
-      method: 'POST',
-      body: {
-        prompt,
-        maxLines: 50,
-        systemPrompt: "You are an AI compliance analysis expert. Extract structured data from user descriptions. Return only valid JSON, no extra text."
-      }
+    const response = await groqChat({
+      prompt,
+      maxLines: 50,
+      systemPrompt: "You are an AI compliance analysis expert. Extract structured data from user descriptions. Return only valid JSON, no extra text."
     });
 
     if (response && response.reply) {
@@ -582,6 +598,7 @@ Be smart - infer from context. Return only valid JSON.`;
     }
   } catch (error: any) {
     console.error('Analysis error:', error);
+    errorMessage.value = error.data?.statusMessage || error.message || 'The AI analysis service is unavailable.';
   } finally {
     isLoading.value = false;
   }
@@ -612,6 +629,7 @@ const submitClarification = async () => {
 const generateComplianceReport = async () => {
   isLoading.value = true;
   currentState.value = 'results';
+  errorMessage.value = '';
 
   try {
     const prompt = `Based on this structured AI use case data, generate a compliance report for the EU AI Act and related regulations:
@@ -640,13 +658,10 @@ Use plain language, avoid legal certainty, use words like "likely", "may", "shou
 
 Return as JSON object with these exact field names.`;
 
-    const response = await $fetch<{ reply: string }>('/.netlify/functions/groqChat', {
-      method: 'POST',
-      body: {
-        prompt,
-        maxLines: 100,
-        systemPrompt: "You are an AI compliance expert. Generate educational compliance reports. Return only valid JSON."
-      }
+    const response = await groqChat({
+      prompt,
+      maxLines: 100,
+      systemPrompt: "You are an AI compliance expert. Generate educational compliance reports. Return only valid JSON."
     });
 
     if (response && response.reply) {
@@ -681,6 +696,24 @@ Return as JSON object with these exact field names.`;
     }
   } catch (error: any) {
     console.error('Compliance generation error:', error);
+    errorMessage.value = error.data?.statusMessage || error.message || 'The compliance report service is unavailable.';
+    complianceData.value = normalizeComplianceData({
+      role: extractedData.value.role || 'Unclear',
+      riskLevel: 'Unclear',
+      confidence: 'Low',
+      reasoning: 'The AI service could not generate a full report. Review the use case manually and treat this as incomplete.',
+      riskExplanation: 'Risk classification is unavailable because the report request failed.',
+      gdprCheck: 'If personal data is processed, GDPR review is recommended. Map the data flow and legal basis.',
+      copyrightCheck: 'Review whether copyrighted or third-party material is involved.',
+      transparencyCheck: 'Inform users where AI is used and keep human oversight for important decisions.',
+      nextSteps: [
+        'Document the AI use case and intended users.',
+        'Map input data, output data, and third-party providers.',
+        'Check whether personal or sensitive data is processed.',
+        'Review provider terms and retention policies.',
+        'Add human oversight for important outcomes.',
+      ],
+    });
   } finally {
     isLoading.value = false;
     // Merge extracted data into compliance results so clarified values are preserved
@@ -696,12 +729,13 @@ const reset = () => {
   clarificationQuestions.value = [];
   clarificationAnswers.value = {};
   complianceData.value = {};
+  errorMessage.value = '';
 };
 
 useHead({
   title: "AI Compliance Compass | Igal Vilensky",
   meta: [
-    { name: 'description', content: 'Educational AI compliance tool for understanding EU AI Act requirements and related regulations.' }
+    { name: 'description', content: 'Educational AI compliance and responsible AI tool for practical EU/Germany use-case review.' }
   ]
 });
 </script>

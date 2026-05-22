@@ -27,7 +27,7 @@
             class="px-5 py-2.5 text-sm font-medium text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all rounded-full hover:bg-secondary-100 dark:hover:bg-white/5 relative group"
             :class="{
               'text-primary-600 dark:text-primary-400 bg-secondary-50 dark:bg-white/5':
-                route.path === item.path,
+                isActive(item.path),
             }">
             {{ item.label }}
           </NuxtLink>
@@ -50,7 +50,8 @@
         <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center gap-4">
           <button @click="toggleColorMode"
-            class="w-10 h-10 rounded-full flex items-center justify-center text-secondary-500 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-white/5 transition-all">
+            class="w-10 h-10 rounded-full flex items-center justify-center text-secondary-500 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-white/5 transition-all"
+            aria-label="Toggle dark mode">
             <i :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
           </button>
 
@@ -74,7 +75,7 @@
             class="flex items-center justify-between px-4 py-4 text-lg font-medium text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-secondary-50 dark:hover:bg-white/5 rounded-xl transition-all"
             :class="{
               'text-primary-600 dark:text-primary-400 bg-secondary-50 dark:bg-white/5':
-                route.path === item.path,
+                isActive(item.path),
             }" @click="closeMobileMenu">
             <span>{{ item.label }}</span>
             <i class="fas fa-chevron-right text-xs opacity-50"></i>
@@ -93,7 +94,6 @@
 </template>
 
 <script setup lang="ts">
-import { useMouse, useWindowSize, useScroll } from '@vueuse/core';
 import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
 
@@ -118,6 +118,11 @@ const toggleColorMode = () => {
 
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false;
+};
+
+const isActive = (path: string) => {
+  if (path === "/") return route.path === "/";
+  return route.path === path || route.path.startsWith(`${path}/`);
 };
 
 const handleScroll = () => {

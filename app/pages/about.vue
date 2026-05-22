@@ -1,175 +1,207 @@
 <template>
-  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
+  <div class="page-shell">
     <AboutVisualizer />
-    <div class="container mx-auto px-6 relative z-10 max-w-7xl">
-      <!-- Section: Meta & Headline -->
-      <div class="grid lg:grid-cols-12 gap-12 mb-32 items-end">
-        <div class="lg:col-span-8 about-reveal opacity-0 translate-y-10">
-          <span
-            class="inline-block px-4 py-1.5 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary-500 dark:text-primary-400 mb-8">
-            The Philosophy
+    <div class="page-container">
+      <header class="about-reveal page-header opacity-0">
+        <div class="page-header-main">
+          <span class="page-kicker">
+            About
           </span>
-          <h1
-            class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-secondary-900 dark:text-white leading-[1] tracking-tight">
-            Engineering <br />
-            <span class="text-gradient-primary">Human</span> Experience.
+          <h1 class="page-title">
+            Full-stack developer building practical products and
+            <span class="text-gradient-primary">AI workflows.</span>
           </h1>
         </div>
-        <div class="lg:col-span-4 about-reveal opacity-0 translate-y-10 lg:pb-4">
-          <p
-            class="text-xl text-secondary-600 dark:text-secondary-400 leading-relaxed italic border-l-2 border-primary-500 pl-6">
-            "I don't just write code; I design systems that empower growth and solve tangible business challenges."
+        <div class="page-header-side">
+          <p class="page-intro">
+            I build practical web products, then keep asking how the workflow could be clearer, faster, and more useful.
           </p>
         </div>
-      </div>
+      </header>
 
-      <!-- Section: The Narrative Grid -->
-      <div class="grid lg:grid-cols-12 gap-20 mb-32">
-        <!-- Sidebar: The Core -->
-        <div class="lg:col-span-4 space-y-12">
-          <div class="about-reveal opacity-0 translate-y-10">
-            <div
-              class="aspect-square rounded-3xl overflow-hidden bg-secondary-100 dark:bg-white/5 mb-8 grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl">
-              <img src="/profile.jpeg" alt="Igal Vilensky"
-                class="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-700" />
+      <section class="mb-16 grid gap-10 lg:grid-cols-12">
+        <aside class="about-reveal opacity-0 lg:col-span-4">
+          <div class="sticky top-28 space-y-6">
+            <div class="overflow-hidden rounded-3xl border border-secondary-100 bg-secondary-100 shadow-2xl shadow-secondary-900/10 dark:border-white/10 dark:bg-white/5">
+              <img
+                src="/profile.jpeg"
+                alt="Igal Vilensky"
+                class="aspect-square h-full w-full object-cover grayscale transition duration-700 hover:scale-105 hover:grayscale-0"
+              />
             </div>
-            <h3 class="text-2xl font-bold dark:text-white mb-2">Igal Vilensky</h3>
-            <p class="text-primary-500 font-mono text-xs uppercase tracking-widest mb-6">Product Engineer • Creative
-              Technologist</p>
-          </div>
 
-          <!-- Quick Context Cards -->
-          <div class="space-y-4 about-reveal opacity-0 translate-y-10">
-            <div
-              class="p-6 rounded-2xl bg-secondary-50 dark:bg-white/5 border border-secondary-100 dark:border-white/5">
-              <span class="block text-[10px] font-bold text-secondary-400 uppercase tracking-widest mb-1">Current
-                Base</span>
-              <span class="text-sm dark:text-secondary-300">Leipzig, Germany</span>
-            </div>
-            <div
-              class="p-6 rounded-2xl bg-secondary-50 dark:bg-white/5 border border-secondary-100 dark:border-white/5">
-              <span class="block text-[10px] font-bold text-secondary-400 uppercase tracking-widest mb-1">Key
-                Expertise</span>
-              <span class="text-sm dark:text-secondary-300">Scalable SaaS Architecture</span>
+            <div class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/50">
+              <h2 class="text-2xl font-bold text-secondary-900 dark:text-white">Igal Vilensky</h2>
+              <p class="mt-2 font-mono text-xs uppercase tracking-widest text-primary-600 dark:text-primary-300">
+                Full-stack developer / Creative technologist
+              </p>
+              <div class="mt-6 grid gap-3">
+                <div v-for="item in quickContext" :key="item.label" class="rounded-2xl bg-secondary-50 p-4 dark:bg-white/5">
+                  <span class="block text-[10px] font-bold uppercase tracking-widest text-secondary-400">
+                    {{ item.label }}
+                  </span>
+                  <span class="mt-1 block text-sm text-secondary-700 dark:text-secondary-300">
+                    {{ item.value }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+        </aside>
+
+        <div class="space-y-12 lg:col-span-8">
+          <section class="about-reveal rounded-3xl border border-secondary-100 bg-white/75 p-7 opacity-0 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45 md:p-10">
+            <h2 class="mb-6 font-display text-3xl font-bold text-secondary-900 dark:text-white">
+              Building from interface to infrastructure.
+            </h2>
+            <div class="space-y-5 text-lg leading-relaxed text-secondary-700 dark:text-secondary-300">
+              <p>
+                I am a full-stack software developer based in Leipzig, Germany. My work sits between product thinking
+                and implementation: shaping user flows, building responsive interfaces, connecting APIs, structuring
+                data, and deploying working software.
+              </p>
+              <p>
+                My current stack is TypeScript-heavy across Vue/Nuxt and React/Next, with Node.js, Express, Python,
+                FastAPI, PostgreSQL, Prisma, Firebase, and Firestore on the backend side. I care about clean UX, clear
+                architecture, and practical delivery more than shiny complexity.
+              </p>
+              <p>
+                I am currently expanding my full-stack background into AI agents and automation workflows through the AI
+                Agents & Automations course at WBS CODING SCHOOL, with a focus on practical systems that connect APIs,
+                LLMs, webhooks, and product interfaces.
+              </p>
+            </div>
+          </section>
+
+          <section class="about-reveal opacity-0">
+            <div class="mb-8">
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+                Working areas
+              </p>
+              <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
+                What I bring into a team or project.
+              </h2>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <article
+                v-for="area in workingAreas"
+                :key="area.title"
+                class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
+              >
+                <i :class="[area.icon, 'mb-5 text-2xl text-primary-500']"></i>
+                <h3 class="mb-3 text-xl font-bold text-secondary-900 dark:text-white">{{ area.title }}</h3>
+                <p class="text-sm leading-relaxed text-secondary-600 dark:text-secondary-400">
+                  {{ area.description }}
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="about-reveal opacity-0">
+            <div class="mb-8">
+              <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+                Stack snapshot
+              </p>
+              <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
+                Practical tools, not a buzzword wall.
+              </h2>
+            </div>
+
+            <div class="grid gap-5 md:grid-cols-2">
+              <div
+                v-for="group in skillGroups"
+                :key="group.title"
+                class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
+              >
+                <h3 class="mb-4 text-lg font-bold text-secondary-900 dark:text-white">{{ group.title }}</h3>
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    v-for="item in group.items"
+                    :key="item"
+                    class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+                  >
+                    {{ item }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
+      </section>
 
-        <!-- Main Body: The Depth -->
-        <div class="lg:col-span-8 space-y-16">
-          <div class="prose prose-xl dark:prose-invert max-w-none about-reveal opacity-0 translate-y-10">
-            <h2 class="text-3xl font-display font-bold mb-8">Bridging Ambition & Reality.</h2>
-            <p class="text-secondary-600 dark:text-secondary-400">
-              My transition from a multi-disciplinary background into high-stakes software engineering wasn't
-              accidental—it was driven by a fascination with how robust systems can scale human ideas.
-              At <span class="text-secondary-900 dark:text-white font-bold">Flowplace</span>, I lead the technical
-              evolution of SaaS features that bridge talent profiling with enterprise needs, reaching 5,000+ users in
-              record time.
+      <section class="about-reveal rounded-3xl border border-primary-200 bg-primary-50/80 p-8 opacity-0 shadow-xl shadow-primary-500/10 dark:border-primary-400/20 dark:bg-primary-400/10 md:p-10">
+        <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div class="max-w-3xl">
+            <h2 class="font-display text-3xl font-bold text-secondary-900 dark:text-white">
+              Open to product engineering and AI automation work.
+            </h2>
+            <p class="mt-4 text-lg leading-relaxed text-secondary-700 dark:text-primary-100">
+              I am interested in developer roles, SaaS/product teams, practical AI tools, and automation projects that
+              need thoughtful implementation rather than vague AI promises.
             </p>
-            <p class="text-secondary-600 dark:text-secondary-400">
-              My engineering philosophy is rooted in <span class="text-primary-500 italic">resilience</span>.
-              Having operated in the world's most extreme climates (-60°C environments in the Arctic), I approach system
-              design with the same rigor: building for reliability, edge-case failure prevention, and sustainable
-              performance.
-            </p>
           </div>
-
-          <!-- Skills Editorial Grid -->
-          <div class="grid md:grid-cols-2 gap-8 about-reveal opacity-0 translate-y-10">
-            <div class="space-y-6">
-              <h4 class="text-sm font-bold uppercase tracking-widest text-primary-500">Tech Ecosystem</h4>
-              <ul class="space-y-3">
-                <li v-for="skill in frontendSkills" :key="skill.title"
-                  class="flex items-center gap-3 text-secondary-700 dark:text-secondary-300">
-                  <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
-                  {{ skill.title }}
-                </li>
-              </ul>
-            </div>
-            <div class="space-y-6">
-              <h4 class="text-sm font-bold uppercase tracking-widest text-primary-500">Architecture & Ops</h4>
-              <ul class="space-y-3">
-                <li v-for="skill in backendSkills" :key="skill.title"
-                  class="flex items-center gap-3 text-secondary-700 dark:text-secondary-300">
-                  <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
-                  {{ skill.title }}
-                </li>
-              </ul>
-            </div>
-          </div>
+          <NuxtLink to="/contact" class="btn-primary inline-flex shrink-0 items-center justify-center gap-3 px-8 py-4">
+            <span>Get in touch</span>
+            <i class="fas fa-paper-plane"></i>
+          </NuxtLink>
         </div>
-      </div>
-
-      <!-- Section: The Unconventional Path (Editorial Cards) -->
-      <div class="grid md:grid-cols-3 gap-8 mb-32">
-        <div v-for="(fact, i) in funFacts" :key="i"
-          class="p-10 rounded-3xl bg-secondary-50 dark:bg-dark-surface/50 border border-secondary-100 dark:border-white/5 about-reveal opacity-0 translate-y-10">
-          <i :class="[fact.icon, 'text-primary-500 text-2xl mb-6']"></i>
-          <h4 class="text-xl font-bold dark:text-white mb-4">{{ fact.title }}</h4>
-          <p class="text-sm text-secondary-600 dark:text-secondary-400 leading-relaxed">{{ fact.desc }}</p>
-        </div>
-      </div>
-
-      <!-- Final CTA -->
-      <div class="text-center about-reveal opacity-0 translate-y-10">
-        <h3 class="text-3xl font-display font-bold mb-12">Looking for a Technical Partner?</h3>
-        <button @click="scrollToContact"
-          class="inline-flex items-center gap-4 py-5 px-12 bg-secondary-900 dark:bg-white text-white dark:text-secondary-900 font-bold rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-2xl">
-          Get in Touch <i class="fas fa-paper-plane"></i>
-        </button>
-      </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useHead, navigateTo } from "#imports";
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import AboutVisualizer from '~/components/AboutVisualizer.vue';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AboutVisualizer from "~/components/AboutVisualizer.vue";
 
-const frontendSkills = [
-  { title: "TypeScript / Vue / Nuxt" },
-  { title: "React / Next.js / Mobile" },
-  { title: "Component Architecture" },
-  { title: "Performance Optimization" }
+const { skillGroups } = useProjects();
+
+const quickContext = [
+  { label: "Base", value: "Leipzig, Germany" },
+  { label: "Core", value: "Full-stack product engineering" },
+  { label: "Current learning", value: "AI Agents & Automations at WBS CODING SCHOOL" },
+  { label: "Direction", value: "AI-assisted workflows, agents, APIs, webhooks" },
 ];
 
-const backendSkills = [
-  { title: "Node.js / Distributed Systems" },
-  { title: "Firebase / NoSQL / CMS" },
-  { title: "Security & Auth Protocols" },
-  { title: "API Design & Scaling" }
-];
-
-const funFacts = [
+const workingAreas = [
   {
-    title: "Dramatic Arts",
-    desc: "A background in TV, Film, and Opera that fuels my ability to communicate complex ideas and present high-stakes product narratives.",
-    icon: "fas fa-theater-masks"
+    title: "SaaS and product development",
+    description:
+      "I enjoy translating messy product needs into screens, flows, APIs, data models, and deployable increments.",
+    icon: "fas fa-layer-group",
   },
   {
-    title: "Arctic Resilience",
-    desc: "Surviving and working in Yamalo-Nenets (-60°C) taught me mental toughness and the importance of redundant, fail-safe systems.",
-    icon: "fas fa-snowflake"
+    title: "AI-assisted product workflows",
+    description:
+      "I am exploring AI as a practical workflow layer: summaries, decision support, structured recommendations, and human-in-the-loop tools.",
+    icon: "fas fa-wand-magic-sparkles",
   },
   {
-    title: "Creative Improvisation",
-    desc: "A piano player who believes that engineering code and improvising melodies share the same fundamental patterns of structure and creativity.",
-    icon: "fas fa-music"
-  }
+    title: "Automation systems",
+    description:
+      "I am building knowledge around agents, n8n, Make, webhooks, and API orchestration so products can trigger useful work beyond the UI.",
+    icon: "fas fa-diagram-project",
+  },
+  {
+    title: "Human-centered systems thinking",
+    description:
+      "Creative technology, performance, startup work, and cross-cultural experience all feed into how I communicate and design technical systems.",
+    icon: "fas fa-compass",
+  },
 ];
-
-const scrollToContact = () => {
-  return navigateTo("/contact");
-};
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  const reveals = document.querySelectorAll('.about-reveal');
-  reveals.forEach((el, i) => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set(".about-reveal", { y: 0, opacity: 1 });
+    return;
+  }
+
+  document.querySelectorAll(".about-reveal").forEach((el, i) => {
     gsap.to(el, {
       scrollTrigger: {
         trigger: el,
@@ -177,20 +209,27 @@ onMounted(() => {
       },
       opacity: 1,
       y: 0,
-      duration: 1,
-      delay: (i % 3) * 0.1,
-      ease: "power4.out"
+      duration: 0.9,
+      delay: (i % 3) * 0.08,
+      ease: "power4.out",
     });
   });
 });
 
 useHead({
-  title: "About | Igal Vilensky - Engineering Philosophy",
+  title: "About | Igal Vilensky - Full-Stack Developer and AI Automation Learner",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Igal Vilensky is a full-stack software developer in Leipzig, Germany, focused on SaaS/product engineering and currently specializing in AI agents and automation workflows.",
+    },
+  ],
 });
 </script>
 
 <style scoped>
 .text-gradient-primary {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-400 to-accent-500;
 }
 </style>

@@ -178,6 +178,7 @@ const project = reactive({
 
 const isLoading = ref(false);
 const result = ref<string | null>(null);
+const groqChat = useGroqChat();
 
 const resultSections = computed(() => {
     if (!result.value) return [];
@@ -224,13 +225,10 @@ const simulate = async () => {
     3. DATA MODEL STRATEGY (brief overview)
     4. SECURITY CONSIDERATIONS (brief overview)`;
 
-        const response = await $fetch<{ reply: string }>('/.netlify/functions/groqChat', {
-            method: 'POST',
-            body: {
-                prompt: rawPrompt,
-                maxLines: 20,
-                systemPrompt: "You are a Senior Technical Architect Simulator. Provide deep technical insights and architectural decisions. Be concise, professional, and engineer-focused."
-            }
+        const response = await groqChat({
+            prompt: rawPrompt,
+            maxLines: 20,
+            systemPrompt: "You are a Senior Technical Architect Simulator. Provide deep technical insights and architectural decisions. Be concise, professional, and engineer-focused."
         });
 
 

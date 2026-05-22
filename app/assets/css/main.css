@@ -15,7 +15,15 @@
     }
 
     body {
-        @apply bg-secondary-900 text-secondary-100 overflow-x-hidden selection:bg-primary-500 selection:text-white;
+        @apply bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100 overflow-x-hidden selection:bg-primary-500 selection:text-white;
+    }
+
+    a,
+    button,
+    input,
+    textarea,
+    select {
+        @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-dark-bg;
     }
 
     /* Custom Scrollbar */
@@ -60,6 +68,46 @@
 
     .btn-outline {
         @apply px-6 py-3 bg-transparent border border-white/20 text-white rounded-full font-medium transition-all duration-300 hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 active:translate-y-0;
+    }
+
+    .page-shell {
+        @apply relative min-h-screen overflow-hidden bg-transparent pb-20 pt-28 md:pt-32;
+    }
+
+    .page-container {
+        @apply container relative z-10 mx-auto max-w-7xl px-6;
+    }
+
+    .page-header {
+        @apply mb-12 grid gap-8 lg:grid-cols-12 lg:items-end;
+    }
+
+    .page-header-main {
+        @apply lg:col-span-8;
+    }
+
+    .page-header-side {
+        @apply lg:col-span-4;
+    }
+
+    .page-kicker {
+        @apply mb-5 inline-flex items-center gap-2 rounded-full border border-secondary-200 bg-secondary-100 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-secondary-500 dark:border-white/10 dark:bg-white/5 dark:text-primary-300;
+    }
+
+    .page-title {
+        @apply font-display text-4xl font-bold leading-tight tracking-tight text-secondary-900 dark:text-white md:text-5xl lg:text-6xl;
+    }
+
+    .page-intro {
+        @apply border-l-2 border-primary-500 pl-5 text-base leading-relaxed text-secondary-600 dark:text-secondary-400 md:text-lg;
+    }
+
+    .section-compact {
+        @apply py-14 md:py-16;
+    }
+
+    .section-title {
+        @apply font-display text-3xl font-bold leading-tight text-secondary-900 dark:text-white md:text-4xl;
     }
 }
 

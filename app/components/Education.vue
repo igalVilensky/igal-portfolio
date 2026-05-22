@@ -85,7 +85,7 @@
 
           <!-- Download Certificate Button -->
           <div class="flex-shrink-0">
-            <a href="/certificate.pdf" target="_blank"
+            <a href="/certificate.pdf" target="_blank" rel="noopener noreferrer"
               class="group inline-flex items-center px-4 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md"
               :class="colorMode.value === 'dark'
                   ? 'bg-[#809FFF]/20 text-[#809FFF] hover:bg-[#809FFF]/30'

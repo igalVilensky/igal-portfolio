@@ -1,22 +1,36 @@
 <template>
-  <div class="min-h-screen bg-transparent pt-32 pb-24 overflow-hidden relative">
+  <div class="page-shell">
     <ExperimentsVisualizer />
-    <div class="container mx-auto px-6 relative z-10 max-w-7xl">
+    <div class="page-container">
       <!-- Page Header -->
-      <div class="max-w-4xl mb-16 px-4">
+      <header class="page-header">
+        <div class="page-header-main">
         <div
-          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 text-xs font-mono text-secondary-500 dark:text-primary-400 mb-6 lab-header-anim">
+          class="page-kicker lab-header-anim">
           <span class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span>
-          LAB_ENV: PRODUCTION
+          LAB_ENV: EXPLORING
         </div>
         <h1
-          class="text-display-lg md:text-display-xl font-display font-bold text-secondary-900 dark:text-white mb-6 leading-tight lab-header-anim">
+          class="page-title lab-header-anim">
           The <span class="text-gradient-primary">Digital Lab</span>
         </h1>
-        <p class="text-xl text-secondary-600 dark:text-secondary-400 max-w-2xl leading-relaxed lab-header-anim">
-          A collection of experiments in AI, system architecture, and creative engineering. Most projects here are in
-          active development or conceptual stage.
+        </div>
+        <div class="page-header-side">
+        <p class="page-intro lab-header-anim">
+          Smaller tools and experiments where I explore AI UX patterns, decision support, automation workflows,
+          developer utilities, and product thinking without pretending every idea needs to be a full case study.
         </p>
+        </div>
+      </header>
+
+      <div class="grid gap-4 mb-10 md:grid-cols-4">
+        <div
+          v-for="track in explorationTracks"
+          :key="track"
+          class="lab-header-anim rounded-2xl border border-secondary-100 bg-white/70 p-4 text-sm font-medium text-secondary-700 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45 dark:text-secondary-300"
+        >
+          {{ track }}
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -56,9 +70,9 @@
           <div
             class="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white relative overflow-hidden shadow-xl lab-mod-anim">
             <div class="relative z-10">
-              <h4 class="text-lg font-bold mb-2">Request a Prototype?</h4>
-              <p class="text-primary-100 text-sm mb-6">Need a custom solution or want to discuss an experimental
-                feature?</p>
+              <h4 class="text-lg font-bold mb-2">Need a prototype?</h4>
+              <p class="text-primary-100 text-sm mb-6">I am open to practical AI automation experiments, product
+                utilities, and focused workflow tools.</p>
               <NuxtLink to="/contact"
                 class="inline-flex items-center gap-2 text-sm font-bold bg-white text-primary-700 px-6 py-3 rounded-xl hover:bg-primary-50 transition-colors">
                 Let's Talk
@@ -69,6 +83,69 @@
           </div>
         </div>
       </div>
+
+      <section class="mt-20 border-t border-secondary-100 pt-14 dark:border-white/10">
+        <div class="mb-8 max-w-3xl">
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
+            Lab shelf
+          </p>
+          <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
+            Smaller tools and exploratory builds.
+          </h2>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <article
+            v-for="project in experimentProjects"
+            :key="project.id"
+            class="lab-mod-anim rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
+          >
+            <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-secondary-500 dark:text-secondary-400">
+              {{ project.category }}
+            </p>
+            <h3 class="mb-3 text-xl font-bold text-secondary-900 dark:text-white">{{ project.title }}</h3>
+            <p class="mb-5 text-sm leading-relaxed text-secondary-600 dark:text-secondary-400">
+              {{ project.shortDescription }}
+            </p>
+            <div class="mb-5 flex flex-wrap gap-2">
+              <span
+                v-for="tag in project.tags.slice(0, 5)"
+                :key="tag"
+                class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+              >
+                {{ tag }}
+              </span>
+            </div>
+            <div class="flex flex-wrap gap-4">
+              <NuxtLink
+                v-if="project.caseStudyUrl"
+                :to="project.caseStudyUrl"
+                class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-300"
+              >
+                Case study
+              </NuxtLink>
+              <a
+                v-if="project.liveUrl && !project.liveUrl.startsWith('/')"
+                :href="project.liveUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-300"
+              >
+                Demo
+              </a>
+              <a
+                v-if="project.githubUrl"
+                :href="project.githubUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400"
+              >
+                Source
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -82,6 +159,14 @@ import ContrastChecker from '~/components/lab/ContrastChecker.vue';
 import ExperimentsVisualizer from '~/components/ExperimentsVisualizer.vue';
 
 const featuredModule = ref('architect');
+const { experimentProjects } = useProjects();
+
+const explorationTracks = [
+  'AI UX patterns',
+  'Decision support',
+  'Automation workflows',
+  'Developer utilities'
+];
 
 const modules = [
   { id: 'architect', component: markRaw(ArchitectSimulator), title: 'AI Architect' },
@@ -145,7 +230,7 @@ onMounted(() => {
 useHead({
   title: "The Lab | Igal Vilensky",
   meta: [
-    { name: 'description', content: 'Experimental digital lab exploring AI, Nuxt 3, and modern web architecture.' }
+    { name: 'description', content: 'Experimental digital lab exploring AI UX patterns, automation workflows, developer utilities, and product thinking.' }
   ]
 });
 </script>

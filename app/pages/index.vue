@@ -22,6 +22,13 @@ definePageMeta({
 });
 
 useHead({
-  title: "Igal Vilensky - Creative Technologist & Problem Solver",
+  title: "Igal Vilensky - Full-Stack Developer for SaaS and AI-Assisted Tools",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Portfolio of Igal Vilensky, a full-stack developer in Leipzig building SaaS products, AI-assisted tools, and automation-friendly web applications.",
+    },
+  ],
 });
 </script>

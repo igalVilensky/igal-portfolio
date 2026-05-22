@@ -1,202 +1,130 @@
-<!-- app/components/IntegratedSkills.vue -->
 <template>
-  <section class="section-y bg-transparent py-16 px-4">
+  <section class="bg-transparent px-6 py-12 md:py-14">
     <div class="container mx-auto max-w-7xl">
-      <div class="max-w-7xl mx-auto">
-        <!-- Section Header -->
-        <div class="mb-16 md:mb-20">
-          <div class="inline-block mb-4 skills-header-anim">
-            <span class="text-primary-500 font-semibold text-sm uppercase tracking-wider">
-              Capabilities
+      <div class="mb-6 max-w-3xl md:mb-8">
+        <span class="skills-header-anim mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-primary-500">
+          Skills and tools
+        </span>
+        <h2 class="skills-header-anim mb-5 section-title">
+          Full-stack foundations, AI workflow direction.
+        </h2>
+        <p class="skills-header-anim text-lg leading-relaxed text-neutral-600 dark:text-neutral-300">
+          The stack is intentionally practical: product interfaces, APIs, databases, deployment, and the automation
+          layer that can connect them.
+        </p>
+      </div>
+
+      <div class="skills-grid grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
+        <article
+          v-for="group in skillGroups"
+          :key="group.title"
+          class="skill-category rounded-3xl border border-secondary-100 bg-white/75 p-7 shadow-xl shadow-secondary-900/5 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-primary-300/60 dark:border-white/10 dark:bg-dark-surface/45 md:p-8"
+        >
+          <div class="mb-6 flex items-start justify-between gap-5">
+            <div>
+              <div :class="['mb-5 h-1 w-12 rounded-full', accentClass(group.accent)]"></div>
+              <h3 class="text-2xl font-display font-bold text-secondary-900 dark:text-white">
+                {{ group.title }}
+              </h3>
+            </div>
+            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary-50 text-primary-600 dark:bg-white/5 dark:text-primary-300">
+              <i :class="iconClass(group.title)"></i>
+            </div>
+          </div>
+
+          <p class="mb-6 leading-relaxed text-secondary-600 dark:text-secondary-400">
+            {{ group.description }}
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <span
+              v-for="item in group.items"
+              :key="item"
+              class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-2 text-xs font-medium text-secondary-700 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
+            >
+              {{ item }}
             </span>
           </div>
-          <h2
-            class="skills-header-anim text-4xl md:text-6xl font-display text-secondary-900 dark:text-white mb-6 leading-tight">
-            Integrated Skills
-          </h2>
-          <p
-            class="skills-header-anim text-xl md:text-2xl text-neutral-600 dark:text-neutral-300 leading-relaxed max-w-2xl">
-            A multidisciplinary approach to problem-solving
-          </p>
-        </div>
+        </article>
+      </div>
 
-        <!-- Skills Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 skills-grid">
-          <!-- Technical -->
-          <div class="space-y-4 skill-category">
-            <div class="flex items-center gap-4 mb-5">
-              <div class="w-10 h-0.5 bg-primary-500"></div>
-              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Technical
-              </h3>
-            </div>
-            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              <li class="flex items-start gap-3">
-                <span class="text-primary-500">•</span>
-                <span>Full-stack Engineer (Vue/Nuxt, React/Next)</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-primary-500">•</span>
-                <span>System Architecture (Node.js, Express)</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-primary-500">•</span>
-                <span>Database Design (Firebase, MongoDB, Sanity)</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-primary-500">•</span>
-                <span>Modern Web Standards (TypeScript, MV3)</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Creative -->
-          <div class="space-y-4 skill-category">
-            <div class="flex items-center gap-4 mb-5">
-              <div class="w-10 h-0.5 bg-accent-500"></div>
-              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Creative
-              </h3>
-            </div>
-            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              <li class="flex items-start gap-3">
-                <span class="text-accent-500">•</span>
-                <span>UI/UX Design</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-accent-500">•</span>
-                <span>Content Creation</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-accent-500">•</span>
-                <span>Storytelling</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-accent-500">•</span>
-                <span>Brand Strategy</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Business -->
-          <div class="space-y-4 skill-category">
-            <div class="flex items-center gap-4 mb-5">
-              <div class="w-10 h-0.5 bg-secondary-400"></div>
-              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Business
-              </h3>
-            </div>
-            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              <li class="flex items-start gap-3">
-                <span class="text-secondary-400">•</span>
-                <span>Product Strategy</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-secondary-400">•</span>
-                <span>Startup Experience</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-secondary-400">•</span>
-                <span>Customer Insights</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-secondary-400">•</span>
-                <span>Market Research</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Interpersonal -->
-          <div class="space-y-4 skill-category">
-            <div class="flex items-center gap-4 mb-5">
-              <div class="w-10 h-0.5 bg-neutral-500"></div>
-              <h3 class="text-2xl md:text-3xl font-display text-secondary-900 dark:text-white">
-                Interpersonal
-              </h3>
-            </div>
-            <ul class="space-y-3 text-base md:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
-              <li class="flex items-start gap-3">
-                <span class="text-neutral-500">•</span>
-                <span>Communication</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-neutral-500">•</span>
-                <span>Team Leadership</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-neutral-500">•</span>
-                <span>Client Relations</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="text-neutral-500">•</span>
-                <span>Cross-cultural Work</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Connecting Statement -->
-        <div class="mt-20 md:mt-24">
-          <div class="skills-quote-anim border-l-4 border-accent-500 pl-6 md:pl-8 py-3">
-            <p class="text-xl md:text-2xl text-accent-700 dark:text-accent-200 font-light leading-relaxed italic">
-              "The intersection of these disciplines is where truly innovative
-              solutions emerge"
-            </p>
-          </div>
-        </div>
+      <div class="skills-quote-anim mt-6 rounded-2xl border border-primary-200 bg-primary-50/80 p-5 dark:border-primary-400/20 dark:bg-primary-400/10 md:mt-7 md:p-6">
+        <p class="text-lg font-light leading-relaxed text-primary-900 dark:text-primary-100 md:text-xl">
+          I am strongest where product UX, frontend polish, backend structure, and practical automation meet.
+        </p>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { onMounted } from "vue";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+const { skillGroups } = useProjects();
+
+const accentClass = (accent: string) => {
+  const classes: Record<string, string> = {
+    primary: "bg-primary-500",
+    accent: "bg-accent-500",
+    emerald: "bg-emerald-500",
+    secondary: "bg-secondary-500",
+  };
+  return classes[accent] || "bg-primary-500";
+};
+
+const iconClass = (title: string) => {
+  const icons: Record<string, string> = {
+    Frontend: "fas fa-window-maximize",
+    Backend: "fas fa-server",
+    "AI / Automation": "fas fa-wand-magic-sparkles",
+    Engineering: "fas fa-code-branch",
+  };
+  return icons[title] || "fas fa-code";
+};
 
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Header Animations
-  gsap.from('.skills-header-anim', {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    gsap.set([".skills-header-anim", ".skill-category", ".skills-quote-anim"], { y: 0, x: 0, opacity: 1 });
+    return;
+  }
+
+  gsap.from(".skills-header-anim", {
     scrollTrigger: {
-      trigger: '.skills-header-anim',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
+      trigger: ".skills-header-anim",
+      start: "top 80%",
+      once: true,
     },
-    y: 50,
-    opacity: 0,
+    y: 40,
     duration: 0.8,
-    stagger: 0.2,
-    ease: 'power3.out'
+    stagger: 0.16,
+    ease: "power3.out",
   });
 
-  // Skills Grid Animation
-  gsap.from('.skill-category', {
+  gsap.from(".skill-category", {
     scrollTrigger: {
-      trigger: '.skills-grid',
-      start: 'top 75%',
-      toggleActions: 'play none none reverse'
+      trigger: ".skills-grid",
+      start: "top 78%",
+      once: true,
     },
-    y: 50,
-    opacity: 0,
+    y: 40,
     duration: 0.8,
-    stagger: 0.15,
-    ease: 'power3.out'
+    stagger: 0.1,
+    ease: "power3.out",
   });
 
-  // Connecting Statement Animation
-  gsap.from('.skills-quote-anim', {
+  gsap.from(".skills-quote-anim", {
     scrollTrigger: {
-      trigger: '.skills-quote-anim',
-      start: 'top 85%',
-      toggleActions: 'play none none reverse'
+      trigger: ".skills-quote-anim",
+      start: "top 88%",
+      once: true,
     },
-    x: 30,
-    opacity: 0,
-    duration: 1,
-    ease: 'power3.out'
+    y: 24,
+    duration: 0.8,
+    ease: "power3.out",
   });
 });
 </script>
