@@ -1,0 +1,114 @@
+{
+  "identity": {
+    "name": "Igal Vilensky",
+    "profession": "Full-Stack Software Developer",
+    "location": {
+      "city": "Leipzig",
+      "country": "Germany"
+    },
+    "based_in": "Leipzig, Germany"
+  },
+  "headline": "Full-stack software developer building SaaS products and practical AI-assisted workflows.",
+  "summary": "Igal Vilensky is a full-stack software developer based in Leipzig, Germany. He builds SaaS products, frontend interfaces, API-connected workflows, and practical AI-assisted tools using TypeScript, Vue/Nuxt, React/Next, Node.js, Python/FastAPI, APIs, and automation platforms.",
+  "cv_summary": "Full-Stack Developer with 3+ years of experience in SaaS and web projects. Works with TypeScript, Vue.js/Nuxt.js, React.js, Node.js, and headless CMS to build user-friendly, scalable apps using Agile and test-driven methods.",
+  "experience_level": {
+    "label": "3+ years",
+    "note": "The 3+ years claim appears in the existing CV and locale hero copy."
+  },
+  "current_focus": [
+    "AI agents",
+    "automations",
+    "practical AI-assisted product workflows",
+    "automation-ready web applications"
+  ],
+  "current_course": {
+    "program": "AI Agents & Automations",
+    "institution": "WBS CODING SCHOOL",
+    "timeframe": null,
+    "status": "current",
+    "note": "The documentation identifies this as the current course, but no exact start or end date is present in the repository."
+  },
+  "target_roles": [
+    "Full-Stack Software Developer",
+    "Frontend Developer",
+    "Vue.js Developer",
+    "React Developer",
+    "TypeScript Developer",
+    "Software Developer",
+    "AI Software Developer",
+    "AI Automation Developer",
+    "AI Workflow Developer",
+    "SaaS Developer",
+    "API Integration Developer"
+  ],
+  "core_technologies": [
+    "TypeScript",
+    "JavaScript",
+    "Vue",
+    "Nuxt",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Express",
+    "Python",
+    "FastAPI",
+    "REST APIs",
+    "Tailwind CSS",
+    "Directus",
+    "MongoDB",
+    "PostgreSQL",
+    "Prisma",
+    "Firebase"
+  ],
+  "ai_automation_technologies": [
+    "LLM APIs",
+    "Groq API",
+    "prompt engineering",
+    "AI agents",
+    "n8n",
+    "Make",
+    "APIs",
+    "webhooks",
+    "AI-assisted workflows",
+    "AI safety"
+  ],
+  "languages": [
+    {
+      "language": "Hebrew",
+      "level": "Native",
+      "note": "Listed as native in the strategy and Codex docs."
+    },
+    {
+      "language": "Russian",
+      "level": "Native",
+      "note": "Listed as native in the CV and portfolio locale data."
+    },
+    {
+      "language": "English",
+      "level": "C1",
+      "note": "Listed as C1 in the CV and portfolio locale data."
+    },
+    {
+      "language": "German",
+      "level": "B2",
+      "note": "Listed as B2 in the CV and portfolio locale data."
+    }
+  ],
+  "links": {
+    "email": "vilenskyigal@gmail.com",
+    "phone": "+49 1783099433",
+    "github": "https://github.com/igalVilensky",
+    "linkedin": "https://www.linkedin.com/in/igalvilensky/",
+    "portfolio": "https://igalvilensky.netlify.app/",
+    "cv": "/Igal_Vilensky.pdf",
+    "certificate": "/certificate.pdf"
+  },
+  "availability": {
+    "summary": "Open to full-stack, frontend, SaaS, and AI automation-related software developer roles in Germany, Leipzig, hybrid, or remote EU contexts.",
+    "source_note": "Derived from the positioning and contact docs."
+  },
+  "source_notes": [
+    "Profile facts come from the CV PDF, README, current portfolio copy, project docs, and positioning documentation.",
+    "No private or external profile data was added."
+  ]
+}

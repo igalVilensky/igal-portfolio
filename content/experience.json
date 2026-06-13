@@ -1,0 +1,171 @@
+{
+  "entries": [
+    {
+      "id": "flowplace",
+      "organization": "Flowplace",
+      "title": "Full-Stack Developer",
+      "timeframe": "2023 - Present",
+      "location": "Leipzig",
+      "type": "work",
+      "summary": "Develops SaaS features with Vue.js/Nuxt.js and Directus, implements responsive UI designs, improves usability and accessibility, and integrates REST APIs.",
+      "highlights": [
+        "Developed SaaS features with Vue.js/Nuxt.js and Directus.",
+        "Implemented responsive UI designs.",
+        "Improved usability, accessibility, and consistency of the platform.",
+        "Integrated REST APIs and optimized UI workflows.",
+        "Worked on the Role Compass talent profile feature, which reached 5,000+ users in the first month."
+      ],
+      "technologies": [
+        "Vue.js",
+        "Nuxt.js",
+        "TypeScript",
+        "Directus",
+        "REST APIs",
+        "CI/CD"
+      ],
+      "source_notes": [
+        "Role, timeframe, and responsibilities come from the CV and locale files.",
+        "Role Compass outcome comes from the project docs and existing case study page."
+      ]
+    },
+    {
+      "id": "leanera",
+      "organization": "LeanERA GmbH",
+      "title": "Software Developer",
+      "timeframe": "2022 - 2023",
+      "location": "Leipzig",
+      "type": "work",
+      "summary": "Built dynamic and responsive web applications and supported LeanERA's transition toward product-focused systems.",
+      "highlights": [
+        "Developed dynamic and responsive web applications using JavaScript, Vue 3, Nuxt 3, TypeScript, Tailwind CSS, and Ionic.",
+        "Collaborated with cross-functional teams to evaluate and select technologies.",
+        "Established a clean, scalable codebase to support LeanERA's transition to a product-focused company."
+      ],
+      "technologies": [
+        "JavaScript",
+        "Vue 3",
+        "Nuxt 3",
+        "TypeScript",
+        "Tailwind CSS",
+        "Ionic",
+        "Agile"
+      ],
+      "source_notes": [
+        "Details come from the CV, locale files, and the LeanERA case study page."
+      ]
+    },
+    {
+      "id": "ari-motors",
+      "organization": "ARI Motors GmbH",
+      "title": "Full Stack Web Developer",
+      "timeframe": "2021 - 2022",
+      "location": "Leipzig",
+      "type": "work",
+      "summary": "Developed user interfaces for an electric commercial vehicle comparison portal and maintained backend systems and databases.",
+      "highlights": [
+        "Developed and implemented user interfaces for a new comparison portal for electric commercial vehicles and other websites.",
+        "Enhanced user functionality and experience.",
+        "Managed website administration, backend system maintenance, and database operations.",
+        "Delivered the EV comparison portal from concept to production in under three months as the sole developer."
+      ],
+      "technologies": [
+        "JavaScript",
+        "Responsive CSS",
+        "Backend API",
+        "Database management",
+        "REST APIs"
+      ],
+      "source_notes": [
+        "Role, timeframe, and responsibilities come from the CV and locale files.",
+        "Solo delivery and under-three-month launch come from the ARI Motors case study page."
+      ]
+    },
+    {
+      "id": "myfxbook-cashdo",
+      "organization": "Myfxbook Ltd / Cashdo",
+      "title": "Social Media & Web Coordinator",
+      "timeframe": "2017 - 2019",
+      "location": "Ashqelon",
+      "type": "work",
+      "summary": "Managed company website and social media channels and supported market research and affiliate marketing campaigns.",
+      "highlights": [
+        "Managed company website and social media channels including Instagram, Telegram, and Facebook.",
+        "Conducted market research and affiliate marketing campaigns."
+      ],
+      "technologies": [
+        "Website administration",
+        "Social media channels",
+        "Affiliate marketing"
+      ],
+      "source_notes": [
+        "Details come from the CV and locale files."
+      ]
+    },
+    {
+      "id": "wbs-ai-agents-automations",
+      "organization": "WBS CODING SCHOOL",
+      "title": "AI Agents & Automations course",
+      "timeframe": null,
+      "location": null,
+      "type": "education",
+      "summary": "Current course focused on strengthening software development experience with AI agents, automations, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
+      "highlights": [
+        "Learning LLM workflows and prompt engineering.",
+        "Learning AI agents and automation workflows.",
+        "Working with n8n, Make, APIs, and webhooks.",
+        "Connecting Python automations and AI safety to existing full-stack development experience."
+      ],
+      "technologies": [
+        "LLM APIs",
+        "prompt engineering",
+        "AI agents",
+        "n8n",
+        "Make",
+        "Python automations",
+        "APIs",
+        "webhooks",
+        "AI safety"
+      ],
+      "source_notes": [
+        "The docs identify this as the current course; exact dates and location are not provided."
+      ]
+    },
+    {
+      "id": "dci-web-software-development",
+      "organization": "Digital Career Institute (DCI)",
+      "title": "Web- und Softwareentwickler/in",
+      "timeframe": "07.12.2020 - 01.02.2022",
+      "location": "Leipzig / Remote Learning",
+      "type": "education",
+      "summary": "Completed comprehensive web and software development training covering frontend, backend, databases, authentication, REST APIs, Git/GitHub workflow, agile methodologies, and job-related German.",
+      "highlights": [
+        "Completed web and software developer training in remote learning.",
+        "Covered HTML, CSS, modern JavaScript, responsive web design, React, Redux, Node.js, Express.js, MongoDB, Mongoose, JWT, REST APIs, GitHub team workflow, and agile methodologies.",
+        "Completed final project Plantastic.",
+        "Enhanced job-related German language skills at B2.2 level."
+      ],
+      "technologies": [
+        "HTML",
+        "CSS",
+        "JavaScript ES2015+",
+        "React",
+        "React Hooks",
+        "Redux",
+        "Context API",
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Mongoose",
+        "JWT",
+        "REST APIs",
+        "Git",
+        "GitHub",
+        "Agile methodologies"
+      ],
+      "source_notes": [
+        "Dates and curriculum come from public/certificate.pdf.",
+        "Institution location appears as Leipzig in the app locale data."
+      ]
+    }
+  ]
+}

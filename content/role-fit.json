@@ -1,0 +1,355 @@
+{
+  "roles": [
+    {
+      "role_title": "Full-Stack Software Developer",
+      "fit_summary": "Igal has professional full-stack and SaaS experience, plus portfolio projects that combine frontend interfaces, backend APIs, databases, deployment, and AI-assisted workflows.",
+      "relevant_skills": [
+        "TypeScript",
+        "Vue/Nuxt",
+        "React/Next",
+        "Node.js",
+        "Express",
+        "Python",
+        "FastAPI",
+        "REST APIs",
+        "PostgreSQL",
+        "MongoDB",
+        "Docker"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai",
+        "ari-motors-ev-portal",
+        "user-management-app"
+      ],
+      "proof_points": [
+        "Professional full-stack developer role at Flowplace.",
+        "Solo full-stack delivery of ARI Motors EV portal from concept to production in under three months.",
+        "OpenMe combines Next.js, Express, PostgreSQL, Prisma, FastAPI, and deployment across Vercel, Render, and Neon."
+      ],
+      "possible_search_keywords": [
+        "Full-Stack Developer",
+        "Full Stack Software Developer",
+        "TypeScript Developer",
+        "SaaS Developer",
+        "API Developer"
+      ]
+    },
+    {
+      "role_title": "Frontend Developer",
+      "fit_summary": "Igal's professional work includes responsive UI implementation, usability improvements, frontend workflows, and modern Vue/Nuxt and React/Next interfaces.",
+      "relevant_skills": [
+        "TypeScript",
+        "JavaScript",
+        "Vue",
+        "Nuxt",
+        "React",
+        "Next.js",
+        "Tailwind CSS",
+        "Responsive Design",
+        "Accessibility"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "leanera-digital-transition",
+        "ari-motors-ev-portal",
+        "decision-matrix-ai",
+        "mindq-lab"
+      ],
+      "proof_points": [
+        "Implemented responsive UI designs at Flowplace.",
+        "Built Vue 3, Nuxt 3, TypeScript, Tailwind CSS, and Ionic applications at LeanERA.",
+        "Developed user interfaces for ARI Motors comparison portal."
+      ],
+      "possible_search_keywords": [
+        "Frontend Developer",
+        "Frontend Engineer",
+        "Vue Developer",
+        "React Developer",
+        "TypeScript Frontend Developer"
+      ]
+    },
+    {
+      "role_title": "Vue.js Developer",
+      "fit_summary": "Igal has professional Vue/Nuxt experience at Flowplace and LeanERA, and several Nuxt/Vue portfolio projects.",
+      "relevant_skills": [
+        "Vue.js",
+        "Vue 3",
+        "Nuxt.js",
+        "Nuxt 3",
+        "TypeScript",
+        "Tailwind CSS",
+        "Directus",
+        "REST APIs"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "leanera-digital-transition",
+        "ai-compliance-compass",
+        "user-management-app",
+        "family-space"
+      ],
+      "proof_points": [
+        "Developed SaaS features with Vue.js/Nuxt.js and Directus at Flowplace.",
+        "Developed Vue 3 and Nuxt 3 applications at LeanERA.",
+        "The current portfolio itself is a Nuxt/Vue/TypeScript project."
+      ],
+      "possible_search_keywords": [
+        "Vue.js Developer",
+        "Nuxt Developer",
+        "Vue Frontend Developer",
+        "Vue TypeScript Developer"
+      ]
+    },
+    {
+      "role_title": "React Developer",
+      "fit_summary": "Igal's React/Next.js experience is represented in the CV, DCI training, and current full-stack portfolio projects such as OpenMe and Decision Matrix AI.",
+      "relevant_skills": [
+        "React",
+        "Next.js",
+        "React Hooks",
+        "Redux",
+        "Context API",
+        "TypeScript",
+        "Tailwind CSS"
+      ],
+      "relevant_projects": [
+        "openme",
+        "decision-matrix-ai"
+      ],
+      "proof_points": [
+        "CV lists React.js and Next.js as core skills.",
+        "DCI training covered React, React Hooks, Redux, and Context API.",
+        "OpenMe uses Next.js, React, and TypeScript.",
+        "Decision Matrix AI uses React, Vite, TypeScript, and Tailwind CSS."
+      ],
+      "possible_search_keywords": [
+        "React Developer",
+        "Next.js Developer",
+        "React TypeScript Developer",
+        "Frontend React Developer"
+      ]
+    },
+    {
+      "role_title": "TypeScript Developer",
+      "fit_summary": "TypeScript appears across Igal's professional positioning, current stack, and several featured projects.",
+      "relevant_skills": [
+        "TypeScript",
+        "JavaScript",
+        "Vue/Nuxt",
+        "React/Next",
+        "Node.js",
+        "Zod"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai",
+        "leanera-digital-transition",
+        "i18n-lint-cli"
+      ],
+      "proof_points": [
+        "Flowplace Role Compass uses TypeScript with Vue/Nuxt.",
+        "LeanERA work used Vue 3, Nuxt 3, TypeScript, and Tailwind CSS.",
+        "OpenMe and Decision Matrix AI are TypeScript projects."
+      ],
+      "possible_search_keywords": [
+        "TypeScript Developer",
+        "TypeScript Engineer",
+        "JavaScript Developer",
+        "Full-Stack TypeScript Developer"
+      ]
+    },
+    {
+      "role_title": "Software Developer",
+      "fit_summary": "Igal has software development experience across professional product work, web applications, developer utilities, and practical full-stack systems.",
+      "relevant_skills": [
+        "JavaScript",
+        "TypeScript",
+        "REST APIs",
+        "Git",
+        "Docker",
+        "Agile",
+        "Testing / QA",
+        "Deployment"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "ari-motors-ev-portal",
+        "leanera-digital-transition",
+        "user-management-app",
+        "i18n-lint-cli"
+      ],
+      "proof_points": [
+        "Professional Software Developer role at LeanERA.",
+        "Professional Full-Stack Developer role at Flowplace.",
+        "DCI certificate documents web and software developer training."
+      ],
+      "possible_search_keywords": [
+        "Software Developer",
+        "Web Developer",
+        "Product Developer",
+        "Application Developer"
+      ]
+    },
+    {
+      "role_title": "AI Software Developer",
+      "fit_summary": "Igal is expanding an existing software development background into AI-assisted product workflows through WBS CODING SCHOOL and AI-enabled portfolio projects.",
+      "relevant_skills": [
+        "LLM APIs",
+        "Groq API",
+        "Prompt engineering",
+        "TypeScript",
+        "Netlify Functions",
+        "FastAPI",
+        "Firebase",
+        "Human-in-the-loop AI features"
+      ],
+      "relevant_projects": [
+        "decision-matrix-ai",
+        "openme",
+        "ai-compliance-compass"
+      ],
+      "proof_points": [
+        "Decision Matrix AI uses Groq API, Netlify Functions, Firebase, Firestore, and Zod.",
+        "OpenMe includes AI-assisted submission summaries.",
+        "AI Compliance Compass implements an educational AI use-case checker with disclaimers."
+      ],
+      "possible_search_keywords": [
+        "AI Software Developer",
+        "AI Application Developer",
+        "LLM Developer",
+        "AI Product Developer"
+      ]
+    },
+    {
+      "role_title": "AI Automation Developer",
+      "fit_summary": "Igal's current direction is practical AI automation using APIs, webhooks, n8n, Make, and human-in-the-loop product workflows.",
+      "relevant_skills": [
+        "AI agents",
+        "n8n",
+        "Make",
+        "Webhooks",
+        "API automation",
+        "LLM APIs",
+        "Prompt engineering",
+        "Python automations"
+      ],
+      "relevant_projects": [
+        "openme",
+        "decision-matrix-ai",
+        "ai-compliance-compass"
+      ],
+      "proof_points": [
+        "The WBS AI Agents & Automations course is documented as the current course.",
+        "OpenMe and Decision Matrix AI show AI-assisted workflow thinking.",
+        "Current portfolio docs explicitly position AI as an extension of existing software engineering."
+      ],
+      "possible_search_keywords": [
+        "AI Automation Developer",
+        "Automation Developer",
+        "Workflow Automation Developer",
+        "n8n Developer",
+        "Make Developer"
+      ]
+    },
+    {
+      "role_title": "AI Workflow Developer",
+      "fit_summary": "Igal can connect product UX, structured workflows, API integration, and AI-assisted outputs in practical web applications.",
+      "relevant_skills": [
+        "AI-assisted product workflows",
+        "LLM product UX",
+        "APIs",
+        "Webhooks",
+        "Prompt engineering",
+        "TypeScript",
+        "Netlify Functions"
+      ],
+      "relevant_projects": [
+        "openme",
+        "decision-matrix-ai",
+        "ai-compliance-compass"
+      ],
+      "proof_points": [
+        "OpenMe includes endpoint workflows and AI-assisted summaries.",
+        "Decision Matrix AI turns vague decisions into structured criteria, scores, recommendations, and action checklists.",
+        "AI Compliance Compass uses intake, clarification, and next-step workflows."
+      ],
+      "possible_search_keywords": [
+        "AI Workflow Developer",
+        "AI Workflow Engineer",
+        "AI Product Workflow Developer",
+        "LLM Workflow Developer"
+      ]
+    },
+    {
+      "role_title": "SaaS Developer",
+      "fit_summary": "Igal has professional SaaS feature experience and portfolio SaaS MVP work.",
+      "relevant_skills": [
+        "SaaS product development",
+        "TypeScript",
+        "Vue/Nuxt",
+        "React/Next",
+        "Node.js",
+        "REST APIs",
+        "PostgreSQL",
+        "Prisma",
+        "Directus"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai"
+      ],
+      "proof_points": [
+        "Flowplace Role Compass is professional SaaS product engineering.",
+        "OpenMe is a full-stack SaaS MVP.",
+        "CV summary states experience in SaaS and web projects."
+      ],
+      "possible_search_keywords": [
+        "SaaS Developer",
+        "SaaS Software Developer",
+        "Product Engineer",
+        "Full-Stack SaaS Developer"
+      ]
+    },
+    {
+      "role_title": "API Integration Developer",
+      "fit_summary": "Igal's work includes REST API integrations, serverless AI calls, backend API workflows, webhooks, and automation-focused product integrations.",
+      "relevant_skills": [
+        "REST APIs",
+        "API integration",
+        "Webhooks",
+        "Node.js",
+        "Express",
+        "FastAPI",
+        "Netlify Functions",
+        "Groq API",
+        "Firebase"
+      ],
+      "relevant_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai",
+        "ai-compliance-compass",
+        "user-management-app"
+      ],
+      "proof_points": [
+        "Flowplace responsibilities include REST API integration and optimized UI workflows.",
+        "Decision Matrix AI routes AI calls through Netlify Functions and validates data with Zod.",
+        "User Management App uses Vue 3 and FastAPI with REST API workflows."
+      ],
+      "possible_search_keywords": [
+        "API Integration Developer",
+        "Backend Integration Developer",
+        "Automation API Developer",
+        "REST API Developer"
+      ]
+    }
+  ],
+  "source_notes": [
+    "Role fit is based only on the target role docs, CV, structured project data, and existing repository content.",
+    "AI role fit is framed as current specialization and practical project direction, not as senior AI expert positioning."
+  ]
+}

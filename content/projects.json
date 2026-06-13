@@ -1,0 +1,543 @@
+{
+  "projects": [
+    {
+      "id": "flowplace-role-compass",
+      "title": "Flowplace: Role Compass",
+      "category": "SaaS Product Engineering / Professional Case Study",
+      "priority": "featured",
+      "short_description": "Talent profile feature for a SaaS platform, built with Vue/Nuxt and Directus and adopted by 5,000+ users in the first month.",
+      "long_description": "A professional SaaS case study focused on end-to-end product engineering, responsive UI workflows, API integration, feature delivery, and sustainable frontend architecture in a high-velocity Agile team.",
+      "role": "Full-stack developer working on end-to-end product engineering for a core talent profile feature.",
+      "technologies": [
+        "Vue.js",
+        "Nuxt.js",
+        "TypeScript",
+        "Directus",
+        "REST APIs",
+        "CI/CD"
+      ],
+      "highlights": [
+        "Reached 5,000+ users in the first month.",
+        "Led end-to-end development of a core talent profile feature.",
+        "Improved usability, accessibility, and consistency across product workflows.",
+        "Worked inside Agile delivery with production release discipline."
+      ],
+      "outcome_or_proof": [
+        "5,000+ users in the first month.",
+        "Professional SaaS feature in production context."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "Frontend Developer",
+        "Vue.js Developer",
+        "TypeScript Developer",
+        "SaaS Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": null,
+        "case_study": "/case-studies/flowplace"
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts, docs, and the Flowplace case study page."
+      ]
+    },
+    {
+      "id": "openme",
+      "title": "OpenMe",
+      "category": "SaaS MVP / AI-Assisted Platform / Full-Stack Product",
+      "priority": "featured",
+      "short_description": "Actionable bio/profile platform where people define what others can do with them through public endpoints such as collaboration, questions, feedback, and ideas.",
+      "long_description": "OpenMe rethinks the personal link-in-bio page as an interaction menu. Instead of only listing links, a profile exposes clear public endpoints like collaborate, ask me, feedback, and offer help. The MVP includes profile links, custom endpoints, boundaries, inbox flows, and AI-assisted submission summaries.",
+      "role": "Builder and full-stack developer for a SaaS MVP with AI-assisted workflow features.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "PostgreSQL",
+        "Prisma",
+        "FastAPI",
+        "Docker Compose",
+        "Vercel",
+        "Render",
+        "Neon"
+      ],
+      "highlights": [
+        "Full-stack monorepo architecture with pnpm workspaces and Turbo.",
+        "Public profile and endpoint system with authenticated owner flows.",
+        "Dashboard and inbox workflow with AI-assisted summaries for incoming submissions.",
+        "Production deployment across Vercel, Render, and Neon."
+      ],
+      "outcome_or_proof": [
+        "Live deployment exists.",
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "React Developer",
+        "TypeScript Developer",
+        "AI Software Developer",
+        "SaaS Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": "https://openme-web.vercel.app/",
+        "github": "https://github.com/igalVilensky/openme",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and docs."
+      ]
+    },
+    {
+      "id": "decision-matrix-ai",
+      "title": "Decision Matrix AI",
+      "category": "AI Product Tool / Decision Support / Full-Stack App",
+      "priority": "featured",
+      "short_description": "AI-assisted decision matrix app for comparing complex choices using weighted criteria, scores, explainable recommendations, and action checklists.",
+      "long_description": "Decision Matrix AI helps users turn vague decisions into structured comparisons. It supports weighted criteria, must-have requirements, editable scores, ranked results, category breakdowns, AI-generated suggestions, recommendation summaries, and practical next-step checklists.",
+      "role": "Builder and full-stack developer for an AI-assisted decision-support product tool.",
+      "technologies": [
+        "React",
+        "Vite",
+        "TypeScript",
+        "Tailwind CSS",
+        "Netlify Functions",
+        "Groq API",
+        "Firebase Anonymous Auth",
+        "Firestore",
+        "Zod"
+      ],
+      "highlights": [
+        "AI-generated criteria, options, scores, review, recommendations, and action checklists.",
+        "User-specific cloud persistence with Firebase and Firestore.",
+        "Import/export JSON backups for decision data.",
+        "Serverless AI calls through Netlify Functions with Zod validation."
+      ],
+      "outcome_or_proof": [
+        "Live deployment exists.",
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "React Developer",
+        "TypeScript Developer",
+        "AI Software Developer",
+        "AI Workflow Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": "https://decision-matrix-ai.netlify.app/",
+        "github": "https://github.com/igalVilensky/decision-matrix-ai",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and docs."
+      ]
+    },
+    {
+      "id": "ari-motors-ev-portal",
+      "title": "ARI Motors: EV Portal",
+      "category": "Full-Stack Web Platform / Professional Case Study",
+      "priority": "featured",
+      "short_description": "Electric vehicle comparison portal built from scratch to production in under three months as a solo full-stack developer.",
+      "long_description": "A professional case study covering frontend interface work, backend systems, database architecture, responsive design, and a fast production launch for an electric commercial vehicle comparison portal.",
+      "role": "Solo full-stack developer responsible for frontend, backend, database, data handling, and launch work.",
+      "technologies": [
+        "JavaScript",
+        "Full-Stack",
+        "Database",
+        "Responsive Design",
+        "REST APIs"
+      ],
+      "highlights": [
+        "Solo full-stack delivery from concept to production.",
+        "Built vehicle comparison workflows for complex technical data.",
+        "Managed frontend, backend, data handling, and launch work.",
+        "Delivered under a tight three-month timeline."
+      ],
+      "outcome_or_proof": [
+        "Launched from concept to production in under three months.",
+        "Case study page states the platform launched successfully within the deadline."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "Frontend Developer",
+        "Software Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": null,
+        "case_study": "/case-studies/leanera"
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts, CV, and the ARI Motors case study page.",
+        "The current route file is leanera.vue, but its page content is ARI Motors: EV Comparison Portal."
+      ]
+    },
+    {
+      "id": "ai-compliance-compass",
+      "title": "AI Compliance Compass",
+      "category": "Responsible AI Tool / Practical Compliance UX",
+      "priority": "secondary",
+      "short_description": "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
+      "long_description": "AI Compliance Compass is a practical portfolio tool for exploring AI compliance, safety, and responsible use patterns in a German/EU context. It avoids legal certainty and focuses on educational classification, clarification questions, and next-step checklists.",
+      "role": "Builder of a responsible-AI product workflow inside the portfolio.",
+      "technologies": [
+        "Nuxt",
+        "Vue 3",
+        "TypeScript",
+        "Netlify Functions",
+        "Groq API",
+        "Tailwind CSS"
+      ],
+      "highlights": [
+        "Plain-language AI use-case intake.",
+        "Clarification flow for missing context.",
+        "Educational risk, GDPR, copyright, and transparency checks.",
+        "Built-in disclaimers to avoid legal overclaiming."
+      ],
+      "outcome_or_proof": [
+        "Implemented as a live route in the portfolio.",
+        "No external user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "AI Software Developer",
+        "AI Workflow Developer",
+        "TypeScript Developer",
+        "Frontend Developer"
+      ],
+      "links": {
+        "live": "/ai-compliance-compass",
+        "github": "https://github.com/igalVilensky/igal-portfolio",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and app/pages/ai-compliance-compass.vue."
+      ]
+    },
+    {
+      "id": "user-management-app",
+      "title": "User Management App",
+      "category": "Full-Stack Admin Dashboard",
+      "priority": "secondary",
+      "short_description": "Full-stack user administration dashboard with FastAPI, Vue 3, CRUD workflows, search, sorting, pagination, validation, and Docker support.",
+      "long_description": "A practical admin dashboard focused on efficient user management workflows. It includes real-time CRUD-style interactions, smart username generation, debounced global search, sorting, pagination, inline validation, reusable Vue components, and a FastAPI backend.",
+      "role": "Builder and full-stack developer.",
+      "technologies": [
+        "Vue 3",
+        "FastAPI",
+        "Python",
+        "JavaScript",
+        "Docker",
+        "Docker Compose",
+        "REST API"
+      ],
+      "highlights": [
+        "Full-stack frontend/backend structure.",
+        "User CRUD operations with validation and data integrity rules.",
+        "Debounced global search, pagination, and sorting.",
+        "Docker-based setup with reusable Vue component architecture."
+      ],
+      "outcome_or_proof": [
+        "GitHub repository is available.",
+        "No live URL or user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "Vue.js Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": "https://github.com/igalVilensky/user-management-app",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts."
+      ]
+    },
+    {
+      "id": "leanera-digital-transition",
+      "title": "LeanERA: Digital Transition",
+      "category": "Web Application Engineering / Professional Case Study",
+      "priority": "secondary",
+      "short_description": "Modern Vue/Nuxt applications and product-focused architecture work supporting a startup's digital transition.",
+      "long_description": "A professional case study focused on scalable codebases, cross-functional technology choices, Vue 3/Nuxt 3 delivery, and maintainable product foundations.",
+      "role": "Software developer contributing modern frontend architecture and cross-functional technology choices.",
+      "technologies": [
+        "Vue 3",
+        "Nuxt 3",
+        "TypeScript",
+        "Tailwind CSS",
+        "Agile"
+      ],
+      "highlights": [
+        "Established clean, scalable frontend architecture.",
+        "Supported transition from service work toward product systems.",
+        "Collaborated with teams on technology choices and delivery patterns."
+      ],
+      "outcome_or_proof": [
+        "Professional role documented in CV.",
+        "No public product metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Frontend Developer",
+        "Vue.js Developer",
+        "TypeScript Developer",
+        "Software Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": null,
+        "case_study": "/case-studies/cashdo"
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts, CV, and the LeanERA case study page.",
+        "The current route file is cashdo.vue, but its page content is LeanERA: Digital Transition."
+      ]
+    },
+    {
+      "id": "mindq-lab",
+      "title": "MindQ Lab",
+      "category": "Personal Product / Learning Experience",
+      "priority": "lab",
+      "short_description": "A psychology and personal-growth platform blending structured learning, daily progress, and reflective product UX.",
+      "long_description": "MindQ Lab turns a personal learning concept into a polished Nuxt product experience with Firebase-backed flows, structured content, progress mechanics, and a calm interface for reflection.",
+      "role": "Builder of a personal product and learning experience.",
+      "technologies": [
+        "Nuxt",
+        "TypeScript",
+        "Firebase",
+        "Tailwind CSS"
+      ],
+      "highlights": [
+        "Progress-oriented product experience.",
+        "Firebase-backed state and user flows.",
+        "Content-driven interface with a strong visual identity."
+      ],
+      "outcome_or_proof": [
+        "Live deployment exists.",
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Frontend Developer",
+        "Vue.js Developer",
+        "TypeScript Developer"
+      ],
+      "links": {
+        "live": "https://www.mindqlab.com/",
+        "github": "https://github.com/igalvilensky/psy-blog",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and locale project copy."
+      ]
+    },
+    {
+      "id": "security-playground",
+      "title": "Security Playground",
+      "category": "Developer Education / Web Security Lab",
+      "priority": "lab",
+      "short_description": "Interactive demos of common web security issues and safer implementation patterns.",
+      "long_description": "A hands-on lab for learning about XSS, LocalStorage misuse, SQL injection simulations, and practical secure interface thinking.",
+      "role": "Builder of interactive developer education demos.",
+      "technologies": [
+        "Nuxt",
+        "Vue 3",
+        "Web Security",
+        "OWASP"
+      ],
+      "highlights": [
+        "Interactive vulnerability simulations.",
+        "Educational remediation patterns.",
+        "Built as part of the portfolio lab environment."
+      ],
+      "outcome_or_proof": [
+        "Case study route exists in the portfolio.",
+        "No external user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Frontend Developer",
+        "Software Developer",
+        "TypeScript Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": null,
+        "case_study": "/case-studies/security"
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and app/pages/case-studies/security.vue."
+      ]
+    },
+    {
+      "id": "page-scope",
+      "title": "PageScope",
+      "category": "Browser Extension / Developer Utility",
+      "priority": "lab",
+      "short_description": "Chrome extension that analyzes websites locally and returns summaries, metadata, and technology hints.",
+      "long_description": "PageScope explores local-first browser tooling for quick website insight without sending page content away from the user's browser.",
+      "role": "Builder of a local-first browser extension utility.",
+      "technologies": [
+        "Chrome Extensions",
+        "JavaScript",
+        "Manifest V3",
+        "HTML",
+        "CSS"
+      ],
+      "highlights": [
+        "Local browser-side analysis.",
+        "Website summaries and metadata extraction.",
+        "Manifest V3 extension workflow."
+      ],
+      "outcome_or_proof": [
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Frontend Developer",
+        "Software Developer"
+      ],
+      "links": {
+        "live": "https://github.com/igalVilensky/pagescope",
+        "github": "https://github.com/igalVilensky/pagescope",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts."
+      ]
+    },
+    {
+      "id": "i18n-lint-cli",
+      "title": "i18n Linter CLI",
+      "category": "CLI Tool / Developer Workflow",
+      "priority": "lab",
+      "short_description": "CLI utility for checking translation files for missing keys, extra keys, and placeholder mismatches.",
+      "long_description": "A focused developer utility that helps multilingual projects keep locale files aligned and reduce release-time translation mistakes.",
+      "role": "Builder of a developer workflow CLI.",
+      "technologies": [
+        "Node.js",
+        "TypeScript",
+        "CLI",
+        "npm"
+      ],
+      "highlights": [
+        "Compares locale files against a base language.",
+        "Finds missing and extra translation keys.",
+        "Checks placeholder consistency."
+      ],
+      "outcome_or_proof": [
+        "npm package URL is present in the repository.",
+        "GitHub repository is available."
+      ],
+      "role_relevance": [
+        "TypeScript Developer",
+        "Software Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": "https://www.npmjs.com/package/i18n-lint-cli",
+        "github": "https://github.com/igalVilensky/i18n-lint-cli",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts."
+      ]
+    },
+    {
+      "id": "family-space",
+      "title": "Family Space",
+      "category": "Personal Productivity / Firebase App",
+      "priority": "lab",
+      "short_description": "Family organization app with shared calendars, task management, messaging, and Firebase-backed collaboration.",
+      "long_description": "A practical personal productivity app exploring shared household coordination, family workflows, and realtime-feeling collaboration patterns.",
+      "role": "Builder of a personal productivity application.",
+      "technologies": [
+        "Nuxt",
+        "Vue 3",
+        "TypeScript",
+        "Tailwind CSS",
+        "Firebase"
+      ],
+      "highlights": [
+        "Shared calendar and task coordination patterns.",
+        "Firebase-backed collaboration.",
+        "Responsive family-focused interface."
+      ],
+      "outcome_or_proof": [
+        "Live deployment exists.",
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Frontend Developer",
+        "Vue.js Developer",
+        "TypeScript Developer"
+      ],
+      "links": {
+        "live": "https://my-nest.netlify.app/",
+        "github": "https://github.com/igalVilensky/family-app",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts."
+      ]
+    },
+    {
+      "id": "sunlit-tales",
+      "title": "Sunlit Tales",
+      "category": "Content Platform / Creative Web",
+      "priority": "lab",
+      "short_description": "Poetry and creative content platform built with Nuxt, Node.js, Sanity, MongoDB, and Tailwind.",
+      "long_description": "A creative publishing project exploring content architecture, quiet reading interfaces, and full-stack web delivery.",
+      "role": "Builder of a creative content platform.",
+      "technologies": [
+        "Node.js",
+        "Nuxt",
+        "Tailwind CSS",
+        "Sanity",
+        "MongoDB"
+      ],
+      "highlights": [
+        "Headless content workflow.",
+        "Reading-focused UI.",
+        "Full-stack publishing architecture."
+      ],
+      "outcome_or_proof": [
+        "Live deployment exists.",
+        "GitHub repository is available.",
+        "No user/adoption metric is present in the repository."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "Frontend Developer",
+        "Vue.js Developer"
+      ],
+      "links": {
+        "live": "https://sunlit-tales.netlify.app/",
+        "github": "https://github.com/igalvilensky/sunlit-tales",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from app/composables/useProjects.ts and locale project copy."
+      ]
+    }
+  ],
+  "featured_project_order": [
+    "flowplace-role-compass",
+    "openme",
+    "decision-matrix-ai",
+    "ari-motors-ev-portal"
+  ],
+  "source_notes": [
+    "Project data is based on app/composables/useProjects.ts, existing case-study pages, locale copy, README links, and positioning docs.",
+    "Secondary and lab projects are included only when they already appear in the repository."
+  ]
+}

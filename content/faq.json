@@ -1,0 +1,175 @@
+{
+  "faqs": [
+    {
+      "id": "role-fit",
+      "question": "What roles is Igal a good fit for?",
+      "answer": "Igal is a good fit for full-stack, frontend, Vue/Nuxt, React/Next, TypeScript, SaaS, API integration, and AI automation-related software developer roles. The strongest match is product-focused software work that combines frontend UX, APIs, SaaS workflows, and practical AI-assisted features.",
+      "related_roles": [
+        "Full-Stack Software Developer",
+        "Frontend Developer",
+        "Vue.js Developer",
+        "React Developer",
+        "TypeScript Developer",
+        "SaaS Developer",
+        "API Integration Developer",
+        "AI Automation Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai",
+        "ari-motors-ev-portal"
+      ]
+    },
+    {
+      "id": "recruiter-summary",
+      "question": "Summarize Igal for a recruiter.",
+      "answer": "Igal Vilensky is a full-stack software developer based in Leipzig, Germany. He has professional experience building SaaS and web products with TypeScript, Vue/Nuxt, React/Next, Node.js, REST APIs, and headless CMS tools. He is currently extending that background through an AI Agents & Automations course at WBS CODING SCHOOL, with a focus on LLM workflows, AI agents, n8n, Make, APIs, webhooks, and AI safety.",
+      "related_roles": [
+        "Full-Stack Software Developer",
+        "Frontend Developer",
+        "AI Automation Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai"
+      ]
+    },
+    {
+      "id": "frontend-experience",
+      "question": "What is his frontend experience?",
+      "answer": "His frontend experience includes professional Vue.js/Nuxt.js work at Flowplace, Vue 3/Nuxt 3/TypeScript/Tailwind CSS work at LeanERA, and user interface development for ARI Motors. His portfolio projects also include React/Next.js and TypeScript work in OpenMe and Decision Matrix AI.",
+      "related_roles": [
+        "Frontend Developer",
+        "Vue.js Developer",
+        "React Developer",
+        "TypeScript Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "leanera-digital-transition",
+        "ari-motors-ev-portal",
+        "openme",
+        "decision-matrix-ai"
+      ]
+    },
+    {
+      "id": "saas-experience",
+      "question": "Does he have SaaS experience?",
+      "answer": "Yes. Flowplace Role Compass is documented as professional SaaS product engineering, built with Vue/Nuxt, TypeScript, Directus, and REST APIs, and reached 5,000+ users in the first month. The CV also describes Igal as having 3+ years of experience in SaaS and web projects. OpenMe is a full-stack SaaS MVP in his portfolio.",
+      "related_roles": [
+        "SaaS Developer",
+        "Full-Stack Software Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "openme"
+      ]
+    },
+    {
+      "id": "ai-automation-experience",
+      "question": "What is his AI/automation experience?",
+      "answer": "Igal is currently expanding his existing software development background through the AI Agents & Automations course at WBS CODING SCHOOL. The docs list LLM workflows, prompt engineering, AI agents, n8n, Make, Python automations, APIs, webhooks, and AI safety as current focus areas. Project proof includes Decision Matrix AI, OpenMe's AI-assisted submission summaries, and AI Compliance Compass.",
+      "related_roles": [
+        "AI Software Developer",
+        "AI Automation Developer",
+        "AI Workflow Developer"
+      ],
+      "related_projects": [
+        "decision-matrix-ai",
+        "openme",
+        "ai-compliance-compass"
+      ]
+    },
+    {
+      "id": "first-project-to-review",
+      "question": "Which project should I review first?",
+      "answer": "For professional SaaS proof, review Flowplace Role Compass first because it shows production product engineering and a 5,000+ user first-month outcome. For full-stack SaaS and AI-assisted workflow proof, review OpenMe next. For AI product UX, review Decision Matrix AI. For solo full-stack delivery under a tight deadline, review ARI Motors EV Portal.",
+      "related_roles": [
+        "Full-Stack Software Developer",
+        "SaaS Developer",
+        "AI Software Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "openme",
+        "decision-matrix-ai",
+        "ari-motors-ev-portal"
+      ]
+    },
+    {
+      "id": "not-junior",
+      "question": "What makes him different from a junior developer?",
+      "answer": "Igal is not positioned as someone entering tech from zero. The repository documents professional roles at Flowplace, LeanERA, and ARI Motors, including shipped SaaS features, responsive UI work, REST API integration, production bug-fix and release support in the positioning docs, and solo delivery of an EV comparison portal from concept to production in under three months.",
+      "related_roles": [
+        "Full-Stack Software Developer",
+        "Software Developer",
+        "Frontend Developer"
+      ],
+      "related_projects": [
+        "flowplace-role-compass",
+        "leanera-digital-transition",
+        "ari-motors-ev-portal"
+      ]
+    },
+    {
+      "id": "technologies",
+      "question": "What technologies does he use?",
+      "answer": "His core stack includes TypeScript, JavaScript, Vue, Nuxt, React, Next.js, Node.js, Express, Python, FastAPI, REST APIs, Tailwind CSS, Directus, MongoDB, PostgreSQL, Prisma, Firebase, Git, Docker, Netlify, Vercel, and Render. His current AI/automation stack includes LLM APIs, Groq API, prompt engineering, AI agents, n8n, Make, APIs, webhooks, and AI-assisted workflows.",
+      "related_roles": [
+        "TypeScript Developer",
+        "Full-Stack Software Developer",
+        "AI Automation Developer"
+      ],
+      "related_projects": [
+        "openme",
+        "decision-matrix-ai",
+        "flowplace-role-compass"
+      ]
+    },
+    {
+      "id": "location",
+      "question": "Where is he based?",
+      "answer": "Igal is based in Leipzig, Germany. The portfolio positioning is aimed at Germany, Leipzig, hybrid, and remote EU contexts.",
+      "related_roles": [
+        "Full-Stack Software Developer",
+        "Frontend Developer"
+      ],
+      "related_projects": []
+    },
+    {
+      "id": "languages",
+      "question": "What languages does he speak?",
+      "answer": "The repository documents Hebrew and Russian as native languages, English at C1, and German at B2. The DCI certificate also mentions job-related German language training at B2.2 level.",
+      "related_roles": [],
+      "related_projects": []
+    },
+    {
+      "id": "wbs-fit",
+      "question": "How does the WBS AI Agents & Automations course fit into his profile?",
+      "answer": "The WBS course is framed as a continuation of Igal's existing software development profile, not a career reset. It strengthens his product engineering background with LLM workflows, prompt engineering, AI agents, n8n, Make, Python automations, APIs, webhooks, and AI safety.",
+      "related_roles": [
+        "AI Software Developer",
+        "AI Automation Developer",
+        "AI Workflow Developer"
+      ],
+      "related_projects": [
+        "decision-matrix-ai",
+        "openme",
+        "ai-compliance-compass"
+      ]
+    },
+    {
+      "id": "contact",
+      "question": "How can someone contact Igal?",
+      "answer": "The repository lists email as vilenskyigal@gmail.com, LinkedIn as https://www.linkedin.com/in/igalvilensky/, GitHub as https://github.com/igalVilensky, and the portfolio as https://igalvilensky.netlify.app/.",
+      "related_roles": [],
+      "related_projects": []
+    }
+  ],
+  "source_notes": [
+    "FAQ answers are written for a future deterministic portfolio guide and use only repository and documentation facts.",
+    "Where exact dates or metrics are missing, the answer avoids adding them."
+  ]
+}

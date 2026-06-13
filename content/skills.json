@@ -1,0 +1,120 @@
+{
+  "groups": [
+    {
+      "id": "frontend",
+      "title": "Frontend",
+      "summary": "Interfaces that are fast, responsive, and built around real user workflows.",
+      "skills": [
+        "TypeScript",
+        "JavaScript",
+        "Vue",
+        "Vue 3",
+        "Nuxt",
+        "Nuxt 3",
+        "React",
+        "Next.js",
+        "React Native",
+        "Ionic",
+        "Tailwind CSS",
+        "Bootstrap",
+        "SCSS",
+        "HTML5",
+        "CSS3",
+        "Responsive Design"
+      ]
+    },
+    {
+      "id": "backend",
+      "title": "Backend",
+      "summary": "APIs, data models, auth flows, and production-minded service boundaries.",
+      "skills": [
+        "Node.js",
+        "Express",
+        "Python",
+        "FastAPI",
+        "REST APIs",
+        "RESTful API",
+        "JWT",
+        "MongoDB",
+        "Mongoose",
+        "PostgreSQL",
+        "Prisma",
+        "Directus",
+        "Headless CMS",
+        "Firebase",
+        "Firestore"
+      ]
+    },
+    {
+      "id": "ai-automation",
+      "title": "AI / Automation",
+      "summary": "Current specialization around practical AI-assisted systems and automation-first product flows.",
+      "skills": [
+        "LLM APIs",
+        "Groq API",
+        "Prompt engineering",
+        "AI agents",
+        "n8n",
+        "Make",
+        "Webhooks",
+        "API automation",
+        "AI-assisted product workflows",
+        "AI safety",
+        "Python automations",
+        "Human-in-the-loop AI features"
+      ]
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering",
+      "summary": "Development habits and tools used to keep products maintainable after launch.",
+      "skills": [
+        "Git",
+        "GitHub",
+        "GitHub team workflow",
+        "Docker",
+        "Docker Compose",
+        "CI/CD",
+        "Testing / QA",
+        "Deployment",
+        "Netlify",
+        "Vercel",
+        "Render",
+        "Neon",
+        "Agile",
+        "Scrum"
+      ]
+    },
+    {
+      "id": "transferable",
+      "title": "Transferable Skills",
+      "summary": "Product and collaboration strengths that connect technical work to business and user needs.",
+      "skills": [
+        "End-to-end product development",
+        "Technical problem-solving",
+        "Cross-functional collaboration",
+        "User-focused thinking",
+        "API and workflow integration",
+        "Adaptability and fast learning",
+        "Business and product understanding",
+        "Market research",
+        "Affiliate marketing",
+        "Website administration"
+      ]
+    },
+    {
+      "id": "languages",
+      "title": "Languages",
+      "summary": "Working language profile from the CV, locale data, and positioning docs.",
+      "skills": [
+        "Hebrew - Native",
+        "Russian - Native",
+        "English - C1",
+        "German - B2"
+      ]
+    }
+  ],
+  "source_notes": [
+    "Skills are consolidated from the CV, DCI certificate, app locale files, app/composables/useProjects.ts, and positioning docs."
+  ]
+}
