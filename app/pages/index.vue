@@ -9,7 +9,12 @@
       :snapshot-items="heroSnapshot"
     />
     <RecruiterSnapshot :items="recruiterSnapshot" />
-    <AskPortfolioPreview :prompts="askPrompts" :guide-preview="guidePreview" />
+    <AskPortfolioPreview
+      :prompts="askPrompts"
+      :guide-preview="guidePreview"
+      :faqs="faqData.faqs"
+      :portfolio-context="portfolioGuideContext"
+    />
     <SelectedWork :projects="featuredProjects" />
     <HowIWork :steps="workSteps" />
     <AiAutomationFocus :items="aiFocus" />
@@ -36,6 +41,7 @@ import profileData from "../../content/profile.json";
 import projectsData from "../../content/projects.json";
 import experienceData from "../../content/experience.json";
 import skillsData from "../../content/skills.json";
+import roleFitData from "../../content/role-fit.json";
 import faqData from "../../content/faq.json";
 
 definePageMeta({
@@ -158,12 +164,72 @@ const featuredProjects = projectsData.featured_project_order
   .filter((project): project is Project => Boolean(project))
   .map(toFeaturedProject);
 
-const askPrompts = ["role-fit", "recruiter-summary", "saas-experience", "first-project-to-review"]
+const askPrompts = [
+  "role-fit",
+  "recruiter-summary",
+  "frontend-experience",
+  "saas-experience",
+  "ai-automation-experience",
+  "first-project-to-review",
+]
   .map((id) => faqData.faqs.find((item) => item.id === id))
   .filter((item): item is (typeof faqData.faqs)[number] => Boolean(item));
 
 const guidePreview =
   faqData.faqs.find((item) => item.id === "recruiter-summary") ?? faqData.faqs[0];
+
+const portfolioGuideContext = {
+  profile: {
+    identity: profile.identity,
+    headline: profile.headline,
+    summary: profile.summary,
+    cv_summary: profile.cv_summary,
+    experience_level: profile.experience_level,
+    current_focus: profile.current_focus,
+    current_course: profile.current_course,
+    target_roles: profile.target_roles,
+    core_technologies: profile.core_technologies,
+    ai_automation_technologies: profile.ai_automation_technologies,
+    languages: profile.languages,
+    availability: profile.availability,
+    links: {
+      email: profile.links.email,
+      github: profile.links.github,
+      linkedin: profile.links.linkedin,
+      portfolio: profile.links.portfolio,
+      cv: profile.links.cv,
+    },
+  },
+  projects: projectsData.projects.map((project) => ({
+    id: project.id,
+    title: project.title,
+    category: project.category,
+    priority: project.priority,
+    short_description: project.short_description,
+    long_description: project.long_description,
+    role: project.role,
+    technologies: project.technologies,
+    highlights: project.highlights,
+    outcome_or_proof: project.outcome_or_proof,
+    role_relevance: project.role_relevance,
+    links: project.links,
+  })),
+  featured_project_order: projectsData.featured_project_order,
+  experience: experienceData.entries.map((entry) => ({
+    id: entry.id,
+    organization: entry.organization,
+    title: entry.title,
+    timeframe: entry.timeframe,
+    location: entry.location,
+    type: entry.type,
+    summary: entry.summary,
+    highlights: entry.highlights,
+    technologies: entry.technologies,
+  })),
+  skills: skillsData.groups,
+  role_fit: roleFitData.roles,
+  faqs: faqData.faqs,
+};
 
 const workSteps = [
   {

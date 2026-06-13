@@ -188,40 +188,43 @@ The new content files prioritize:
 
 Other projects are marked as secondary or lab so they do not compete equally on the homepage.
 
-## AI Guide Status
+## Ask My Portfolio Status
 
-The AI guide is still not implemented as real AI.
+Ask My Portfolio is now implemented as an AI-powered recruiter guide with a deterministic local fallback.
 
-The homepage now includes a static “Ask My Portfolio” preview:
+What works:
 
-* suggested recruiter prompts
-* a sample grounded answer from `content/faq.json`
-* no API calls
-* no external actions
-* no chatbot state
+* The homepage guide reuses the existing `useGroqChat()` composable.
+* Local development calls `/api/groqChat`; production calls `/.netlify/functions/groqChat`.
+* The existing Groq provider and `GROQ_API_KEY` server-side pattern are reused.
+* No API key is exposed in frontend code.
+* Suggested recruiter questions remain visible and selectable.
+* Custom recruiter questions can be asked from the homepage guide.
+* The AI prompt receives local structured portfolio context from `content/profile.json`, `content/projects.json`, `content/experience.json`, `content/skills.json`, `content/role-fit.json`, and `content/faq.json`.
+* If the AI route is unavailable, no API key is configured, the request fails, or no reply is returned, the guide falls back to the closest predefined answer from `content/faq.json`.
+* The UI states that answers are grounded in portfolio content and that the guide cannot browse, send emails, schedule calls, apply to jobs, or make claims beyond portfolio data.
 
-Preferred path:
+Known limitations:
 
-1. Static/deterministic guide first.
-2. Use suggested recruiter questions and predefined answers.
-3. Connect to the structured content layer.
-4. Add optional server-side LLM only later, with safe fallback and no frontend API keys.
+* Grounding is prompt-based and uses local structured context, not RAG or source citation retrieval.
+* The fallback matching is deterministic and simple, based on FAQ question/answer text overlap.
+* Existing AI infrastructure still uses Groq through the current generic chat route/function.
 
 ## Next Recommended Phase
 
 The next phase should be:
 
-> Static Ask My Portfolio guide.
+> Add source cues and QA cases for Ask My Portfolio.
 
-Now that the homepage is structured into focused components, build the first deterministic Ask My Portfolio guide experience using local structured content only.
+Now that Ask My Portfolio can use AI with a deterministic fallback, harden the experience with clearer source cues and a small set of manual QA prompts.
 
 Focus areas:
 
-* use `content/faq.json` and related structured content as the source of truth
-* keep suggested recruiter questions and predefined grounded answers
-* avoid external API calls, API routes, browsing, or LLM behavior
-* preserve the current visual system and homepage IA unless explicitly approved
-* do not invent facts or add hiring promises
+* add lightweight source cues for FAQ, project, role-fit, or experience-backed answers
+* define manual QA prompts for role fit, SaaS proof, frontend experience, AI/automation, contact, and unavailable information
+* verify AI answers stay within local portfolio facts
+* preserve the fallback behavior when Groq is unavailable
+* avoid new providers, dependencies, route changes, or visual redesign
 * run the build after implementation
 
 ## Known Constraints
@@ -239,4 +242,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-13 after homepage component extraction.
+2026-06-13 after AI-powered Ask My Portfolio implementation.
