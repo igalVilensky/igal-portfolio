@@ -136,6 +136,20 @@ What changed:
 
 No real AI integration, API route, dependency, route change, structured content fact change, component split, or case-study rebuild was added.
 
+## Strengthened Homepage Visual Identity Pass
+
+A stronger homepage visual identity pass is complete after review found the prior version too close to the old portfolio style.
+
+What changed:
+
+* Homepage styling now leans light-first with warm off-white backgrounds, charcoal text, soft gray borders, white editorial panels, and restrained indigo accents.
+* The homepage no longer uses the old dark/glass-heavy treatment, glow effects, gradients, or icon-heavy button styling.
+* The same eight-section recruiter IA is preserved: Hero, Recruiter Snapshot, Ask My Portfolio preview, Selected Work, How I Work, AI / Automation Focus, Experience Snapshot, and Contact CTA.
+* Shared primitives in `app/assets/css/main.css` were flattened: glass and gradient utilities now resolve to calm solid treatments, `btn-primary` is restrained, and `page-kicker`, `section-title`, and `section-compact` better match the mature product style.
+* `tailwind.config.js` now uses warmer neutral/charcoal colors, indigo-blue primary accents, emerald secondary accents, and removes the old hero glow token while de-emphasizing motion/display styling.
+
+No component extraction, real AI integration, API route, dependency, route change, or structured content fact change was added.
+
 ## Strongest Featured Projects
 
 The new content files prioritize:
@@ -172,7 +186,7 @@ The next phase should be:
 
 > Extract homepage sections into components.
 
-Now that the homepage structure and visual language are stable, split the monolithic homepage into focused section components without changing information architecture, facts, routes, or styling direction.
+After the strengthened visual identity is approved, split the monolithic homepage into focused section components without changing information architecture, facts, routes, or styling direction.
 
 Focus areas:
 
@@ -198,4 +212,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-13 after visual system refactor.
+2026-06-13 after strengthened homepage visual identity pass.

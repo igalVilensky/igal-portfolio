@@ -4,8 +4,8 @@
 
 @layer base {
     :root {
-        --scroll-thumb: #334155;
-        --scroll-track: #0F172A;
+        --scroll-thumb: #A8A39A;
+        --scroll-track: #F4F3EF;
     }
 
     html {
@@ -15,7 +15,7 @@
     }
 
     body {
-        @apply bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100 overflow-x-hidden selection:bg-primary-500 selection:text-white;
+        @apply bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100 overflow-x-hidden selection:bg-primary-600 selection:text-white;
     }
 
     a,
@@ -41,33 +41,33 @@
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
+        background: #746F66;
     }
 }
 
 @layer components {
     .glass {
-        @apply bg-white/70 dark:bg-secondary-900/70 backdrop-blur-lg border border-secondary-200 dark:border-white/5;
+        @apply border border-secondary-200 bg-white/95 dark:border-dark-border dark:bg-dark-surface;
     }
 
     .glass-card {
-        @apply bg-secondary-50/40 dark:bg-secondary-800/40 backdrop-blur-md border border-secondary-200 dark:border-white/5 rounded-2xl transition-all duration-300 hover:bg-secondary-100/60 dark:hover:bg-secondary-800/60 hover:border-primary-500/30 hover:shadow-lg hover:shadow-primary-500/10;
+        @apply rounded-lg border border-secondary-200 bg-white transition-colors duration-200 hover:border-secondary-300 hover:bg-secondary-50 dark:border-dark-border dark:bg-dark-surface dark:hover:border-secondary-700;
     }
 
     .text-gradient {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-primary-200 to-primary-400;
+        @apply text-primary-700 dark:text-primary-300;
     }
 
     .text-gradient-primary {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-primary-600;
+        @apply text-primary-700 dark:text-primary-300;
     }
 
     .btn-primary {
-        @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold transition-colors duration-200 hover:bg-primary-700 active:bg-primary-800;
+        @apply rounded-md bg-primary-700 px-6 py-3 font-semibold text-white shadow-sm shadow-secondary-900/5 transition-colors duration-200 hover:bg-primary-800 active:bg-primary-900;
     }
 
     .btn-outline {
-        @apply px-6 py-3 bg-transparent border border-white/20 text-white rounded-lg font-semibold transition-colors duration-200 hover:bg-white/10 hover:border-white/40;
+        @apply rounded-md border border-secondary-300 bg-white px-6 py-3 font-semibold text-secondary-900 transition-colors duration-200 hover:border-primary-300 hover:bg-secondary-50 dark:border-dark-border dark:bg-dark-surface dark:text-secondary-100 dark:hover:border-primary-700;
     }
 
     .page-shell {
@@ -91,23 +91,23 @@
     }
 
     .page-kicker {
-        @apply mb-4 inline-flex items-center gap-2 rounded-md border border-secondary-200 bg-secondary-100 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-secondary-500 dark:border-white/10 dark:bg-white/5 dark:text-primary-300;
+        @apply mb-3 text-xs font-semibold uppercase text-primary-700 dark:text-primary-300;
     }
 
     .page-title {
-        @apply text-4xl font-semibold leading-tight text-secondary-900 dark:text-white md:text-5xl lg:text-6xl;
+        @apply text-4xl font-semibold leading-tight text-secondary-950 dark:text-white md:text-5xl lg:text-6xl;
     }
 
     .page-intro {
-        @apply border-l-2 border-primary-500 pl-5 text-base leading-relaxed text-secondary-600 dark:text-secondary-400 md:text-lg;
+        @apply border-l-2 border-primary-600 pl-5 text-base leading-relaxed text-secondary-600 dark:text-secondary-400 md:text-lg;
     }
 
     .section-compact {
-        @apply py-12 md:py-14;
+        @apply py-14 md:py-16 lg:py-20;
     }
 
     .section-title {
-        @apply text-2xl font-semibold leading-tight text-secondary-900 dark:text-white md:text-3xl;
+        @apply max-w-3xl text-2xl font-semibold leading-tight text-secondary-950 dark:text-white md:text-3xl;
     }
 }
 

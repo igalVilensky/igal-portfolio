@@ -6,7 +6,7 @@ Extract homepage sections into components.
 
 ## Goal
 
-Split the refactored homepage in `app/pages/index.vue` into focused, maintainable section components without changing the homepage information architecture, facts, routes, or visual direction.
+After the strengthened homepage visual identity is approved, split the refactored homepage in `app/pages/index.vue` into focused, maintainable section components without changing the homepage information architecture, facts, routes, or visual direction.
 
 The goal is code organization only. The homepage should render the same eight-section recruiter flow:
 
@@ -21,7 +21,9 @@ The goal is code organization only. The homepage should render the same eight-se
 
 ## Context
 
-The homepage information architecture is stable and the visual system has been calmed down for a mature, recruiter-friendly product-engineering portfolio.
+The homepage information architecture is stable. A stronger light-first product/SaaS-style visual identity pass has been applied after the previous version still felt too close to the old portfolio style.
+
+Component extraction should remain paused until that visual identity is approved.
 
 Current positioning remains:
 
@@ -62,7 +64,7 @@ Good scope:
 * pass props from the page into section components where practical
 * preserve current section IDs and order
 * preserve the current homepage content hierarchy
-* preserve the current visual styling direction
+* preserve the approved visual styling direction
 * keep components simple and local to the homepage unless reuse is obvious
 
 Avoid in this task:
@@ -72,7 +74,7 @@ Avoid in this task:
 * adding dependencies
 * implementing real AI
 * adding API routes
-* redesigning the visual system again
+* redesigning the visual system again unless the user explicitly asks for another visual pass
 * rebuilding case studies
 * deleting useful pages
 
