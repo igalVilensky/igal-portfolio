@@ -2,19 +2,13 @@
 
 ## Task Title
 
-Visual system refactor.
+Extract homepage sections into components.
 
 ## Goal
 
-Move the portfolio’s visual system toward a mature, calm, recruiter-friendly product-engineering style now that the homepage information architecture is in place.
+Split the refactored homepage in `app/pages/index.vue` into focused, maintainable section components without changing the homepage information architecture, facts, routes, or visual direction.
 
-The goal is not to redesign everything from scratch. The goal is to make the existing Nuxt/Tailwind interface feel clearer, quieter, more readable, and more aligned with:
-
-> Full-stack software developer building SaaS products and practical AI-assisted workflows.
-
-## Context
-
-The homepage now follows the target IA:
+The goal is code organization only. The homepage should render the same eight-section recruiter flow:
 
 1. Hero
 2. Recruiter Snapshot
@@ -25,82 +19,86 @@ The homepage now follows the target IA:
 7. Experience Snapshot
 8. Contact CTA
 
-The next step is to polish the visual language around that structure.
+## Context
 
-## Design Direction
+The homepage information architecture is stable and the visual system has been calmed down for a mature, recruiter-friendly product-engineering portfolio.
 
-Follow:
+Current positioning remains:
+
+> Full-stack software developer building SaaS products and practical AI-assisted workflows.
+
+The page currently imports structured content from:
 
 ```text
-docs/design/visual-direction.md
+content/profile.json
+content/projects.json
+content/experience.json
+content/skills.json
+content/faq.json
 ```
 
-The site should feel:
-
-* clean
-* mature
-* calm
-* readable
-* recruiter-friendly
-* product-minded
-* case-study-driven
-* lightly technical
-
-Avoid:
-
-* loud gradients
-* neon/cyberpunk styling
-* excessive animation
-* heavy glassmorphism
-* overly playful AI visuals
-* decorative elements that compete with content
+Preserve the structured content source of truth.
 
 ## Recommended Scope
 
-Focus on the homepage and shared visual primitives used there.
+Create focused homepage section components, likely under an existing or new component directory that fits the Nuxt app structure.
+
+Suggested components:
+
+```text
+HomepageHero.vue
+RecruiterSnapshot.vue
+AskPortfolioPreview.vue
+SelectedWork.vue
+HowIWork.vue
+AiAutomationFocus.vue
+ExperienceSnapshot.vue
+HomepageContactCTA.vue
+```
 
 Good scope:
 
-* simplify colors and backgrounds
-* reduce gradient-heavy styling
-* improve typography hierarchy
-* tighten section spacing
-* make cards cleaner and more content-led
-* make buttons and links more consistent
-* improve mobile readability
-* keep the static Ask My Portfolio preview professional
-* preserve the data-driven homepage structure
+* keep data preparation readable
+* pass props from the page into section components where practical
+* preserve current section IDs and order
+* preserve the current homepage content hierarchy
+* preserve the current visual styling direction
+* keep components simple and local to the homepage unless reuse is obvious
 
 Avoid in this task:
 
+* changing content facts
 * changing routes
 * adding dependencies
 * implementing real AI
 * adding API routes
-* rebuilding all case studies
+* redesigning the visual system again
+* rebuilding case studies
 * deleting useful pages
-* inventing new facts
 
 ## Files Likely To Inspect
 
 ```text
 app/pages/index.vue
 app/assets/css/main.css
-tailwind.config.js
-docs/design/visual-direction.md
+content/profile.json
+content/projects.json
+content/experience.json
+content/skills.json
+content/faq.json
 docs/codex/current-state.md
 ```
-
-Only change `tailwind.config.js` if truly needed. Prefer scoped or existing utility-class improvements first.
 
 ## Rules
 
 * Keep the app working.
 * Do not add dependencies.
 * Do not implement real AI.
-* Do not overstate AI expertise.
-* Do not change the structured content facts.
-* Keep visual changes restrained and purposeful.
+* Do not add API routes.
+* Do not change routes.
+* Do not change structured content facts.
+* Do not alter the homepage IA.
+* Do not make a new visual redesign pass.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -109,11 +107,11 @@ Only change `tailwind.config.js` if truly needed. Prefer scoped or existing util
 
 The task is complete when:
 
-* homepage feels calmer and more recruiter-friendly
-* text hierarchy is easier to scan
-* section and card styling is more consistent
-* colors and effects are less flashy
-* mobile layout remains readable
-* no real AI or new dependencies are added
+* the homepage still renders the same eight sections in the same order
+* `app/pages/index.vue` is smaller and easier to scan
+* homepage sections live in focused Vue components
+* structured content usage remains clear
+* visual styling remains materially unchanged
+* no real AI, API route, dependency, or route change is added
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated

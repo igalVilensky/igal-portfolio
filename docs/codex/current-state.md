@@ -123,6 +123,19 @@ What changed:
 
 No real AI integration, API route, dependency, route migration, or page deletion was added.
 
+Milestone 4 visual system refactor is complete.
+
+What changed:
+
+* Homepage visual treatment is calmer, flatter, and more recruiter-friendly while keeping the same eight-section IA.
+* Hero typography, section headings, and body copy were tightened for easier scanning.
+* Cards now use more consistent borders, spacing, and corner radius.
+* Buttons and homepage CTA links are more consistent and mobile-readable.
+* The Ask My Portfolio preview is quieter and more professional, still static and non-functional.
+* Shared homepage primitives in `app/assets/css/main.css` were simplified for buttons, kickers, titles, and compact sections.
+
+No real AI integration, API route, dependency, route change, structured content fact change, component split, or case-study rebuild was added.
+
 ## Strongest Featured Projects
 
 The new content files prioritize:
@@ -157,19 +170,18 @@ Preferred path:
 
 The next phase should be:
 
-> Visual system refactor.
+> Extract homepage sections into components.
 
-Now that the homepage structure is stable, move the visual system toward the mature, calm product-engineering direction in `docs/design/visual-direction.md`.
+Now that the homepage structure and visual language are stable, split the monolithic homepage into focused section components without changing information architecture, facts, routes, or styling direction.
 
 Focus areas:
 
-* simplify color palette
-* reduce remaining flashy gradients and decorative effects
-* improve typography hierarchy
-* tighten spacing and card treatments
-* improve button consistency
-* check mobile readability and scanning
-* preserve the homepage IA and structured content usage
+* preserve the same eight homepage sections
+* keep structured content imports and props clear
+* avoid changing content facts or adding new product claims
+* keep the visual system intact
+* do not add dependencies, API routes, or real AI behavior
+* run the build after extraction
 
 ## Known Constraints
 
@@ -186,4 +198,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-13 after homepage information architecture refactor.
+2026-06-13 after visual system refactor.
