@@ -1,365 +1,37 @@
 <!-- app/pages/index.vue -->
 <template>
   <main class="min-h-screen bg-secondary-50 text-secondary-900">
-    <section id="hero" class="border-b border-secondary-200 bg-secondary-50 pt-24">
-      <div class="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-6 md:py-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:items-center">
-        <div>
-          <p class="mb-5 text-xs font-semibold uppercase text-primary-700">
-            {{ profile.identity.name }} · {{ profile.identity.based_in }}
-          </p>
-          <h1 class="max-w-4xl text-4xl font-semibold leading-tight text-secondary-950 sm:text-5xl md:text-6xl">
-            Full-stack software developer building SaaS products and practical AI-assisted workflows.
-          </h1>
-          <p class="mt-6 max-w-3xl text-base leading-8 text-secondary-700 md:text-lg">
-            I build user-focused web applications with TypeScript, Vue/Nuxt, React/Next, Node.js, APIs, and Python/FastAPI.
-            My current AI agents and automation work extends that product engineering foundation into practical workflows.
-          </p>
-
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <NuxtLink to="/case-studies" class="btn-primary inline-flex w-full items-center justify-center px-5 py-3 sm:w-auto">
-              View selected work
-            </NuxtLink>
-            <a
-              :href="profile.links.cv"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex w-full items-center justify-center rounded-md border border-secondary-300 bg-white px-5 py-3 font-semibold text-secondary-900 shadow-sm shadow-secondary-900/5 transition hover:border-primary-300 hover:bg-primary-50 sm:w-auto"
-            >
-              View CV
-            </a>
-            <a
-              href="#ask-my-portfolio"
-              class="inline-flex w-full items-center justify-center rounded-md border border-secondary-300 bg-secondary-50 px-5 py-3 font-semibold text-secondary-900 transition hover:border-primary-300 hover:bg-primary-50 sm:w-auto"
-            >
-              Ask My Portfolio
-            </a>
-          </div>
-
-          <div class="mt-8 flex flex-wrap gap-2">
-            <span
-              v-for="role in heroRoles"
-              :key="role"
-              class="rounded-md border border-secondary-200 bg-white px-3 py-1.5 text-sm font-medium text-secondary-700"
-            >
-              {{ role }}
-            </span>
-          </div>
-        </div>
-
-        <aside class="rounded-md border border-secondary-200 bg-white p-6 shadow-sm shadow-secondary-900/5">
-          <div class="border-b border-secondary-200 pb-5">
-            <p class="text-xs font-semibold uppercase text-primary-700">
-              30-second recruiter read
-            </p>
-            <p class="mt-2 text-sm leading-6 text-secondary-600">
-              Stack, focus, and strongest proof in one place.
-            </p>
-          </div>
-          <dl class="divide-y divide-secondary-100">
-            <div v-for="item in heroSnapshot" :key="item.label" class="py-5 last:pb-0">
-              <dt class="text-xs font-semibold uppercase text-secondary-500">
-                {{ item.label }}
-              </dt>
-              <dd class="mt-2 text-base font-medium leading-7 text-secondary-950">
-                {{ item.value }}
-              </dd>
-            </div>
-          </dl>
-        </aside>
-      </div>
-    </section>
-
-    <section id="recruiter-snapshot" class="section-compact bg-white">
-      <div class="mx-auto max-w-7xl px-5 sm:px-6">
-        <div class="mb-9 grid gap-5 md:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] md:items-end">
-          <div>
-            <p class="page-kicker">Recruiter snapshot</p>
-            <h2 class="section-title">The useful facts first.</h2>
-          </div>
-          <p class="text-base leading-7 text-secondary-600">
-            A compact view of role fit, stack, language coverage, and current AI automation direction.
-          </p>
-        </div>
-
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <article
-            v-for="item in recruiterSnapshot"
-            :key="item.label"
-            class="rounded-md border border-secondary-200 bg-secondary-50 p-5"
-          >
-            <p class="text-xs font-semibold uppercase text-secondary-500">
-              {{ item.label }}
-            </p>
-            <p class="mt-3 text-base leading-7 text-secondary-900">
-              {{ item.value }}
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="ask-my-portfolio" class="section-compact border-y border-secondary-200 bg-secondary-100/60">
-      <div class="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
-        <div>
-          <p class="page-kicker">Ask My Portfolio preview</p>
-          <h2 class="section-title">A grounded shortcut for busy reviewers.</h2>
-          <p class="mt-5 text-base leading-7 text-secondary-600">
-            This preview shows the planned recruiter guide direction: concise answers based on portfolio data,
-            selected projects, role fit, and documented experience.
-          </p>
-        </div>
-
-        <div class="rounded-md border border-secondary-200 bg-white p-5 shadow-sm shadow-secondary-900/5 md:p-6">
-          <div class="mb-5 flex flex-wrap gap-2">
-            <span
-              v-for="item in askPrompts"
-              :key="item.id"
-              class="rounded-md border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-sm text-secondary-700"
-            >
-              {{ item.question }}
-            </span>
-          </div>
-
-          <div class="rounded-md border border-secondary-200 border-l-4 border-l-primary-600 bg-white p-5">
-            <p class="text-xs font-semibold uppercase text-primary-700">
-              Sample grounded answer
-            </p>
-            <h3 class="mt-3 text-lg font-semibold text-secondary-950">
-              {{ guidePreview.question }}
-            </h3>
-            <p class="mt-3 text-sm leading-6 text-secondary-700">
-              {{ guidePreview.answer }}
-            </p>
-          </div>
-
-          <p class="mt-4 text-xs leading-5 text-secondary-500">
-            Answers should stay grounded in local portfolio content and avoid external actions, browsing, or hiring promises.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="selected-work" class="section-compact bg-secondary-50">
-      <div class="mx-auto max-w-7xl px-5 sm:px-6">
-        <div class="mb-9 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div class="max-w-3xl">
-            <p class="page-kicker">Selected work</p>
-            <h2 class="section-title">Four projects that show the main proof.</h2>
-            <p class="mt-5 text-base leading-7 text-secondary-600">
-              The homepage now gives priority to the strongest SaaS, full-stack, and AI-assisted product examples.
-            </p>
-          </div>
-          <NuxtLink to="/case-studies" class="inline-flex items-center gap-2 font-semibold text-primary-700 hover:text-primary-800">
-            <span>Open full work page</span>
-            <span aria-hidden="true">&rarr;</span>
-          </NuxtLink>
-        </div>
-
-        <div class="grid gap-5 lg:grid-cols-2">
-          <article
-            v-for="project in featuredProjects"
-            :key="project.id"
-            class="rounded-md border border-secondary-200 bg-white p-5 shadow-sm shadow-secondary-900/5 transition-colors hover:border-primary-200 md:p-6"
-          >
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <p class="text-xs font-semibold uppercase text-primary-700">
-                  {{ project.category }}
-                </p>
-                <h3 class="mt-3 text-xl font-semibold leading-snug text-secondary-950 md:text-2xl">
-                  {{ project.title }}
-                </h3>
-              </div>
-              <span class="w-fit rounded-md border border-secondary-200 bg-secondary-50 px-2.5 py-1 text-xs font-medium text-secondary-600">
-                Featured
-              </span>
-            </div>
-
-            <p class="mt-4 text-sm leading-6 text-secondary-700">
-              {{ project.short_description }}
-            </p>
-            <p class="mt-4 border-l-2 border-secondary-200 pl-4 text-sm leading-6 text-secondary-600">
-              {{ project.role }}
-            </p>
-
-            <ul class="mt-5 space-y-2">
-              <li
-                v-for="proof in project.outcome_or_proof.slice(0, 2)"
-                :key="proof"
-                class="flex gap-3 text-sm leading-6 text-secondary-700"
-              >
-                <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-600"></span>
-                <span>{{ proof }}</span>
-              </li>
-            </ul>
-
-            <div class="mt-5 flex flex-wrap gap-2">
-              <span
-                v-for="tech in project.technologies.slice(0, 6)"
-                :key="tech"
-                class="rounded-md border border-secondary-200 bg-secondary-50 px-2.5 py-1 text-xs text-secondary-700"
-              >
-                {{ tech }}
-              </span>
-            </div>
-
-            <div class="mt-6">
-              <NuxtLink
-                v-if="getProjectLink(project)?.internal"
-                :to="getProjectLink(project)?.url"
-                class="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 hover:text-primary-800"
-              >
-                <span>{{ getProjectLink(project)?.label }}</span>
-                <span aria-hidden="true">&rarr;</span>
-              </NuxtLink>
-              <a
-                v-else-if="getProjectLink(project)"
-                :href="getProjectLink(project)?.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 text-sm font-semibold text-primary-700 hover:text-primary-800"
-              >
-                <span>{{ getProjectLink(project)?.label }}</span>
-                <span aria-hidden="true">&nearr;</span>
-              </a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="how-i-work" class="section-compact border-y border-secondary-200 bg-white">
-      <div class="mx-auto max-w-7xl px-5 sm:px-6">
-        <div class="mb-9 max-w-3xl">
-          <p class="page-kicker">How I work</p>
-          <h2 class="section-title">Product thinking before feature noise.</h2>
-          <p class="mt-5 text-base leading-7 text-secondary-600">
-            The through-line is practical product engineering: understand the workflow, build the right interface,
-            connect the system, test the path, and iterate with the team.
-          </p>
-        </div>
-
-        <div class="grid gap-4 md:grid-cols-5">
-          <article
-            v-for="step in workSteps"
-            :key="step.title"
-            class="rounded-md border border-secondary-200 bg-secondary-50 p-5"
-          >
-            <p class="text-sm font-bold text-primary-700">{{ step.index }}</p>
-            <h3 class="mt-3 font-semibold text-secondary-950">{{ step.title }}</h3>
-            <p class="mt-2 text-sm leading-6 text-secondary-600">
-              {{ step.description }}
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="ai-automation-focus" class="section-compact bg-secondary-50">
-      <div class="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
-        <div>
-          <p class="page-kicker">AI / Automation focus</p>
-          <h2 class="section-title">AI as an extension of software work.</h2>
-          <p class="mt-5 text-base leading-7 text-secondary-600">
-            The current direction is not a restart. It builds on SaaS, APIs, UX, and workflow experience to create
-            AI-assisted systems with clear boundaries and human review.
-          </p>
-        </div>
-
-        <div class="grid gap-4 sm:grid-cols-2">
-          <article
-            v-for="item in aiFocus"
-            :key="item.title"
-            class="rounded-md border border-secondary-200 bg-white p-5 shadow-sm shadow-secondary-900/5"
-          >
-            <h3 class="font-semibold text-secondary-950">{{ item.title }}</h3>
-            <p class="mt-2 text-sm leading-6 text-secondary-600">
-              {{ item.description }}
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="experience-snapshot" class="section-compact border-y border-secondary-200 bg-white">
-      <div class="mx-auto max-w-7xl px-5 sm:px-6">
-        <div class="mb-9 max-w-3xl">
-          <p class="page-kicker">Experience snapshot</p>
-          <h2 class="section-title">Professional context, scanned quickly.</h2>
-          <p class="mt-5 text-base leading-7 text-secondary-600">
-            A concise timeline linking software development, product operations, and the current AI automation course.
-          </p>
-        </div>
-
-        <div class="grid gap-4 lg:grid-cols-3">
-          <article
-            v-for="entry in experienceSnapshot"
-            :key="entry.id"
-            class="rounded-md border border-secondary-200 bg-secondary-50 p-5"
-          >
-            <p class="text-xs font-semibold uppercase text-secondary-500">
-              {{ entry.timeframe }} · {{ entry.location }}
-            </p>
-            <h3 class="mt-3 text-lg font-semibold text-secondary-950">
-              {{ entry.title }}
-            </h3>
-            <p class="mt-1 text-sm font-medium text-primary-700">
-              {{ entry.organization }}
-            </p>
-            <p class="mt-3 text-sm leading-6 text-secondary-600">
-              {{ entry.summary }}
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="section-compact bg-secondary-50">
-      <div class="mx-auto max-w-7xl px-5 sm:px-6">
-        <div class="rounded-md border border-secondary-200 bg-white p-6 text-secondary-950 shadow-sm shadow-secondary-900/5 md:p-8">
-          <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-            <div>
-              <p class="text-xs font-semibold uppercase text-primary-700">Contact</p>
-              <h2 class="mt-4 max-w-3xl text-2xl font-semibold leading-tight md:text-3xl">
-                Looking for a full-stack, frontend, SaaS, or AI automation developer?
-              </h2>
-              <p class="mt-5 max-w-3xl text-base leading-7 text-secondary-600">
-                {{ profile.availability.summary }}
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
-              <a
-                :href="`mailto:${profile.links.email}`"
-                class="btn-primary inline-flex w-full items-center justify-center px-5 py-3 sm:w-auto"
-              >
-                Email
-              </a>
-              <a
-                :href="profile.links.linkedin"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex w-full items-center justify-center rounded-md border border-secondary-300 bg-white px-5 py-3 font-semibold text-secondary-900 transition hover:border-primary-300 hover:bg-primary-50 sm:w-auto"
-              >
-                LinkedIn
-              </a>
-              <a
-                :href="profile.links.github"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex w-full items-center justify-center rounded-md border border-secondary-300 bg-white px-5 py-3 font-semibold text-secondary-900 transition hover:border-primary-300 hover:bg-primary-50 sm:w-auto"
-              >
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <HomeHero
+      :profile-name="profile.identity.name"
+      :based-in="profile.identity.based_in"
+      :cv-href="profile.links.cv"
+      :roles="heroRoles"
+      :snapshot-items="heroSnapshot"
+    />
+    <RecruiterSnapshot :items="recruiterSnapshot" />
+    <AskPortfolioPreview :prompts="askPrompts" :guide-preview="guidePreview" />
+    <SelectedWork :projects="featuredProjects" />
+    <HowIWork :steps="workSteps" />
+    <AiAutomationFocus :items="aiFocus" />
+    <ExperienceSnapshot :entries="experienceSnapshot" />
+    <HomeContactCTA
+      :summary="profile.availability.summary"
+      :email="profile.links.email"
+      :linkedin="profile.links.linkedin"
+      :github="profile.links.github"
+    />
   </main>
 </template>
 
 <script setup lang="ts">
+import AiAutomationFocus from "~/components/home/AiAutomationFocus.vue";
+import AskPortfolioPreview from "~/components/home/AskPortfolioPreview.vue";
+import ExperienceSnapshot from "~/components/home/ExperienceSnapshot.vue";
+import HomeContactCTA from "~/components/home/HomeContactCTA.vue";
+import HomeHero from "~/components/home/HomeHero.vue";
+import HowIWork from "~/components/home/HowIWork.vue";
+import RecruiterSnapshot from "~/components/home/RecruiterSnapshot.vue";
+import SelectedWork from "~/components/home/SelectedWork.vue";
 import profileData from "../../content/profile.json";
 import projectsData from "../../content/projects.json";
 import experienceData from "../../content/experience.json";
@@ -377,6 +49,17 @@ type ProjectLink = {
 };
 
 type Project = (typeof projectsData.projects)[number];
+
+type FeaturedProject = {
+  id: string;
+  title: string;
+  category: string;
+  shortDescription: string;
+  role: string;
+  outcomeOrProof: string[];
+  technologies: string[];
+  link: ProjectLink | null;
+};
 
 const profile = profileData;
 
@@ -431,9 +114,49 @@ const recruiterSnapshot = [
   },
 ];
 
+const getProjectLink = (project: Project): ProjectLink | null => {
+  if (project.links.case_study) {
+    return {
+      url: project.links.case_study,
+      label: "View case study",
+      internal: project.links.case_study.startsWith("/"),
+    };
+  }
+
+  if (project.links.live) {
+    return {
+      url: project.links.live,
+      label: project.links.live.startsWith("/") ? "Open tool" : "Open live demo",
+      internal: project.links.live.startsWith("/"),
+    };
+  }
+
+  if (project.links.github) {
+    return {
+      url: project.links.github,
+      label: "View GitHub",
+      internal: false,
+    };
+  }
+
+  return null;
+};
+
+const toFeaturedProject = (project: Project): FeaturedProject => ({
+  id: project.id,
+  title: project.title,
+  category: project.category,
+  shortDescription: project.short_description,
+  role: project.role,
+  outcomeOrProof: project.outcome_or_proof,
+  technologies: project.technologies,
+  link: getProjectLink(project),
+});
+
 const featuredProjects = projectsData.featured_project_order
   .map((id) => projectsData.projects.find((project) => project.id === id))
-  .filter((project): project is Project => Boolean(project));
+  .filter((project): project is Project => Boolean(project))
+  .map(toFeaturedProject);
 
 const askPrompts = ["role-fit", "recruiter-summary", "saas-experience", "first-project-to-review"]
   .map((id) => faqData.faqs.find((item) => item.id === id))
@@ -502,34 +225,6 @@ const experienceSnapshotIds = [
 const experienceSnapshot = experienceSnapshotIds
   .map((id) => experienceData.entries.find((entry) => entry.id === id))
   .filter((entry): entry is (typeof experienceData.entries)[number] => Boolean(entry));
-
-const getProjectLink = (project: Project): ProjectLink | null => {
-  if (project.links.case_study) {
-    return {
-      url: project.links.case_study,
-      label: "View case study",
-      internal: project.links.case_study.startsWith("/"),
-    };
-  }
-
-  if (project.links.live) {
-    return {
-      url: project.links.live,
-      label: project.links.live.startsWith("/") ? "Open tool" : "Open live demo",
-      internal: project.links.live.startsWith("/"),
-    };
-  }
-
-  if (project.links.github) {
-    return {
-      url: project.links.github,
-      label: "View GitHub",
-      internal: false,
-    };
-  }
-
-  return null;
-};
 
 useHead({
   title: "Igal Vilensky - Full-Stack Developer for SaaS and AI-Assisted Workflows",

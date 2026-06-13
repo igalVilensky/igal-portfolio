@@ -150,6 +150,33 @@ What changed:
 
 No component extraction, real AI integration, API route, dependency, route change, or structured content fact change was added.
 
+## Homepage Component Extraction
+
+The homepage component extraction task is complete.
+
+What changed:
+
+* The eight homepage sections now live as focused components under `app/components/home/`.
+* `app/pages/index.vue` is now smaller and acts as the structured content orchestration layer.
+* Prepared data is passed into section components through typed props.
+* The existing homepage IA, section order, section IDs, content facts, routes, and strengthened visual direction were preserved.
+* Project link preparation remains typed and readable in the page before data is passed to `SelectedWork.vue`.
+
+Created components:
+
+```text
+app/components/home/HomeHero.vue
+app/components/home/RecruiterSnapshot.vue
+app/components/home/AskPortfolioPreview.vue
+app/components/home/SelectedWork.vue
+app/components/home/HowIWork.vue
+app/components/home/AiAutomationFocus.vue
+app/components/home/ExperienceSnapshot.vue
+app/components/home/HomeContactCTA.vue
+```
+
+No real AI integration, API route, dependency, route change, content fact change, or visual redesign was added.
+
 ## Strongest Featured Projects
 
 The new content files prioritize:
@@ -184,18 +211,18 @@ Preferred path:
 
 The next phase should be:
 
-> Extract homepage sections into components.
+> Static Ask My Portfolio guide.
 
-After the strengthened visual identity is approved, split the monolithic homepage into focused section components without changing information architecture, facts, routes, or styling direction.
+Now that the homepage is structured into focused components, build the first deterministic Ask My Portfolio guide experience using local structured content only.
 
 Focus areas:
 
-* preserve the same eight homepage sections
-* keep structured content imports and props clear
-* avoid changing content facts or adding new product claims
-* keep the visual system intact
-* do not add dependencies, API routes, or real AI behavior
-* run the build after extraction
+* use `content/faq.json` and related structured content as the source of truth
+* keep suggested recruiter questions and predefined grounded answers
+* avoid external API calls, API routes, browsing, or LLM behavior
+* preserve the current visual system and homepage IA unless explicitly approved
+* do not invent facts or add hiring promises
+* run the build after implementation
 
 ## Known Constraints
 
@@ -212,4 +239,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-13 after strengthened homepage visual identity pass.
+2026-06-13 after homepage component extraction.

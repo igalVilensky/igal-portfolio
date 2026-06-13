@@ -2,92 +2,72 @@
 
 ## Task Title
 
-Extract homepage sections into components.
+Build the static Ask My Portfolio guide.
 
 ## Goal
 
-After the strengthened homepage visual identity is approved, split the refactored homepage in `app/pages/index.vue` into focused, maintainable section components without changing the homepage information architecture, facts, routes, or visual direction.
+Turn the current Ask My Portfolio preview into a deterministic, recruiter-friendly guide using local structured content only.
 
-The goal is code organization only. The homepage should render the same eight-section recruiter flow:
-
-1. Hero
-2. Recruiter Snapshot
-3. Ask My Portfolio preview
-4. Selected Work
-5. How I Work
-6. AI / Automation Focus
-7. Experience Snapshot
-8. Contact CTA
+This is not a real AI task. The goal is to create a useful static guide experience with suggested recruiter questions and predefined grounded answers.
 
 ## Context
 
-The homepage information architecture is stable. A stronger light-first product/SaaS-style visual identity pass has been applied after the previous version still felt too close to the old portfolio style.
+The homepage now has:
 
-Component extraction should remain paused until that visual identity is approved.
+1. Stable recruiter-focused information architecture.
+2. A strengthened light-first product/SaaS visual identity.
+3. Focused section components under `app/components/home/`.
+4. A static Ask My Portfolio preview powered by `content/faq.json`.
 
 Current positioning remains:
 
 > Full-stack software developer building SaaS products and practical AI-assisted workflows.
 
-The page currently imports structured content from:
+## Recommended Scope
+
+Use local structured content as the source of truth:
 
 ```text
 content/profile.json
 content/projects.json
 content/experience.json
 content/skills.json
+content/role-fit.json
 content/faq.json
-```
-
-Preserve the structured content source of truth.
-
-## Recommended Scope
-
-Create focused homepage section components, likely under an existing or new component directory that fits the Nuxt app structure.
-
-Suggested components:
-
-```text
-HomepageHero.vue
-RecruiterSnapshot.vue
-AskPortfolioPreview.vue
-SelectedWork.vue
-HowIWork.vue
-AiAutomationFocus.vue
-ExperienceSnapshot.vue
-HomepageContactCTA.vue
 ```
 
 Good scope:
 
-* keep data preparation readable
-* pass props from the page into section components where practical
-* preserve current section IDs and order
-* preserve the current homepage content hierarchy
-* preserve the approved visual styling direction
-* keep components simple and local to the homepage unless reuse is obvious
+* expand the current Ask My Portfolio preview into a more useful deterministic guide
+* show suggested recruiter questions from `content/faq.json`
+* display predefined answers from `content/faq.json`
+* optionally group questions by recruiter intent such as role fit, frontend experience, SaaS proof, AI/automation, location, and contact
+* keep answers grounded in existing content facts
+* preserve the current visual system and mature product style
+* keep the interaction simple, clear, and static-deployment friendly
 
 Avoid in this task:
 
-* changing content facts
-* changing routes
-* adding dependencies
-* implementing real AI
-* adding API routes
-* redesigning the visual system again unless the user explicitly asks for another visual pass
-* rebuilding case studies
-* deleting useful pages
+* real AI or LLM calls
+* API routes
+* external browsing
+* new dependencies
+* invented facts or unsupported claims
+* route changes unless explicitly approved
+* redesigning the homepage visual system
+* changing project, experience, profile, or FAQ facts
 
 ## Files Likely To Inspect
 
 ```text
 app/pages/index.vue
-app/assets/css/main.css
+app/components/home/AskPortfolioPreview.vue
+content/faq.json
 content/profile.json
 content/projects.json
 content/experience.json
 content/skills.json
-content/faq.json
+content/role-fit.json
 docs/codex/current-state.md
 ```
 
@@ -97,10 +77,10 @@ docs/codex/current-state.md
 * Do not add dependencies.
 * Do not implement real AI.
 * Do not add API routes.
-* Do not change routes.
+* Do not expose API keys.
+* Do not change routes unless the user explicitly asks.
 * Do not change structured content facts.
-* Do not alter the homepage IA.
-* Do not make a new visual redesign pass.
+* Preserve the visual direction unless the user asks for a visual pass.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -109,11 +89,11 @@ docs/codex/current-state.md
 
 The task is complete when:
 
-* the homepage still renders the same eight sections in the same order
-* `app/pages/index.vue` is smaller and easier to scan
-* homepage sections live in focused Vue components
-* structured content usage remains clear
-* visual styling remains materially unchanged
-* no real AI, API route, dependency, or route change is added
+* Ask My Portfolio is more useful than the current preview
+* suggested questions are visible and selectable
+* answers are deterministic and come from local content
+* no real AI, API route, dependency, or external service is added
+* content facts remain unchanged
+* the current homepage IA and visual style are preserved
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated
