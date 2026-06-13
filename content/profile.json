@@ -24,9 +24,9 @@
   "current_course": {
     "program": "AI Agents & Automations",
     "institution": "WBS CODING SCHOOL",
-    "timeframe": null,
+    "timeframe": "2026 - Present",
     "status": "current",
-    "note": "The documentation identifies this as the current course, but no exact start or end date is present in the repository."
+    "note": "Timeframe provided by the user during the content accuracy correction pass."
   },
   "target_roles": [
     "Full-Stack Software Developer",

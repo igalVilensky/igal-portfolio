@@ -3,11 +3,11 @@
     {
       "id": "flowplace",
       "organization": "Flowplace",
-      "title": "Full-Stack Developer",
-      "timeframe": "2023 - Present",
+      "title": "Software Developer",
+      "timeframe": "2023 - 2025",
       "location": "Leipzig",
       "type": "work",
-      "summary": "Develops SaaS features with Vue.js/Nuxt.js and Directus, implements responsive UI designs, improves usability and accessibility, and integrates REST APIs.",
+      "summary": "Developed SaaS features with Vue.js/Nuxt.js and Directus, implemented responsive UI designs, improved usability and accessibility, and integrated REST APIs.",
       "highlights": [
         "Developed SaaS features with Vue.js/Nuxt.js and Directus.",
         "Implemented responsive UI designs.",
@@ -24,7 +24,7 @@
         "CI/CD"
       ],
       "source_notes": [
-        "Role, timeframe, and responsibilities come from the CV and locale files.",
+        "Role and timeframe were corrected from user-provided information during the content accuracy pass.",
         "Role Compass outcome comes from the project docs and existing case study page."
       ]
     },
@@ -83,30 +83,36 @@
     {
       "id": "myfxbook-cashdo",
       "organization": "Myfxbook Ltd / Cashdo",
-      "title": "Social Media & Web Coordinator",
+      "title": "Digital Product & Web Coordinator",
       "timeframe": "2017 - 2019",
       "location": "Ashqelon",
       "type": "work",
-      "summary": "Managed company website and social media channels and supported market research and affiliate marketing campaigns.",
+      "summary": "Coordinated website and digital product operations, supported feature development coordination, and worked with white-label partner integrations.",
       "highlights": [
-        "Managed company website and social media channels including Instagram, Telegram, and Facebook.",
-        "Conducted market research and affiliate marketing campaigns."
+        "Managed company website operations and digital product updates.",
+        "Coordinated feature development needs between product, web, and partner-facing workflows.",
+        "Supported white-label partner integrations.",
+        "Conducted market research and affiliate marketing campaigns.",
+        "Maintained social media channels as a supporting responsibility."
       ],
       "technologies": [
         "Website administration",
-        "Social media channels",
+        "Product operations",
+        "White-label partner integrations",
+        "Feature development coordination",
         "Affiliate marketing"
       ],
       "source_notes": [
-        "Details come from the CV and locale files."
+        "Title and product-operations framing were corrected from user-provided information during the content accuracy pass.",
+        "Market research, affiliate marketing, website administration, and social media support appear in the CV and locale files."
       ]
     },
     {
       "id": "wbs-ai-agents-automations",
       "organization": "WBS CODING SCHOOL",
       "title": "AI Agents & Automations course",
-      "timeframe": null,
-      "location": null,
+      "timeframe": "2026 - Present",
+      "location": "Online",
       "type": "education",
       "summary": "Current course focused on strengthening software development experience with AI agents, automations, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
       "highlights": [
@@ -127,7 +133,7 @@
         "AI safety"
       ],
       "source_notes": [
-        "The docs identify this as the current course; exact dates and location are not provided."
+        "Timeframe and location were corrected from user-provided information during the content accuracy pass."
       ]
     },
     {

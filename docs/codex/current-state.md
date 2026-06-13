@@ -65,9 +65,15 @@ The structured content covers:
 
 Known content boundaries:
 
-* WBS AI Agents & Automations dates are not available in the repo, so they remain `null`.
+* WBS AI Agents & Automations is now recorded as `2026 - Present`, Online, from user-provided correction.
 * Some existing case-study routes have naming mismatches, and the project content records notes rather than hiding that uncertainty.
 * Project metrics are only included where the repository documents them.
+
+Content accuracy corrections made after Milestone 2:
+
+* Flowplace experience is now `Software Developer`, `2023 - 2025`, and no longer labeled current.
+* Myfxbook Ltd / Cashdo is now framed as `Digital Product & Web Coordinator`, emphasizing website/product operations, feature development coordination, and white-label partner integrations.
+* WBS CODING SCHOOL is now `2026 - Present`, Online.
 
 ## Current App Understanding
 
@@ -139,4 +145,4 @@ Target homepage sections:
 
 ## Last Updated
 
-2026-06-13 after creating the structured content source files.
+2026-06-13 after structured content accuracy corrections.

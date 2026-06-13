@@ -16,15 +16,15 @@ He is currently extending that software development background through the AI Ag
 
 Igal is a full-stack software developer with experience building SaaS products and web applications using TypeScript, Vue/Nuxt, React/Next, Node.js, REST APIs, and modern development workflows. In previous roles, he worked on production features end-to-end, collaborated with product and design teams, tested user flows, supported bug fixes, and contributed to product launches.
 
-At Flowplace, he worked as a Full-Stack Developer on SaaS features with Vue.js/Nuxt.js and Directus, implemented responsive UI designs, improved usability, accessibility, and platform consistency, and integrated REST APIs. The Flowplace Role Compass feature is documented as reaching 5,000+ users in its first month.
+At Flowplace, he worked as a Software Developer from 2023 to 2025 on SaaS features with Vue.js/Nuxt.js and Directus, implemented responsive UI designs, improved usability, accessibility, and platform consistency, and integrated REST APIs. The Flowplace Role Compass feature is documented as reaching 5,000+ users in its first month.
 
 At LeanERA, he worked as a Software Developer using JavaScript, Vue 3, Nuxt 3, TypeScript, Tailwind CSS, and Ionic. The existing CV and case-study content describe his work on dynamic and responsive web applications, cross-functional technology selection, and clean, scalable codebases that supported the company's transition toward product-focused systems.
 
 At ARI Motors, he worked as a Full Stack Web Developer on a comparison portal for electric commercial vehicles and other websites. The existing case-study page describes solo full-stack ownership of the EV comparison portal, including frontend interface work, backend systems, database architecture, and delivery from concept to production in under three months.
 
-Before these software development roles, Igal worked as a Social Media & Web Coordinator at Myfxbook Ltd / Cashdo, managing company website and social media channels and supporting market research and affiliate marketing campaigns. That earlier startup and web operations background supports his product-minded approach to software: he connects implementation details with user workflows, business context, and clear communication.
+Before these software development roles, Igal worked as a Digital Product & Web Coordinator at Myfxbook Ltd / Cashdo, coordinating website and digital product operations, feature development needs, white-label partner integrations, market research, and affiliate marketing campaigns. That earlier startup, product operations, and web coordination background supports his product-minded approach to software: he connects implementation details with user workflows, business context, partner needs, and clear communication.
 
-His current AI Agents & Automations course at WBS CODING SCHOOL is a natural next step. It does not replace his software development profile; it strengthens it with practical AI workflows, LLM APIs, prompt engineering, AI agents, n8n, Make, APIs, webhooks, Python automations, and AI safety.
+His current AI Agents & Automations course at WBS CODING SCHOOL, running from 2026 to present online, is a natural next step. It does not replace his software development profile; it strengthens it with practical AI workflows, LLM APIs, prompt engineering, AI agents, n8n, Make, APIs, webhooks, Python automations, and AI safety.
 
 ## Short Recruiter Summary
 
@@ -36,6 +36,6 @@ Full-stack software developer with professional SaaS and web application experie
 
 ## Fact Boundaries
 
-- WBS course dates are not present in the repository.
+- WBS course timeframe and location were corrected from user-provided information: 2026 - Present, Online.
 - Some project pages/routes have naming mismatches in the current app; the content files keep route notes where relevant.
 - User or revenue metrics are included only where the repository documents them, such as Flowplace Role Compass reaching 5,000+ users in the first month.
