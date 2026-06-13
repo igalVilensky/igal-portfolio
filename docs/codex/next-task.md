@@ -2,40 +2,19 @@
 
 ## Task Title
 
-Refactor homepage information architecture.
+Visual system refactor.
 
 ## Goal
 
-Restructure the homepage around recruiter scanning and the new source-of-truth content files.
+Move the portfolio’s visual system toward a mature, calm, recruiter-friendly product-engineering style now that the homepage information architecture is in place.
 
-The goal is to make the first page communicate quickly:
+The goal is not to redesign everything from scratch. The goal is to make the existing Nuxt/Tailwind interface feel clearer, quieter, more readable, and more aligned with:
 
-* who Igal is professionally
-* which roles he fits
-* what stack he uses
-* which projects provide the strongest proof
-* how AI agents and automations connect to his existing software development experience
-* how to contact him or review work
+> Full-stack software developer building SaaS products and practical AI-assisted workflows.
 
 ## Context
 
-Milestone 2 created the structured content source files:
-
-```text
-content/profile.json
-content/experience.json
-content/projects.json
-content/skills.json
-content/role-fit.json
-content/faq.json
-content/professional-narrative.md
-```
-
-Use these files as the source of truth where practical. Do not invent new content in components.
-
-## Target Homepage Sections
-
-Refactor the homepage toward this structure:
+The homepage now follows the target IA:
 
 1. Hero
 2. Recruiter Snapshot
@@ -46,56 +25,83 @@ Refactor the homepage toward this structure:
 7. Experience Snapshot
 8. Contact CTA
 
+The next step is to polish the visual language around that structure.
+
+## Design Direction
+
+Follow:
+
+```text
+docs/design/visual-direction.md
+```
+
+The site should feel:
+
+* clean
+* mature
+* calm
+* readable
+* recruiter-friendly
+* product-minded
+* case-study-driven
+* lightly technical
+
+Avoid:
+
+* loud gradients
+* neon/cyberpunk styling
+* excessive animation
+* heavy glassmorphism
+* overly playful AI visuals
+* decorative elements that compete with content
+
 ## Recommended Scope
 
-This task should focus on structure and content hierarchy first.
+Focus on the homepage and shared visual primitives used there.
 
 Good scope:
 
-* simplify the homepage flow
-* make the hero copy more direct and recruiter-friendly
-* add or prepare a recruiter snapshot section
-* show only the strongest selected work on the homepage
-* explain AI/automation as an extension of software development
-* keep visual changes restrained
-* keep existing routes working
+* simplify colors and backgrounds
+* reduce gradient-heavy styling
+* improve typography hierarchy
+* tighten section spacing
+* make cards cleaner and more content-led
+* make buttons and links more consistent
+* improve mobile readability
+* keep the static Ask My Portfolio preview professional
+* preserve the data-driven homepage structure
 
 Avoid in this task:
 
-* full visual-system redesign
-* real AI integration
-* new dependencies
-* route migration
-* deleting useful pages
+* changing routes
+* adding dependencies
+* implementing real AI
+* adding API routes
 * rebuilding all case studies
+* deleting useful pages
+* inventing new facts
 
-## Data To Use
+## Files Likely To Inspect
 
-Use:
+```text
+app/pages/index.vue
+app/assets/css/main.css
+tailwind.config.js
+docs/design/visual-direction.md
+docs/codex/current-state.md
+```
 
-* `content/profile.json`
-* `content/projects.json`
-* `content/experience.json`
-* `content/skills.json`
-* `content/professional-narrative.md`
-* positioning docs in `docs/strategy/positioning.md`
-* visual direction docs in `docs/design/visual-direction.md`
-
-Featured homepage projects should be:
-
-1. Flowplace Role Compass
-2. OpenMe
-3. Decision Matrix AI
-4. ARI Motors EV Portal
+Only change `tailwind.config.js` if truly needed. Prefer scoped or existing utility-class improvements first.
 
 ## Rules
 
-* Do not add real AI integration yet.
+* Keep the app working.
 * Do not add dependencies.
-* Do not invent facts.
+* Do not implement real AI.
 * Do not overstate AI expertise.
-* Keep the app working after the refactor.
-* Prefer small, readable components or data-driven sections.
+* Do not change the structured content facts.
+* Keep visual changes restrained and purposeful.
+* Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
 
@@ -103,10 +109,11 @@ Featured homepage projects should be:
 
 The task is complete when:
 
-* homepage information hierarchy matches the target structure or a clearly justified MVP subset
-* strongest role positioning is visible near the top
-* selected work is limited to the highest-priority projects
-* AI/automation is framed as a practical extension of software development
-* no unsupported facts are introduced
-* existing main routes still work
+* homepage feels calmer and more recruiter-friendly
+* text hierarchy is easier to scan
+* section and card styling is more consistent
+* colors and effects are less flashy
+* mobile layout remains readable
+* no real AI or new dependencies are added
+* build/check passes or any blocker is documented
 * current-state and next-task docs are updated

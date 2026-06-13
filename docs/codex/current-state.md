@@ -81,13 +81,47 @@ The existing app already has:
 
 * Nuxt/Vue/TypeScript foundation
 * Tailwind styling
-* homepage sections such as Hero, MyStory, IntegratedSkills, CaseStudiesPreview, ContactCTA
+* a refactored homepage in `app/pages/index.vue`
 * project data in `app/composables/useProjects.ts`
+* structured portfolio data in `content/*.json`
 * multiple project/case-study routes
 * live deployment context
 * current AI/automation language in parts of the site
 
-No UI code was changed during Milestone 2.
+Milestone 3 homepage information architecture is complete.
+
+Homepage sections now follow the target recruiter flow:
+
+1. Hero
+2. Recruiter Snapshot
+3. Ask My Portfolio preview
+4. Selected Work
+5. How I Work
+6. AI / Automation Focus
+7. Experience Snapshot
+8. Contact CTA
+
+The homepage now imports structured content from:
+
+```text
+content/profile.json
+content/projects.json
+content/experience.json
+content/skills.json
+content/faq.json
+```
+
+What changed:
+
+* Hero copy is more direct, mature, and recruiter-friendly.
+* Recruiter snapshot gives location, target roles, stack, AI focus, languages, and current WBS course.
+* Ask My Portfolio is a static/non-functional preview using FAQ content only.
+* Selected Work shows only the four featured projects.
+* AI/automation is framed as an extension of software development experience.
+* Experience snapshot is concise and data-driven.
+* Contact CTA points to email, LinkedIn, and GitHub.
+
+No real AI integration, API route, dependency, route migration, or page deletion was added.
 
 ## Strongest Featured Projects
 
@@ -102,7 +136,15 @@ Other projects are marked as secondary or lab so they do not compete equally on 
 
 ## AI Guide Status
 
-The AI guide is still not implemented.
+The AI guide is still not implemented as real AI.
+
+The homepage now includes a static “Ask My Portfolio” preview:
+
+* suggested recruiter prompts
+* a sample grounded answer from `content/faq.json`
+* no API calls
+* no external actions
+* no chatbot state
 
 Preferred path:
 
@@ -115,20 +157,19 @@ Preferred path:
 
 The next phase should be:
 
-> Refactor homepage information architecture.
+> Visual system refactor.
 
-Use the content files as the source of truth and restructure the homepage around recruiter scanning before doing a visual-system polish.
+Now that the homepage structure is stable, move the visual system toward the mature, calm product-engineering direction in `docs/design/visual-direction.md`.
 
-Target homepage sections:
+Focus areas:
 
-1. Hero
-2. Recruiter Snapshot
-3. Ask My Portfolio preview
-4. Selected Work
-5. How I Work
-6. AI / Automation Focus
-7. Experience Snapshot
-8. Contact CTA
+* simplify color palette
+* reduce remaining flashy gradients and decorative effects
+* improve typography hierarchy
+* tighten spacing and card treatments
+* improve button consistency
+* check mobile readability and scanning
+* preserve the homepage IA and structured content usage
 
 ## Known Constraints
 
@@ -145,4 +186,4 @@ Target homepage sections:
 
 ## Last Updated
 
-2026-06-13 after structured content accuracy corrections.
+2026-06-13 after homepage information architecture refactor.
