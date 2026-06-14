@@ -1,62 +1,40 @@
 <!-- app/components/Navbar.vue -->
 <template>
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" :class="[
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-secondary-200 transition-all duration-300 dark:border-dark-border" :class="[
     isScrolled
-      ? 'glass py-4'
-      : 'bg-transparent py-6',
+      ? 'bg-secondary-50 py-3 dark:bg-dark-bg'
+      : 'bg-secondary-50 py-4 dark:bg-dark-bg',
   ]">
-    <div class="container mx-auto px-6">
-      <div class="flex justify-between items-center">
-        <!-- Logo/Brand -->
-        <div class="flex-shrink-0">
-          <NuxtLink to="/" class="flex items-center gap-3 group" @click="closeMobileMenu">
-            <div
-              class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white font-display font-bold text-xl shadow-lg shadow-primary-500/20 group-hover:scale-105 transition-transform duration-300">
-              IV
-            </div>
-            <span
-              class="text-xl font-display font-bold text-secondary-900 dark:text-white tracking-tight group-hover:text-primary-500 transition-colors">
-              Igal Vilensky
-            </span>
-          </NuxtLink>
-        </div>
-
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-1">
+    <div class="mx-auto max-w-4xl px-5 sm:px-6">
+      <div class="flex justify-end md:justify-between items-center">
+        <div class="hidden md:flex items-center gap-1">
           <NuxtLink v-for="item in navigationItems" :key="item.id" :to="item.path"
-            class="px-5 py-2.5 text-sm font-medium text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all rounded-full hover:bg-secondary-100 dark:hover:bg-white/5 relative group"
+            class="rounded-md px-3 py-2 text-sm font-medium text-secondary-600 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-300 dark:hover:bg-dark-surface dark:hover:text-primary-300"
             :class="{
-              'text-primary-600 dark:text-primary-400 bg-secondary-50 dark:bg-white/5':
+              'bg-white text-primary-700 dark:bg-dark-surface dark:text-primary-300':
                 isActive(item.path),
             }">
             {{ item.label }}
           </NuxtLink>
         </div>
 
-        <!-- Desktop Right Side -->
-        <div class="hidden md:flex items-center gap-4">
-          <!-- Dark Mode Toggle -->
+        <div class="hidden md:flex items-center">
           <button @click="toggleColorMode"
-            class="w-10 h-10 rounded-full flex items-center justify-center text-secondary-500 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-secondary-100 dark:hover:bg-white/5 transition-all"
+            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-500 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-400 dark:hover:bg-dark-surface dark:hover:text-primary-300"
             aria-label="Toggle dark mode">
             <i :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
           </button>
-
-          <NuxtLink to="/contact" class="btn-primary text-sm px-6 py-2.5">
-            Let's Talk
-          </NuxtLink>
         </div>
 
-        <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center gap-4">
           <button @click="toggleColorMode"
-            class="w-10 h-10 rounded-full flex items-center justify-center text-secondary-500 dark:text-secondary-400 hover:bg-secondary-100 dark:hover:bg-white/5 transition-all"
+            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-500 transition-colors hover:bg-secondary-100 dark:text-secondary-400 dark:hover:bg-dark-surface"
             aria-label="Toggle dark mode">
             <i :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
           </button>
 
           <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="w-10 h-10 flex items-center justify-center text-secondary-900 dark:text-white hover:text-primary-500 transition-colors"
+            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-900 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-white dark:hover:bg-dark-surface dark:hover:text-primary-300"
             aria-label="Toggle mobile menu">
             <i :class="isMobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
           </button>
@@ -69,24 +47,17 @@
       enter-to-class="opacity-100 translate-y-0" leave-active-class="transition ease-in duration-200"
       leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-4">
       <div v-show="isMobileMenuOpen"
-        class="md:hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-dark-surface/95 backdrop-blur-xl border-b border-secondary-200 dark:border-white/5 shadow-xl">
-        <div class="container mx-auto px-6 py-6 space-y-2">
+        class="md:hidden absolute top-full left-0 right-0 border-b border-secondary-200 bg-secondary-50 dark:border-dark-border dark:bg-dark-bg">
+        <div class="mx-auto max-w-4xl px-5 py-4 space-y-1 sm:px-6">
           <NuxtLink v-for="item in navigationItems" :key="item.id" :to="item.path"
-            class="flex items-center justify-between px-4 py-4 text-lg font-medium text-secondary-600 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-secondary-50 dark:hover:bg-white/5 rounded-xl transition-all"
+            class="flex items-center justify-between rounded-md px-3 py-3 text-base font-medium text-secondary-600 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-300 dark:hover:bg-dark-surface dark:hover:text-primary-300"
             :class="{
-              'text-primary-600 dark:text-primary-400 bg-secondary-50 dark:bg-white/5':
+              'bg-white text-primary-700 dark:bg-dark-surface dark:text-primary-300':
                 isActive(item.path),
             }" @click="closeMobileMenu">
             <span>{{ item.label }}</span>
             <i class="fas fa-chevron-right text-xs opacity-50"></i>
           </NuxtLink>
-
-          <div class="pt-4 mt-4 border-t border-secondary-100 dark:border-white/5">
-            <NuxtLink to="/contact" class="flex items-center justify-center w-full btn-primary"
-              @click="closeMobileMenu">
-              Start a Project
-            </NuxtLink>
-          </div>
         </div>
       </div>
     </Transition>

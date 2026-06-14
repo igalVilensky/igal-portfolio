@@ -88,20 +88,16 @@ The existing app already has:
 * live deployment context
 * current AI/automation language in parts of the site
 
-Milestone 3 homepage information architecture is complete.
+The homepage has been simplified from the previous marketing-style eight-section direction into a quieter professional developer portfolio index.
 
-Homepage sections now follow the target recruiter flow:
+Homepage sections now follow this compact structure:
 
-1. Hero
-2. Recruiter Snapshot
-3. Ask My Portfolio preview
-4. Selected Work
-5. How I Work
-6. AI / Automation Focus
-7. Experience Snapshot
-8. Contact CTA
+1. Minimal hero
+2. Selected Work
+3. Ask about the portfolio
+4. Contact
 
-The homepage now imports structured content from:
+The homepage still imports structured content from:
 
 ```text
 content/profile.json
@@ -113,53 +109,29 @@ content/faq.json
 
 What changed:
 
-* Hero copy is more direct, mature, and recruiter-friendly.
-* Recruiter snapshot gives location, target roles, stack, AI focus, languages, and current WBS course.
-* Ask My Portfolio is a static/non-functional preview using FAQ content only.
-* Selected Work shows only the four featured projects.
-* AI/automation is framed as an extension of software development experience.
-* Experience snapshot is concise and data-driven.
-* Contact CTA points to email, LinkedIn, and GitHub.
+* The hero now shows only Igal's name, one positioning sentence, one metadata line, and simple Work/CV/GitHub/LinkedIn/Email links.
+* The hero and selected work sections now share the same `max-w-4xl` content width.
+* Selected Work is the main homepage content and shows only Flowplace Role Compass, OpenMe, Decision Matrix AI, and ARI Motors EV Portal.
+* Project entries are concise: title, one-sentence summary, compact tech line, and one link.
+* Recruiter Snapshot, How I Work, AI / Automation Focus, and Experience Snapshot are no longer rendered on the homepage.
+* Ask My Portfolio is now a compact optional guide labeled "Ask about the portfolio." It shows an input and three suggested questions, with no answer visible by default.
+* The guide still uses the existing AI route when available and preserves deterministic FAQ fallback behavior.
+* The guide now sends a compact portfolio brief instead of the full structured content object, avoiding homepage-specific AI request failures.
+* The homepage contact area is a short availability sentence plus email, LinkedIn, and GitHub.
+* The default footer sitemap is hidden on the homepage to avoid a large footer-like content block.
+* The global navbar is simplified to text links and a theme toggle, with the left logo/name block and "Let's Talk" CTA removed.
 
-No real AI integration, API route, dependency, route migration, or page deletion was added.
-
-Milestone 4 visual system refactor is complete.
-
-What changed:
-
-* Homepage visual treatment is calmer, flatter, and more recruiter-friendly while keeping the same eight-section IA.
-* Hero typography, section headings, and body copy were tightened for easier scanning.
-* Cards now use more consistent borders, spacing, and corner radius.
-* Buttons and homepage CTA links are more consistent and mobile-readable.
-* The Ask My Portfolio preview is quieter and more professional, still static and non-functional.
-* Shared homepage primitives in `app/assets/css/main.css` were simplified for buttons, kickers, titles, and compact sections.
-
-No real AI integration, API route, dependency, route change, structured content fact change, component split, or case-study rebuild was added.
-
-## Strengthened Homepage Visual Identity Pass
-
-A stronger homepage visual identity pass is complete after review found the prior version too close to the old portfolio style.
-
-What changed:
-
-* Homepage styling now leans light-first with warm off-white backgrounds, charcoal text, soft gray borders, white editorial panels, and restrained indigo accents.
-* The homepage no longer uses the old dark/glass-heavy treatment, glow effects, gradients, or icon-heavy button styling.
-* The same eight-section recruiter IA is preserved: Hero, Recruiter Snapshot, Ask My Portfolio preview, Selected Work, How I Work, AI / Automation Focus, Experience Snapshot, and Contact CTA.
-* Shared primitives in `app/assets/css/main.css` were flattened: glass and gradient utilities now resolve to calm solid treatments, `btn-primary` is restrained, and `page-kicker`, `section-title`, and `section-compact` better match the mature product style.
-* `tailwind.config.js` now uses warmer neutral/charcoal colors, indigo-blue primary accents, emerald secondary accents, and removes the old hero glow token while de-emphasizing motion/display styling.
-
-No component extraction, real AI integration, API route, dependency, route change, or structured content fact change was added.
+No dependency, route, provider, structured content fact, or case-study page change was added.
 
 ## Homepage Component Extraction
 
-The homepage component extraction task is complete.
+The homepage component extraction task remains complete.
 
 What changed:
 
-* The eight homepage sections now live as focused components under `app/components/home/`.
+* Homepage sections live as focused components under `app/components/home/`.
 * `app/pages/index.vue` is now smaller and acts as the structured content orchestration layer.
 * Prepared data is passed into section components through typed props.
-* The existing homepage IA, section order, section IDs, content facts, routes, and strengthened visual direction were preserved.
 * Project link preparation remains typed and readable in the page before data is passed to `SelectedWork.vue`.
 
 Created components:
@@ -175,7 +147,9 @@ app/components/home/ExperienceSnapshot.vue
 app/components/home/HomeContactCTA.vue
 ```
 
-No real AI integration, API route, dependency, route change, content fact change, or visual redesign was added.
+Some extracted components from the previous homepage direction remain available but are currently unused by `app/pages/index.vue`.
+
+No route, dependency, or structured content fact change was added.
 
 ## Strongest Featured Projects
 
@@ -190,7 +164,7 @@ Other projects are marked as secondary or lab so they do not compete equally on 
 
 ## Ask My Portfolio Status
 
-Ask My Portfolio is now implemented as an AI-powered recruiter guide with a deterministic local fallback.
+Ask My Portfolio is implemented as an optional AI-assisted portfolio guide with a deterministic local fallback.
 
 What works:
 
@@ -201,8 +175,9 @@ What works:
 * Suggested recruiter questions remain visible and selectable.
 * Custom recruiter questions can be asked from the homepage guide.
 * The AI prompt receives local structured portfolio context from `content/profile.json`, `content/projects.json`, `content/experience.json`, `content/skills.json`, `content/role-fit.json`, and `content/faq.json`.
+* The homepage sends that context as a compact text brief rather than a full JSON dump.
 * If the AI route is unavailable, no API key is configured, the request fails, or no reply is returned, the guide falls back to the closest predefined answer from `content/faq.json`.
-* The UI states that answers are grounded in portfolio content and that the guide cannot browse, send emails, schedule calls, apply to jobs, or make claims beyond portfolio data.
+* The homepage UI keeps the guide compact, shows only three suggested questions, and reveals an answer only after the visitor asks or selects a question.
 
 Known limitations:
 
@@ -214,17 +189,17 @@ Known limitations:
 
 The next phase should be:
 
-> Add source cues and QA cases for Ask My Portfolio.
+> Align the secondary pages with the simplified portfolio direction.
 
-Now that Ask My Portfolio can use AI with a deterministic fallback, harden the experience with clearer source cues and a small set of manual QA prompts.
+The homepage is now intentionally minimal and project-led. Next, review the work/case-study index, about/contact pages, global navigation labels, and shared footer treatment so the rest of the site does not reintroduce marketing-style repetition or dense sitemap content.
 
 Focus areas:
 
-* add lightweight source cues for FAQ, project, role-fit, or experience-backed answers
-* define manual QA prompts for role fit, SaaS proof, frontend experience, AI/automation, contact, and unavailable information
-* verify AI answers stay within local portfolio facts
-* preserve the fallback behavior when Groq is unavailable
-* avoid new providers, dependencies, route changes, or visual redesign
+* audit secondary pages for repeated stack, role, current-course, and process copy
+* make the work/case-study index the deeper place for project detail
+* keep full experience, languages, detailed stack, course context, and process off the homepage unless requested through the guide
+* keep Ask My Portfolio fallback behavior intact
+* avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
 
 ## Known Constraints
@@ -242,4 +217,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-13 after AI-powered Ask My Portfolio implementation.
+2026-06-14 after homepage simplification into a compact project-led developer portfolio.

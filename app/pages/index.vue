@@ -1,24 +1,20 @@
 <!-- app/pages/index.vue -->
 <template>
-  <main class="min-h-screen bg-secondary-50 text-secondary-900">
+  <main class="min-h-screen bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100">
     <HomeHero
       :profile-name="profile.identity.name"
       :based-in="profile.identity.based_in"
       :cv-href="profile.links.cv"
-      :roles="heroRoles"
-      :snapshot-items="heroSnapshot"
+      :github="profile.links.github"
+      :linkedin="profile.links.linkedin"
+      :email="profile.links.email"
     />
-    <RecruiterSnapshot :items="recruiterSnapshot" />
+    <SelectedWork :projects="featuredProjects" />
     <AskPortfolioPreview
       :prompts="askPrompts"
-      :guide-preview="guidePreview"
       :faqs="faqData.faqs"
       :portfolio-context="portfolioGuideContext"
     />
-    <SelectedWork :projects="featuredProjects" />
-    <HowIWork :steps="workSteps" />
-    <AiAutomationFocus :items="aiFocus" />
-    <ExperienceSnapshot :entries="experienceSnapshot" />
     <HomeContactCTA
       :summary="profile.availability.summary"
       :email="profile.links.email"
@@ -29,13 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import AiAutomationFocus from "~/components/home/AiAutomationFocus.vue";
 import AskPortfolioPreview from "~/components/home/AskPortfolioPreview.vue";
-import ExperienceSnapshot from "~/components/home/ExperienceSnapshot.vue";
 import HomeContactCTA from "~/components/home/HomeContactCTA.vue";
 import HomeHero from "~/components/home/HomeHero.vue";
-import HowIWork from "~/components/home/HowIWork.vue";
-import RecruiterSnapshot from "~/components/home/RecruiterSnapshot.vue";
 import SelectedWork from "~/components/home/SelectedWork.vue";
 import profileData from "../../content/profile.json";
 import projectsData from "../../content/projects.json";
@@ -59,66 +51,12 @@ type Project = (typeof projectsData.projects)[number];
 type FeaturedProject = {
   id: string;
   title: string;
-  category: string;
   shortDescription: string;
-  role: string;
-  outcomeOrProof: string[];
-  technologies: string[];
+  techLine: string;
   link: ProjectLink | null;
 };
 
 const profile = profileData;
-
-const heroRoles = [
-  "Full-stack",
-  "Frontend",
-  "Vue/Nuxt",
-  "React/Next",
-  "SaaS",
-  "AI automation",
-];
-
-const heroSnapshot = [
-  {
-    label: "Core stack",
-    value: "TypeScript, Vue/Nuxt, React/Next, Node.js, APIs, Python/FastAPI",
-  },
-  {
-    label: "Current focus",
-    value: "AI agents, automations, LLM workflows, n8n, Make, webhooks",
-  },
-  {
-    label: "Strongest proof",
-    value: "SaaS features, full-stack MVPs, AI-assisted product tools, EV portal delivery",
-  },
-];
-
-const recruiterSnapshot = [
-  {
-    label: "Location",
-    value: profile.identity.based_in,
-  },
-  {
-    label: "Target roles",
-    value: "Full-stack, Frontend, Vue/Nuxt, React/Next, TypeScript, AI Automation",
-  },
-  {
-    label: "Core stack",
-    value: "TypeScript, Vue/Nuxt, React/Next, Node.js, Express, APIs, Python/FastAPI",
-  },
-  {
-    label: "AI focus",
-    value: "LLM APIs, prompt engineering, AI agents, n8n, Make, APIs, webhooks, AI safety",
-  },
-  {
-    label: "Languages",
-    value: profile.languages.map((item) => `${item.language} ${item.level}`).join(", "),
-  },
-  {
-    label: "Current",
-    value: `${profile.current_course.program}, ${profile.current_course.institution}, ${profile.current_course.timeframe}`,
-  },
-];
 
 const getProjectLink = (project: Project): ProjectLink | null => {
   if (project.links.case_study) {
@@ -151,11 +89,8 @@ const getProjectLink = (project: Project): ProjectLink | null => {
 const toFeaturedProject = (project: Project): FeaturedProject => ({
   id: project.id,
   title: project.title,
-  category: project.category,
   shortDescription: project.short_description,
-  role: project.role,
-  outcomeOrProof: project.outcome_or_proof,
-  technologies: project.technologies,
+  techLine: project.technologies.slice(0, 5).join(" · "),
   link: getProjectLink(project),
 });
 
@@ -166,139 +101,68 @@ const featuredProjects = projectsData.featured_project_order
 
 const askPrompts = [
   "role-fit",
-  "recruiter-summary",
   "frontend-experience",
-  "saas-experience",
-  "ai-automation-experience",
   "first-project-to-review",
 ]
   .map((id) => faqData.faqs.find((item) => item.id === id))
   .filter((item): item is (typeof faqData.faqs)[number] => Boolean(item));
 
-const guidePreview =
-  faqData.faqs.find((item) => item.id === "recruiter-summary") ?? faqData.faqs[0];
+const formatProjectForGuide = (project: Project) => [
+  `${project.title}: ${project.short_description}`,
+  `Role: ${project.role}`,
+  `Technologies: ${project.technologies.slice(0, 8).join(", ")}`,
+  `Proof: ${project.outcome_or_proof.join(" ")}`,
+].join("\n");
 
-const portfolioGuideContext = {
-  profile: {
-    identity: profile.identity,
-    headline: profile.headline,
-    summary: profile.summary,
-    cv_summary: profile.cv_summary,
-    experience_level: profile.experience_level,
-    current_focus: profile.current_focus,
-    current_course: profile.current_course,
-    target_roles: profile.target_roles,
-    core_technologies: profile.core_technologies,
-    ai_automation_technologies: profile.ai_automation_technologies,
-    languages: profile.languages,
-    availability: profile.availability,
-    links: {
-      email: profile.links.email,
-      github: profile.links.github,
-      linkedin: profile.links.linkedin,
-      portfolio: profile.links.portfolio,
-      cv: profile.links.cv,
-    },
-  },
-  projects: projectsData.projects.map((project) => ({
-    id: project.id,
-    title: project.title,
-    category: project.category,
-    priority: project.priority,
-    short_description: project.short_description,
-    long_description: project.long_description,
-    role: project.role,
-    technologies: project.technologies,
-    highlights: project.highlights,
-    outcome_or_proof: project.outcome_or_proof,
-    role_relevance: project.role_relevance,
-    links: project.links,
-  })),
-  featured_project_order: projectsData.featured_project_order,
-  experience: experienceData.entries.map((entry) => ({
-    id: entry.id,
-    organization: entry.organization,
-    title: entry.title,
-    timeframe: entry.timeframe,
-    location: entry.location,
-    type: entry.type,
-    summary: entry.summary,
-    highlights: entry.highlights,
-    technologies: entry.technologies,
-  })),
-  skills: skillsData.groups,
-  role_fit: roleFitData.roles,
-  faqs: faqData.faqs,
-};
+const featuredProjectBrief = featuredProjects
+  .map((project) => projectsData.projects.find((item) => item.id === project.id))
+  .filter((project): project is Project => Boolean(project))
+  .map(formatProjectForGuide)
+  .join("\n\n");
 
-const workSteps = [
-  {
-    index: "01",
-    title: "Clarify the workflow",
-    description: "Translate ambiguous needs into user flows, product constraints, and useful scope.",
-  },
-  {
-    index: "02",
-    title: "Design the interface",
-    description: "Shape responsive screens around clarity, accessibility, and real user tasks.",
-  },
-  {
-    index: "03",
-    title: "Connect the system",
-    description: "Build frontend and backend paths with APIs, data models, integrations, and deployment in mind.",
-  },
-  {
-    index: "04",
-    title: "Test the path",
-    description: "Check user flows, edge cases, data handling, and release readiness.",
-  },
-  {
-    index: "05",
-    title: "Iterate with context",
-    description: "Use feedback, bugs, and product priorities to keep improving the shipped experience.",
-  },
-];
+const experienceBrief = experienceData.entries
+  .filter((entry) => entry.type === "work" || entry.id === "wbs-ai-agents-automations")
+  .map((entry) => `${entry.title}, ${entry.organization}, ${entry.timeframe}: ${entry.summary}`)
+  .join("\n");
 
-const aiAutomationSkills = skillsData.groups.find((group) => group.id === "ai-automation");
-const aiFocus = [
-  {
-    title: "LLM product UX",
-    description: "Interfaces where AI suggestions are editable, explainable, and grounded in user intent.",
-  },
-  {
-    title: "Automation workflows",
-    description: "n8n, Make, APIs, and webhooks used as practical handoffs between tools and teams.",
-  },
-  {
-    title: "Human-in-the-loop systems",
-    description: "AI-assisted outputs with clear boundaries, review points, and no unsupported claims.",
-  },
-  {
-    title: "Current course layer",
-    description: `${profile.current_course.program} at ${profile.current_course.institution}, supported by ${aiAutomationSkills?.skills.slice(0, 5).join(", ")}.`,
-  },
-];
+const skillBrief = skillsData.groups
+  .filter((group) => ["frontend", "backend", "ai-automation", "engineering"].includes(group.id))
+  .map((group) => `${group.title}: ${group.skills.slice(0, 10).join(", ")}`)
+  .join("\n");
 
-const experienceSnapshotIds = [
-  "flowplace",
-  "leanera",
-  "ari-motors",
-  "myfxbook-cashdo",
-  "wbs-ai-agents-automations",
-  "dci-web-software-development",
-];
+const roleFitBrief = roleFitData.roles
+  .slice(0, 6)
+  .map((role) => `${role.role_title}: ${role.fit_summary}`)
+  .join("\n");
 
-const experienceSnapshot = experienceSnapshotIds
-  .map((id) => experienceData.entries.find((entry) => entry.id === id))
-  .filter((entry): entry is (typeof experienceData.entries)[number] => Boolean(entry));
+const faqBrief = faqData.faqs
+  .map((faq) => `${faq.question}\n${faq.answer}`)
+  .join("\n\n");
+
+const portfolioGuideContext = [
+  `Name: ${profile.identity.name}`,
+  `Location: ${profile.identity.based_in}`,
+  "Positioning: Full-stack developer building SaaS products, web applications, and AI-assisted tools.",
+  `Summary: ${profile.cv_summary}`,
+  `Availability: ${profile.availability.summary}`,
+  `Target roles: ${profile.target_roles.join(", ")}`,
+  `Current course: ${profile.current_course.program}, ${profile.current_course.institution}, ${profile.current_course.timeframe}.`,
+  `Languages: ${profile.languages.map((item) => `${item.language} ${item.level}`).join(", ")}`,
+  `Contact: email ${profile.links.email}, LinkedIn ${profile.links.linkedin}, GitHub ${profile.links.github}, CV ${profile.links.cv}.`,
+  `Featured projects:\n${featuredProjectBrief}`,
+  `Experience:\n${experienceBrief}`,
+  `Skills:\n${skillBrief}`,
+  `Role fit:\n${roleFitBrief}`,
+  `Saved portfolio answers:\n${faqBrief}`,
+].join("\n\n");
 
 useHead({
-  title: "Igal Vilensky - Full-Stack Developer for SaaS and AI-Assisted Workflows",
+  title: "Igal Vilensky - Full-Stack Developer",
   meta: [
     {
       name: "description",
       content:
-        "Recruiter-friendly portfolio of Igal Vilensky, a Leipzig-based full-stack software developer building SaaS products, frontend interfaces, API-connected workflows, and practical AI-assisted tools.",
+        "Portfolio of Igal Vilensky, a Leipzig-based full-stack developer building SaaS products, web applications, and AI-assisted tools.",
     },
   ],
 });

@@ -2,64 +2,64 @@
 
 ## Task Title
 
-Add source cues and QA cases for Ask My Portfolio.
+Align secondary pages with the simplified portfolio direction.
 
 ## Goal
 
-Harden the AI-powered Ask My Portfolio guide by making answer grounding clearer and defining a small manual QA set for recruiter questions.
-
-The guide already uses the existing Groq-backed portfolio AI route when available and falls back to deterministic local FAQ answers when AI is unavailable.
+Review and simplify the non-homepage experience so it supports the new compact, project-led developer portfolio direction without reintroducing marketing-style repetition.
 
 ## Context
 
-The homepage now has:
+The homepage has been simplified into:
 
-1. Stable recruiter-focused information architecture.
-2. A strengthened light-first product/SaaS visual identity.
-3. Focused section components under `app/components/home/`.
-4. Ask My Portfolio implemented in `app/components/home/AskPortfolioPreview.vue`.
-5. Existing AI infrastructure reused through `useGroqChat()`, `/api/groqChat`, and `/.netlify/functions/groqChat`.
-6. Static FAQ fallback from `content/faq.json`.
+1. Minimal hero
+2. Selected Work
+3. Ask about the portfolio
+4. Contact
+
+The homepage now avoids recruiter snapshot blocks, process sections, large AI marketing sections, experience snapshots, long bio copy, repeated stack lists, full course explanations, and a large footer sitemap.
 
 Current positioning remains:
 
-> Full-stack software developer building SaaS products and practical AI-assisted workflows.
+> Full-stack developer building SaaS products, web applications, and AI-assisted tools.
 
 ## Recommended Scope
 
 Good scope:
 
-* add lightweight source cues to the Ask My Portfolio answer panel
-* indicate whether an answer is backed by FAQ, project, experience, role-fit, skills, or profile content
-* add a concise manual QA checklist for common recruiter prompts
-* include at least one unavailable-information prompt to verify the guide says when information is missing
-* verify fallback behavior when `GROQ_API_KEY` is missing or the AI request fails
-* preserve current homepage IA and visual style
-* keep all answer grounding tied to local structured content
+* audit `/case-studies`, project detail pages, `/about`, `/contact`, global navigation, and shared footer treatment
+* keep the work/case-study index as the deeper place for project proof
+* remove or compress repeated stack, role, current-course, and process copy across secondary pages
+* keep full experience, languages, detailed stack, current course, process, and detailed role fit available away from the homepage or through Ask My Portfolio
+* preserve existing routes
+* preserve Ask My Portfolio AI and deterministic FAQ fallback behavior
+* keep the light-first mature visual style
+* run the build after implementation
 
 Avoid in this task:
 
-* adding a new AI provider
-* exposing API keys on the frontend
 * adding dependencies
-* adding browsing, email sending, scheduling, job applications, or external actions
+* adding a new AI provider
+* exposing API keys
 * inventing facts or unsupported claims
-* redesigning the homepage visual system
-* changing routes unless explicitly requested
+* redesigning the site into a landing page again
+* deleting routes
+* changing structured content facts unless the user provides corrections
 
 ## Files Likely To Inspect
 
 ```text
-app/components/home/AskPortfolioPreview.vue
-app/pages/index.vue
-app/composables/useGroqChat.ts
-server/api/groqChat.post.ts
-netlify/functions/groqChat.js
-content/faq.json
+app/pages/case-studies/index.vue
+app/pages/case-studies/*.vue
+app/pages/about.vue
+app/pages/contact.vue
+app/components/Navbar.vue
+app/components/Footer.vue
+content/profile.json
 content/projects.json
 content/experience.json
 content/skills.json
-content/role-fit.json
+content/faq.json
 docs/codex/current-state.md
 ```
 
@@ -67,11 +67,11 @@ docs/codex/current-state.md
 
 * Keep the app working.
 * Do not add dependencies.
-* Do not add a new AI provider.
+* Do not change routes.
 * Do not expose API keys.
-* Preserve the deterministic FAQ fallback.
-* Do not change structured content facts.
-* Preserve the visual direction unless the user asks for a visual pass.
+* Do not invent facts.
+* Preserve deterministic FAQ fallback.
+* Keep homepage content minimal.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -80,10 +80,9 @@ docs/codex/current-state.md
 
 The task is complete when:
 
-* Ask My Portfolio answers show clearer grounding/source cues
-* a small QA prompt set is documented or implemented
-* fallback behavior remains intact
-* no new provider, dependency, route change, or external action is added
-* no unsupported facts are introduced
+* secondary pages support the simplified portfolio direction
+* repeated homepage-style copy is reduced across the site
+* project proof remains easy to find
+* no routes, providers, dependencies, or unsupported facts are introduced
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated
