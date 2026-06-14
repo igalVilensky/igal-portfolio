@@ -50,38 +50,45 @@ To run this project locally:
    ```bash
    git clone https://github.com/igalVilensky/igal-portfolio.git
    cd igal-portfolio
-   Install dependencies:
    ```
 
-bash
-npm install
-Run the development server:
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-bash
-npm run dev
-Open in browser: Visit http://localhost:3000 to view the portfolio.
+3. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
 
-Build for production:
+4. **Open in browser**: Visit http://localhost:3000 to view the portfolio.
 
-bash
-npm run generate
-npm run preview
-📂 Project Structure
-text
+5. **Build for production**:
+   ```bash
+   npm run generate
+   npm run preview
+   ```
+
+## 📂 Project Structure
+
+```text
 ├── app/
 │ ├── components/ # Reusable Vue components
-│ │ ├── Navbar.vue # Navigation with mobile menu
-│ │ ├── Hero.vue # Landing section
-│ │ ├── MyStory.vue # Timeline and background
-│ │ ├── IntegratedSkills.vue # Skills showcase
-│ │ ├── CaseStudiesPreview.vue # Project highlights
-│ │ └── ContactCTA.vue # Contact section
+│ │ ├── Navbar.vue # Minimal site navigation
+│ │ ├── Footer.vue # Minimal global footer
+│ │ ├── home/ # Homepage sections
+│ │ ├── lab/ # Interactive lab tools
+│ │ └── *.vue # Active page support components and visualizers
 │ ├── pages/ # App routes
 │ │ ├── index.vue # Homepage
 │ │ ├── about.vue # About page with profile
-│ │ ├── case-studies.vue # Full projects showcase
+│ │ ├── case-studies/ # Work index and case-study documents
+│ │ ├── ai-compliance-compass.vue # AI compliance tool
 │ │ ├── contact.vue # Contact page
-│ │ └── writing.vue # Articles and blog
+│ │ ├── education.vue # Education page
+│ │ ├── experience.vue # Experience page
+│ │ └── experiments.vue # Lab experiments
 │ ├── layouts/ # Page layouts
 │ └── composables/ # Vue composables
 ├── assets/ # Static assets
@@ -89,13 +96,15 @@ text
 │ └── locales/ # Translation files (en, de, ru)
 ├── public/ # Public assets
 │ ├── profile.jpeg # Profile image
-│ ├── family-space.jpeg # Project screenshots
-│ ├── canOrderSystem.jpeg
-│ └── other project images...
+│ ├── experience-logos/ # Company and education logos
+│ ├── *.jpeg # Referenced project images
+│ └── *.pdf # CV and certificate documents
 ├── nuxt.config.ts # Nuxt configuration
 ├── tailwind.config.js # Tailwind CSS with custom design system
 ├── package.json # Dependencies and scripts
 └── README.md # This file
+```
+
 🎨 Design System
 The portfolio uses a custom design system with:
 

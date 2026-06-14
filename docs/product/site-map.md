@@ -462,19 +462,15 @@ For first major refactor, target:
 
 ```text
 /
-  Hero
-  RecruiterSnapshot
-  AskPortfolioPreview
+  HomeHero
   SelectedWork
-  HowIWork
-  AiAutomationFocus
-  ExperienceSnapshot
-  ContactCTA
+  AskPortfolioPreview
+  HomeContactCTA
 
 /case-studies
-  Featured work
-  AI/automation projects
-  Additional lab projects
+  Work index
+  Concise case-study documents
+  Secondary work rows
 
 /contact
   Contact details

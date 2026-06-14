@@ -50,14 +50,6 @@
         @apply border border-secondary-200 bg-white dark:border-dark-border dark:bg-dark-surface;
     }
 
-    .glass-card {
-        @apply rounded-md border border-secondary-200 bg-white transition-colors duration-200 hover:border-secondary-300 dark:border-dark-border dark:bg-dark-surface dark:hover:border-secondary-600;
-    }
-
-    .text-gradient {
-        @apply text-secondary-950 dark:text-white;
-    }
-
     .text-gradient-primary {
         @apply text-secondary-950 dark:text-white;
     }

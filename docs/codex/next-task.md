@@ -18,6 +18,8 @@ The homepage, global shell, Work index, and first individual case-study detail p
 * quiet dark mode
 * no large stat cards, gradient hero treatments, visualizers, or promotional CTA panels
 
+The cleanup pass has also removed unused legacy landing-page components, old demo/security components, stale no-op animation hooks, and unreferenced public images. The active Experience page and `app/components/Experience.vue` remain intentionally untouched by that cleanup and are still the next redesign target.
+
 Current positioning remains:
 
 > Full-stack developer building SaaS products, web applications, and AI-assisted tools.
@@ -45,6 +47,7 @@ Avoid in this task:
 * adding dependencies
 * adding providers, AI features, or API-key changes
 * inventing facts, metrics, companies, links, or claims
+* reintroducing deleted legacy components from the previous landing-page direction
 * reintroducing large cards, decorative timelines, icon-heavy blocks, gradients, glow, glassmorphism, or scroll reveal animation
 
 ## Files Likely To Inspect

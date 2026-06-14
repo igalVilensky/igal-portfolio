@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import gsap from "gsap";
 import { useI18n } from "vue-i18n";
 import ExperienceContent from "~/components/Experience.vue";
 
@@ -19,16 +17,5 @@ const { t } = useI18n();
 
 useHead({
   title: t("seo.experience"),
-});
-
-onMounted(() => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  gsap.from(".experience-item", {
-    duration: 1,
-    opacity: 0,
-    y: 50,
-    stagger: 0.2,
-    ease: "easeInOut",
-  });
 });
 </script>

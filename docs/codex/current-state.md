@@ -194,18 +194,69 @@ Created components:
 
 ```text
 app/components/home/HomeHero.vue
-app/components/home/RecruiterSnapshot.vue
 app/components/home/AskPortfolioPreview.vue
 app/components/home/SelectedWork.vue
-app/components/home/HowIWork.vue
-app/components/home/AiAutomationFocus.vue
-app/components/home/ExperienceSnapshot.vue
 app/components/home/HomeContactCTA.vue
 ```
 
-Some extracted components from the previous homepage direction remain available but are currently unused by `app/pages/index.vue`.
+Extracted homepage components from the previous eight-section direction that were no longer referenced by `app/pages/index.vue` were removed during the cleanup pass.
 
 No route, dependency, or structured content fact change was added.
+
+## Safe Cleanup Pass
+
+The cleanup-only pass is complete. It removed files only after repo-wide reference checks across app code, content, docs, config, route links, and public asset paths.
+
+Removed unused Vue components:
+
+```text
+app/components/About.vue
+app/components/CaseStudiesPreview.vue
+app/components/CaseStudiesVisualizer.vue
+app/components/ContactCTA.vue
+app/components/CursorNeuralVisualizer.vue
+app/components/GridSystem.vue
+app/components/Hero.vue
+app/components/IntegratedSkills.vue
+app/components/MyStory.vue
+app/components/ProjectVisual.vue
+app/components/home/AiAutomationFocus.vue
+app/components/home/ExperienceSnapshot.vue
+app/components/home/HowIWork.vue
+app/components/home/RecruiterSnapshot.vue
+app/components/lab/SecurityAuditor.vue
+app/components/lab/SystemMonitor.vue
+app/components/security/LocalStorageDemo.vue
+app/components/security/SecurityDemo.vue
+app/components/security/XssDemo.vue
+```
+
+Removed unreferenced public assets:
+
+```text
+public/canOrderSystem.jpeg
+public/comap.jpeg
+public/coming_soon.jpg
+public/images/hero-bg.png
+public/portfolio.jpeg
+public/psy.jpeg
+public/url-shortener.jpeg
+```
+
+Other cleanup:
+
+* Removed stale no-op GSAP hooks from `app/pages/education.vue` and `app/pages/experience.vue`.
+* Removed unused global CSS utilities `.glass-card` and `.text-gradient` from `app/assets/css/main.css`.
+* Kept `.text-gradient-primary` because active pages still use it.
+* Updated the README structure section so it no longer points to deleted components or removed public images.
+* Kept active visualizers on About, Contact, and Experiments because current pages still reference them.
+* Kept `ProjectVisual` TypeScript data shape in `app/composables/useProjects.ts` because project data still stores `visual` metadata.
+* Kept package dependencies unchanged because active code still uses GSAP and VueUse-derived imports, and dependency removal was not necessary for a safe cleanup.
+* Left the ARI Motors and LeanERA legacy case-study route names unchanged because the current route/content mapping was already documented and no safe route rename was required.
+
+Verification:
+
+* `npm run build` passed after the cleanup pass.
 
 ## Strongest Featured Projects
 
@@ -247,7 +298,7 @@ The next phase should be:
 
 > Redesign the Experience page.
 
-The homepage, global shell, Work index, and first individual case-study pages now follow the minimal/document-like direction. The next best step is to bring the Experience page into the same recruiter-friendly style.
+The homepage, global shell, Work index, first individual case-study pages, and cleanup pass are complete. The next best step is to bring the Experience page into the same recruiter-friendly style.
 
 Focus areas:
 
@@ -275,4 +326,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after individual case-study pages were redesigned into concise technical documents.
+2026-06-15 after the safe cleanup pass removed unused legacy components, stale helper code, and unreferenced public assets.
