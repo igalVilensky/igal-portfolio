@@ -118,10 +118,25 @@ What changed:
 * The guide still uses the existing AI route when available and preserves deterministic FAQ fallback behavior.
 * The guide now sends a compact portfolio brief instead of the full structured content object, avoiding homepage-specific AI request failures.
 * The homepage contact area is a short availability sentence plus email, LinkedIn, and GitHub.
-* The default footer sitemap is hidden on the homepage to avoid a large footer-like content block.
-* The global navbar is simplified to text links and a theme toggle, with the left logo/name block and "Let's Talk" CTA removed.
+* The global navbar is simplified to text links and a quiet theme toggle, with the left logo/name block and "Let's Talk" CTA removed.
 
 No dependency, route, provider, structured content fact, or case-study page change was added.
+
+## Global Shell Simplification
+
+The global shell now follows the minimal portfolio direction before individual secondary page redesigns.
+
+What changed:
+
+* `app/components/Navbar.vue` is a narrow `max-w-4xl` text navigation with subtle active text emphasis, no logo block, no name block, no CTA button, and a quiet text-based dark mode toggle.
+* Mobile navigation is text-only and narrow, with no decorative chevrons or CTA block.
+* `app/components/Footer.vue` is now a minimal footer with only copyright, Email, GitHub, and LinkedIn.
+* The footer sitemap, brand paragraph, social icons, and "Nuxt 4 / SSR" line were removed.
+* `app/layouts/default.vue` renders the minimal footer globally again because it is no longer a landing-page footer.
+* Shared primitives in `app/assets/css/main.css` are calmer and narrower: `page-container` is `max-w-4xl`, page headers are single-column, titles are smaller, intros are unframed, buttons are quieter, and glass/gradient utilities resolve to flat treatments.
+* `tailwind.config.js` now reduces oversized display font tokens, section spacing, container width, and custom animation intensity.
+
+No route, dependency, content fact, provider, or individual page redesign was added.
 
 ## Homepage Component Extraction
 
@@ -189,16 +204,17 @@ Known limitations:
 
 The next phase should be:
 
-> Align the secondary pages with the simplified portfolio direction.
+> Redesign the Work index page.
 
-The homepage is now intentionally minimal and project-led. Next, review the work/case-study index, about/contact pages, global navigation labels, and shared footer treatment so the rest of the site does not reintroduce marketing-style repetition or dense sitemap content.
+The homepage and global shell now set the minimal/document-like direction. The next best step is to redesign the Work index page so project proof remains the main deeper path from the homepage.
 
 Focus areas:
 
-* audit secondary pages for repeated stack, role, current-course, and process copy
-* make the work/case-study index the deeper place for project detail
-* keep full experience, languages, detailed stack, course context, and process off the homepage unless requested through the guide
-* keep Ask My Portfolio fallback behavior intact
+* make `/case-studies` a compact project index rather than a landing page
+* keep Flowplace, OpenMe, Decision Matrix AI, and ARI Motors as primary proof
+* move secondary/lab work into quieter groupings
+* remove promotional headings, CTA blocks, large cards, badges, decorative effects, and repeated stack lists
+* preserve existing case-study routes and project facts
 * avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
 
@@ -217,4 +233,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-14 after homepage simplification into a compact project-led developer portfolio.
+2026-06-14 after global shell simplification into the minimal portfolio style.

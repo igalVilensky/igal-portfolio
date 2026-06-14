@@ -47,67 +47,67 @@
 
 @layer components {
     .glass {
-        @apply border border-secondary-200 bg-white/95 dark:border-dark-border dark:bg-dark-surface;
+        @apply border border-secondary-200 bg-white dark:border-dark-border dark:bg-dark-surface;
     }
 
     .glass-card {
-        @apply rounded-lg border border-secondary-200 bg-white transition-colors duration-200 hover:border-secondary-300 hover:bg-secondary-50 dark:border-dark-border dark:bg-dark-surface dark:hover:border-secondary-700;
+        @apply rounded-md border border-secondary-200 bg-white transition-colors duration-200 hover:border-secondary-300 dark:border-dark-border dark:bg-dark-surface dark:hover:border-secondary-600;
     }
 
     .text-gradient {
-        @apply text-primary-700 dark:text-primary-300;
+        @apply text-secondary-950 dark:text-white;
     }
 
     .text-gradient-primary {
-        @apply text-primary-700 dark:text-primary-300;
+        @apply text-secondary-950 dark:text-white;
     }
 
     .btn-primary {
-        @apply rounded-md bg-primary-700 px-6 py-3 font-semibold text-white shadow-sm shadow-secondary-900/5 transition-colors duration-200 hover:bg-primary-800 active:bg-primary-900;
+        @apply rounded-md bg-secondary-950 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-secondary-800 active:bg-secondary-700 dark:bg-secondary-100 dark:text-secondary-950 dark:hover:bg-white;
     }
 
     .btn-outline {
-        @apply rounded-md border border-secondary-300 bg-white px-6 py-3 font-semibold text-secondary-900 transition-colors duration-200 hover:border-primary-300 hover:bg-secondary-50 dark:border-dark-border dark:bg-dark-surface dark:text-secondary-100 dark:hover:border-primary-700;
+        @apply rounded-md border border-secondary-300 bg-transparent px-5 py-2.5 text-sm font-medium text-secondary-800 transition-colors duration-200 hover:border-secondary-500 hover:text-secondary-950 dark:border-dark-border dark:text-secondary-200 dark:hover:border-secondary-500 dark:hover:text-white;
     }
 
     .page-shell {
-        @apply relative min-h-screen overflow-hidden bg-transparent pb-20 pt-28 md:pt-32;
+        @apply relative min-h-screen bg-secondary-50 pb-16 pt-24 dark:bg-dark-bg md:pt-28;
     }
 
     .page-container {
-        @apply container relative z-10 mx-auto max-w-7xl px-6;
+        @apply relative z-10 mx-auto max-w-4xl px-5 sm:px-6;
     }
 
     .page-header {
-        @apply mb-12 grid gap-8 lg:grid-cols-12 lg:items-end;
+        @apply mb-10 grid gap-5 border-b border-secondary-200 pb-8 dark:border-dark-border;
     }
 
     .page-header-main {
-        @apply lg:col-span-8;
+        @apply max-w-3xl;
     }
 
     .page-header-side {
-        @apply lg:col-span-4;
+        @apply max-w-3xl;
     }
 
     .page-kicker {
-        @apply mb-3 text-xs font-semibold uppercase text-primary-700 dark:text-primary-300;
+        @apply mb-3 text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400;
     }
 
     .page-title {
-        @apply text-4xl font-semibold leading-tight text-secondary-950 dark:text-white md:text-5xl lg:text-6xl;
+        @apply text-3xl font-semibold leading-tight text-secondary-950 dark:text-white md:text-4xl;
     }
 
     .page-intro {
-        @apply border-l-2 border-primary-600 pl-5 text-base leading-relaxed text-secondary-600 dark:text-secondary-400 md:text-lg;
+        @apply max-w-3xl text-sm leading-7 text-secondary-600 dark:text-secondary-400 md:text-base;
     }
 
     .section-compact {
-        @apply py-14 md:py-16 lg:py-20;
+        @apply py-10 md:py-12;
     }
 
     .section-title {
-        @apply max-w-3xl text-2xl font-semibold leading-tight text-secondary-950 dark:text-white md:text-3xl;
+        @apply max-w-3xl text-2xl font-semibold leading-tight text-secondary-950 dark:text-white;
     }
 }
 

@@ -7,16 +7,11 @@
     <main class="flex-1 relative z-10">
       <slot />
     </main>
-    <Footer v-if="!isHomeRoute" />
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
 import Navbar from "~/components/Navbar.vue";
 import Footer from "~/components/Footer.vue";
-
-const route = useRoute();
-const isHomeRoute = computed(() => route.path === "/");
 </script>

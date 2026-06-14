@@ -2,22 +2,29 @@
 
 ## Task Title
 
-Align secondary pages with the simplified portfolio direction.
+Redesign the Work index page.
 
 ## Goal
 
-Review and simplify the non-homepage experience so it supports the new compact, project-led developer portfolio direction without reintroducing marketing-style repetition.
+Refactor `/case-studies` into a minimal, project-led index that matches the new homepage and global shell style.
 
 ## Context
 
-The homepage has been simplified into:
+The homepage is now a compact developer portfolio index:
 
 1. Minimal hero
 2. Selected Work
 3. Ask about the portfolio
 4. Contact
 
-The homepage now avoids recruiter snapshot blocks, process sections, large AI marketing sections, experience snapshots, long bio copy, repeated stack lists, full course explanations, and a large footer sitemap.
+The global shell now supports the same direction:
+
+* narrow text navigation
+* minimal footer
+* calmer shared page primitives
+* no large sitemap footer
+* no logo/name block in the nav
+* no landing-page CTA in the nav
 
 Current positioning remains:
 
@@ -27,39 +34,32 @@ Current positioning remains:
 
 Good scope:
 
-* audit `/case-studies`, project detail pages, `/about`, `/contact`, global navigation, and shared footer treatment
-* keep the work/case-study index as the deeper place for project proof
-* remove or compress repeated stack, role, current-course, and process copy across secondary pages
-* keep full experience, languages, detailed stack, current course, process, and detailed role fit available away from the homepage or through Ask My Portfolio
-* preserve existing routes
-* preserve Ask My Portfolio AI and deterministic FAQ fallback behavior
-* keep the light-first mature visual style
+* redesign `app/pages/case-studies/index.vue`
+* make the page a compact Work index, not a landing page
+* keep Flowplace Role Compass, OpenMe, Decision Matrix AI, and ARI Motors EV Portal as the strongest work
+* group secondary and lab projects quietly below primary work if they are shown
+* use concise project rows or simple bordered entries
+* include title, one-sentence summary, compact tech line, and one primary link per project
+* preserve existing case-study routes and project links
+* keep dark mode support
 * run the build after implementation
 
 Avoid in this task:
 
+* redesigning every case-study detail page
+* changing routes
 * adding dependencies
-* adding a new AI provider
-* exposing API keys
-* inventing facts or unsupported claims
-* redesigning the site into a landing page again
-* deleting routes
-* changing structured content facts unless the user provides corrections
+* adding new AI providers or touching API keys
+* inventing project facts, metrics, or links
+* reintroducing large cards, badges, promotional CTA panels, icons, gradients, glow, glassmorphism, or decorative effects
+* repeating the full stack/current-course/process narrative from the homepage
 
 ## Files Likely To Inspect
 
 ```text
 app/pages/case-studies/index.vue
-app/pages/case-studies/*.vue
-app/pages/about.vue
-app/pages/contact.vue
-app/components/Navbar.vue
-app/components/Footer.vue
-content/profile.json
+app/composables/useProjects.ts
 content/projects.json
-content/experience.json
-content/skills.json
-content/faq.json
 docs/codex/current-state.md
 ```
 
@@ -70,8 +70,7 @@ docs/codex/current-state.md
 * Do not change routes.
 * Do not expose API keys.
 * Do not invent facts.
-* Preserve deterministic FAQ fallback.
-* Keep homepage content minimal.
+* Keep homepage and global shell minimal.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -80,9 +79,9 @@ docs/codex/current-state.md
 
 The task is complete when:
 
-* secondary pages support the simplified portfolio direction
-* repeated homepage-style copy is reduced across the site
-* project proof remains easy to find
+* `/case-studies` matches the minimal portfolio style
+* primary projects are easy to scan and clearly prioritized
+* secondary/lab work does not compete with the strongest work
 * no routes, providers, dependencies, or unsupported facts are introduced
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated

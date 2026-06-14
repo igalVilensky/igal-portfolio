@@ -1,42 +1,59 @@
 <!-- app/components/Navbar.vue -->
 <template>
-  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-secondary-200 transition-all duration-300 dark:border-dark-border" :class="[
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-secondary-200 transition-colors duration-200 dark:border-dark-border" :class="[
     isScrolled
       ? 'bg-secondary-50 py-3 dark:bg-dark-bg'
       : 'bg-secondary-50 py-4 dark:bg-dark-bg',
   ]">
     <div class="mx-auto max-w-4xl px-5 sm:px-6">
-      <div class="flex justify-end md:justify-between items-center">
-        <div class="hidden md:flex items-center gap-1">
-          <NuxtLink v-for="item in navigationItems" :key="item.id" :to="item.path"
-            class="rounded-md px-3 py-2 text-sm font-medium text-secondary-600 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-300 dark:hover:bg-dark-surface dark:hover:text-primary-300"
+      <div class="flex items-center justify-between">
+        <div class="hidden items-center gap-5 md:flex">
+          <NuxtLink
+            v-for="item in navigationItems"
+            :key="item.id"
+            :to="item.path"
+            class="border-b border-transparent py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
-              'bg-white text-primary-700 dark:bg-dark-surface dark:text-primary-300':
-                isActive(item.path),
-            }">
+              'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
+            }"
+          >
             {{ item.label }}
           </NuxtLink>
         </div>
 
-        <div class="hidden md:flex items-center">
-          <button @click="toggleColorMode"
-            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-500 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-400 dark:hover:bg-dark-surface dark:hover:text-primary-300"
-            aria-label="Toggle dark mode">
-            <i :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
+        <NuxtLink
+          to="/"
+          class="py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white md:hidden"
+          @click="closeMobileMenu"
+        >
+          Home
+        </NuxtLink>
+
+        <div class="hidden items-center md:flex">
+          <button
+            type="button"
+            class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            @click="toggleColorMode"
+          >
+            {{ colorMode.value === "dark" ? "Light" : "Dark" }}
           </button>
         </div>
 
-        <div class="md:hidden flex items-center gap-4">
-          <button @click="toggleColorMode"
-            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-500 transition-colors hover:bg-secondary-100 dark:text-secondary-400 dark:hover:bg-dark-surface"
-            aria-label="Toggle dark mode">
-            <i :class="colorMode.value === 'dark' ? 'fas fa-sun' : 'fas fa-moon'" class="text-lg"></i>
+        <div class="flex items-center gap-4 md:hidden">
+          <button
+            type="button"
+            class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            @click="toggleColorMode"
+          >
+            {{ colorMode.value === "dark" ? "Light" : "Dark" }}
           </button>
 
-          <button @click="isMobileMenuOpen = !isMobileMenuOpen"
-            class="w-10 h-10 rounded-md flex items-center justify-center text-secondary-900 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-white dark:hover:bg-dark-surface dark:hover:text-primary-300"
-            aria-label="Toggle mobile menu">
-            <i :class="isMobileMenuOpen ? 'fas fa-times' : 'fas fa-bars'" class="text-xl"></i>
+          <button
+            type="button"
+            class="py-1 text-sm text-secondary-900 transition-colors hover:text-secondary-600 dark:text-white dark:hover:text-secondary-300"
+            @click="isMobileMenuOpen = !isMobileMenuOpen"
+          >
+            {{ isMobileMenuOpen ? "Close" : "Menu" }}
           </button>
         </div>
       </div>
@@ -48,15 +65,18 @@
       leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-4">
       <div v-show="isMobileMenuOpen"
         class="md:hidden absolute top-full left-0 right-0 border-b border-secondary-200 bg-secondary-50 dark:border-dark-border dark:bg-dark-bg">
-        <div class="mx-auto max-w-4xl px-5 py-4 space-y-1 sm:px-6">
-          <NuxtLink v-for="item in navigationItems" :key="item.id" :to="item.path"
-            class="flex items-center justify-between rounded-md px-3 py-3 text-base font-medium text-secondary-600 transition-colors hover:bg-secondary-100 hover:text-primary-700 dark:text-secondary-300 dark:hover:bg-dark-surface dark:hover:text-primary-300"
+        <div class="mx-auto flex max-w-4xl flex-col gap-3 px-5 py-4 sm:px-6">
+          <NuxtLink
+            v-for="item in navigationItems"
+            :key="item.id"
+            :to="item.path"
+            class="border-b border-transparent py-1 text-base text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
-              'bg-white text-primary-700 dark:bg-dark-surface dark:text-primary-300':
-                isActive(item.path),
-            }" @click="closeMobileMenu">
-            <span>{{ item.label }}</span>
-            <i class="fas fa-chevron-right text-xs opacity-50"></i>
+              'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
+            }"
+            @click="closeMobileMenu"
+          >
+            {{ item.label }}
           </NuxtLink>
         </div>
       </div>

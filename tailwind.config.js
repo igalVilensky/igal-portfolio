@@ -60,9 +60,9 @@ module.exports = {
         },
       },
       fontSize: {
-        "display-2xl": ["4.5rem", { lineHeight: "1", fontWeight: "800", letterSpacing: "0" }],
-        "display-xl": ["3.75rem", { lineHeight: "1.1", fontWeight: "800", letterSpacing: "0" }],
-        "display-lg": ["3rem", { lineHeight: "1.1", fontWeight: "700", letterSpacing: "0" }],
+        "display-2xl": ["3rem", { lineHeight: "1.08", fontWeight: "700", letterSpacing: "0" }],
+        "display-xl": ["2.5rem", { lineHeight: "1.12", fontWeight: "700", letterSpacing: "0" }],
+        "display-lg": ["2rem", { lineHeight: "1.2", fontWeight: "650", letterSpacing: "0" }],
         h1: ["2.25rem", { lineHeight: "1.2", fontWeight: "700", letterSpacing: "0" }],
         h2: ["1.875rem", { lineHeight: "1.3", fontWeight: "600" }],
         h3: ["1.5rem", { lineHeight: "1.4", fontWeight: "600" }],
@@ -70,15 +70,15 @@ module.exports = {
         small: ["0.875rem", { lineHeight: "1.5" }],
       },
       spacing: {
-        "section-y": "8rem",
-        "section-x": "2rem",
-        container: "min(1280px, 92vw)",
+        "section-y": "4rem",
+        "section-x": "1.5rem",
+        container: "min(896px, 92vw)",
       },
       animation: {
-        "fade-in": "fadeIn 0.35s ease-out forwards",
-        "slide-up": "slideUp 0.35s ease-out forwards",
-        "slide-down": "slideDown 0.35s ease-out forwards",
-        "scale-in": "scaleIn 0.3s ease-out forwards",
+        "fade-in": "fadeIn 0.2s ease-out forwards",
+        "slide-up": "slideUp 0.2s ease-out forwards",
+        "slide-down": "slideDown 0.2s ease-out forwards",
+        "scale-in": "scaleIn 0.2s ease-out forwards",
       },
       keyframes: {
         fadeIn: {
@@ -86,15 +86,15 @@ module.exports = {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         slideDown: {
-          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "0%": { opacity: "0", transform: "translateY(-8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         scaleIn: {
-          "0%": { opacity: "0", transform: "scale(0.9)" },
+          "0%": { opacity: "0", transform: "scale(0.98)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
       },
