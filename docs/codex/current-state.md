@@ -153,6 +153,32 @@ What changed:
 
 No route, dependency, content fact, provider, homepage, global shell, or individual case-study detail page change was added.
 
+## Case Study Detail Redesign
+
+The first individual case-study page redesign milestone is complete.
+
+What changed:
+
+* `app/pages/case-studies/flowplace.vue` is now a concise document-style case study for Flowplace Role Compass.
+* `app/pages/case-studies/leanera.vue` is now a concise document-style case study for ARI Motors EV Portal.
+* `app/pages/case-studies/cashdo.vue` is now a concise document-style case study for LeanERA Digital Transition.
+* `app/pages/case-studies/security.vue` is now a concise document-style lab case study for Security Playground.
+* The old oversized hero sections, gradient backgrounds, metric card grids, icon-heavy blocks, decorative security visuals, simulator framing, and promotional CTA panel were removed from these four pages.
+* Each page now uses the shared minimal `page-shell`, `page-container`, and `page-header` direction with a simple summary, role/stack/outcome facts, and short Context, Problem, Role/Implementation, Outcome, and Stack sections where relevant.
+* Dark mode support is preserved through the existing neutral text, border, and background utilities.
+
+Route/content verification:
+
+* `/case-studies/flowplace` represents Flowplace Role Compass.
+* `/case-studies/leanera` is a legacy route name, but its content represents ARI Motors EV Portal.
+* `/case-studies/cashdo` is a legacy route name, but its content represents LeanERA Digital Transition.
+* `/case-studies/security` represents Security Playground.
+* No project-to-case-study URL mapping was changed because `app/composables/useProjects.ts` and `content/projects.json` already pointed each project to the route matching the current page content.
+
+Verification:
+
+* `npm run build` passed after the case-study redesign.
+
 ## Homepage Component Extraction
 
 The homepage component extraction task remains complete.
@@ -219,16 +245,17 @@ Known limitations:
 
 The next phase should be:
 
-> Redesign individual case-study pages.
+> Redesign the Experience page.
 
-The homepage, global shell, and Work index now set the minimal/document-like direction. The next best step is to redesign the individual case-study pages so the detail view matches the compact project index.
+The homepage, global shell, Work index, and first individual case-study pages now follow the minimal/document-like direction. The next best step is to bring the Experience page into the same recruiter-friendly style.
 
 Focus areas:
 
-* start with the strongest detail routes: `/case-studies/flowplace`, `/case-studies/leanera`, `/case-studies/cashdo`, and `/case-studies/security`
-* make detail pages typography-first and evidence-led
-* remove oversized hero treatments, decorative visuals, icon-heavy sections, gradient text, and marketing-style CTAs
-* keep project facts, routes, and links intact
+* redesign `/experience` and its supporting component/data usage as a compact professional timeline
+* use structured content from `content/experience.json` where practical
+* preserve corrected facts such as Flowplace `2023 - 2025`, WBS `2026 - Present`, and Myfxbook Ltd / Cashdo framing
+* remove oversized cards, decorative timelines, heavy logos, gradients, and marketing-style CTAs
+* keep the page useful for recruiter scanning: role, organization, dates, context, contribution, stack/proof
 * avoid redesigning unrelated pages in the same task
 * avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
@@ -248,4 +275,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-14 after Work index redesign into a compact project index.
+2026-06-15 after individual case-study pages were redesigned into concise technical documents.

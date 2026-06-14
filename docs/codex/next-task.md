@@ -2,21 +2,21 @@
 
 ## Task Title
 
-Redesign individual case-study pages.
+Redesign the Experience page.
 
 ## Goal
 
-Bring the case-study detail pages in line with the new minimal, document-like portfolio direction.
+Bring `/experience` in line with the new minimal, document-like portfolio direction.
 
 ## Context
 
-The homepage, global shell, and Work index now use a compact developer portfolio style:
+The homepage, global shell, Work index, and first individual case-study detail pages now use a compact developer portfolio style:
 
 * narrow layout
 * typography-first presentation
-* minimal navigation and footer
-* compact project rows
-* no visualizer, large stats, gradient hero, GSAP reveal animations, or promotional CTA blocks on the Work index
+* simple bordered rows
+* quiet dark mode
+* no large stat cards, gradient hero treatments, visualizers, or promotional CTA panels
 
 Current positioning remains:
 
@@ -26,37 +26,34 @@ Current positioning remains:
 
 Good scope:
 
-* redesign the existing case-study detail routes without changing their paths
-* start with:
-  * `app/pages/case-studies/flowplace.vue`
-  * `app/pages/case-studies/leanera.vue`
-  * `app/pages/case-studies/cashdo.vue`
-  * `app/pages/case-studies/security.vue`
-* make each page read like a concise technical case-study document
-* keep the strongest facts, outcomes, role context, stack, and links
-* use simple headings, paragraphs, lists, and bordered sections
+* inspect `app/pages/experience.vue`, `app/components/Experience.vue`, and `content/experience.json`
+* make the Experience page read like a concise professional timeline
+* use compact rows or sections for each role
+* show organization, role, dates, location/type where available, and the strongest contribution bullets
+* preserve corrected facts:
+  * Flowplace is `Software Developer`, `2023 - 2025`, not current
+  * WBS CODING SCHOOL is `2026 - Present`, Online
+  * Myfxbook Ltd / Cashdo is framed as `Digital Product & Web Coordinator`
 * keep dark mode support
 * run the build after implementation
 
 Avoid in this task:
 
+* redesigning the homepage, Work index, case-study pages, navbar, or footer again
+* changing project/case-study route mappings
 * changing routes
-* deleting case-study pages
 * adding dependencies
-* adding new AI providers or touching API keys
-* inventing project facts, metrics, or links
-* reintroducing large cards, badges, promotional CTA panels, icons, gradients, glow, glassmorphism, visualizers, or scroll reveal animations
-* redesigning unrelated pages such as About, Contact, Experiments, or AI Compliance Compass
+* adding providers, AI features, or API-key changes
+* inventing facts, metrics, companies, links, or claims
+* reintroducing large cards, decorative timelines, icon-heavy blocks, gradients, glow, glassmorphism, or scroll reveal animation
 
 ## Files Likely To Inspect
 
 ```text
-app/pages/case-studies/flowplace.vue
-app/pages/case-studies/leanera.vue
-app/pages/case-studies/cashdo.vue
-app/pages/case-studies/security.vue
-app/composables/useProjects.ts
-content/projects.json
+app/pages/experience.vue
+app/components/Experience.vue
+content/experience.json
+content/profile.json
 docs/codex/current-state.md
 ```
 
@@ -67,7 +64,7 @@ docs/codex/current-state.md
 * Do not change routes.
 * Do not expose API keys.
 * Do not invent facts.
-* Preserve homepage, global shell, and Work index direction.
+* Preserve homepage, global shell, Work index, and case-study direction.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -76,9 +73,9 @@ docs/codex/current-state.md
 
 The task is complete when:
 
-* individual case-study pages match the minimal portfolio style
-* project facts, links, and routes are preserved
-* detail pages are easier to scan and less visually noisy
+* `/experience` matches the minimal portfolio style
+* experience facts and corrected dates are preserved
+* the page is easier to scan for recruiters and hiring managers
 * no routes, providers, dependencies, or unsupported facts are introduced
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated

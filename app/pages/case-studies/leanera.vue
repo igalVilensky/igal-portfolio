@@ -1,258 +1,139 @@
 <template>
-    <div class="min-h-screen bg-neutral-50 dark:bg-secondary-600">
-        <!-- Hero Section -->
-        <section class="relative pt-32 pb-20 px-4 overflow-hidden">
-            <!-- Background gradient -->
-            <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                <div class="absolute top-0 left-0 w-[600px] h-[600px] bg-accent-500/10 rounded-full blur-[120px]"></div>
-            </div>
+  <div class="page-shell">
+    <article class="page-container">
+      <NuxtLink
+        to="/case-studies"
+        class="mb-8 inline-flex text-sm font-medium text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+      >
+        Back to Work
+      </NuxtLink>
 
-            <div class="container mx-auto px-6 relative z-10 max-w-7xl">
-                <div class="max-w-7xl mx-auto">
-                    <!-- Back button -->
-                    <NuxtLink to="/case-studies"
-                        class="inline-flex items-center gap-2 text-sm text-secondary-600 dark:text-secondary-400 hover:text-primary-500 dark:hover:text-primary-400 mb-8 transition-colors">
-                        <i class="fas fa-arrow-left"></i>
-                        <span>Back to Projects</span>
-                    </NuxtLink>
+      <header class="page-header">
+        <div class="page-header-main">
+          <p class="page-kicker">Professional case study - ARI Motors - 2021-2022</p>
+          <h1 class="page-title">ARI Motors: EV Portal</h1>
+          <p class="page-intro mt-4">
+            Electric vehicle comparison portal built from scratch to production in under
+            three months as a solo full-stack developer.
+          </p>
+        </div>
+      </header>
 
-                    <!-- Project header -->
-                    <div class="mb-12">
-                        <div
-                            class="inline-block px-3 py-1 rounded-full bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 text-sm font-medium mb-4">
-                            Full-Stack Development • 2021-2022
-                        </div>
-                        <h1
-                            class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-secondary-900 dark:text-white mb-6">
-                            ARI Motors: EV Comparison Portal
-                        </h1>
-                        <p class="text-xl text-secondary-600 dark:text-secondary-300 leading-relaxed">
-                            Designed, developed, and launched a comparison portal for electric commercial vehicles from
-                            scratch to production in <span class="text-accent-500 font-bold">under 3 months</span>
-                        </p>
-                    </div>
+      <dl
+        class="mb-12 grid gap-0 border-y border-secondary-200 text-sm dark:border-dark-border sm:grid-cols-3"
+      >
+        <div class="border-b border-secondary-200 py-5 dark:border-dark-border sm:border-b-0 sm:pr-6">
+          <dt class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
+            Role
+          </dt>
+          <dd class="mt-2 leading-6 text-secondary-800 dark:text-secondary-200">
+            Solo full-stack developer responsible for frontend, backend, database, data handling, and launch.
+          </dd>
+        </div>
+        <div
+          class="border-b border-secondary-200 py-5 dark:border-dark-border sm:border-b-0 sm:border-l sm:px-6"
+        >
+          <dt class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
+            Stack
+          </dt>
+          <dd class="mt-2 leading-6 text-secondary-800 dark:text-secondary-200">
+            JavaScript, backend APIs, database work, responsive design.
+          </dd>
+        </div>
+        <div class="py-5 sm:border-l sm:border-secondary-200 sm:pl-6 sm:dark:border-dark-border">
+          <dt class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
+            Outcome
+          </dt>
+          <dd class="mt-2 leading-6 text-secondary-800 dark:text-secondary-200">
+            Launched from concept to production in under three months.
+          </dd>
+        </div>
+      </dl>
 
-                    <!-- Key metrics -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-                        <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm">
-                            <div class="text-3xl font-bold text-accent-500 mb-2">&lt;3</div>
-                            <div class="text-sm text-secondary-600 dark:text-secondary-400">Months to Launch</div>
-                        </div>
-                        <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm">
-                            <div class="text-3xl font-bold text-primary-500 mb-2">Solo</div>
-                            <div class="text-sm text-secondary-600 dark:text-secondary-400">Developer</div>
-                        </div>
-                        <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm">
-                            <div class="text-3xl font-bold text-secondary-500 mb-2">Full</div>
-                            <div class="text-sm text-secondary-600 dark:text-secondary-400">Stack</div>
-                        </div>
-                        <div class="bg-white dark:bg-secondary-900 rounded-lg p-6 shadow-sm">
-                            <div class="text-3xl font-bold text-accent-500 mb-2">2021</div>
-                            <div class="text-sm text-secondary-600 dark:text-secondary-400">Launch Year</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="max-w-3xl space-y-11">
+        <section aria-labelledby="context-title">
+          <h2 id="context-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Context
+          </h2>
+          <p class="mt-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            ARI Motors needed a comparison portal for electric commercial vehicles. The product
+            had to help customers evaluate complex technical specifications in a clear interface
+            while supporting vehicle data management behind the scenes.
+          </p>
         </section>
 
-        <!-- Content sections -->
-        <section class="pb-20 px-4">
-            <div class="container mx-auto px-6 max-w-7xl">
-                <div class="max-w-7xl mx-auto space-y-12">
-
-                    <!-- Challenge -->
-                    <div class="bg-white dark:bg-secondary-900 rounded-lg p-8 shadow-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
-                            <h2 class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white">
-                                The Challenge
-                            </h2>
-                        </div>
-                        <p class="text-base text-secondary-600 dark:text-secondary-300 leading-relaxed mb-4">
-                            ARI Motors needed a comprehensive comparison portal to help customers evaluate electric
-                            commercial vehicles. The platform had to present complex technical specifications in an
-                            accessible, user-friendly format while handling vehicle data management on the backend.
-                        </p>
-                        <p class="text-base text-secondary-600 dark:text-secondary-300 leading-relaxed">
-                            As the sole developer, I was responsible for the entire stack: frontend interface, backend
-                            systems, database architecture, and deployment—all within a tight 3-month deadline.
-                        </p>
-                    </div>
-
-                    <!-- Approach -->
-                    <div class="bg-white dark:bg-secondary-900 rounded-lg p-8 shadow-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
-                            <h2 class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white">
-                                My Approach
-                            </h2>
-                        </div>
-                        <p class="text-base text-secondary-600 dark:text-secondary-300 leading-relaxed mb-6">
-                            I took a pragmatic, iterative approach focusing on core functionality first, then
-                            progressively enhancing the user experience. The key was balancing speed with
-                            maintainability—building something that could launch quickly but wouldn't become a
-                            maintenance nightmare.
-                        </p>
-
-                        <h3 class="text-lg font-semibold text-secondary-900 dark:text-white mb-3">Development Strategy:
-                        </h3>
-                        <ul class="space-y-2 mb-6">
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent-500 mt-2 flex-shrink-0"></span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Responsive-first design for
-                                    mobile and desktop users</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent-500 mt-2 flex-shrink-0"></span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Structured database schema for
-                                    vehicle specifications and comparisons</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent-500 mt-2 flex-shrink-0"></span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Clean, maintainable codebase
-                                    for long-term sustainability</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent-500 mt-2 flex-shrink-0"></span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Performance optimization for
-                                    fast page loads</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Tech Stack -->
-                    <div class="bg-white dark:bg-secondary-900 rounded-lg p-8 shadow-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1 h-8 bg-secondary-500 rounded-full"></div>
-                            <h2 class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white">
-                                Tech Stack
-                            </h2>
-                        </div>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h3
-                                    class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2">
-                                    <i class="fas fa-laptop-code text-primary-500"></i>
-                                    Frontend
-                                </h3>
-                                <ul class="space-y-2">
-                                    <li class="text-secondary-600 dark:text-secondary-300">Modern JavaScript</li>
-                                    <li class="text-secondary-600 dark:text-secondary-300">Responsive CSS</li>
-                                    <li class="text-secondary-600 dark:text-secondary-300">User-friendly interfaces</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3
-                                    class="text-sm font-semibold text-secondary-900 dark:text-white mb-3 flex items-center gap-2">
-                                    <i class="fas fa-server text-accent-500"></i>
-                                    Backend & Database
-                                </h3>
-                                <ul class="space-y-2">
-                                    <li class="text-secondary-600 dark:text-secondary-300">Backend API</li>
-                                    <li class="text-secondary-600 dark:text-secondary-300">Database management</li>
-                                    <li class="text-secondary-600 dark:text-secondary-300">Content administration</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Results -->
-                    <div
-                        class="bg-gradient-to-br from-accent-50 to-primary-50 dark:from-secondary-800 dark:to-secondary-900 rounded-lg p-8 shadow-sm border border-accent-100 dark:border-accent-900">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1 h-8 bg-accent-500 rounded-full"></div>
-                            <h2 class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white">
-                                The Results
-                            </h2>
-                        </div>
-                        <p class="text-base text-secondary-600 dark:text-secondary-300 leading-relaxed mb-6">
-                            The comparison portal launched successfully within the 3-month deadline and has been serving
-                            customers reliably since. The platform makes it easy for potential buyers to compare
-                            electric commercial vehicles and make informed decisions.
-                        </p>
-
-                        <h3 class="text-lg font-semibold text-secondary-900 dark:text-white mb-3">Key Achievements:</h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-3">
-                                <span class="text-accent-500 mt-1">✓</span>
-                                <span class="text-secondary-600 dark:text-secondary-300"><strong>On-time
-                                        delivery</strong> from concept to production in under 3 months</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="text-accent-500 mt-1">✓</span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Full-stack ownership: website,
-                                    backend, and database</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="text-accent-500 mt-1">✓</span>
-                                <span class="text-secondary-600 dark:text-secondary-300">High performance under
-                                    production load</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="text-accent-500 mt-1">✓</span>
-                                <span class="text-secondary-600 dark:text-secondary-300">Maintainable codebase for
-                                    long-term sustainability</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Lessons Learned -->
-                    <div class="bg-white dark:bg-secondary-900 rounded-lg p-8 shadow-sm">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-1 h-8 bg-primary-500 rounded-full"></div>
-                            <h2 class="text-2xl md:text-3xl font-display font-bold text-secondary-900 dark:text-white">
-                                Lessons Learned
-                            </h2>
-                        </div>
-                        <ul class="space-y-4">
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-primary-500 mt-2 flex-shrink-0"></span>
-                                <div>
-                                    <strong class="text-secondary-900 dark:text-white">Solo full-stack builds require
-                                        discipline:</strong>
-                                    <span class="text-secondary-600 dark:text-secondary-300"> Clear architecture
-                                        decisions upfront prevent technical debt later</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-primary-500 mt-2 flex-shrink-0"></span>
-                                <div>
-                                    <strong class="text-secondary-900 dark:text-white">Responsive design is
-                                        non-negotiable:</strong>
-                                    <span class="text-secondary-600 dark:text-secondary-300"> Users access comparison
-                                        tools from all devices</span>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <span class="w-1.5 h-1.5 rounded-full bg-primary-500 mt-2 flex-shrink-0"></span>
-                                <div>
-                                    <strong class="text-secondary-900 dark:text-white">Tight deadlines demand
-                                        pragmatism:</strong>
-                                    <span class="text-secondary-600 dark:text-secondary-300"> Focus on core features
-                                        first, enhance progressively</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
+        <section aria-labelledby="problem-title">
+          <h2 id="problem-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Problem
+          </h2>
+          <p class="mt-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            The project combined frontend comparison workflows, backend systems, database
+            architecture, and launch work under a tight deadline. The challenge was to move quickly
+            without making the data model or user interface difficult to maintain.
+          </p>
         </section>
-    </div>
+
+        <section aria-labelledby="role-title">
+          <h2 id="role-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Role
+          </h2>
+          <ul class="mt-4 space-y-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            <li>Owned the build as the solo full-stack developer.</li>
+            <li>Designed and implemented responsive comparison interfaces for technical vehicle data.</li>
+            <li>Handled backend, database, data-management, and launch responsibilities.</li>
+            <li>Balanced fast delivery with maintainable structure for ongoing use.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="implementation-title">
+          <h2 id="implementation-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Implementation
+          </h2>
+          <ul class="mt-4 space-y-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            <li>Built responsive screens for comparing electric commercial vehicle specifications.</li>
+            <li>Created backend and database structures for vehicle data and comparison workflows.</li>
+            <li>Organized the interface around accessible customer decision-making rather than raw specs.</li>
+            <li>Focused on core functionality first, then refined the experience for launch readiness.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="outcome-title">
+          <h2 id="outcome-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Outcome
+          </h2>
+          <p class="mt-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            The portal launched successfully within the under-three-month deadline. The case study
+            demonstrates solo full-stack delivery, practical database and API work, and the ability
+            to turn complex product information into a usable comparison workflow.
+          </p>
+        </section>
+
+        <section aria-labelledby="stack-title" class="border-t border-secondary-200 pt-8 dark:border-dark-border">
+          <h2 id="stack-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            Stack
+          </h2>
+          <p class="mt-3 text-sm leading-7 text-secondary-700 dark:text-secondary-300">
+            JavaScript, full-stack development, database architecture, responsive design, REST APIs
+          </p>
+        </section>
+      </div>
+    </article>
+  </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-    layout: "default",
+  layout: "default",
 });
 
 useHead({
-    title: "ARI Motors: EV Comparison Portal - Igal Vilensky",
-    meta: [
-        {
-            name: "description",
-            content: "Solo full-stack development of an electric vehicle comparison portal from scratch to production in under 3 months for ARI Motors.",
-        },
-    ],
+  title: "ARI Motors: EV Portal | Igal Vilensky",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Concise technical case study for the ARI Motors EV comparison portal, delivered from concept to production in under three months.",
+    },
+  ],
 });
 </script>
