@@ -1,6 +1,6 @@
 <template>
   <section id="contact" class="bg-secondary-50 py-12 dark:bg-dark-bg">
-    <div class="mx-auto max-w-3xl px-5 sm:px-6">
+    <div class="mx-auto max-w-4xl px-5 sm:px-6">
       <div class="border-t border-secondary-200 pt-8 dark:border-dark-border">
         <h2 class="text-xl font-semibold text-secondary-950 dark:text-white">
           Contact

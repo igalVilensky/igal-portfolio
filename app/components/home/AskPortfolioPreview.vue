@@ -1,6 +1,6 @@
 <template>
   <section id="ask-my-portfolio" class="border-b border-secondary-200 bg-white py-12 dark:border-dark-border dark:bg-dark-surface">
-    <div class="mx-auto max-w-3xl px-5 sm:px-6">
+    <div class="mx-auto max-w-4xl px-5 sm:px-6">
       <div class="rounded-md border border-secondary-200 bg-secondary-50 p-5 dark:border-dark-border dark:bg-dark-bg md:p-6">
         <div class="mb-5">
           <h2 class="text-xl font-semibold text-secondary-950 dark:text-white">

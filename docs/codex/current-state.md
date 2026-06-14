@@ -138,6 +138,21 @@ What changed:
 
 No route, dependency, content fact, provider, or individual page redesign was added.
 
+## Work Index Redesign
+
+The `/case-studies` Work index now follows the same minimal, document-like portfolio direction.
+
+What changed:
+
+* Removed the old Work page visualizer, stats cards, GSAP reveal animations, gradient headline, ProjectVisual cards, large tag walls, icon-heavy links, and promotional contact CTA.
+* The page now has a simple header with the title `Work` and a short intro.
+* Primary projects are explicitly ordered as Flowplace Role Compass, OpenMe, Decision Matrix AI, and ARI Motors EV Portal.
+* Primary projects render as compact bordered rows with title, one-sentence summary, compact tech line, and available case study/live/GitHub links.
+* Remaining projects render in a quieter Secondary work list using the same compact row pattern.
+* Existing project facts, links, and case-study routes are preserved through `app/composables/useProjects.ts`.
+
+No route, dependency, content fact, provider, homepage, global shell, or individual case-study detail page change was added.
+
 ## Homepage Component Extraction
 
 The homepage component extraction task remains complete.
@@ -204,17 +219,17 @@ Known limitations:
 
 The next phase should be:
 
-> Redesign the Work index page.
+> Redesign individual case-study pages.
 
-The homepage and global shell now set the minimal/document-like direction. The next best step is to redesign the Work index page so project proof remains the main deeper path from the homepage.
+The homepage, global shell, and Work index now set the minimal/document-like direction. The next best step is to redesign the individual case-study pages so the detail view matches the compact project index.
 
 Focus areas:
 
-* make `/case-studies` a compact project index rather than a landing page
-* keep Flowplace, OpenMe, Decision Matrix AI, and ARI Motors as primary proof
-* move secondary/lab work into quieter groupings
-* remove promotional headings, CTA blocks, large cards, badges, decorative effects, and repeated stack lists
-* preserve existing case-study routes and project facts
+* start with the strongest detail routes: `/case-studies/flowplace`, `/case-studies/leanera`, `/case-studies/cashdo`, and `/case-studies/security`
+* make detail pages typography-first and evidence-led
+* remove oversized hero treatments, decorative visuals, icon-heavy sections, gradient text, and marketing-style CTAs
+* keep project facts, routes, and links intact
+* avoid redesigning unrelated pages in the same task
 * avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
 
@@ -223,7 +238,7 @@ Focus areas:
 * Do not create a new repo.
 * Do not migrate away from Nuxt.
 * Do not add dependencies unless explicitly requested.
-* Do not start with real AI integration.
+* Do not add new AI providers or ungrounded AI behavior unless explicitly approved.
 * Do not implement RAG or MCP in the portfolio MVP.
 * Do not invent facts.
 * Do not overstate AI expertise.
@@ -233,4 +248,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-14 after global shell simplification into the minimal portfolio style.
+2026-06-14 after Work index redesign into a compact project index.
