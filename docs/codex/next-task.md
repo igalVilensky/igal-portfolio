@@ -10,7 +10,7 @@ Bring `/experience` in line with the new minimal, document-like portfolio direct
 
 ## Context
 
-The homepage, global shell, Work index, and first individual case-study detail pages now use a compact developer portfolio style:
+The homepage, global shell, Work index, first individual case-study detail pages, and focused AI & Automation page now use a compact developer portfolio style:
 
 * narrow layout
 * typography-first presentation
@@ -18,7 +18,7 @@ The homepage, global shell, Work index, and first individual case-study detail p
 * quiet dark mode
 * no large stat cards, gradient hero treatments, visualizers, or promotional CTA panels
 
-The cleanup pass has also removed unused legacy landing-page components, old demo/security components, stale no-op animation hooks, and unreferenced public images. The active Experience page and `app/components/Experience.vue` remain intentionally untouched by that cleanup and are still the next redesign target.
+The cleanup pass has also removed unused legacy landing-page components, old demo/security components, stale no-op animation hooks, and unreferenced public images. The focused `/ai-automation` page now groups AI-assisted tools, LLM integrations, automation workflow proof, and current WBS AI Agents & Automations learning without adding new AI functionality. The active Experience page and `app/components/Experience.vue` remain intentionally untouched by those milestones and are still the next redesign target.
 
 Current positioning remains:
 
@@ -42,6 +42,7 @@ Good scope:
 Avoid in this task:
 
 * redesigning the homepage, Work index, case-study pages, navbar, or footer again
+* redesigning `/ai-automation` or turning it into a marketing landing page
 * changing project/case-study route mappings
 * changing routes
 * adding dependencies

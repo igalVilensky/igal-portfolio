@@ -292,13 +292,41 @@ Known limitations:
 * The fallback matching is deterministic and simple, based on FAQ question/answer text overlap.
 * Existing AI infrastructure still uses Groq through the current generic chat route/function.
 
+## AI & Automation Page
+
+The focused AI proof page is complete.
+
+What changed:
+
+* Added `app/pages/ai-automation.vue` at `/ai-automation`.
+* The page follows the minimal document-like direction using simple headers, bordered rows, compact lists, and existing dark mode utilities.
+* Featured AI-related work is grouped as Decision Matrix AI, AI Compliance Compass, OpenMe, and Ask My Portfolio.
+* Each AI-related item shows a concise summary, what AI/automation pattern it demonstrates, a compact tech line, and available links.
+* Decision Matrix AI, AI Compliance Compass, and OpenMe facts come from `content/projects.json`.
+* Ask My Portfolio is included as an existing portfolio assistant/site feature, not as a new structured project claim.
+* Patterns demonstrated are listed factually: LLM API integration, structured prompts, serverless AI calls, fallback behavior, human-in-the-loop review, API/webhook workflow thinking, and responsible AI boundaries.
+* Current learning is based on WBS AI Agents & Automations and covers AI agents, n8n, Make, Python automations, APIs/webhooks, and AI safety.
+* The global navbar now uses a short `AI` link to `/ai-automation`; AI Compliance Compass remains reachable from the AI page and Work project links.
+* AI-related proof now has its own focused grouping instead of adding more homepage sections or making the Work index more marketing-heavy.
+
+Content boundary:
+
+* Job Command Center was not added because the repository and structured content do not document enough factual information for it yet.
+* TODO: Add Job Command Center only if factual project content, links, role, stack, and boundaries are documented first.
+
+No dependency, homepage layout, provider, API key, or new AI functionality change was added.
+
+Verification:
+
+* `npm run build` passed after the AI & Automation page milestone.
+
 ## Next Recommended Phase
 
 The next phase should be:
 
 > Redesign the Experience page.
 
-The homepage, global shell, Work index, first individual case-study pages, and cleanup pass are complete. The next best step is to bring the Experience page into the same recruiter-friendly style.
+The homepage, global shell, Work index, first individual case-study pages, cleanup pass, and AI & Automation page are complete. The next best step is to bring the Experience page into the same recruiter-friendly style.
 
 Focus areas:
 
@@ -326,4 +354,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after the safe cleanup pass removed unused legacy components, stale helper code, and unreferenced public assets.
+2026-06-15 after the focused AI & Automation page was added and verified with `npm run build`.
