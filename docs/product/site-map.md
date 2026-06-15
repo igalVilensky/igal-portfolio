@@ -187,19 +187,15 @@ Each case study should include:
 
 Not every project needs a full case study. Prioritize quality over quantity.
 
-### 4. Experience
+### 4. Experience Content
 
-Route:
+Standalone route:
 
 ```text
-/experience
+None
 ```
 
-Optional. Could also be a homepage section only for MVP.
-
-Purpose:
-
-Show professional timeline and connect it to target roles.
+Experience should not be a separate public page in the current portfolio structure. Keep it as structured source content for About, Work/case-study context, and Ask My Portfolio.
 
 Content:
 
@@ -451,7 +447,6 @@ Possible final routes:
 Optional later:
 
 ```text
-/experience
 /ai-guide
 /lab
 ```

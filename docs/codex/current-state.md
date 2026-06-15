@@ -320,21 +320,46 @@ Verification:
 
 * `npm run build` passed after the AI & Automation page milestone.
 
+## Standalone Experience Page Removed
+
+The standalone `/experience` page has been removed from the public portfolio structure.
+
+Reason:
+
+* The intended public structure is Home, Work, Experiments, AI, and About.
+* A standalone Experience page duplicated information already covered through About, Work, case studies, structured content, and Ask My Portfolio.
+* Experience data remains valuable as structured source material, but it should not create a public top-level route.
+
+What changed:
+
+* Removed `app/pages/experience.vue`, which removed the public `/experience` route.
+* `app/components/Experience.vue` remains removed after confirming no app code referenced it.
+* `content/experience.json` was preserved as the factual source for About, Ask My Portfolio, structured context, and future content work.
+* The global navbar remains Home, Work, Experiments, AI, About.
+* Stale `/experience` references were removed from product/Codex handoff docs.
+
+No dependency, provider, API key, homepage, Work index, case-study, navbar, footer, `/ai-automation`, or AI functionality change was added.
+
+Verification:
+
+* `npm run build` passed after removing the standalone Experience route.
+* A fresh dev server returned `404 Page not found` for `/experience`.
+
 ## Next Recommended Phase
 
 The next phase should be:
 
-> Redesign the Experience page.
+> Redesign the About page.
 
-The homepage, global shell, Work index, first individual case-study pages, cleanup pass, and AI & Automation page are complete. The next best step is to bring the Experience page into the same recruiter-friendly style.
+The homepage, global shell, Work index, first individual case-study pages, cleanup pass, AI & Automation page, and public route structure are complete. The next best step is to bring the About page into the same recruiter-friendly style.
 
 Focus areas:
 
-* redesign `/experience` and its supporting component/data usage as a compact professional timeline
-* use structured content from `content/experience.json` where practical
-* preserve corrected facts such as Flowplace `2023 - 2025`, WBS `2026 - Present`, and Myfxbook Ltd / Cashdo framing
-* remove oversized cards, decorative timelines, heavy logos, gradients, and marketing-style CTAs
-* keep the page useful for recruiter scanning: role, organization, dates, context, contribution, stack/proof
+* redesign `/about` as a concise professional profile page
+* use structured content from `content/profile.json`, `content/skills.json`, and `content/professional-narrative.md` where practical
+* remove `AboutVisualizer`, GSAP reveal animation, glossy cards, oversized rounded panels, icons, gradients, and promotional CTA treatment
+* preserve factual positioning around full-stack software development, SaaS/product work, API-connected workflows, and current AI automation learning
+* keep the page useful for recruiter scanning: profile, working style, relevant strengths, language/location context, and current learning
 * avoid redesigning unrelated pages in the same task
 * avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
@@ -354,4 +379,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after the focused AI & Automation page was added and verified with `npm run build`.
+2026-06-15 after the standalone Experience route was removed and verified with `npm run build`.
