@@ -162,7 +162,7 @@ What changed:
 * `app/pages/case-studies/flowplace.vue` is now a concise document-style case study for Flowplace Role Compass.
 * `app/pages/case-studies/leanera.vue` is now a concise document-style case study for ARI Motors EV Portal.
 * `app/pages/case-studies/cashdo.vue` is now a concise document-style case study for LeanERA Digital Transition.
-* `app/pages/case-studies/security.vue` is now a concise document-style lab case study for Security Playground.
+* `app/pages/case-studies/security.vue` was originally a concise document-style case study, but has since been rebuilt into an interactive educational lab.
 * The old oversized hero sections, gradient backgrounds, metric card grids, icon-heavy blocks, decorative security visuals, simulator framing, and promotional CTA panel were removed from these four pages.
 * Each page now uses the shared minimal `page-shell`, `page-container`, and `page-header` direction with a simple summary, role/stack/outcome facts, and short Context, Problem, Role/Implementation, Outcome, and Stack sections where relevant.
 * Dark mode support is preserved through the existing neutral text, border, and background utilities.
@@ -427,6 +427,21 @@ Focus areas:
 * Do not make the site flashy.
 * Do not rebuild all pages in one task.
 * Keep the site working after each milestone.
+
+## Security Playground Lab Rebuild
+
+The Security Playground has been successfully rebuilt from a static case study into an interactive educational lab.
+
+What changed:
+
+* `app/pages/case-studies/security.vue` is now an interactive lab rather than a static document.
+* Created four new, safe, self-contained educational demo components under `app/components/security/`:
+  * `XssConceptDemo.vue`
+  * `TokenStorageDemo.vue`
+  * `PhishingAwarenessDemo.vue`
+  * `SqlInjectionConceptDemo.vue`
+* Kept the minimal, document-like styling of the portfolio.
+* Avoided executing any real malicious payloads or utilizing real tokens.
 
 ## Last Updated
 
