@@ -2,15 +2,25 @@
 
 ## Task Title
 
-Redesign the About page.
+Redesign the Experiments page.
 
 ## Goal
 
-Bring `/about` in line with the new minimal, document-like portfolio direction.
+Bring `/experiments` in line with the new minimal, document-like portfolio direction.
 
 ## Context
 
-The homepage, global shell, Work index, first individual case-study detail pages, and focused AI & Automation page now use a compact developer portfolio style, and the standalone Experience route has been removed from the public structure:
+The public navigation model is now:
+
+```text
+Home
+Work
+Experiments
+AI
+About
+```
+
+The homepage, global shell, Work index, first individual case-study detail pages, focused AI & Automation page, public route structure, and About page now use a compact developer portfolio style:
 
 * narrow layout
 * typography-first presentation
@@ -18,15 +28,15 @@ The homepage, global shell, Work index, first individual case-study detail pages
 * quiet dark mode
 * no large stat cards, gradient hero treatments, visualizers, decorative timelines, or promotional CTA panels
 
-The public navigation model is Home, Work, Experiments, AI, and About. The active About page still carries older landing-page patterns:
+The active Experiments page still carries older lab/landing-page patterns:
 
-* `AboutVisualizer`
-* GSAP / ScrollTrigger reveal animation
-* large rounded cards
-* glossy/translucent panels and shadow-heavy blocks
-* icon-heavy working-area cards
-* gradient text treatment
-* promotional contact CTA panel
+* `ExperimentsVisualizer`
+* GSAP reveal animation
+* gradient hero text
+* large module layout
+* hover-scale module swapping
+* rounded/glassy cards
+* icon-heavy promotional CTA panel
 
 Current positioning remains:
 
@@ -36,17 +46,17 @@ Current positioning remains:
 
 Good scope:
 
-* inspect `app/pages/about.vue`, `app/components/AboutVisualizer.vue`, `content/profile.json`, `content/skills.json`, and `content/professional-narrative.md`
-* make `/about` read like a concise professional profile
-* use structured content where practical
-* show a short profile summary, working style, strongest skill/context areas, location/language context, and current WBS AI Agents & Automations learning
+* inspect `app/pages/experiments.vue`, `app/components/ExperimentsVisualizer.vue`, `app/components/ArchitectSimulator.vue`, `app/components/lab/JsonToTs.vue`, `app/components/lab/ContrastChecker.vue`, and `app/composables/useProjects.ts`
+* make `/experiments` a concise lab/utility index rather than a showy interactive landing page
+* present experiment/lab projects as compact rows using existing project data where practical
+* decide whether the current interactive lab tools still belong on the page; if they stay, frame them simply and avoid visualizer/animation treatment
+* if `ExperimentsVisualizer.vue` becomes unused after this change, remove it only after confirming no references remain
 * keep dark mode support
-* if `AboutVisualizer.vue` becomes unused after this change, remove it only after confirming no references remain
 * run the build after implementation
 
 Avoid in this task:
 
-* redesigning the homepage, Work index, case-study pages, navbar, footer, or `/ai-automation`
+* redesigning the homepage, Work index, case-study pages, About page, navbar, footer, or `/ai-automation`
 * changing project/case-study route mappings
 * changing routes
 * adding dependencies
@@ -58,11 +68,12 @@ Avoid in this task:
 ## Files Likely To Inspect
 
 ```text
-app/pages/about.vue
-app/components/AboutVisualizer.vue
-content/profile.json
-content/skills.json
-content/professional-narrative.md
+app/pages/experiments.vue
+app/components/ExperimentsVisualizer.vue
+app/components/ArchitectSimulator.vue
+app/components/lab/JsonToTs.vue
+app/components/lab/ContrastChecker.vue
+app/composables/useProjects.ts
 app/assets/css/main.css
 docs/codex/current-state.md
 ```
@@ -74,7 +85,7 @@ docs/codex/current-state.md
 * Do not change routes.
 * Do not expose API keys.
 * Do not invent facts.
-* Preserve homepage, global shell, Work index, case-study, AI & Automation, and the five-item public navigation model.
+* Preserve homepage, global shell, Work index, case-study, AI & Automation, About page, and the five-item public navigation model.
 * Run the relevant build/check command if possible.
 * Update `docs/codex/current-state.md` after completing the task.
 * Update this file with the next recommended task after completion.
@@ -83,9 +94,8 @@ docs/codex/current-state.md
 
 The task is complete when:
 
-* `/about` matches the minimal portfolio style
-* profile facts and current AI automation learning are preserved
-* the page is easier to scan for recruiters and hiring managers
+* `/experiments` matches the minimal portfolio style
+* useful lab/experiment content remains available without a marketing/lab-showcase treatment
 * no routes, providers, dependencies, or unsupported facts are introduced
 * build/check passes or any blocker is documented
 * current-state and next-task docs are updated

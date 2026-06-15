@@ -1,150 +1,70 @@
 <template>
   <div class="page-shell">
-    <AboutVisualizer />
     <div class="page-container">
-      <header class="about-reveal page-header opacity-0">
+      <header class="page-header">
         <div class="page-header-main">
-          <span class="page-kicker">
-            About
-          </span>
-          <h1 class="page-title">
-            Full-stack developer building practical products and
-            <span class="text-gradient-primary">AI workflows.</span>
-          </h1>
-        </div>
-        <div class="page-header-side">
-          <p class="page-intro">
-            I build practical web products, then keep asking how the workflow could be clearer, faster, and more useful.
+          <h1 class="page-title">About</h1>
+          <p class="page-intro mt-4">
+            I'm a full-stack developer based in Leipzig, focused on SaaS products,
+            web applications, and AI-assisted workflows.
           </p>
         </div>
       </header>
 
-      <section class="mb-16 grid gap-10 lg:grid-cols-12">
-        <aside class="about-reveal opacity-0 lg:col-span-4">
-          <div class="sticky top-28 space-y-6">
-            <div class="overflow-hidden rounded-3xl border border-secondary-100 bg-secondary-100 shadow-2xl shadow-secondary-900/10 dark:border-white/10 dark:bg-white/5">
-              <img
-                src="/profile.jpeg"
-                alt="Igal Vilensky"
-                class="aspect-square h-full w-full object-cover grayscale transition duration-700 hover:scale-105 hover:grayscale-0"
-              />
-            </div>
-
-            <div class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/50">
-              <h2 class="text-2xl font-bold text-secondary-900 dark:text-white">Igal Vilensky</h2>
-              <p class="mt-2 font-mono text-xs uppercase tracking-widest text-primary-600 dark:text-primary-300">
-                Full-stack developer / Creative technologist
-              </p>
-              <div class="mt-6 grid gap-3">
-                <div v-for="item in quickContext" :key="item.label" class="rounded-2xl bg-secondary-50 p-4 dark:bg-white/5">
-                  <span class="block text-[10px] font-bold uppercase tracking-widest text-secondary-400">
-                    {{ item.label }}
-                  </span>
-                  <span class="mt-1 block text-sm text-secondary-700 dark:text-secondary-300">
-                    {{ item.value }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <div class="space-y-12 lg:col-span-8">
-          <section class="about-reveal rounded-3xl border border-secondary-100 bg-white/75 p-7 opacity-0 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45 md:p-10">
-            <h2 class="mb-6 font-display text-3xl font-bold text-secondary-900 dark:text-white">
-              Building from interface to infrastructure.
-            </h2>
-            <div class="space-y-5 text-lg leading-relaxed text-secondary-700 dark:text-secondary-300">
-              <p>
-                I am a full-stack software developer based in Leipzig, Germany. My work sits between product thinking
-                and implementation: shaping user flows, building responsive interfaces, connecting APIs, structuring
-                data, and deploying working software.
-              </p>
-              <p>
-                My current stack is TypeScript-heavy across Vue/Nuxt and React/Next, with Node.js, Express, Python,
-                FastAPI, PostgreSQL, Prisma, Firebase, and Firestore on the backend side. I care about clean UX, clear
-                architecture, and practical delivery more than shiny complexity.
-              </p>
-              <p>
-                I am currently expanding my full-stack background into AI agents and automation workflows through the AI
-                Agents & Automations course at WBS CODING SCHOOL, with a focus on practical systems that connect APIs,
-                LLMs, webhooks, and product interfaces.
-              </p>
-            </div>
-          </section>
-
-          <section class="about-reveal opacity-0">
-            <div class="mb-8">
-              <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
-                Working areas
-              </p>
-              <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
-                What I bring into a team or project.
-              </h2>
-            </div>
-
-            <div class="grid gap-5 md:grid-cols-2">
-              <article
-                v-for="area in workingAreas"
-                :key="area.title"
-                class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
-              >
-                <i :class="[area.icon, 'mb-5 text-2xl text-primary-500']"></i>
-                <h3 class="mb-3 text-xl font-bold text-secondary-900 dark:text-white">{{ area.title }}</h3>
-                <p class="text-sm leading-relaxed text-secondary-600 dark:text-secondary-400">
-                  {{ area.description }}
-                </p>
-              </article>
-            </div>
-          </section>
-
-          <section class="about-reveal opacity-0">
-            <div class="mb-8">
-              <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
-                Stack snapshot
-              </p>
-              <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
-                Practical tools, not a buzzword wall.
-              </h2>
-            </div>
-
-            <div class="grid gap-5 md:grid-cols-2">
-              <div
-                v-for="group in skillGroups"
-                :key="group.title"
-                class="rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
-              >
-                <h3 class="mb-4 text-lg font-bold text-secondary-900 dark:text-white">{{ group.title }}</h3>
-                <div class="flex flex-wrap gap-2">
-                  <span
-                    v-for="item in group.items"
-                    :key="item"
-                    class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
-                  >
-                    {{ item }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
+      <section aria-labelledby="background-title" class="mb-14 max-w-3xl">
+        <h2 id="background-title" class="section-title">Short background</h2>
+        <div class="mt-6 space-y-5 text-sm leading-7 text-secondary-700 dark:text-secondary-300 md:text-base">
+          <p v-for="paragraph in backgroundParagraphs" :key="paragraph">
+            {{ paragraph }}
+          </p>
         </div>
       </section>
 
-      <section class="about-reveal rounded-3xl border border-primary-200 bg-primary-50/80 p-8 opacity-0 shadow-xl shadow-primary-500/10 dark:border-primary-400/20 dark:bg-primary-400/10 md:p-10">
-        <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div class="max-w-3xl">
-            <h2 class="font-display text-3xl font-bold text-secondary-900 dark:text-white">
-              Open to product engineering and AI automation work.
-            </h2>
-            <p class="mt-4 text-lg leading-relaxed text-secondary-700 dark:text-primary-100">
-              I am interested in developer roles, SaaS/product teams, practical AI tools, and automation projects that
-              need thoughtful implementation rather than vague AI promises.
-            </p>
+      <section aria-labelledby="snapshot-title" class="mb-14 max-w-3xl">
+        <h2 id="snapshot-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+          Snapshot
+        </h2>
+
+        <dl class="mt-6 border-y border-secondary-200 dark:border-dark-border">
+          <div
+            v-for="item in snapshotItems"
+            :key="item.label"
+            class="grid gap-2 border-b border-secondary-200 py-4 last:border-b-0 dark:border-dark-border sm:grid-cols-[10rem_minmax(0,1fr)]"
+          >
+            <dt class="text-sm font-medium text-secondary-700 dark:text-secondary-300">
+              {{ item.label }}
+            </dt>
+            <dd class="text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+              {{ item.value }}
+            </dd>
           </div>
-          <NuxtLink to="/contact" class="btn-primary inline-flex shrink-0 items-center justify-center gap-3 px-8 py-4">
-            <span>Get in touch</span>
-            <i class="fas fa-paper-plane"></i>
-          </NuxtLink>
+        </dl>
+      </section>
+
+      <section aria-labelledby="links-title" class="max-w-3xl">
+        <h2 id="links-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+          Links
+        </h2>
+
+        <div class="mt-5 flex flex-wrap gap-x-5 gap-y-3">
+          <template v-for="link in links" :key="link.label">
+            <NuxtLink
+              v-if="link.internal"
+              :to="link.href"
+              class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+            >
+              {{ link.label }}
+            </NuxtLink>
+            <a
+              v-else
+              :href="link.href"
+              :target="link.target"
+              :rel="link.target ? 'noopener noreferrer' : undefined"
+              class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+            >
+              {{ link.label }}
+            </a>
+          </template>
         </div>
       </section>
     </div>
@@ -152,84 +72,111 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import AboutVisualizer from "~/components/AboutVisualizer.vue";
+import experienceData from "../../content/experience.json";
+import profileData from "../../content/profile.json";
+import skillsData from "../../content/skills.json";
 
-const { skillGroups } = useProjects();
-
-const quickContext = [
-  { label: "Base", value: "Leipzig, Germany" },
-  { label: "Core", value: "Full-stack product engineering" },
-  { label: "Current learning", value: "AI Agents & Automations at WBS CODING SCHOOL" },
-  { label: "Direction", value: "AI-assisted workflows, agents, APIs, webhooks" },
-];
-
-const workingAreas = [
-  {
-    title: "SaaS and product development",
-    description:
-      "I enjoy translating messy product needs into screens, flows, APIs, data models, and deployable increments.",
-    icon: "fas fa-layer-group",
-  },
-  {
-    title: "AI-assisted product workflows",
-    description:
-      "I am exploring AI as a practical workflow layer: summaries, decision support, structured recommendations, and human-in-the-loop tools.",
-    icon: "fas fa-wand-magic-sparkles",
-  },
-  {
-    title: "Automation systems",
-    description:
-      "I am building knowledge around agents, n8n, Make, webhooks, and API orchestration so products can trigger useful work beyond the UI.",
-    icon: "fas fa-diagram-project",
-  },
-  {
-    title: "Human-centered systems thinking",
-    description:
-      "Creative technology, performance, startup work, and cross-cultural experience all feed into how I communicate and design technical systems.",
-    icon: "fas fa-compass",
-  },
-];
-
-onMounted(() => {
-  gsap.registerPlugin(ScrollTrigger);
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    gsap.set(".about-reveal", { y: 0, opacity: 1 });
-    return;
-  }
-
-  document.querySelectorAll(".about-reveal").forEach((el, i) => {
-    gsap.to(el, {
-      scrollTrigger: {
-        trigger: el,
-        start: "top 90%",
-      },
-      opacity: 1,
-      y: 0,
-      duration: 0.9,
-      delay: (i % 3) * 0.08,
-      ease: "power4.out",
-    });
-  });
+definePageMeta({
+  layout: "default",
 });
 
+type SnapshotItem = {
+  label: string;
+  value: string;
+};
+
+type AboutLink = {
+  label: string;
+  href: string;
+  internal: boolean;
+  target?: "_blank";
+};
+
+const profile = profileData;
+
+const wbsCourse = experienceData.entries.find((entry) => entry.id === "wbs-ai-agents-automations");
+const languageGroup = skillsData.groups.find((group) => group.id === "languages");
+
+const currentCourse = {
+  title: wbsCourse?.title ?? profile.current_course.program,
+  organization: wbsCourse?.organization ?? profile.current_course.institution,
+  timeframe: wbsCourse?.timeframe ?? profile.current_course.timeframe,
+};
+
+const backgroundParagraphs = [
+  `${profile.identity.name} is a full-stack software developer based in ${profile.identity.based_in}. He builds SaaS products, web applications, frontend interfaces, API-connected workflows, and practical AI-assisted tools.`,
+  "His day-to-day stack is TypeScript-heavy, with Vue/Nuxt, React/Next, Node.js, and REST APIs as recurring parts of the work. He is most interested in clear product flows, maintainable implementation, and software that is useful after the first demo.",
+  `He is currently extending that software development background through the ${currentCourse.title} at ${currentCourse.organization}, with a focus on AI agents, LLM workflows, n8n, Make, APIs/webhooks, and AI safety.`,
+];
+
+const snapshotItems: SnapshotItem[] = [
+  {
+    label: "Location",
+    value: profile.identity.based_in,
+  },
+  {
+    label: "Core stack",
+    value: "TypeScript, Vue/Nuxt, React/Next, Node.js, APIs",
+  },
+  {
+    label: "AI focus",
+    value: "LLM workflows, AI agents, n8n, Make, APIs/webhooks",
+  },
+  {
+    label: "Languages",
+    value:
+      languageGroup?.skills.join(", ") ??
+      profile.languages.map((item) => `${item.language} - ${item.level}`).join(", "),
+  },
+  {
+    label: "Current",
+    value: `${currentCourse.organization}: ${currentCourse.title}, ${currentCourse.timeframe}`,
+  },
+];
+
+const links: AboutLink[] = [
+  {
+    label: "Work",
+    href: "/case-studies",
+    internal: true,
+  },
+  {
+    label: "AI",
+    href: "/ai-automation",
+    internal: true,
+  },
+  {
+    label: "GitHub",
+    href: profile.links.github,
+    internal: false,
+    target: "_blank",
+  },
+  {
+    label: "LinkedIn",
+    href: profile.links.linkedin,
+    internal: false,
+    target: "_blank",
+  },
+  {
+    label: "Email",
+    href: `mailto:${profile.links.email}`,
+    internal: false,
+  },
+  {
+    label: "CV",
+    href: profile.links.cv,
+    internal: true,
+  },
+];
+
 useHead({
-  title: "About | Igal Vilensky - Full-Stack Developer and AI Automation Learner",
+  title: "About | Igal Vilensky",
   meta: [
     {
       name: "description",
       content:
-        "Igal Vilensky is a full-stack software developer in Leipzig, Germany, focused on SaaS/product engineering and currently specializing in AI agents and automation workflows.",
+        "Short professional profile for Igal Vilensky, a Leipzig-based full-stack software developer focused on SaaS products, web applications, and AI-assisted workflows.",
     },
   ],
 });
 </script>
-
-<style scoped>
-.text-gradient-primary {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-primary-400 to-accent-500;
-}
-</style>

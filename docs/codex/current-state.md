@@ -249,7 +249,7 @@ Other cleanup:
 * Removed unused global CSS utilities `.glass-card` and `.text-gradient` from `app/assets/css/main.css`.
 * Kept `.text-gradient-primary` because active pages still use it.
 * Updated the README structure section so it no longer points to deleted components or removed public images.
-* Kept active visualizers on About, Contact, and Experiments because current pages still reference them.
+* Kept active visualizers on About, Contact, and Experiments because current pages still referenced them at the time of the cleanup pass.
 * Kept `ProjectVisual` TypeScript data shape in `app/composables/useProjects.ts` because project data still stores `visual` metadata.
 * Kept package dependencies unchanged because active code still uses GSAP and VueUse-derived imports, and dependency removal was not necessary for a safe cleanup.
 * Left the ARI Motors and LeanERA legacy case-study route names unchanged because the current route/content mapping was already documented and no safe route rename was required.
@@ -345,21 +345,41 @@ Verification:
 * `npm run build` passed after removing the standalone Experience route.
 * A fresh dev server returned `404 Page not found` for `/experience`.
 
+## About Page Redesign
+
+The `/about` page redesign is complete.
+
+What changed:
+
+* `app/pages/about.vue` is now a short, quiet human/context page rather than another landing page or CV page.
+* Removed `AboutVisualizer`, GSAP / ScrollTrigger imports, reveal animation code, gradient text, profile/sidebar card layout, glassy cards, icon-heavy working-area cards, and the promotional CTA panel from About.
+* The page now uses `page-shell`, `page-container`, `page-header`, max-width text sections, simple bordered snapshot rows, and plain text links.
+* About now answers only the core context questions: who Igal is, what kind of developer he is, short background, current focus, and where to review work or contact him.
+* Structured content is used from `content/profile.json`, `content/experience.json`, and `content/skills.json`.
+* The AI helper remains only on the homepage and was not moved or duplicated on About.
+* `app/components/AboutVisualizer.vue` was removed after confirming no app code referenced it.
+* The old `Creative technologist` wording was removed from About.
+
+No dependency, route, provider, API key, homepage, Work index, case-study, navbar, footer, `/ai-automation`, Experiments, or AI functionality change was added.
+
+Verification:
+
+* `npm run build` passed after the About page redesign.
+
 ## Next Recommended Phase
 
 The next phase should be:
 
-> Redesign the About page.
+> Redesign the Experiments page.
 
-The homepage, global shell, Work index, first individual case-study pages, cleanup pass, AI & Automation page, and public route structure are complete. The next best step is to bring the About page into the same recruiter-friendly style.
+The homepage, global shell, Work index, first individual case-study pages, cleanup pass, AI & Automation page, public route structure, and About page are complete. The next best step is to bring the visible Experiments page into the same recruiter-friendly style.
 
 Focus areas:
 
-* redesign `/about` as a concise professional profile page
-* use structured content from `content/profile.json`, `content/skills.json`, and `content/professional-narrative.md` where practical
-* remove `AboutVisualizer`, GSAP reveal animation, glossy cards, oversized rounded panels, icons, gradients, and promotional CTA treatment
-* preserve factual positioning around full-stack software development, SaaS/product work, API-connected workflows, and current AI automation learning
-* keep the page useful for recruiter scanning: profile, working style, relevant strengths, language/location context, and current learning
+* redesign `/experiments` as a concise lab/project utility index
+* keep the usable lab tools if they remain valuable, but remove decorative lab visualizer, GSAP reveal animation, gradient hero treatment, large cards, hover-scale module swapping, and promotional CTA panel
+* present lab/experiment projects as simple bordered rows using existing project data where practical
+* preserve useful links to demos, source, or case studies without overpromoting experiments as primary work
 * avoid redesigning unrelated pages in the same task
 * avoid new providers, dependencies, route changes, or invented facts
 * run the build after implementation
@@ -379,4 +399,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after the standalone Experience route was removed and verified with `npm run build`.
+2026-06-15 after the About page was redesigned and verified with `npm run build`.
