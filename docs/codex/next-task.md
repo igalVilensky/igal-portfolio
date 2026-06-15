@@ -2,11 +2,11 @@
 
 ## Task Title
 
-Redesign the Experiments page.
+Add concise case-study pages for OpenMe and Decision Matrix AI.
 
 ## Goal
 
-Bring `/experiments` in line with the new minimal, document-like portfolio direction.
+Give the remaining primary portfolio projects their own focused, document-style case-study pages so the strongest Work items have deeper proof without changing the minimal public direction.
 
 ## Context
 
@@ -20,82 +20,85 @@ AI
 About
 ```
 
-The homepage, global shell, Work index, first individual case-study detail pages, focused AI & Automation page, public route structure, and About page now use a compact developer portfolio style:
+The homepage, global shell, Work index, Experiments workbench, AI & Automation page, About page, public route structure, and first existing case-study detail pages now use the compact developer portfolio style:
 
 * narrow layout
 * typography-first presentation
-* simple bordered rows
+* simple bordered rows and panels
 * quiet dark mode
-* no large stat cards, gradient hero treatments, visualizers, decorative timelines, or promotional CTA panels
+* no large stat-card systems, gradient hero treatments, visualizers, decorative timelines, or promotional CTA panels
 
-The active Experiments page still carries older lab/landing-page patterns:
+Experiments is intentionally interactive. Do not turn it into a static project index in future cleanup passes.
 
-* `ExperimentsVisualizer`
-* GSAP reveal animation
-* gradient hero text
-* large module layout
-* hover-scale module swapping
-* rounded/glassy cards
-* icon-heavy promotional CTA panel
+Primary project order is:
 
-Current positioning remains:
+```text
+Flowplace Role Compass
+OpenMe
+Decision Matrix AI
+ARI Motors EV Portal
+```
 
-> Full-stack developer building SaaS products, web applications, and AI-assisted tools.
+Current case-study coverage:
+
+* `/case-studies/flowplace` covers Flowplace Role Compass.
+* `/case-studies/leanera` is a legacy route name, but its content covers ARI Motors EV Portal.
+* `/case-studies/cashdo` is a legacy route name, but its content covers LeanERA Digital Transition.
+* `/case-studies/security` covers Security Playground.
+* OpenMe and Decision Matrix AI are primary projects but do not yet have dedicated case-study routes.
 
 ## Recommended Scope
 
 Good scope:
 
-* inspect `app/pages/experiments.vue`, `app/components/ExperimentsVisualizer.vue`, `app/components/ArchitectSimulator.vue`, `app/components/lab/JsonToTs.vue`, `app/components/lab/ContrastChecker.vue`, and `app/composables/useProjects.ts`
-* make `/experiments` a concise lab/utility index rather than a showy interactive landing page
-* present experiment/lab projects as compact rows using existing project data where practical
-* decide whether the current interactive lab tools still belong on the page; if they stay, frame them simply and avoid visualizer/animation treatment
-* if `ExperimentsVisualizer.vue` becomes unused after this change, remove it only after confirming no references remain
-* keep dark mode support
+* inspect `docs/codex/current-state.md`
+* inspect `docs/codex/implementation-rules.md`
+* inspect `app/pages/case-studies/flowplace.vue`
+* inspect `app/pages/case-studies/index.vue`
+* inspect `app/composables/useProjects.ts`
+* inspect `content/projects.json`
+* add concise document-style case-study pages for OpenMe and Decision Matrix AI if no route conflicts exist
+* update project data links only after the new routes exist
+* keep the new pages visually consistent with the existing redesigned case-study pages
 * run the build after implementation
 
-Avoid in this task:
-
-* redesigning the homepage, Work index, case-study pages, About page, navbar, footer, or `/ai-automation`
-* changing project/case-study route mappings
-* changing routes
-* adding dependencies
-* adding providers, AI features, or API-key changes
-* inventing facts, metrics, companies, links, or claims
-* reintroducing deleted legacy components from the previous landing-page direction
-* reintroducing large cards, decorative timelines, icon-heavy blocks, gradients, glow, glassmorphism, or scroll reveal animation
-
-## Files Likely To Inspect
+Possible route names:
 
 ```text
-app/pages/experiments.vue
-app/components/ExperimentsVisualizer.vue
-app/components/ArchitectSimulator.vue
-app/components/lab/JsonToTs.vue
-app/components/lab/ContrastChecker.vue
-app/composables/useProjects.ts
-app/assets/css/main.css
-docs/codex/current-state.md
+/case-studies/openme
+/case-studies/decision-matrix-ai
 ```
 
-## Rules
+Use these only if they are available and no existing route/content mapping conflicts.
 
-* Keep the app working.
-* Do not add dependencies.
-* Do not change routes.
-* Do not expose API keys.
-* Do not invent facts.
-* Preserve homepage, global shell, Work index, case-study, AI & Automation, About page, and the five-item public navigation model.
-* Run the relevant build/check command if possible.
-* Update `docs/codex/current-state.md` after completing the task.
-* Update this file with the next recommended task after completion.
+## Content Boundaries
+
+Use existing documented facts only:
+
+* OpenMe facts from `app/composables/useProjects.ts`, `content/projects.json`, and the existing live/GitHub links.
+* Decision Matrix AI facts from `app/composables/useProjects.ts`, `content/projects.json`, and the existing live/GitHub links.
+* Do not invent adoption metrics, user counts, architecture claims, product outcomes, or business impact.
+* It is acceptable to say that no user/adoption metric is documented where relevant.
+
+## Avoid In This Task
+
+* redesigning Home, Work index, Experiments, AI & Automation, About, navbar, footer, or existing case-study pages
+* removing or hiding the interactive Experiments tools
+* renaming existing legacy case-study routes
+* changing the public navigation model
+* adding dependencies
+* adding AI providers, API keys, or AI helper changes
+* adding ungrounded metrics, outcomes, or claims
+* reintroducing visualizers, GSAP page animation, gradient heroes, large cards, glow/glass treatments, decorative timelines, or promotional CTA panels
 
 ## Acceptance Criteria
 
 The task is complete when:
 
-* `/experiments` matches the minimal portfolio style
-* useful lab/experiment content remains available without a marketing/lab-showcase treatment
-* no routes, providers, dependencies, or unsupported facts are introduced
+* OpenMe has a concise case-study page if the route is safely available
+* Decision Matrix AI has a concise case-study page if the route is safely available
+* `app/composables/useProjects.ts` and `content/projects.json` link to the new case-study pages if they were added
+* the Work index exposes the new case-study links through existing row link behavior
+* no unrelated routes, providers, dependencies, or visual systems are changed
 * build/check passes or any blocker is documented
-* current-state and next-task docs are updated
+* `docs/codex/current-state.md` and this file are updated for the next milestone

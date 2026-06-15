@@ -1,216 +1,269 @@
 <template>
-    <div :class="[
-        'glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/5 transition-all duration-500 relative',
-        isFeatured ? 'p-8' : 'p-6'
-    ]">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
-                <i class="fas fa-code text-xs"></i>
-            </div>
-            <h3 :class="[
-                'font-bold text-secondary-900 dark:text-white uppercase tracking-wider',
-                isFeatured ? 'text-xl md:text-2xl' : 'text-sm'
-            ]">
-                JSON to TS
-            </h3>
-        </div>
-
-        <div class="space-y-4">
-            <textarea v-model="inputJson" placeholder='{"name": "Igal", "role": "Engineer"}' :class="[
-                'w-full bg-secondary-50 dark:bg-black/20 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-1 focus:ring-blue-500 outline-none transition-all text-secondary-900 dark:text-white font-mono resize-none',
-                isFeatured ? 'text-base h-48' : 'text-[10px] h-24'
-            ]"></textarea>
-
-            <div v-if="tsInterface" class="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 animate-fade-in">
-                <div class="flex justify-between items-center mb-2">
-                    <span :class="[
-                        'font-mono text-blue-500 uppercase font-bold',
-                        isFeatured ? 'text-xs' : 'text-[8px]'
-                    ]">
-                        Generated Interface
-                    </span>
-
-                    <button @click="copyToClipboard" class="flex items-center gap-1.5 transition-colors"
-                        :class="copied ? 'text-green-500' : 'text-secondary-400 hover:text-blue-500'">
-                        <i :class="copied ? 'fas fa-check' : 'fas fa-copy'" class="text-[10px]"></i>
-                        <span v-if="copied" class="text-[8px] font-bold uppercase tracking-tighter">
-                            Copied!
-                        </span>
-                    </button>
-                </div>
-
-                <pre :class="[
-                    'text-secondary-600 dark:text-secondary-300 font-mono overflow-x-auto whitespace-pre-wrap',
-                    isFeatured ? 'text-sm' : 'text-[9px]'
-                ]">
-{{ tsInterface }}
-        </pre>
-            </div>
-
-            <div v-if="error" class="text-[9px] text-red-500 font-mono mt-2">
-                <i class="fas fa-circle-exclamation mr-1"></i> {{ error }}
-            </div>
-        </div>
+  <section class="rounded-md border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
+    <div class="mb-5">
+      <h3 class="text-lg font-semibold text-secondary-950 dark:text-white">
+        JSON to TypeScript
+      </h3>
+      <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+        Paste JSON and generate a simple TypeScript interface locally in the browser.
+      </p>
     </div>
+
+    <div class="space-y-4">
+      <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+        <label class="block">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Interface name</span>
+          <input
+            v-model="interfaceName"
+            type="text"
+            class="mt-2 w-full rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
+            placeholder="RootObject"
+          />
+        </label>
+
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="example in examples"
+            :key="example.label"
+            type="button"
+            class="rounded-md border border-secondary-200 px-3 py-2 text-xs font-medium text-secondary-600 transition-colors hover:border-secondary-400 hover:text-secondary-950 dark:border-dark-border dark:text-secondary-400 dark:hover:text-white"
+            @click="loadExample(example)"
+          >
+            {{ example.label }}
+          </button>
+        </div>
+      </div>
+
+      <label class="block">
+        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">JSON input</span>
+        <textarea
+          v-model="inputJson"
+          rows="10"
+          placeholder='{"name": "Igal", "role": "Developer"}'
+          class="mt-2 w-full resize-none rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 font-mono text-xs leading-5 text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
+        ></textarea>
+      </label>
+
+      <p v-if="error" class="text-sm leading-6 text-red-600 dark:text-red-400">
+        {{ error }}
+      </p>
+
+      <div
+        v-if="tsInterface"
+        class="rounded-md border border-secondary-200 bg-secondary-50 dark:border-dark-border dark:bg-dark-bg"
+      >
+        <div class="flex items-center justify-between border-b border-secondary-200 px-3 py-2 dark:border-dark-border">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">
+            Generated interface
+          </span>
+          <button
+            type="button"
+            class="text-xs font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+            @click="copyToClipboard"
+          >
+            {{ copied ? "Copied" : "Copy" }}
+          </button>
+        </div>
+
+        <pre class="overflow-x-auto whitespace-pre-wrap p-3 font-mono text-xs leading-5 text-secondary-800 dark:text-secondary-200">{{ tsInterface }}</pre>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from "vue";
 
-const props = withDefaults(
-    defineProps<{ isFeatured?: boolean }>(),
-    { isFeatured: false }
-);
+type JsonExample = {
+  label: string;
+  interfaceName: string;
+  value: string;
+};
 
-const inputJson = ref('');
-const error = ref('');
-const copied = ref(false);
-
-const tsInterface = computed(() => {
-    if (!inputJson.value.trim()) return '';
-    error.value = '';
-
-    try {
-        const obj = JSON.parse(inputJson.value);
-        return generateInterface(obj, 'RootObject');
-    } catch {
-        error.value = 'Invalid JSON input';
-        return '';
-    }
+const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
+  isFeatured: false,
 });
 
-function inferType(val: any, key = '', indent = 2): string {
-    const spaces = ' '.repeat(indent);
-    const innerSpaces = ' '.repeat(indent + 2);
-    const lowerKey = key.toLowerCase();
+void props;
 
-    // ---- null handling (nullable inference)
-    if (val === null) {
-        if (
-            lowerKey.includes('name') ||
-            lowerKey.includes('bio') ||
-            lowerKey.includes('url') ||
-            lowerKey.includes('email') ||
-            lowerKey.includes('text')
-        ) {
-            return 'string | null';
-        }
+const examples: JsonExample[] = [
+  {
+    label: "Profile",
+    interfaceName: "Profile",
+    value: JSON.stringify(
+      {
+        name: "Igal",
+        role: "Developer",
+        links: ["GitHub", "LinkedIn"],
+        available: true,
+      },
+      null,
+      2
+    ),
+  },
+  {
+    label: "Project",
+    interfaceName: "Project",
+    value: JSON.stringify(
+      {
+        title: "Decision Matrix AI",
+        tags: ["React", "TypeScript", "AI"],
+        stats: {
+          hasLiveDemo: true,
+          score: 4.5,
+        },
+      },
+      null,
+      2
+    ),
+  },
+  {
+    label: "API",
+    interfaceName: "ApiResponse",
+    value: JSON.stringify(
+      {
+        ok: true,
+        data: {
+          id: 42,
+          status: "ready",
+        },
+        error: null,
+      },
+      null,
+      2
+    ),
+  },
+];
 
-        if (
-            lowerKey.includes('date') ||
-            lowerKey.includes('time') ||
-            lowerKey.includes('login')
-        ) {
-            return 'string | null';
-        }
+const inputJson = ref("");
+const interfaceName = ref("RootObject");
+const error = ref("");
+const copied = ref(false);
 
-        return 'unknown | null';
+const normalizedInterfaceName = computed(() => {
+  const fallback = "RootObject";
+  const cleaned = interfaceName.value
+    .trim()
+    .replace(/[^A-Za-z0-9_$]/g, "")
+    .replace(/^[0-9]+/, "");
+
+  return cleaned || fallback;
+});
+
+const tsInterface = computed(() => {
+  if (!inputJson.value.trim()) return "";
+  error.value = "";
+
+  try {
+    const parsed = JSON.parse(inputJson.value);
+    return generateInterface(parsed, normalizedInterfaceName.value);
+  } catch {
+    error.value = "Invalid JSON input.";
+    return "";
+  }
+});
+
+const loadExample = (example: JsonExample) => {
+  interfaceName.value = example.interfaceName;
+  inputJson.value = example.value;
+};
+
+const toPropertyName = (key: string) => {
+  if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(key)) return key;
+  return JSON.stringify(key);
+};
+
+function inferType(val: any, key = "", indent = 2): string {
+  const spaces = " ".repeat(indent);
+  const innerSpaces = " ".repeat(indent + 2);
+  const lowerKey = key.toLowerCase();
+
+  if (val === null) {
+    if (
+      lowerKey.includes("name") ||
+      lowerKey.includes("bio") ||
+      lowerKey.includes("url") ||
+      lowerKey.includes("email") ||
+      lowerKey.includes("text") ||
+      lowerKey.includes("date") ||
+      lowerKey.includes("time")
+    ) {
+      return "string | null";
     }
 
-    // ---- arrays
-    if (Array.isArray(val)) {
-        if (val.length === 0) return 'never[]';
+    return "unknown | null";
+  }
 
-        const rawTypes = val.map(v => inferType(v, key, indent + 2));
-        const merged = mergeStructuralTypes(rawTypes);
-        const type =
-            merged.length > 1 ? `(${merged.join(' | ')})` : merged[0];
+  if (Array.isArray(val)) {
+    if (val.length === 0) return "unknown[]";
 
-        return `${type}[]`;
+    const rawTypes = val.map((item) => inferType(item, key, indent + 2));
+    const merged = mergeStructuralTypes(rawTypes);
+    const type = merged.length > 1 ? `(${merged.join(" | ")})` : merged[0];
+
+    return `${type}[]`;
+  }
+
+  if (typeof val === "object") {
+    const entries = Object.entries(val);
+    if (!entries.length) return "Record<string, unknown>";
+
+    let struct = "{\n";
+    for (const [objectKey, objectValue] of entries) {
+      struct += `${innerSpaces}${toPropertyName(objectKey)}: ${inferType(objectValue, objectKey, indent + 2)};\n`;
+    }
+    struct += `${spaces}}`;
+    return struct;
+  }
+
+  if (typeof val === "string") {
+    const enumLikeKeys = ["role", "theme", "status", "type", "kind", "action", "tag"];
+
+    if (enumLikeKeys.some((enumKey) => lowerKey.includes(enumKey))) {
+      return JSON.stringify(val);
     }
 
-    // ---- objects
-    if (typeof val === 'object') {
-        const entries = Object.entries(val);
-        if (entries.length === 0) return 'Record<string, unknown>';
+    return "string";
+  }
 
-        let struct = '{\n';
-        for (const [k, v] of entries) {
-            struct += `${innerSpaces}${k}: ${inferType(v, k, indent + 2)};\n`;
-        }
-        struct += `${spaces}}`;
-        return struct;
-    }
-
-    // ---- string inference (ENUM-SAFE)
-    if (typeof val === 'string') {
-        const enumLikeKeys = [
-            'role',
-            'theme',
-            'status',
-            'type',
-            'kind',
-            'action',
-            'actions',
-            'tag',
-            'tags'
-        ];
-
-        if (enumLikeKeys.some(k => lowerKey.includes(k))) {
-            return `"${val}"`;
-        }
-
-        return 'string';
-    }
-
-    return typeof val;
+  return typeof val;
 }
 
 function mergeStructuralTypes(types: string[]): string[] {
-    const unique = Array.from(new Set(types)).filter(Boolean);
-    if (unique.length <= 1) return unique;
+  const unique = Array.from(new Set(types)).filter(Boolean);
+  if (unique.length <= 1) return unique;
 
-    // unknown | null normalization
-    if (unique.includes('unknown | null')) {
-        return ['unknown | null'];
-    }
+  const objects = unique.filter((type) => type.startsWith("{"));
+  const nonObjects = unique.filter((type) => !type.startsWith("{"));
 
-    // structural object merging
-    const objects = unique.filter(t => t.startsWith('{'));
-    const nonObjects = unique.filter(t => !t.startsWith('{'));
+  if (objects.length > 1) {
+    const longest = objects.sort((a, b) => b.length - a.length)[0];
+    return [...nonObjects, longest];
+  }
 
-    if (objects.length > 1) {
-        const longest = objects.sort((a, b) => b.length - a.length)[0];
-        return [...nonObjects, longest];
-    }
-
-    return unique;
+  return unique;
 }
 
 function generateInterface(obj: any, name: string): string {
-    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
-        return `interface ${name} {}`;
-    }
+  const rootObject = Array.isArray(obj) ? obj[0] : obj;
 
-    let result = `interface ${name} {\n`;
-    for (const [key, value] of Object.entries(obj)) {
-        result += `  ${key}: ${inferType(value, key, 2)};\n`;
-    }
-    result += '}';
-    return result;
+  if (!rootObject || typeof rootObject !== "object" || Array.isArray(rootObject)) {
+    return `interface ${name} {\n  value: ${inferType(obj)};\n}`;
+  }
+
+  let result = `interface ${name} {\n`;
+  for (const [key, value] of Object.entries(rootObject)) {
+    result += `  ${toPropertyName(key)}: ${inferType(value, key, 2)};\n`;
+  }
+  result += "}";
+  return result;
 }
 
 function copyToClipboard() {
-    navigator.clipboard.writeText(tsInterface.value);
-    copied.value = true;
-    setTimeout(() => (copied.value = false), 2000);
+  navigator.clipboard.writeText(tsInterface.value);
+  copied.value = true;
+  setTimeout(() => {
+    copied.value = false;
+  }, 2000);
 }
 </script>
-
-<style scoped>
-.animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>

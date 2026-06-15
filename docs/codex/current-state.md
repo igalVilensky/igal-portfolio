@@ -366,22 +366,55 @@ Verification:
 
 * `npm run build` passed after the About page redesign.
 
+## Experiments Workbench Redesign
+
+The `/experiments` page redesign is complete, and the page intentionally remains interactive.
+
+What changed:
+
+* `app/pages/experiments.vue` is now a calm developer workbench, not a static project list.
+* The page uses the shared minimal `page-shell`, `page-container`, and `page-header` direction.
+* The header title is `Experiments` with the intro: "Small interactive tools and lab projects. Some are usable mini-tools; others are smaller proof points."
+* The old featured-module/sidebar swap pattern was removed.
+* All three interactive tools are visible and usable without hover-scale swapping:
+  * System Design Sketcher, implemented in `app/components/ArchitectSimulator.vue`
+  * JSON to TypeScript, implemented in `app/components/lab/JsonToTs.vue`
+  * A11y Contrast Checker, implemented in `app/components/lab/ContrastChecker.vue`
+* The System Design Sketcher keeps the existing `useGroqChat()` integration but now uses less overclaiming language, includes the note "Generated sketch, not final architecture.", and requests concise sections for suggested stack, architecture shape, data/storage choice, key tradeoff, and MVP first step.
+* JSON to TypeScript keeps local JSON parsing and copy-to-clipboard, and now has an optional interface-name input plus small example presets.
+* A11y Contrast Checker keeps local contrast calculation and visual preview, and now includes color swapping, normal/large AA and AAA states, and a short guidance line.
+* The Lab shelf remains below the tools as compact bordered rows using existing project data for Security Playground, PageScope, i18n Linter CLI, Family Space, MindQ Lab, and Sunlit Tales.
+* MindQ Lab is included on Experiments because `content/projects.json` marks it as `priority: "lab"` even though the composable still categorizes it as `projectType: "work"`.
+* Removed the old Experiments visualizer, GSAP reveal animation, gradient hero text, exploration track cards, hover-scale module swapping, large cards, icon-heavy CTA panel, and promotional contact panel.
+
+Removed unused component after confirming no app references remained:
+
+```text
+app/components/ExperimentsVisualizer.vue
+```
+
+No route, dependency, provider, API key, AI helper, homepage, Work index, case-study, AI & Automation, About, navbar, or footer change was added.
+
+Verification:
+
+* `npm run build` passed after the Experiments workbench redesign.
+
 ## Next Recommended Phase
 
 The next phase should be:
 
-> Redesign the Experiments page.
+> Add concise case-study pages for OpenMe and Decision Matrix AI.
 
-The homepage, global shell, Work index, first individual case-study pages, cleanup pass, AI & Automation page, public route structure, and About page are complete. The next best step is to bring the visible Experiments page into the same recruiter-friendly style.
+The visible public pages now follow the minimal portfolio direction: Home, Work, Experiments, AI, About, the global shell, and the first existing case-study detail pages. The strongest remaining content gap is that OpenMe and Decision Matrix AI are primary projects but do not yet have their own concise case-study pages.
 
 Focus areas:
 
-* redesign `/experiments` as a concise lab/project utility index
-* keep the usable lab tools if they remain valuable, but remove decorative lab visualizer, GSAP reveal animation, gradient hero treatment, large cards, hover-scale module swapping, and promotional CTA panel
-* present lab/experiment projects as simple bordered rows using existing project data where practical
-* preserve useful links to demos, source, or case studies without overpromoting experiments as primary work
+* create document-style case studies for OpenMe and Decision Matrix AI if no existing route conflicts exist
+* use only documented project facts from `app/composables/useProjects.ts`, `content/projects.json`, existing docs, and linked repositories if inspected
+* update project data links only after the new pages exist
+* preserve the existing legacy route mappings for Flowplace, ARI Motors, LeanERA, and Security Playground
 * avoid redesigning unrelated pages in the same task
-* avoid new providers, dependencies, route changes, or invented facts
+* avoid new providers, dependencies, ungrounded metrics, or invented claims
 * run the build after implementation
 
 ## Known Constraints
@@ -399,4 +432,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after the About page was redesigned and verified with `npm run build`.
+2026-06-15 after the Experiments workbench redesign was verified with `npm run build`.

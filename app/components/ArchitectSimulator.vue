@@ -1,268 +1,221 @@
 <template>
-    <div :class="[
-        'glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/10 transition-all duration-500 relative group',
-        isFeatured ? 'p-8 shadow-2xl' : 'p-6 shadow-lg'
-    ]">
-        <!-- Decorative Elements -->
-        <div
-            class="absolute -top-24 -right-24 w-48 h-48 bg-primary-500/10 blur-3xl rounded-full group-hover:bg-primary-500/20 transition-colors duration-700">
-        </div>
-
-        <div class="relative z-10">
-            <div class="flex items-center gap-4 mb-8">
-                <div
-                    :class="['bg-primary-600 rounded-2xl flex items-center justify-center text-white shadow-lg ring-4 ring-primary-500/20', isFeatured ? 'w-12 h-12 text-xl' : 'w-8 h-8 text-sm']">
-                    <i class="fas fa-microchip animate-pulse"></i>
-                </div>
-                <div>
-                    <h3
-                        :class="['font-display font-bold text-secondary-900 dark:text-white', isFeatured ? 'text-2xl' : 'text-sm']">
-                        Architect Simulator
-                    </h3>
-                    <p :class="['text-secondary-500 dark:text-secondary-400', isFeatured ? 'text-sm' : 'text-[10px]']">
-                        Technical Strategy & System Design
-                        v1.0</p>
-                </div>
-            </div>
-
-            <div class="space-y-8">
-                <!-- Input Form -->
-                <div v-if="!result" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label
-                                class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">Project
-                                Domain</label>
-                            <input v-model="project.domain" type="text" placeholder="e.g. Fintech, SaaS, Health" :class="[
-                                'w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white',
-                                isFeatured ? 'py-3 text-base' : 'py-2 text-[10px]'
-                            ]" />
-                        </div>
-                        <div class="space-y-2">
-                            <label
-                                class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">Key
-                                Constraint</label>
-                            <div class="relative">
-                                <select v-model="project.constraint" :class="[
-                                    'w-full bg-secondary-50 dark:bg-secondary-800 border border-secondary-200 dark:border-white/10 rounded-xl px-4 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white appearance-none cursor-pointer',
-                                    isFeatured ? 'py-3 text-base' : 'py-2 text-[10px]'
-                                ]">
-                                    <option value="scalability">High Scalability (10M+ Users)</option>
-                                    <option value="security">Maximum Data Security (Fintech Grade)</option>
-                                    <option value="speed">Fastest TTM (Lean MVP Architecture)</option>
-                                    <option value="complexity">Complex Multi-Tenant Logic</option>
-                                    <option value="performance">Sub-100ms Performance</option>
-                                </select>
-                                <div
-                                    class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-secondary-400">
-                                    <i class="fas fa-chevron-down text-xs"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <label
-                            class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">Core
-                            Requirement</label>
-                        <textarea v-model="project.requirement" :rows="isFeatured ? 3 : 2"
-                            placeholder="e.g. Real-time collaborative document editing with version history and offline support..."
-                            :class="[
-                                'w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white resize-none',
-                                isFeatured ? 'text-base' : 'text-[10px]'
-                            ]"></textarea>
-                        <p class="text-[10px] text-secondary-400 mt-1 italic">Be specific about features, scale, or
-                            technical hurdles.</p>
-                    </div>
-
-                    <button @click="simulate" :disabled="isLoading || !project.domain || !project.requirement" :class="[
-                        'w-full bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-3 shadow-xl shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed group',
-                        isFeatured ? 'py-4 text-base' : 'py-2 text-[10px]'
-                    ]">
-                        <i class="fas fa-cogs" :class="{ 'fa-spin': isLoading }"></i>
-                        <span>{{ isLoading ? 'Processing Architecture...' : 'Run Simulation' }}</span>
-                    </button>
-                </div>
-
-                <!-- Result View -->
-                <div v-else class="space-y-6 animate-fade-in">
-                    <!-- Input Summary (The "Context") -->
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <div
-                            class="px-3 py-1 bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-full text-[10px] font-medium text-secondary-600 dark:text-secondary-400">
-                            <span class="opacity-50 uppercase tracking-tighter mr-1">Domain:</span> {{ project.domain }}
-                        </div>
-                        <div
-                            class="px-3 py-1 bg-secondary-100 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-full text-[10px] font-medium text-secondary-600 dark:text-secondary-400">
-                            <span class="opacity-50 uppercase tracking-tighter mr-1">Constraint:</span> {{
-                                project.constraint }}
-                        </div>
-                        <div v-if="project.requirement"
-                            class="w-full px-3 py-2 bg-secondary-100/50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-xl text-[10px] font-medium text-secondary-600 dark:text-secondary-400 mt-2">
-                            <span class="opacity-50 uppercase tracking-tighter block mb-1">Requirement:</span>
-                            <span class="italic">"{{ project.requirement }}"</span>
-                        </div>
-                    </div>
-
-                    <div class="relative group/result">
-                        <div
-                            class="absolute -inset-1 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-3xl blur opacity-0 group-hover/result:opacity-100 transition duration-500">
-                        </div>
-                        <div
-                            class="relative p-8 bg-white dark:bg-dark-surface border border-secondary-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden">
-                            <!-- Background Accent -->
-                            <div
-                                class="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 -mr-16 -mt-16 rounded-full blur-2xl">
-                            </div>
-
-                            <div class="flex justify-between items-center mb-6">
-                                <h4
-                                    class="text-xs font-bold uppercase tracking-[0.2em] text-primary-600 dark:text-primary-400 flex items-center gap-2">
-                                    <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                                    Architectural Blueprint
-                                </h4>
-                                <button @click="result = null"
-                                    class="w-8 h-8 flex items-center justify-center rounded-xl bg-secondary-50 dark:bg-white/5 text-secondary-400 hover:text-primary-500 hover:bg-primary-500/10 transition-all">
-                                    <i class="fas fa-redo-alt text-sm"></i>
-                                </button>
-                            </div>
-
-                            <div class="prose prose-stone dark:prose-invert max-w-none">
-                                <div class="space-y-8">
-                                    <component :is="'div'" v-for="(section, index) in resultSections" :key="index"
-                                        class="relative pl-6 border-l border-primary-500/20">
-                                        <h5
-                                            class="text-xs font-bold text-secondary-900 dark:text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                                            <span class="absolute left-0 w-3 h-[1px] bg-primary-500 -ml-3"></span>
-                                            {{ section.title }}
-                                        </h5>
-                                        <div
-                                            class="text-sm text-secondary-600 dark:text-secondary-400 leading-relaxed whitespace-pre-wrap font-sans">
-                                            {{ section.content }}
-                                        </div>
-                                    </component>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap items-center gap-6 pt-2">
-                        <div class="flex items-center gap-2 text-[10px] font-mono text-secondary-500">
-                            <i class="fas fa-shield-halved text-green-500"></i>
-                            <span class="uppercase tracking-widest">Enterprise Grade Architecture</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-[10px] font-mono text-secondary-500">
-                            <i class="fas fa-bolt text-amber-500"></i>
-                            <span class="uppercase tracking-widest">Optimized for Performance</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <section class="rounded-md border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface md:p-6">
+    <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
+          Featured tool
+        </p>
+        <h3 class="mt-1 text-xl font-semibold text-secondary-950 dark:text-white">
+          System Design Sketcher
+        </h3>
+        <p class="mt-2 max-w-2xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+          Generate a concise first-pass architecture outline from a domain, constraint, and requirement.
+        </p>
+      </div>
+      <p class="text-xs leading-5 text-secondary-500 dark:text-secondary-500">
+        Generated sketch, not final architecture.
+      </p>
     </div>
+
+    <div v-if="!result" class="space-y-4">
+      <div class="grid gap-4 md:grid-cols-2">
+        <label class="block">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Project domain</span>
+          <input
+            v-model="project.domain"
+            type="text"
+            placeholder="SaaS, education, ecommerce"
+            class="mt-2 w-full rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
+          />
+        </label>
+
+        <label class="block">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Primary constraint</span>
+          <select
+            v-model="project.constraint"
+            class="mt-2 w-full rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm text-secondary-950 transition-colors focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white"
+          >
+            <option value="scalability">Scalability</option>
+            <option value="security">Security</option>
+            <option value="speed">Fast MVP delivery</option>
+            <option value="complexity">Complex product logic</option>
+            <option value="performance">Performance</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="block">
+        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Core requirement</span>
+        <textarea
+          v-model="project.requirement"
+          rows="4"
+          placeholder="Example: A small team needs collaborative project notes with roles, comments, and export."
+          class="mt-2 w-full resize-none rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm leading-6 text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
+        ></textarea>
+      </label>
+
+      <button
+        type="button"
+        :disabled="isLoading || !project.domain || !project.requirement"
+        class="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+        @click="simulate"
+      >
+        {{ isLoading ? "Generating sketch..." : "Generate sketch" }}
+      </button>
+    </div>
+
+    <div v-else class="space-y-5">
+      <div class="rounded-md border border-secondary-200 bg-secondary-50 p-4 dark:border-dark-border dark:bg-dark-bg">
+        <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
+              Generated sketch
+            </p>
+            <p class="mt-1 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+              {{ project.domain }} / {{ constraintLabel }}
+            </p>
+          </div>
+          <button
+            type="button"
+            class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+            @click="result = null"
+          >
+            Reset
+          </button>
+        </div>
+
+        <div v-if="resultSections.length" class="space-y-4">
+          <section
+            v-for="section in resultSections"
+            :key="section.title"
+            class="border-t border-secondary-200 pt-4 first:border-t-0 first:pt-0 dark:border-dark-border"
+          >
+            <h4 class="text-sm font-semibold text-secondary-950 dark:text-white">
+              {{ section.title }}
+            </h4>
+            <p class="mt-2 whitespace-pre-wrap text-sm leading-6 text-secondary-700 dark:text-secondary-300">
+              {{ section.content }}
+            </p>
+          </section>
+        </div>
+
+        <p v-else class="whitespace-pre-wrap text-sm leading-6 text-secondary-700 dark:text-secondary-300">
+          {{ result }}
+        </p>
+      </div>
+
+      <p class="text-xs leading-5 text-secondary-500 dark:text-secondary-500">
+        Treat this as a starting point for discussion, validation, and tradeoff review.
+      </p>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { computed, reactive, ref } from "vue";
 
-const props = withDefaults(defineProps<{
-    isFeatured?: boolean
-}>(), {
-    isFeatured: true
+const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
+  isFeatured: true,
 });
+
+void props;
 
 const project = reactive({
-    domain: '',
-    constraint: 'scalability',
-    requirement: ''
+  domain: "",
+  constraint: "scalability",
+  requirement: "",
 });
+
+const constraintLabels: Record<string, string> = {
+  scalability: "Scalability",
+  security: "Security",
+  speed: "Fast MVP delivery",
+  complexity: "Complex product logic",
+  performance: "Performance",
+};
 
 const isLoading = ref(false);
 const result = ref<string | null>(null);
 const groqChat = useGroqChat();
 
+const constraintLabel = computed(() => constraintLabels[project.constraint] ?? project.constraint);
+
 const resultSections = computed(() => {
-    if (!result.value) return [];
+  if (!result.value) return [];
 
-    const sections: { title: string, content: string }[] = [];
-    const lines = result.value.split('\n');
-    let currentTitle = '';
-    let currentContent: string[] = [];
+  const sections: { title: string; content: string }[] = [];
+  const lines = result.value.split("\n");
+  let currentTitle = "";
+  let currentContent: string[] = [];
 
-    lines.forEach(line => {
-        const titleMatch = line.match(/^\d+\.\s+(.+)$/);
-        if (titleMatch && titleMatch[1]) {
-            if (currentTitle) {
-                sections.push({ title: currentTitle, content: currentContent.join('\n').trim() });
-            }
-            currentTitle = titleMatch[1];
-            currentContent = [];
-        } else {
-            currentContent.push(line);
-        }
-    });
+  for (const line of lines) {
+    const titleMatch = line.match(/^\s*\d+\.\s+(.+)$/);
 
-    if (currentTitle) {
-        sections.push({ title: currentTitle, content: currentContent.join('\n').trim() });
+    if (titleMatch?.[1]) {
+      if (currentTitle) {
+        sections.push({
+          title: currentTitle,
+          content: currentContent.join("\n").trim(),
+        });
+      }
+
+      currentTitle = titleMatch[1].replace(/\*\*/g, "").trim();
+      currentContent = [];
+    } else {
+      currentContent.push(line.replace(/^\s*[-*]\s?/, "").trim());
     }
+  }
 
-    return sections;
+  if (currentTitle) {
+    sections.push({
+      title: currentTitle,
+      content: currentContent.join("\n").trim(),
+    });
+  }
+
+  return sections.filter((section) => section.content);
 });
 
 const simulate = async () => {
-    if (isLoading.value) return;
-    isLoading.value = true;
+  if (isLoading.value) return;
+  isLoading.value = true;
 
-    try {
-        const rawPrompt = `Generate a professional technical architecture recommendation for a project in the ${project.domain} domain. 
-    The primary constraint is ${project.constraint}. 
-    Core requirement: ${project.requirement}.
-    
-    Recommend the most appropriate and industry-standard tech stack for this specific use case. While Nuxt 4 and Node.js are preferred for web-centric layers, feel free to suggest more specialized languages or architectures (e.g. Go, Rust, Python, Spring, Microservices, etc.) if they are better suited for the domain's security, performance, or compliance needs.
-    
-    Format the response as:
-    1. PROPOSED TECH STACK (list items)
-    2. KEY ARCHITECTURAL DECISION (explanation)
-    3. DATA MODEL STRATEGY (brief overview)
-    4. SECURITY CONSIDERATIONS (brief overview)`;
+  try {
+    const rawPrompt = `Create a concise system design sketch for this product idea.
 
-        const response = await groqChat({
-            prompt: rawPrompt,
-            maxLines: 20,
-            systemPrompt: "You are a Senior Technical Architect Simulator. Provide deep technical insights and architectural decisions. Be concise, professional, and engineer-focused."
-        });
+Domain: ${project.domain}
+Primary constraint: ${constraintLabel.value}
+Core requirement: ${project.requirement}
 
+Return exactly these numbered sections:
+1. Suggested stack
+2. Architecture shape
+3. Data/storage choice
+4. Key tradeoff
+5. MVP first step
 
-        if (response && response.reply) {
-            result.value = response.reply;
-        } else if (response && (response as any).error) {
-            result.value = `API_ERROR: ${(response as any).error}`;
-        } else {
-            result.value = "Simulation failed. Error in data retrieval.";
-        }
-    } catch (error: any) {
-        console.error("Simulation Error:", error);
-        const errorMsg = error.data?.statusMessage || error.message || "Unknown error";
-        result.value = `CONNECTION_ERROR: ${errorMsg}`;
-    } finally {
-        isLoading.value = false;
+Keep each section to 1-3 short sentences. Avoid certainty, inflated claims, and final-architecture language.`;
+
+    const response = await groqChat({
+      prompt: rawPrompt,
+      maxLines: 16,
+      systemPrompt:
+        "You create concise, practical system design sketches for early product exploration. Be cautious, specific, and concise.",
+    });
+
+    if (response?.reply) {
+      result.value = response.reply;
+    } else if (response && (response as any).error) {
+      result.value = `Could not generate sketch: ${(response as any).error}`;
+    } else {
+      result.value = "Could not generate a sketch from the current response.";
     }
+  } catch (error: any) {
+    console.error("System design sketch error:", error);
+    const errorMsg = error.data?.statusMessage || error.message || "Unknown error";
+    result.value = `Could not generate sketch: ${errorMsg}`;
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
-
-<style scoped>
-.animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>

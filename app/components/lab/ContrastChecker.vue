@@ -1,100 +1,173 @@
 <template>
-    <div :class="[
-        'glass bg-white/80 dark:bg-dark-surface/50 rounded-3xl border border-secondary-200 dark:border-white/5 transition-all duration-500 relative',
-        isFeatured ? 'p-8' : 'p-6'
-    ]">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
-                <i class="fas fa-eye text-xs"></i>
-            </div>
-            <h3
-                :class="['font-bold text-secondary-900 dark:text-white uppercase tracking-wider', isFeatured ? 'text-xl md:text-2xl' : 'text-sm']">
-                A11y Contrast
-            </h3>
-        </div>
-
-        <div class="space-y-4">
-            <div class="flex gap-2">
-                <div class="flex-1 space-y-1">
-                    <label :class="['font-mono text-secondary-400 uppercase', isFeatured ? 'text-xs' : 'text-[8px]']">FG
-                        Color</label>
-                    <div
-                        class="flex items-center gap-2 bg-secondary-50 dark:bg-black/20 border border-secondary-200 dark:border-white/10 rounded-xl px-2 py-1.5">
-                        <input v-model="fg" type="color" class="w-6 h-6 bg-transparent border-none cursor-pointer" />
-                        <span
-                            :class="['font-mono text-secondary-900 dark:text-white uppercase', isFeatured ? 'text-xs' : 'text-[9px]']">{{
-                            fg }}</span>
-                    </div>
-                </div>
-                <div class="flex-1 space-y-1">
-                    <label :class="['font-mono text-secondary-400 uppercase', isFeatured ? 'text-xs' : 'text-[8px]']">BG
-                        Color</label>
-                    <div
-                        class="flex items-center gap-2 bg-secondary-50 dark:bg-black/20 border border-secondary-200 dark:border-white/10 rounded-xl px-2 py-1.5">
-                        <input v-model="bg" type="color" class="w-6 h-6 bg-transparent border-none cursor-pointer" />
-                        <span
-                            :class="['font-mono text-secondary-900 dark:text-white uppercase', isFeatured ? 'text-sm' : 'text-[9px]']">{{
-                            bg }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 rounded-2xl transition-all duration-500 border shadow-inner"
-                :style="{ backgroundColor: bg, color: fg, borderColor: fg + '20' }">
-                <p :class="['font-bold mb-1', isFeatured ? 'text-lg' : 'text-[10px]']">Visual Preview</p>
-                <p :class="['leading-tight', isFeatured ? 'text-sm' : 'text-[9px]']">Checking accessibility standards
-                    for inclusive design.</p>
-            </div>
-
-            <div class="flex justify-between items-end">
-                <div>
-                    <span class="text-[8px] font-mono text-secondary-400 uppercase block mb-1">Ratio</span>
-                    <span
-                        :class="['font-display font-bold', isFeatured ? 'text-4xl' : 'text-xl', passAA ? 'text-emerald-500' : 'text-red-500']">{{
-                        ratio }}:1</span>
-                </div>
-                <div class="flex gap-2">
-                    <div :class="passAA ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'"
-                        class="px-2 py-1 rounded text-[8px] font-bold font-mono">AA</div>
-                    <div :class="passAAA ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'"
-                        class="px-2 py-1 rounded text-[8px] font-bold font-mono">AAA</div>
-                </div>
-            </div>
-        </div>
+  <section class="rounded-md border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
+    <div class="mb-5">
+      <h3 class="text-lg font-semibold text-secondary-950 dark:text-white">
+        A11y Contrast Checker
+      </h3>
+      <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+        Check foreground and background contrast against common WCAG text thresholds.
+      </p>
     </div>
+
+    <div class="space-y-4">
+      <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-end">
+        <label class="block">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Text color</span>
+          <span class="mt-2 flex items-center gap-2 rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 dark:border-dark-border dark:bg-dark-bg">
+            <input v-model="fg" type="color" class="h-7 w-7 cursor-pointer border-0 bg-transparent p-0" />
+            <input
+              v-model="fg"
+              type="text"
+              class="min-w-0 flex-1 bg-transparent font-mono text-xs uppercase text-secondary-950 dark:text-white"
+            />
+          </span>
+        </label>
+
+        <button
+          type="button"
+          class="rounded-md border border-secondary-200 px-3 py-2 text-xs font-medium text-secondary-600 transition-colors hover:border-secondary-400 hover:text-secondary-950 dark:border-dark-border dark:text-secondary-400 dark:hover:text-white"
+          @click="swapColors"
+        >
+          Swap
+        </button>
+
+        <label class="block">
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Background</span>
+          <span class="mt-2 flex items-center gap-2 rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 dark:border-dark-border dark:bg-dark-bg">
+            <input v-model="bg" type="color" class="h-7 w-7 cursor-pointer border-0 bg-transparent p-0" />
+            <input
+              v-model="bg"
+              type="text"
+              class="min-w-0 flex-1 bg-transparent font-mono text-xs uppercase text-secondary-950 dark:text-white"
+            />
+          </span>
+        </label>
+      </div>
+
+      <div
+        class="rounded-md border p-4 transition-colors"
+        :style="{ backgroundColor: safeBg, color: safeFg, borderColor: previewBorder }"
+      >
+        <p class="text-base font-semibold">Visual preview</p>
+        <p class="mt-2 text-sm leading-6">
+          This sample approximates normal interface text on the selected background.
+        </p>
+        <p class="mt-3 text-lg font-semibold">
+          Large text preview
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)]">
+        <div>
+          <p class="text-xs font-medium text-secondary-500 dark:text-secondary-500">Contrast ratio</p>
+          <p
+            class="mt-1 text-3xl font-semibold"
+            :class="passesAaNormal ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
+          >
+            {{ ratio }}:1
+          </p>
+        </div>
+
+        <div class="grid gap-2 sm:grid-cols-2">
+          <div
+            v-for="item in contrastStates"
+            :key="item.label"
+            class="flex items-center justify-between rounded-md border border-secondary-200 px-3 py-2 dark:border-dark-border"
+          >
+            <span class="text-xs text-secondary-600 dark:text-secondary-400">{{ item.label }}</span>
+            <span
+              class="text-xs font-medium"
+              :class="item.passes ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
+            >
+              {{ item.passes ? "Pass" : "Fail" }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+        {{ guidance }}
+      </p>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed, ref } from "vue";
 
-const props = withDefaults(defineProps<{
-    isFeatured?: boolean
-}>(), {
-    isFeatured: false
+const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
+  isFeatured: false,
 });
 
-const fg = ref('#3b82f6');
-const bg = ref('#0f172a');
+void props;
+
+const fg = ref("#334155");
+const bg = ref("#f8fafc");
+
+const isHexColor = (value: string) => /^#[0-9A-Fa-f]{6}$/.test(value);
+
+const safeFg = computed(() => (isHexColor(fg.value) ? fg.value : "#334155"));
+const safeBg = computed(() => (isHexColor(bg.value) ? bg.value : "#f8fafc"));
+
+const previewBorder = computed(() => `${safeFg.value}33`);
 
 const getLuminance = (hex: string) => {
-    const match = hex.match(/[A-Za-z0-9]{2}/g);
-    if (!match || match.length < 3) return 0;
-    const rgb: [number, number, number] = [
-        parseInt(match[0], 16) / 255,
-        parseInt(match[1], 16) / 255,
-        parseInt(match[2], 16) / 255
-    ];
-    const weights = rgb.map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
-    return 0.2126 * weights[0] + 0.7152 * weights[1] + 0.0722 * weights[2];
+  const match = hex.match(/[A-Fa-f0-9]{2}/g);
+  if (!match || match.length < 3) return 0;
+
+  const rgb: [number, number, number] = [
+    parseInt(match[0], 16) / 255,
+    parseInt(match[1], 16) / 255,
+    parseInt(match[2], 16) / 255,
+  ];
+
+  const weights = rgb.map((value) =>
+    value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4)
+  );
+
+  return 0.2126 * weights[0] + 0.7152 * weights[1] + 0.0722 * weights[2];
 };
 
-const ratio = computed(() => {
-    const l1 = getLuminance(fg.value);
-    const l2 = getLuminance(bg.value);
-    const r = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-    return r.toFixed(2);
+const ratioNumber = computed(() => {
+  const l1 = getLuminance(safeFg.value);
+  const l2 = getLuminance(safeBg.value);
+
+  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
 });
 
-const passAA = computed(() => parseFloat(ratio.value) >= 4.5);
-const passAAA = computed(() => parseFloat(ratio.value) >= 7);
+const ratio = computed(() => ratioNumber.value.toFixed(2));
+
+const passesAaNormal = computed(() => ratioNumber.value >= 4.5);
+const passesAaLarge = computed(() => ratioNumber.value >= 3);
+const passesAaaNormal = computed(() => ratioNumber.value >= 7);
+const passesAaaLarge = computed(() => ratioNumber.value >= 4.5);
+
+const contrastStates = computed(() => [
+  { label: "Normal text AA", passes: passesAaNormal.value },
+  { label: "Large text AA", passes: passesAaLarge.value },
+  { label: "Normal text AAA", passes: passesAaaNormal.value },
+  { label: "Large text AAA", passes: passesAaaLarge.value },
+]);
+
+const guidance = computed(() => {
+  if (passesAaaNormal.value) {
+    return "Strong contrast for normal and large text.";
+  }
+
+  if (passesAaNormal.value) {
+    return "Good for normal AA text and large AAA text; increase contrast for stricter normal-text AAA.";
+  }
+
+  if (passesAaLarge.value) {
+    return "Usable for large AA text only; normal interface text needs more contrast.";
+  }
+
+  return "Increase contrast before using this pairing for readable interface text.";
+});
+
+const swapColors = () => {
+  const nextFg = bg.value;
+  bg.value = fg.value;
+  fg.value = nextFg;
+};
 </script>

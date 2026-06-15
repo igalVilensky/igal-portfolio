@@ -1,147 +1,81 @@
 <template>
   <div class="page-shell">
-    <ExperimentsVisualizer />
     <div class="page-container">
-      <!-- Page Header -->
       <header class="page-header">
         <div class="page-header-main">
-        <div
-          class="page-kicker lab-header-anim">
-          <span class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></span>
-          LAB_ENV: EXPLORING
-        </div>
-        <h1
-          class="page-title lab-header-anim">
-          The <span class="text-gradient-primary">Digital Lab</span>
-        </h1>
-        </div>
-        <div class="page-header-side">
-        <p class="page-intro lab-header-anim">
-          Smaller tools and experiments where I explore AI UX patterns, decision support, automation workflows,
-          developer utilities, and product thinking without pretending every idea needs to be a full case study.
-        </p>
+          <h1 class="page-title">Experiments</h1>
+          <p class="page-intro mt-4">
+            Small interactive tools and lab projects. Some are usable mini-tools; others are smaller proof points.
+          </p>
         </div>
       </header>
 
-      <div class="grid gap-4 mb-10 md:grid-cols-4">
-        <div
-          v-for="track in explorationTracks"
-          :key="track"
-          class="lab-header-anim rounded-2xl border border-secondary-100 bg-white/70 p-4 text-sm font-medium text-secondary-700 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45 dark:text-secondary-300"
-        >
-          {{ track }}
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <!-- Main Featured Module -->
-        <div class="lg:col-span-8 lab-mod-anim">
-          <div class="relative group">
-            <div
-              class="absolute -top-4 -left-4 z-20 px-3 py-1 bg-primary-600 text-white text-[10px] font-bold rounded-lg shadow-lg uppercase tracking-widest">
-              Featured Module
-            </div>
-            <component :is="modules.find(m => m.id === featuredModule)?.component" :is-featured="true" />
-          </div>
-        </div>
-
-        <!-- Sidebar / Secondary Experiments -->
-        <div class="lg:col-span-4 space-y-8">
-          <div class="flex flex-col gap-8">
-            <template v-for="mod in modules" :key="mod.id">
-              <div v-if="mod.id !== featuredModule" class="lab-mod-anim group cursor-pointer relative"
-                @click="swapModule(mod.id)">
-                <div class="absolute -top-3 -right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div class="bg-primary-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-lg">
-                    Swap to Main
-                  </div>
-                </div>
-                <div class="transition-all duration-500 group-hover:scale-[1.02] filter group-hover:brightness-110">
-                  <component :is="mod.component" :is-featured="false" />
-                </div>
-                <div
-                  class="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/5 transition-colors rounded-3xl z-10">
-                </div>
-              </div>
-            </template>
-          </div>
-
-          <!-- Lab Stats Card -->
-          <div
-            class="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white relative overflow-hidden shadow-xl lab-mod-anim">
-            <div class="relative z-10">
-              <h4 class="text-lg font-bold mb-2">Need a prototype?</h4>
-              <p class="text-primary-100 text-sm mb-6">I am open to practical AI automation experiments, product
-                utilities, and focused workflow tools.</p>
-              <NuxtLink to="/contact"
-                class="inline-flex items-center gap-2 text-sm font-bold bg-white text-primary-700 px-6 py-3 rounded-xl hover:bg-primary-50 transition-colors">
-                Let's Talk
-                <i class="fas fa-arrow-right"></i>
-              </NuxtLink>
-            </div>
-            <i class="fas fa-flask absolute -bottom-4 -right-4 text-8xl text-white/10 rotate-12"></i>
-          </div>
-        </div>
-      </div>
-
-      <section class="mt-20 border-t border-secondary-100 pt-14 dark:border-white/10">
-        <div class="mb-8 max-w-3xl">
-          <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
-            Lab shelf
+      <section aria-labelledby="interactive-tools-title" class="mb-14">
+        <div class="mb-6">
+          <h2 id="interactive-tools-title" class="section-title">Interactive tools</h2>
+          <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+            Lightweight utilities for sketching, transforming, and checking interface details directly in the browser.
           </p>
-          <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white md:text-4xl">
-            Smaller tools and exploratory builds.
-          </h2>
         </div>
 
-        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div class="space-y-5">
+          <ArchitectSimulator is-featured />
+
+          <div class="grid gap-5 lg:grid-cols-2">
+            <JsonToTs />
+            <ContrastChecker />
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="lab-shelf-title">
+        <div class="mb-6">
+          <h2 id="lab-shelf-title" class="section-title">Lab shelf</h2>
+          <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+            Smaller utilities, learning projects, and exploratory builds kept intentionally quieter than the main Work page.
+          </p>
+        </div>
+
+        <div class="border-y border-secondary-200 dark:border-dark-border">
           <article
-            v-for="project in experimentProjects"
+            v-for="project in labRows"
             :key="project.id"
-            class="lab-mod-anim rounded-3xl border border-secondary-100 bg-white/75 p-6 shadow-lg shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45"
+            class="grid gap-3 border-b border-secondary-200 py-5 last:border-b-0 dark:border-dark-border md:grid-cols-[minmax(0,1fr)_auto] md:gap-8"
           >
-            <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-secondary-500 dark:text-secondary-400">
-              {{ project.category }}
-            </p>
-            <h3 class="mb-3 text-xl font-bold text-secondary-900 dark:text-white">{{ project.title }}</h3>
-            <p class="mb-5 text-sm leading-relaxed text-secondary-600 dark:text-secondary-400">
-              {{ project.shortDescription }}
-            </p>
-            <div class="mb-5 flex flex-wrap gap-2">
-              <span
-                v-for="tag in project.tags.slice(0, 5)"
-                :key="tag"
-                class="rounded-xl border border-secondary-200 bg-secondary-50 px-3 py-1.5 text-xs font-medium text-secondary-600 dark:border-white/10 dark:bg-white/5 dark:text-secondary-300"
-              >
-                {{ tag }}
-              </span>
+            <div>
+              <h3 class="font-medium leading-snug text-secondary-950 dark:text-white">
+                {{ project.title }}
+              </h3>
+              <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+                {{ project.shortDescription }}
+              </p>
+              <p class="mt-2 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
+                {{ project.techLine }}
+              </p>
             </div>
-            <div class="flex flex-wrap gap-4">
-              <NuxtLink
-                v-if="project.caseStudyUrl"
-                :to="project.caseStudyUrl"
-                class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-300"
+
+            <div class="flex flex-wrap gap-x-4 gap-y-2 md:justify-end md:pt-1">
+              <template
+                v-for="link in project.links"
+                :key="`${project.id}-${link.label}`"
               >
-                Case study
-              </NuxtLink>
-              <a
-                v-if="project.liveUrl && !project.liveUrl.startsWith('/')"
-                :href="project.liveUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-xs font-bold uppercase tracking-widest text-primary-600 dark:text-primary-300"
-              >
-                Demo
-              </a>
-              <a
-                v-if="project.githubUrl"
-                :href="project.githubUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400"
-              >
-                Source
-              </a>
+                <NuxtLink
+                  v-if="link.internal"
+                  :to="link.url"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </NuxtLink>
+                <a
+                  v-else
+                  :href="link.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </a>
+              </template>
             </div>
           </article>
         </div>
@@ -151,98 +85,93 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, markRaw, nextTick } from 'vue';
-import gsap from 'gsap';
-import ArchitectSimulator from '~/components/ArchitectSimulator.vue';
-import JsonToTs from '~/components/lab/JsonToTs.vue';
-import ContrastChecker from '~/components/lab/ContrastChecker.vue';
-import ExperimentsVisualizer from '~/components/ExperimentsVisualizer.vue';
+import { computed } from "vue";
+import ArchitectSimulator from "~/components/ArchitectSimulator.vue";
+import JsonToTs from "~/components/lab/JsonToTs.vue";
+import ContrastChecker from "~/components/lab/ContrastChecker.vue";
+import type { PortfolioProject } from "~/composables/useProjects";
 
-const featuredModule = ref('architect');
-const { experimentProjects } = useProjects();
-
-const explorationTracks = [
-  'AI UX patterns',
-  'Decision support',
-  'Automation workflows',
-  'Developer utilities'
-];
-
-const modules = [
-  { id: 'architect', component: markRaw(ArchitectSimulator), title: 'AI Architect' },
-  { id: 'jsontots', component: markRaw(JsonToTs), title: 'JSON to TS' },
-  { id: 'contrast', component: markRaw(ContrastChecker), title: 'A11y Check' }
-];
-
-const swapModule = (id: string) => {
-  if (featuredModule.value === id) return;
-
-  // Transition effect - ONLY target modules, NOT header
-  gsap.to('.lab-mod-anim', {
-    opacity: 0,
-    y: 20,
-    scale: 0.98,
-    duration: 0.3,
-    stagger: 0.05,
-    onComplete: () => {
-      featuredModule.value = id;
-      nextTick().then(() => {
-        // Force visibility and animate in. DO NOT use opacity-0 in template.
-        gsap.fromTo('.lab-mod-anim',
-          { opacity: 0, y: 20, scale: 0.98 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: 'power4.out',
-            clearProps: 'all' // Reset GSAP injected styles to avoid stuck opacity
-          }
-        );
-      });
-    }
-  });
+type LabLink = {
+  label: string;
+  url: string;
+  internal: boolean;
 };
 
-onMounted(() => {
-  // Initialize states in JS to avoid CSS conflicts
-  gsap.set(['.lab-header-anim', '.lab-mod-anim'], { opacity: 0, y: 30 });
+type LabRow = PortfolioProject & {
+  techLine: string;
+  links: LabLink[];
+};
 
-  const tl = gsap.timeline({ delay: 0.2 });
-  tl.to('.lab-header-anim', {
-    y: 0,
-    opacity: 1,
-    duration: 1,
-    stagger: 0.1,
-    ease: 'power3.out'
-  })
-    .to('.lab-mod-anim', {
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      stagger: 0.1,
-      ease: 'power3.out',
-      clearProps: 'all'
-    }, '-=0.6');
+const { projects } = useProjects();
+
+const labProjectIds = [
+  "security-playground",
+  "page-scope",
+  "i18n-lint-cli",
+  "family-space",
+  "mindq-lab",
+  "sunlit-tales",
+];
+
+const isInternalUrl = (url: string) => url.startsWith("/");
+
+const getLiveLabel = (url: string) => {
+  if (url.startsWith("/")) return "Open tool";
+  if (url.includes("npmjs.com/package/")) return "npm";
+  return "Live";
+};
+
+const getLabLinks = (project: PortfolioProject): LabLink[] => {
+  const links: LabLink[] = [];
+
+  if (project.liveUrl && project.liveUrl !== project.githubUrl) {
+    links.push({
+      label: getLiveLabel(project.liveUrl),
+      url: project.liveUrl,
+      internal: isInternalUrl(project.liveUrl),
+    });
+  }
+
+  if (project.githubUrl) {
+    links.push({
+      label: "GitHub",
+      url: project.githubUrl,
+      internal: false,
+    });
+  }
+
+  if (project.caseStudyUrl) {
+    links.push({
+      label: "Case study",
+      url: project.caseStudyUrl,
+      internal: true,
+    });
+  }
+
+  return links;
+};
+
+const toLabRow = (project: PortfolioProject): LabRow => ({
+  ...project,
+  techLine: project.technologies.slice(0, 5).join(" / "),
+  links: getLabLinks(project),
 });
+
+const labRows = computed(() =>
+  labProjectIds
+    .map((id) => projects.find((project) => project.id === id))
+    .filter((project): project is PortfolioProject => Boolean(project))
+    .map(toLabRow)
+);
 
 useHead({
-  title: "The Lab | Igal Vilensky",
+  title: "Experiments | Igal Vilensky",
   meta: [
-    { name: 'description', content: 'Experimental digital lab exploring AI UX patterns, automation workflows, developer utilities, and product thinking.' }
-  ]
+    {
+      name: "description",
+      content:
+        "Interactive tools, lab projects, and smaller technical experiments by Igal Vilensky.",
+    },
+  ],
 });
 </script>
-
-<style scoped>
-.glass {
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.bg-dot-grid {
-  background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-</style>
