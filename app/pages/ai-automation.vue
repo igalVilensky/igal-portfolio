@@ -12,14 +12,14 @@
         </div>
       </header>
 
-      <section aria-labelledby="featured-ai-work-title" class="mb-14">
+      <section aria-labelledby="ai-products-title" class="mb-14">
         <div class="mb-6">
-          <h2 id="featured-ai-work-title" class="section-title">Featured AI-related work</h2>
+          <h2 id="ai-products-title" class="section-title">AI products</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
           <article
-            v-for="item in featuredItems"
+            v-for="item in aiProducts"
             :key="item.id"
             class="grid gap-4 border-b border-secondary-200 py-6 last:border-b-0 dark:border-dark-border md:grid-cols-[minmax(0,1fr)_auto] md:gap-8"
           >
@@ -43,6 +43,112 @@
               <template
                 v-for="link in item.links"
                 :key="`${item.id}-${link.label}`"
+              >
+                <NuxtLink
+                  v-if="link.internal"
+                  :to="link.url"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </NuxtLink>
+                <a
+                  v-else
+                  :href="link.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </a>
+              </template>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="ai-workflows-title" class="mb-14">
+        <div class="mb-6">
+          <h2 id="ai-workflows-title" class="section-title">AI workflow / automation systems</h2>
+        </div>
+
+        <div class="border-y border-secondary-200 dark:border-dark-border">
+          <article
+            v-for="item in aiWorkflows"
+            :key="item.id"
+            class="grid gap-4 border-b border-secondary-200 py-6 last:border-b-0 dark:border-dark-border md:grid-cols-[minmax(0,1fr)_auto] md:gap-8"
+          >
+            <div>
+              <h3 class="text-lg font-semibold leading-snug text-secondary-950 dark:text-white">
+                {{ item.title }}
+              </h3>
+              <p class="mt-2 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
+                {{ item.summary }}
+              </p>
+              <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+                <span class="font-medium text-secondary-800 dark:text-secondary-200">Demonstrates:</span>
+                {{ item.demonstrates }}
+              </p>
+              <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
+                {{ item.techLine }}
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-x-4 gap-y-2 md:justify-end md:pt-1">
+              <template
+                v-for="link in item.links"
+                :key="`${item.id}-${link.label}`"
+              >
+                <NuxtLink
+                  v-if="link.internal"
+                  :to="link.url"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </NuxtLink>
+                <a
+                  v-else
+                  :href="link.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                >
+                  {{ link.label }}
+                </a>
+              </template>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="site-feature-title" class="mb-14">
+        <div class="mb-6">
+          <h2 id="site-feature-title" class="section-title">Site feature</h2>
+        </div>
+
+        <div class="border-y border-secondary-200 dark:border-dark-border">
+          <article
+            class="grid gap-4 border-b border-secondary-200 py-6 last:border-b-0 dark:border-dark-border md:grid-cols-[minmax(0,1fr)_auto] md:gap-8"
+          >
+            <div>
+              <h3 class="text-lg font-semibold leading-snug text-secondary-950 dark:text-white">
+                {{ portfolioAssistantItem.title }}
+              </h3>
+              <p class="mt-2 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
+                {{ portfolioAssistantItem.summary }}
+              </p>
+              <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+                <span class="font-medium text-secondary-800 dark:text-secondary-200">Demonstrates:</span>
+                {{ portfolioAssistantItem.demonstrates }}
+              </p>
+              <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
+                {{ portfolioAssistantItem.techLine }}
+              </p>
+            </div>
+
+            <div class="flex flex-wrap gap-x-4 gap-y-2 md:justify-end md:pt-1">
+              <template
+                v-for="link in portfolioAssistantItem.links"
+                :key="`${portfolioAssistantItem.id}-${link.label}`"
               >
                 <NuxtLink
                   v-if="link.internal"
@@ -135,15 +241,20 @@ type AiWorkItem = {
   links: WorkLink[];
 };
 
-const aiProjectIds = ["decision-matrix-ai", "ai-compliance-compass", "openme"];
+const aiProductsIds = ["decision-matrix-ai", "ai-compliance-compass", "sunlit-tales"];
+const aiWorkflowsIds = ["job-command-center", "openme"];
 
 const projectSummaries: Record<string, string> = {
   "decision-matrix-ai":
     "AI-assisted decision matrix app for comparing complex choices with criteria, scores, recommendations, and action checklists.",
   "ai-compliance-compass":
     "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
+  "sunlit-tales":
+    "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
+  "job-command-center":
+    "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
   openme:
-    "SaaS MVP with profile endpoints, owner inbox flows, and AI-assisted summaries for incoming submissions.",
+    "SaaS MVP with public endpoints, owner inbox flows, and an optional Python/FastAPI AI service layer for incoming submission summaries.",
 };
 
 const demonstratedRoles: Record<string, string> = {
@@ -151,6 +262,10 @@ const demonstratedRoles: Record<string, string> = {
     "LLM API integration for structured decision support, editable outputs, serverless AI calls, validation, and persistence.",
   "ai-compliance-compass":
     "Responsible AI boundaries, clarification flows, cautious language, and educational fallback behavior.",
+  "sunlit-tales":
+    "Server-side Groq call through Netlify Functions, structured JSON generation, and validating model response against source poem text.",
+  "job-command-center":
+    "AI extraction, AI review, budget-aware processing, rule-based prefiltering, and command queue grouped by next action.",
   openme:
     "Automation-oriented product thinking through public endpoints, owner workflows, and AI-assisted inbox review.",
 };
@@ -196,10 +311,13 @@ const toAiWorkItem = (project: Project): AiWorkItem => ({
   links: getProjectLinks(project),
 });
 
-const featuredProjectItems = aiProjectIds
+const getFeaturedItems = (ids: string[]) => ids
   .map((id) => projectsData.projects.find((project) => project.id === id))
   .filter((project): project is Project => Boolean(project))
   .map(toAiWorkItem);
+
+const aiProducts = getFeaturedItems(aiProductsIds);
+const aiWorkflows = getFeaturedItems(aiWorkflowsIds);
 
 const portfolioAssistantItem: AiWorkItem = {
   id: "ask-my-portfolio",
@@ -217,8 +335,6 @@ const portfolioAssistantItem: AiWorkItem = {
     },
   ],
 };
-
-const featuredItems = [...featuredProjectItems, portfolioAssistantItem];
 
 const patterns = [
   "LLM API integration",

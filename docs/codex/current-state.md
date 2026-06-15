@@ -294,25 +294,23 @@ Known limitations:
 
 ## AI & Automation Page
 
-The focused AI proof page is complete.
+The focused AI proof page is updated with verified external repository evidence.
 
 What changed:
 
 * Added `app/pages/ai-automation.vue` at `/ai-automation`.
 * The page follows the minimal document-like direction using simple headers, bordered rows, compact lists, and existing dark mode utilities.
-* Featured AI-related work is grouped as Decision Matrix AI, AI Compliance Compass, OpenMe, and Ask My Portfolio.
-* Each AI-related item shows a concise summary, what AI/automation pattern it demonstrates, a compact tech line, and available links.
-* Decision Matrix AI, AI Compliance Compass, and OpenMe facts come from `content/projects.json`.
-* Ask My Portfolio is included as an existing portfolio assistant/site feature, not as a new structured project claim.
+* Featured AI-related work is now explicitly grouped into three categories: AI products, AI workflow / automation systems, and Site feature.
+* AI products include Decision Matrix AI, AI Compliance Compass, and Sunlit Tales / Poetry Mood Game.
+* AI workflow / automation systems include Job Command Center and OpenMe.
+* Ask My Portfolio is included as an existing portfolio assistant/site feature.
+* OpenMe was updated to show the Python/FastAPI AI service layer in its stack and summary.
+* Job Command Center was added to `content/projects.json` and the AI page with verified facts.
+* Sunlit Tales was updated to reflect its AI mood game feature and point to the correct `poetry` repository.
 * Patterns demonstrated are listed factually: LLM API integration, structured prompts, serverless AI calls, fallback behavior, human-in-the-loop review, API/webhook workflow thinking, and responsible AI boundaries.
 * Current learning is based on WBS AI Agents & Automations and covers AI agents, n8n, Make, Python automations, APIs/webhooks, and AI safety.
-* The global navbar now uses a short `AI` link to `/ai-automation`; AI Compliance Compass remains reachable from the AI page and Work project links.
+* The global navbar uses a short `AI` link to `/ai-automation`; AI Compliance Compass remains reachable from the AI page and Work project links.
 * AI-related proof now has its own focused grouping instead of adding more homepage sections or making the Work index more marketing-heavy.
-
-Content boundary:
-
-* Job Command Center was not added because the repository and structured content do not document enough factual information for it yet.
-* TODO: Add Job Command Center only if factual project content, links, role, stack, and boundaries are documented first.
 
 No dependency, homepage layout, provider, API key, or new AI functionality change was added.
 
@@ -432,4 +430,4 @@ Focus areas:
 
 ## Last Updated
 
-2026-06-15 after the Experiments workbench redesign was verified with `npm run build`.
+2026-06-15 after the AI project taxonomy and AI & Automation page were updated with verified repository evidence.

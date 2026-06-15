@@ -59,6 +59,7 @@
         "Express",
         "PostgreSQL",
         "Prisma",
+        "Python",
         "FastAPI",
         "Docker Compose",
         "Vercel",
@@ -492,18 +493,23 @@
     },
     {
       "id": "sunlit-tales",
-      "title": "Sunlit Tales",
+      "title": "Sunlit Tales / Poetry Mood Game",
       "category": "Content Platform / Creative Web",
       "priority": "lab",
-      "short_description": "Poetry and creative content platform built with Nuxt, Node.js, Sanity, MongoDB, and Tailwind.",
+      "short_description": "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
       "long_description": "A creative publishing project exploring content architecture, quiet reading interfaces, and full-stack web delivery.",
       "role": "Builder of a creative content platform.",
       "technologies": [
-        "Node.js",
         "Nuxt",
+        "Vue",
         "Tailwind CSS",
         "Sanity",
-        "MongoDB"
+        "Axios",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "Netlify Functions",
+        "Groq API"
       ],
       "highlights": [
         "Headless content workflow.",
@@ -522,11 +528,66 @@
       ],
       "links": {
         "live": "https://sunlit-tales.netlify.app/",
-        "github": "https://github.com/igalvilensky/sunlit-tales",
+        "github": "https://github.com/igalVilensky/poetry",
         "case_study": null
       },
       "source_notes": [
         "Derived from app/composables/useProjects.ts and locale project copy."
+      ]
+    },
+    {
+      "id": "job-command-center",
+      "title": "Job Command Center",
+      "category": "AI automation / job workflow command center",
+      "priority": "secondary",
+      "short_description": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+      "long_description": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+      "role": "Builder and full-stack developer.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind",
+        "shadcn/ui",
+        "Node.js",
+        "Express",
+        "PostgreSQL",
+        "Prisma",
+        "Python",
+        "FastAPI",
+        "Pydantic",
+        "httpx",
+        "Docker Compose",
+        "pnpm workspaces",
+        "Turbo",
+        "mock AI",
+        "Groq provider",
+        "optional Gmail import / Gmail OAuth"
+      ],
+      "highlights": [
+        "AI extraction",
+        "AI review",
+        "budget-aware processing",
+        "rule-based prefiltering",
+        "human approval before applying/contacting employers",
+        "command queue grouped by next action"
+      ],
+      "outcome_or_proof": [
+        "GitHub repository is available.",
+        "Self-hosted application."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "AI Software Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": null,
+        "github": "https://github.com/igalVilensky/job-command-center",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from project documentation."
       ]
     }
   ],
