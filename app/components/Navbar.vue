@@ -12,11 +12,12 @@
             v-for="item in navigationItems"
             :key="item.id"
             :to="item.path"
-            class="border-b border-transparent py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            class="flex items-center gap-1.5 border-b border-transparent py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
               'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
             }"
           >
+            <component :is="item.icon" :size="14" />
             {{ item.label }}
           </NuxtLink>
         </div>
@@ -70,12 +71,13 @@
             v-for="item in navigationItems"
             :key="item.id"
             :to="item.path"
-            class="border-b border-transparent py-1 text-base text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            class="flex items-center gap-2 border-b border-transparent py-1 text-base text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
               'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
             }"
             @click="closeMobileMenu"
           >
+            <component :is="item.icon" :size="16" />
             {{ item.label }}
           </NuxtLink>
         </div>
@@ -87,6 +89,7 @@
 <script setup lang="ts">
 import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
+import { Home, Briefcase, FlaskConical, Bot, User } from "lucide-vue-next";
 
 const colorMode = useColorMode();
 const route = useRoute();
@@ -95,11 +98,11 @@ const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
 
 const navigationItems = [
-  { id: "home", path: "/", label: "Home" },
-  { id: "case-studies", path: "/case-studies", label: "Work" },
-  { id: "experiments", path: "/experiments", label: "Experiments" },
-  { id: "ai-automation", path: "/ai-automation", label: "AI" },
-  { id: "about", path: "/about", label: "About" },
+  { id: "home", path: "/", label: "Home", icon: Home },
+  { id: "case-studies", path: "/case-studies", label: "Work", icon: Briefcase },
+  { id: "experiments", path: "/experiments", label: "Experiments", icon: FlaskConical },
+  { id: "ai-automation", path: "/ai-automation", label: "AI", icon: Bot },
+  { id: "about", path: "/about", label: "About", icon: User },
 ];
 
 const toggleColorMode = () => {

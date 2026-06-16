@@ -57,10 +57,11 @@
       <button
         type="button"
         :disabled="isLoading || !project.domain || !project.requirement"
-        class="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+        class="btn-primary inline-flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
         @click="simulate"
       >
-        {{ isLoading ? "Generating sketch..." : "Generate sketch" }}
+        <Loader2 v-if="isLoading" :size="16" class="animate-spin" />
+        <span>{{ isLoading ? "Generating sketch..." : "Generate sketch" }}</span>
       </button>
     </div>
 
@@ -113,6 +114,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
+import { Loader2 } from "lucide-vue-next";
 
 const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
   isFeatured: true,

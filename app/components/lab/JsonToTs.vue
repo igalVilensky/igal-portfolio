@@ -49,6 +49,15 @@
       </p>
 
       <div
+        v-if="!tsInterface && !error"
+        class="flex items-center justify-center rounded-md border border-dashed border-secondary-200 bg-secondary-50/50 py-8 dark:border-dark-border dark:bg-dark-bg/50"
+      >
+        <p class="text-sm text-secondary-500 dark:text-secondary-400">
+          Generated interface will appear here.
+        </p>
+      </div>
+
+      <div
         v-if="tsInterface"
         class="rounded-md border border-secondary-200 bg-secondary-50 dark:border-dark-border dark:bg-dark-bg"
       >

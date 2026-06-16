@@ -12,8 +12,9 @@
       </header>
 
       <section aria-labelledby="primary-work-title" class="mb-14">
-        <div class="mb-6">
-          <h2 id="primary-work-title" class="section-title">Primary projects</h2>
+        <div class="mb-6 flex items-center gap-2">
+          <Layers :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="primary-work-title" class="section-title m-0">Primary projects</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -26,6 +27,11 @@
               <h3 class="text-lg font-semibold leading-snug text-secondary-950 dark:text-white">
                 {{ project.title }}
               </h3>
+              <div v-if="project.badges && project.badges.length" class="mt-2 flex flex-wrap gap-2">
+                <span v-for="badge in project.badges" :key="badge" class="rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-secondary-600 dark:bg-white/5 dark:text-secondary-400">
+                  {{ badge }}
+                </span>
+              </div>
               <p class="mt-2 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
                 {{ project.shortDescription }}
               </p>
@@ -41,9 +47,12 @@
 
       <section v-if="secondaryProjects.length" aria-labelledby="secondary-work-title">
         <div class="mb-5">
-          <h2 id="secondary-work-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
-            Secondary work
-          </h2>
+          <div class="flex items-center gap-2">
+            <Briefcase :size="20" class="text-secondary-950 dark:text-white" />
+            <h2 id="secondary-work-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+              Secondary work
+            </h2>
+          </div>
           <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
             Additional product, utility, and lab projects.
           </p>
@@ -59,6 +68,11 @@
               <h3 class="font-medium text-secondary-950 dark:text-white">
                 {{ project.title }}
               </h3>
+              <div v-if="project.badges && project.badges.length" class="mt-2 flex flex-wrap gap-2">
+                <span v-for="badge in project.badges" :key="badge" class="rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-secondary-600 dark:bg-white/5 dark:text-secondary-400">
+                  {{ badge }}
+                </span>
+              </div>
               <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
                 {{ project.shortDescription }}
               </p>
@@ -77,6 +91,7 @@
 
 <script setup lang="ts">
 import { computed, defineComponent, h, resolveComponent, type PropType } from "vue";
+import { Layers, Briefcase, ExternalLink } from "lucide-vue-next";
 import type { PortfolioProject } from "~/composables/useProjects";
 
 type ProjectLink = {
@@ -87,6 +102,7 @@ type ProjectLink = {
 
 type ProjectRow = PortfolioProject & {
   techLine: string;
+  badges: string[];
   links: ProjectLink[];
 };
 
@@ -134,6 +150,7 @@ const getProjectLinks = (project: PortfolioProject): ProjectLink[] => {
 const toProjectRow = (project: PortfolioProject): ProjectRow => ({
   ...project,
   techLine: project.technologies.slice(0, 5).join(" · "),
+  badges: project.category.split(" / ").slice(0, 3),
   links: getProjectLinks(project),
 });
 
@@ -163,7 +180,7 @@ const ProjectLinks = defineComponent({
   },
   setup(props) {
     const linkClass =
-      "text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200";
+      "inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200";
 
     return () =>
       h(
@@ -192,7 +209,7 @@ const ProjectLinks = defineComponent({
                   rel: "noopener noreferrer",
                   class: linkClass,
                 },
-                link.label
+                [link.label, h(ExternalLink, { size: 14 })]
               )
         )
       );

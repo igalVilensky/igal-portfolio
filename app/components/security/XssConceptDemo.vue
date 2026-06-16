@@ -5,6 +5,9 @@
       <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-400">
         Why rendering untrusted HTML is dangerous.
       </p>
+      <p class="mt-2 text-xs font-semibold uppercase tracking-widest text-secondary-400 dark:text-secondary-500">
+        Shows how a frontend rendering choice can introduce script injection risk.
+      </p>
     </div>
     
     <div class="p-5">

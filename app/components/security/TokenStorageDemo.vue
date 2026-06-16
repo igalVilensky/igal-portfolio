@@ -5,6 +5,9 @@
       <p class="mt-1 text-sm text-secondary-600 dark:text-secondary-400">
         Why storing sensitive tokens in localStorage is risky.
       </p>
+      <p class="mt-2 text-xs font-semibold uppercase tracking-widest text-secondary-400 dark:text-secondary-500">
+        Demonstrates how any script on the page can read localStorage &mdash; including injected ones.
+      </p>
     </div>
     
     <div class="p-5">

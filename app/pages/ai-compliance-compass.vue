@@ -17,6 +17,9 @@
           A practical, educational AI use-case checker for Germany and the EU. Describe how AI is used, then get
           cautious prompts around AI Act risk, data protection, transparency, and next steps.
         </p>
+        <p class="mt-4 text-xs font-semibold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">
+          Educational advisory tool • Not legal advice
+        </p>
         </div>
       </header>
 
@@ -49,10 +52,11 @@
             <button
               @click="analyzeDescription"
               :disabled="isLoading || !userDescription.trim()"
-              class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 py-3 text-base font-bold text-white transition-all hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <i class="fas fa-search" :class="{ 'fa-spin': isLoading }"></i>
-              <span class="ml-2">{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
+              <Loader2 v-if="isLoading" :size="18" class="animate-spin" />
+              <Search v-else :size="18" />
+              <span>{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
             </button>
 
             <p v-if="errorMessage" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
@@ -148,10 +152,11 @@
           <button
             @click="submitClarification"
             :disabled="isLoading"
-            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+            class="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-primary-600 py-3 text-base font-bold text-white transition-all hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <i class="fas fa-check" :class="{ 'fa-spin': isLoading }"></i>
-            <span class="ml-2">{{ isLoading ? 'Processing...' : 'Continue' }}</span>
+            <Loader2 v-if="isLoading" :size="18" class="animate-spin" />
+            <Check v-else :size="18" />
+            <span>{{ isLoading ? 'Processing...' : 'Continue' }}</span>
           </button>
         </div>
 
@@ -277,6 +282,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { Loader2, Search, Check } from "lucide-vue-next";
 
 const userDescription = ref('');
 const currentState = ref<'input' | 'understanding' | 'clarification' | 'results'>('input');

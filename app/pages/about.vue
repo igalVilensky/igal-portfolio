@@ -3,7 +3,10 @@
     <div class="page-container">
       <header class="page-header">
         <div class="page-header-main">
-          <h1 class="page-title">About</h1>
+          <div class="flex items-center gap-3">
+            <User :size="32" class="text-secondary-900 dark:text-white" />
+            <h1 class="page-title m-0">About</h1>
+          </div>
           <p class="page-intro mt-4">
             I'm a full-stack developer based in Leipzig, focused on SaaS products,
             web applications, and AI-assisted workflows.
@@ -51,7 +54,7 @@
             <NuxtLink
               v-if="link.internal"
               :to="link.href"
-              class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             >
               {{ link.label }}
             </NuxtLink>
@@ -60,9 +63,10 @@
               :href="link.href"
               :target="link.target"
               :rel="link.target ? 'noopener noreferrer' : undefined"
-              class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             >
               {{ link.label }}
+              <ExternalLink :size="14" />
             </a>
           </template>
         </div>
@@ -72,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { User, ExternalLink } from "lucide-vue-next";
 import experienceData from "../../content/experience.json";
 import profileData from "../../content/profile.json";
 import skillsData from "../../content/skills.json";

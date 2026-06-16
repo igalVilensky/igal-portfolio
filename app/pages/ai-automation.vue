@@ -13,8 +13,9 @@
       </header>
 
       <section aria-labelledby="ai-products-title" class="mb-14">
-        <div class="mb-6">
-          <h2 id="ai-products-title" class="section-title">AI products</h2>
+        <div class="mb-6 flex items-center gap-2">
+          <Bot :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="ai-products-title" class="section-title m-0">AI products</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -47,7 +48,7 @@
                 <NuxtLink
                   v-if="link.internal"
                   :to="link.url"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
                 </NuxtLink>
@@ -56,9 +57,10 @@
                   :href="link.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
+                  <ExternalLink :size="14" />
                 </a>
               </template>
             </div>
@@ -67,8 +69,9 @@
       </section>
 
       <section aria-labelledby="ai-workflows-title" class="mb-14">
-        <div class="mb-6">
-          <h2 id="ai-workflows-title" class="section-title">AI workflow / automation systems</h2>
+        <div class="mb-6 flex items-center gap-2">
+          <Workflow :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="ai-workflows-title" class="section-title m-0">AI workflow / automation systems</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -101,7 +104,7 @@
                 <NuxtLink
                   v-if="link.internal"
                   :to="link.url"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
                 </NuxtLink>
@@ -110,9 +113,10 @@
                   :href="link.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
+                  <ExternalLink :size="14" />
                 </a>
               </template>
             </div>
@@ -121,8 +125,9 @@
       </section>
 
       <section aria-labelledby="site-feature-title" class="mb-14">
-        <div class="mb-6">
-          <h2 id="site-feature-title" class="section-title">Site feature</h2>
+        <div class="mb-6 flex items-center gap-2">
+          <Sparkles :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="site-feature-title" class="section-title m-0">Site feature</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -133,6 +138,11 @@
               <h3 class="text-lg font-semibold leading-snug text-secondary-950 dark:text-white">
                 {{ portfolioAssistantItem.title }}
               </h3>
+              <div v-if="portfolioAssistantItem.badges && portfolioAssistantItem.badges.length" class="mt-2 flex flex-wrap gap-2">
+                <span v-for="badge in portfolioAssistantItem.badges" :key="badge" class="rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-secondary-600 dark:bg-white/5 dark:text-secondary-400">
+                  {{ badge }}
+                </span>
+              </div>
               <p class="mt-2 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
                 {{ portfolioAssistantItem.summary }}
               </p>
@@ -153,7 +163,7 @@
                 <NuxtLink
                   v-if="link.internal"
                   :to="link.url"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
                 </NuxtLink>
@@ -162,9 +172,10 @@
                   :href="link.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
+                  <ExternalLink :size="14" />
                 </a>
               </template>
             </div>
@@ -216,6 +227,7 @@
 </template>
 
 <script setup lang="ts">
+import { Bot, Workflow, Sparkles, ExternalLink } from "lucide-vue-next";
 import projectsData from "../../content/projects.json";
 import experienceData from "../../content/experience.json";
 import profileData from "../../content/profile.json";
@@ -238,6 +250,7 @@ type AiWorkItem = {
   summary: string;
   demonstrates: string;
   techLine: string;
+  badges?: string[];
   links: WorkLink[];
 };
 
@@ -308,6 +321,7 @@ const toAiWorkItem = (project: Project): AiWorkItem => ({
   summary: projectSummaries[project.id] ?? project.short_description,
   demonstrates: demonstratedRoles[project.id] ?? project.role,
   techLine: project.technologies.slice(0, 6).join(" / "),
+  badges: project.category.split(" / ").slice(0, 3),
   links: getProjectLinks(project),
 });
 
@@ -327,6 +341,7 @@ const portfolioAssistantItem: AiWorkItem = {
   demonstrates:
     "Grounded LLM assistant pattern with prompt boundaries, local context, no external actions, and deterministic fallback.",
   techLine: "Nuxt / Vue 3 / TypeScript / Groq API / FAQ fallback",
+  badges: ["Portfolio Feature", "AI Assistant"],
   links: [
     {
       label: "Open guide",

@@ -11,12 +11,13 @@
       </header>
 
       <section aria-labelledby="interactive-tools-title" class="mb-14">
-        <div class="mb-6">
-          <h2 id="interactive-tools-title" class="section-title">Interactive tools</h2>
-          <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            Lightweight utilities for sketching, transforming, and checking interface details directly in the browser.
-          </p>
+        <div class="mb-6 flex items-center gap-2">
+          <Terminal :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="interactive-tools-title" class="section-title m-0">Interactive tools</h2>
         </div>
+        <p class="mt-2 mb-6 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+          Lightweight utilities for sketching, transforming, and checking interface details directly in the browser.
+        </p>
 
         <div class="space-y-5">
           <ArchitectSimulator is-featured />
@@ -29,12 +30,13 @@
       </section>
 
       <section aria-labelledby="lab-shelf-title">
-        <div class="mb-6">
-          <h2 id="lab-shelf-title" class="section-title">Lab shelf</h2>
-          <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            Smaller utilities, learning projects, and exploratory builds kept intentionally quieter than the main Work page.
-          </p>
+        <div class="mb-6 flex items-center gap-2">
+          <FlaskConical :size="24" class="text-secondary-900 dark:text-white" />
+          <h2 id="lab-shelf-title" class="section-title m-0">Lab shelf</h2>
         </div>
+        <p class="mt-2 mb-6 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+          Smaller utilities, learning projects, and exploratory builds kept intentionally quieter than the main Work page.
+        </p>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
           <article
@@ -46,6 +48,11 @@
               <h3 class="font-medium leading-snug text-secondary-950 dark:text-white">
                 {{ project.title }}
               </h3>
+              <div v-if="project.badges && project.badges.length" class="mt-2 flex flex-wrap gap-2">
+                <span v-for="badge in project.badges" :key="badge" class="rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-secondary-600 dark:bg-white/5 dark:text-secondary-400">
+                  {{ badge }}
+                </span>
+              </div>
               <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
                 {{ project.shortDescription }}
               </p>
@@ -59,10 +66,10 @@
                 v-for="link in project.links"
                 :key="`${project.id}-${link.label}`"
               >
-                <NuxtLink
+                  <NuxtLink
                   v-if="link.internal"
                   :to="link.url"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
                 </NuxtLink>
@@ -71,9 +78,10 @@
                   :href="link.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                  class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
+                  <ExternalLink :size="14" />
                 </a>
               </template>
             </div>
@@ -86,6 +94,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import { Terminal, FlaskConical, ExternalLink } from "lucide-vue-next";
 import ArchitectSimulator from "~/components/ArchitectSimulator.vue";
 import JsonToTs from "~/components/lab/JsonToTs.vue";
 import ContrastChecker from "~/components/lab/ContrastChecker.vue";
@@ -99,6 +108,7 @@ type LabLink = {
 
 type LabRow = PortfolioProject & {
   techLine: string;
+  badges: string[];
   links: LabLink[];
 };
 
@@ -154,6 +164,7 @@ const getLabLinks = (project: PortfolioProject): LabLink[] => {
 const toLabRow = (project: PortfolioProject): LabRow => ({
   ...project,
   techLine: project.technologies.slice(0, 5).join(" / "),
+  badges: project.category.split(" / ").slice(0, 3),
   links: getLabLinks(project),
 });
 

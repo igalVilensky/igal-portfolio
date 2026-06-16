@@ -25,7 +25,12 @@
             <h3 class="text-lg font-semibold leading-snug text-secondary-950 dark:text-white">
               {{ project.title }}
             </h3>
-            <p class="mt-2 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
+            <div v-if="project.badges && project.badges.length" class="mt-2 flex flex-wrap gap-2">
+              <span v-for="badge in project.badges" :key="badge" class="rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-secondary-600 dark:bg-white/5 dark:text-secondary-400">
+                {{ badge }}
+              </span>
+            </div>
+            <p class="mt-3 text-sm leading-6 text-secondary-700 dark:text-secondary-300">
               {{ project.shortDescription }}
             </p>
             <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-400">
@@ -37,7 +42,7 @@
             <NuxtLink
               v-if="project.link && project.link.internal"
               :to="project.link.url"
-              class="inline-flex text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             >
               {{ project.link.label }}
             </NuxtLink>
@@ -46,9 +51,10 @@
               :href="project.link.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             >
               {{ project.link.label }}
+              <ExternalLink :size="14" />
             </a>
           </div>
         </article>
@@ -58,6 +64,8 @@
 </template>
 
 <script setup lang="ts">
+import { ExternalLink } from "lucide-vue-next";
+
 type ProjectLink = {
   url: string;
   label: string;
@@ -69,6 +77,7 @@ type FeaturedProject = {
   title: string;
   shortDescription: string;
   techLine: string;
+  badges: string[];
   link: ProjectLink | null;
 };
 

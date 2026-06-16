@@ -22,10 +22,11 @@
           />
           <button
             type="submit"
-            class="btn-primary min-h-11 px-5 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
+            class="btn-primary inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="isLoading || !customQuestion.trim()"
           >
-            {{ isLoading ? "Asking..." : "Ask" }}
+            <Loader2 v-if="isLoading" :size="16" class="animate-spin" />
+            <span>{{ isLoading ? "Asking..." : "Ask" }}</span>
           </button>
         </form>
 
@@ -72,6 +73,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { Loader2 } from "lucide-vue-next";
 
 type Prompt = {
   id: string;

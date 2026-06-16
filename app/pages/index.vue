@@ -53,6 +53,7 @@ type FeaturedProject = {
   title: string;
   shortDescription: string;
   techLine: string;
+  badges: string[];
   link: ProjectLink | null;
 };
 
@@ -91,6 +92,7 @@ const toFeaturedProject = (project: Project): FeaturedProject => ({
   title: project.title,
   shortDescription: project.short_description,
   techLine: project.technologies.slice(0, 5).join(" · "),
+  badges: project.category.split(" / ").slice(0, 3),
   link: getProjectLink(project),
 });
 
