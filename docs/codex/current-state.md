@@ -399,6 +399,65 @@ Verification:
 
 ## Next Recommended Phase
 
+## UI/UX Consistency Pass
+
+A controlled UI/UX improvement pass was applied across the portfolio to improve scanability, visual hierarchy, and perceived polish without changing the existing minimal, document-like aesthetic or altering existing interactive tool logic.
+
+What changed:
+
+### Semantic icon system (`lucide-vue-next`)
+
+* `app/components/Navbar.vue` now renders a small icon next to each navigation item (Home, Briefcase, FlaskConical, Bot, User) in both desktop and mobile views.
+* Section headings on Work, Experiments, AI & Automation, and About now include a quiet leading icon.
+* Icons are sized 14–24 px and aligned with text using `flex items-center gap-*`.
+
+### Project badges
+
+* Project listings on Home (SelectedWork), Work (case-studies/index), Experiments (lab shelf), and AI & Automation now render compact uppercase badges derived from the project `category` field in `content/projects.json`.
+* Badge styling: `rounded bg-secondary-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider` with dark mode variant `dark:bg-white/5 dark:text-secondary-400`.
+* No new category data was invented; badges are split from the existing `category` string.
+
+### Interactive tool state improvements
+
+* `AskPortfolioPreview.vue` Ask button now shows a Loader2 spinner icon when loading.
+* `ArchitectSimulator.vue` Generate sketch button now shows a Loader2 spinner icon when loading.
+* `ai-compliance-compass.vue` Analyze and Continue buttons now use Loader2/Search/Check icons from `lucide-vue-next` instead of Font Awesome `<i>` tags.
+* `JsonToTs.vue` now shows a dashed placeholder box ("Generated interface will appear here.") when no input has been entered.
+
+### Link affordances
+
+* External links across all pages now include an `ExternalLink` icon (14 px) and use `inline-flex items-center gap-1.5`.
+* All external links use `target="_blank" rel="noopener noreferrer"`.
+* Internal links use consistent `inline-flex items-center gap-1.5` styling without the ExternalLink icon.
+* Link labels are standardized: "Live" / "Open tool" for live links, "GitHub" for source, "Case study" for case studies.
+
+### "Why this matters" microcopy
+
+* `XssConceptDemo.vue` header now includes: "Shows how a frontend rendering choice can introduce script injection risk."
+* `TokenStorageDemo.vue` header now includes: "Demonstrates how any script on the page can read localStorage — including injected ones."
+* `ai-compliance-compass.vue` header now includes: "Educational advisory tool • Not legal advice."
+
+### Spacing and hierarchy
+
+* Section description paragraphs on the Experiments page now include `mb-6` for consistent spacing before content grids.
+* Icon+heading rows use `m-0` on section titles to prevent double margin when wrapped in flex containers.
+
+### Accessibility
+
+* The Ask button includes both a Loader2 icon and text for screen readers.
+* Navigation icons are decorative (no aria-label needed since text labels remain visible).
+* All interactive buttons have `disabled:cursor-not-allowed disabled:opacity-60` or similar disabled state styling.
+
+No route, dependency, content fact, provider, API key, or interactive tool logic change was added.
+
+Verification:
+
+* `npm run build` passed after the UI/UX improvement pass.
+
+## Last Updated
+
+2026-06-16 after the UI/UX consistency pass.
+
 The next phase should be:
 
 > Add concise case-study pages for OpenMe and Decision Matrix AI.

@@ -30,6 +30,17 @@ The homepage, global shell, Work index, Experiments workbench, AI & Automation p
 
 Experiments is intentionally interactive. Do not turn it into a static project index in future cleanup passes.
 
+### Recent completed UI/UX polish
+
+The UI/UX consistency pass is now complete.
+
+* Lucide semantic icons are in use across the navbar and section headings.
+* Selected Work on the homepage and Work index now features compact badges and external-link affordances.
+* Experiments remains interactive with its tools and lab shelf.
+* Security Playground has been restored as an interactive educational lab.
+* AI & Automation page's taxonomy and section structure are preserved with added iconography.
+* The minimal document-like visual direction remains the baseline for the entire portfolio.
+
 Primary project order is:
 
 ```text
