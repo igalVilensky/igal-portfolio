@@ -339,17 +339,17 @@ const aiWorkflows = getFeaturedItems(aiWorkflowsIds);
 
 const portfolioAssistantItem: AiWorkItem = {
   id: "ask-my-portfolio",
-  title: "Ask My Portfolio",
+  title: "Igal, Explained",
   summary:
-    "Optional portfolio assistant that answers recruiter questions from local structured site content and falls back to saved FAQ answers.",
+    "Dedicated portfolio guide that answers recruiter questions from server-side structured knowledge with visible sources and safe unknown handling.",
   demonstrates:
-    "Grounded LLM assistant pattern with prompt boundaries, local context, no external actions, and deterministic fallback.",
-  techLine: "Nuxt / Vue 3 / TypeScript / Groq API / FAQ fallback",
+    "Grounded LLM assistant pattern with retrieval, structured responses, prompt boundaries, no external actions, and source-backed answers.",
+  techLine: "Nuxt / Vue 3 / TypeScript / Netlify Functions / Groq API",
   badges: ["Portfolio Feature", "AI Assistant"],
   links: [
     {
       label: "Open guide",
-      url: "/#ask-my-portfolio",
+      url: "/ask-igal",
       internal: true,
     },
   ],

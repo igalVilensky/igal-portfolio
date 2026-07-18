@@ -11,7 +11,7 @@
           <NuxtLink
             v-for="item in navigationItems"
             :key="item.id"
-            :to="item.path"
+            :to="localePath(item.path)"
             class="flex items-center gap-1.5 border-b border-transparent py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
               'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
@@ -23,11 +23,11 @@
         </div>
 
         <NuxtLink
-          to="/"
+          :to="localePath('/')"
           class="py-1 text-sm text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white md:hidden"
           @click="closeMobileMenu"
         >
-          Home
+          {{ t("nav.home") }}
         </NuxtLink>
 
         <div class="hidden items-center md:flex">
@@ -70,7 +70,7 @@
           <NuxtLink
             v-for="item in navigationItems"
             :key="item.id"
-            :to="item.path"
+            :to="localePath(item.path)"
             class="flex items-center gap-2 border-b border-transparent py-1 text-base text-secondary-600 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
             :class="{
               'border-secondary-400 text-secondary-950 dark:border-secondary-500 dark:text-white': isActive(item.path),
@@ -89,21 +89,25 @@
 <script setup lang="ts">
 import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
-import { Home, Briefcase, FlaskConical, Bot, User } from "lucide-vue-next";
+import { computed } from "vue";
+import { Home, Briefcase, FlaskConical, MessageCircle, Bot, User } from "lucide-vue-next";
 
 const colorMode = useColorMode();
 const route = useRoute();
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 const isMobileMenuOpen = ref(false);
 const isScrolled = ref(false);
 
-const navigationItems = [
-  { id: "home", path: "/", label: "Home", icon: Home },
-  { id: "case-studies", path: "/case-studies", label: "Work", icon: Briefcase },
-  { id: "experiments", path: "/experiments", label: "Experiments", icon: FlaskConical },
-  { id: "ai-automation", path: "/ai-automation", label: "AI", icon: Bot },
-  { id: "about", path: "/about", label: "About", icon: User },
-];
+const navigationItems = computed(() => [
+  { id: "home", path: "/", label: t("nav.home"), icon: Home },
+  { id: "case-studies", path: "/case-studies", label: t("nav.work"), icon: Briefcase },
+  { id: "experiments", path: "/experiments", label: t("nav.experiments"), icon: FlaskConical },
+  { id: "ask-igal", path: "/ask-igal", label: t("nav.askIgal"), icon: MessageCircle },
+  { id: "ai-automation", path: "/ai-automation", label: t("nav.ai"), icon: Bot },
+  { id: "about", path: "/about", label: t("nav.about"), icon: User },
+]);
 
 const toggleColorMode = () => {
   const isDark = colorMode.value === 'dark';
@@ -115,8 +119,9 @@ const closeMobileMenu = () => {
 };
 
 const isActive = (path: string) => {
-  if (path === "/") return route.path === "/";
-  return route.path === path || route.path.startsWith(`${path}/`);
+  const targetPath = localePath(path);
+  if (path === "/") return route.path === targetPath;
+  return route.path === targetPath || route.path.startsWith(`${targetPath}/`);
 };
 
 const handleScroll = () => {

@@ -1,0 +1,27 @@
+{
+  "assistant": {
+    "name": "Igal, Explained",
+    "description": "A recruiter-focused guide to Igal Vilensky's portfolio."
+  },
+  "suggested_questions": [
+    "What roles is Igal a strong fit for?",
+    "What is his frontend experience?",
+    "What has he built with AI and automation?",
+    "Which project should I review first?",
+    "How does he approach debugging?",
+    "Summarize Igal for a hiring manager."
+  ],
+  "missing_topics": [
+    "Detailed debugging examples",
+    "Recent collaboration examples",
+    "More measured project outcomes",
+    "Preferred team environments",
+    "Deeper backend architecture examples"
+  ],
+  "content_rules": [
+    "Use only verified portfolio knowledge.",
+    "Do not add unsupported metrics, testimonials, work history, or seniority claims.",
+    "Distinguish documented facts from interpretation.",
+    "When the knowledge base does not contain enough evidence, say so clearly."
+  ]
+}
