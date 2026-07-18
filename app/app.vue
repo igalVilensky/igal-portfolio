@@ -9,8 +9,14 @@
 import { useHead, useNuxtApp } from "#app"; // Import useNuxtApp as well
 
 const gaId = "G-4KG5Z26HTF"; // Your Google Analytics Measurement ID
+const localeHead = useLocaleHead({
+  addSeoAttributes: true,
+});
 
-useHead({
+useHead(() => ({
+  htmlAttrs: {
+    ...localeHead.value.htmlAttrs,
+  },
   link: [
     { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
     { rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" },
@@ -25,7 +31,9 @@ useHead({
       rel: "stylesheet",
       href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
     },
+    ...(localeHead.value.link || []),
   ],
+  meta: [...(localeHead.value.meta || [])],
   // Add the Google Analytics scripts here
   script: [
     // Google Tag Manager script for gtag.js
@@ -49,7 +57,7 @@ useHead({
       // Nuxt automatically handles client-side only execution for script innerHTML in useHead
     },
   ],
-});
+}));
 
 // Now, handle page view tracking for route changes outside of useHead
 const nuxtApp = useNuxtApp();

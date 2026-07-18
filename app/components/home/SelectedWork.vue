@@ -4,14 +4,14 @@
       <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 class="text-2xl font-semibold leading-tight text-secondary-950 dark:text-white">
-            Selected work
+            {{ t("homePage.selectedWorkTitle") }}
           </h2>
           <p class="mt-3 max-w-2xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            Five projects that show SaaS product work, full-stack delivery, and practical AI-assisted tooling.
+            {{ t("homePage.selectedWorkIntro") }}
           </p>
         </div>
-        <NuxtLink to="/case-studies" class="text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
-          More work
+        <NuxtLink :to="localePath('/case-studies')" class="text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
+          {{ t("homePage.moreWork") }}
         </NuxtLink>
       </div>
 
@@ -41,7 +41,7 @@
           <div class="md:pt-1">
             <NuxtLink
               v-if="project.link && project.link.internal"
-              :to="project.link.url"
+              :to="localePath(project.link.url)"
               class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             >
               {{ project.link.label }}
@@ -84,4 +84,7 @@ type FeaturedProject = {
 defineProps<{
   projects: FeaturedProject[];
 }>();
+
+const { t } = useI18n();
+const localePath = useLocalePath();
 </script>

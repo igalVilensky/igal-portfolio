@@ -4,12 +4,30 @@
     "description": "A recruiter-focused guide to Igal Vilensky's portfolio."
   },
   "suggested_questions": [
-    "What roles is Igal a strong fit for?",
-    "What is his frontend experience?",
-    "What has he built with AI and automation?",
-    "Which project should I review first?",
-    "How does he approach debugging?",
-    "Summarize Igal for a hiring manager."
+    {
+      "id": "role-fit",
+      "translation_key": "portfolioAgent.questions.roleFit"
+    },
+    {
+      "id": "frontend-experience",
+      "translation_key": "portfolioAgent.questions.frontendExperience"
+    },
+    {
+      "id": "ai-automation",
+      "translation_key": "portfolioAgent.questions.aiAutomation"
+    },
+    {
+      "id": "strongest-project",
+      "translation_key": "portfolioAgent.questions.strongestProject"
+    },
+    {
+      "id": "debugging",
+      "translation_key": "portfolioAgent.questions.debugging"
+    },
+    {
+      "id": "recruiter-summary",
+      "translation_key": "portfolioAgent.questions.recruiterSummary"
+    }
   ],
   "missing_topics": [
     "Detailed debugging examples",

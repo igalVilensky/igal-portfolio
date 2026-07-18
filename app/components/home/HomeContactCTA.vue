@@ -3,7 +3,7 @@
     <div class="mx-auto max-w-4xl px-5 sm:px-6">
       <div class="border-t border-secondary-200 pt-8 dark:border-dark-border">
         <h2 class="text-xl font-semibold text-secondary-950 dark:text-white">
-          Contact
+          {{ t("homePage.contactTitle") }}
         </h2>
         <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
           {{ summary }}
@@ -14,7 +14,7 @@
             :href="`mailto:${email}`"
             class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
           >
-            Email
+            {{ t("homePage.email") }}
           </a>
           <a
             :href="linkedin"
@@ -45,4 +45,6 @@ defineProps<{
   linkedin: string;
   github: string;
 }>();
+
+const { t } = useI18n();
 </script>

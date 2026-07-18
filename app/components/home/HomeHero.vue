@@ -5,7 +5,7 @@
         {{ profileName }}
       </h1>
       <p class="mt-5 text-lg leading-8 text-secondary-800 dark:text-secondary-200">
-        Full-stack developer building SaaS products, web applications, and AI-assisted tools.
+        {{ t("homePage.heroSubtitle") }}
       </p>
       <p class="mt-3 text-sm leading-6 text-secondary-500 dark:text-secondary-400">
         {{ basedIn }} · TypeScript · Vue/Nuxt · React/Next · Node.js
@@ -13,20 +13,20 @@
 
       <div class="mt-8">
         <NuxtLink
-          to="/ask-igal"
+          :to="localePath('/ask-igal')"
           class="btn-primary inline-flex min-h-12 items-center justify-center gap-2 px-5 py-3 text-sm"
         >
           <Sparkles :size="17" />
-          Ask Igal’s Portfolio
+          {{ t("homePage.askCta") }}
         </NuxtLink>
         <p class="mt-3 max-w-xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-          Ask about Igal’s experience, projects, skills, AI work, or role fit.
+          {{ t("homePage.askSupport") }}
         </p>
       </div>
 
-      <nav class="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium" aria-label="Homepage links">
+      <nav class="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium" :aria-label="t('homePage.heroLinksLabel')">
         <a href="#selected-work" class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
-          Work
+          {{ t("homePage.work") }}
         </a>
         <a
           :href="cvHref"
@@ -34,7 +34,7 @@
           rel="noopener noreferrer"
           class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
         >
-          CV
+          {{ t("homePage.cv") }}
         </a>
         <a
           :href="github"
@@ -53,7 +53,7 @@
           LinkedIn
         </a>
         <a :href="`mailto:${email}`" class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
-          Email
+          {{ t("homePage.email") }}
         </a>
       </nav>
     </div>
@@ -71,4 +71,7 @@ defineProps<{
   linkedin: string;
   email: string;
 }>();
+
+const { t } = useI18n();
+const localePath = useLocalePath();
 </script>

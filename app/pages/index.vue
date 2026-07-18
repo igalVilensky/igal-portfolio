@@ -23,6 +23,7 @@
 import HomeContactCTA from "~/components/home/HomeContactCTA.vue";
 import HomeHero from "~/components/home/HomeHero.vue";
 import SelectedWork from "~/components/home/SelectedWork.vue";
+import { getLocalizedValue } from "~/utils/localizedContent";
 import profileData from "../../content/profile.json";
 import projectsData from "../../content/projects.json";
 
@@ -48,12 +49,13 @@ type FeaturedProject = {
 };
 
 const profile = profileData;
+const { locale, t } = useI18n();
 
 const getProjectLink = (project: Project): ProjectLink | null => {
   if (project.links.case_study) {
     return {
       url: project.links.case_study,
-      label: "View case study",
+      label: t("homePage.viewCaseStudy"),
       internal: project.links.case_study.startsWith("/"),
     };
   }
@@ -61,7 +63,7 @@ const getProjectLink = (project: Project): ProjectLink | null => {
   if (project.links.live) {
     return {
       url: project.links.live,
-      label: project.links.live.startsWith("/") ? "Open tool" : "Open live demo",
+      label: project.links.live.startsWith("/") ? t("homePage.openTool") : t("homePage.openLiveDemo"),
       internal: project.links.live.startsWith("/"),
     };
   }
@@ -69,7 +71,7 @@ const getProjectLink = (project: Project): ProjectLink | null => {
   if (project.links.github) {
     return {
       url: project.links.github,
-      label: "View GitHub",
+      label: t("homePage.viewGithub"),
       internal: false,
     };
   }
@@ -79,26 +81,25 @@ const getProjectLink = (project: Project): ProjectLink | null => {
 
 const toFeaturedProject = (project: Project): FeaturedProject => ({
   id: project.id,
-  title: project.title,
-  shortDescription: project.short_description,
+  title: getLocalizedValue(project.title, locale.value),
+  shortDescription: getLocalizedValue(project.short_description, locale.value),
   techLine: project.technologies.slice(0, 5).join(" · "),
-  badges: project.category.split(" / ").slice(0, 3),
+  badges: getLocalizedValue(project.category, locale.value).split(" / ").slice(0, 3),
   link: getProjectLink(project),
 });
 
-const featuredProjects = projectsData.featured_project_order
+const featuredProjects = computed(() => projectsData.featured_project_order
   .map((id) => projectsData.projects.find((project) => project.id === id))
   .filter((project): project is Project => Boolean(project))
-  .map(toFeaturedProject);
+  .map(toFeaturedProject));
 
-useHead({
-  title: "Igal Vilensky - Full-Stack Developer",
+useHead(() => ({
+  title: t("homePage.seoTitle"),
   meta: [
     {
       name: "description",
-      content:
-        "Portfolio of Igal Vilensky, a Leipzig-based full-stack developer building SaaS products, web applications, and AI-assisted tools.",
+      content: t("homePage.seoDescription"),
     },
   ],
-});
+}));
 </script>

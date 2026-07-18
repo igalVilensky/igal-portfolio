@@ -31,12 +31,14 @@
         </NuxtLink>
 
         <div class="hidden items-center md:flex">
+          <LanguageSwitcher class="mr-5" />
           <button
             type="button"
             class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            :aria-label="colorMode.value === 'dark' ? t('nav.switchToLight') : t('nav.switchToDark')"
             @click="toggleColorMode"
           >
-            {{ colorMode.value === "dark" ? "Light" : "Dark" }}
+            {{ colorMode.value === "dark" ? t("nav.light") : t("nav.dark") }}
           </button>
         </div>
 
@@ -44,9 +46,10 @@
           <button
             type="button"
             class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
+            :aria-label="colorMode.value === 'dark' ? t('nav.switchToLight') : t('nav.switchToDark')"
             @click="toggleColorMode"
           >
-            {{ colorMode.value === "dark" ? "Light" : "Dark" }}
+            {{ colorMode.value === "dark" ? t("nav.light") : t("nav.dark") }}
           </button>
 
           <button
@@ -54,7 +57,7 @@
             class="py-1 text-sm text-secondary-900 transition-colors hover:text-secondary-600 dark:text-white dark:hover:text-secondary-300"
             @click="isMobileMenuOpen = !isMobileMenuOpen"
           >
-            {{ isMobileMenuOpen ? "Close" : "Menu" }}
+            {{ isMobileMenuOpen ? t("nav.close") : t("nav.menu") }}
           </button>
         </div>
       </div>
@@ -80,6 +83,12 @@
             <component :is="item.icon" :size="16" />
             {{ item.label }}
           </NuxtLink>
+          <div class="border-t border-secondary-200 pt-3 dark:border-dark-border">
+            <p class="mb-2 text-xs font-semibold uppercase text-secondary-500 dark:text-secondary-400">
+              {{ t("nav.language") }}
+            </p>
+            <LanguageSwitcher @selected="closeMobileMenu" />
+          </div>
         </div>
       </div>
     </Transition>
@@ -91,6 +100,7 @@ import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { Home, Briefcase, FlaskConical, MessageCircle, Bot, User } from "lucide-vue-next";
+import LanguageSwitcher from "~/components/LanguageSwitcher.vue";
 
 const colorMode = useColorMode();
 const route = useRoute();

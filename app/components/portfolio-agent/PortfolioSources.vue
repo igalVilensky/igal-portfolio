@@ -1,7 +1,7 @@
 <template>
   <div v-if="sources.length" class="mt-5">
     <p class="text-xs font-semibold uppercase text-secondary-500 dark:text-secondary-400">
-      Evidence
+      {{ t("portfolioAgent.evidence") }}
     </p>
     <div class="mt-2 flex flex-wrap gap-2">
       <component
@@ -25,10 +25,12 @@ defineProps<{
   sources: PortfolioAgentSource[];
 }>();
 
+const { t } = useI18n();
+const localePath = useLocalePath();
 const isInternal = (href: string) => href.startsWith("/");
 const linkComponent = (href: string) => (isInternal(href) ? resolveComponent("NuxtLink") : "a");
 const linkBindings = (href: string) =>
   isInternal(href)
-    ? { to: href }
+    ? { to: localePath(href) }
     : { href, target: href.startsWith("mailto:") ? undefined : "_blank", rel: "noopener noreferrer" };
 </script>

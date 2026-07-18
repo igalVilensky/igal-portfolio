@@ -4,7 +4,7 @@
       :is="action.type === 'internal' ? resolveComponent('NuxtLink') : 'a'"
       v-for="action in actions"
       :key="`${action.label}-${action.href}`"
-      v-bind="action.type === 'internal' ? { to: action.href } : externalBindings(action.href)"
+      v-bind="action.type === 'internal' ? { to: localePath(action.href) } : externalBindings(action.href)"
       class="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-secondary-300 px-3 py-1.5 text-xs font-semibold text-secondary-800 transition hover:border-secondary-500 hover:text-secondary-950 dark:border-dark-border dark:text-secondary-200 dark:hover:border-secondary-500 dark:hover:text-white"
     >
       <Mail v-if="action.type === 'email'" :size="14" />
@@ -24,6 +24,7 @@ defineProps<{
   actions: PortfolioAgentAction[];
 }>();
 
+const localePath = useLocalePath();
 const externalBindings = (href: string) =>
   href.startsWith("mailto:")
     ? { href }

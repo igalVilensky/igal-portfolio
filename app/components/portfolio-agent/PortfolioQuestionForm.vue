@@ -3,7 +3,7 @@
     <form class="grid gap-4" @submit.prevent="submitQuestion">
       <div>
         <label for="portfolio-question" class="text-sm font-semibold text-secondary-950 dark:text-white">
-          Ask a portfolio question
+          {{ t("portfolioAgent.inputLabel") }}
         </label>
         <textarea
           id="portfolio-question"
@@ -11,13 +11,13 @@
           rows="4"
           maxlength="500"
           class="mt-3 w-full resize-none rounded-md border border-secondary-300 bg-secondary-50 px-4 py-3 text-base leading-7 text-secondary-900 transition placeholder:text-secondary-400 focus:border-primary-400 dark:border-dark-border dark:bg-dark-bg dark:text-secondary-100 dark:placeholder:text-secondary-500"
-          placeholder="Ask about role fit, Vue experience, AI projects, collaboration style, or what to review first."
+          :placeholder="t('portfolioAgent.placeholder')"
           :disabled="isLoading"
           @keydown.meta.enter.prevent="submitQuestion"
           @keydown.ctrl.enter.prevent="submitQuestion"
         />
         <div class="mt-2 flex items-center justify-between gap-3 text-xs text-secondary-500 dark:text-secondary-400">
-          <span>Answers stay grounded in portfolio content.</span>
+          <span>{{ t("portfolioAgent.groundingNote") }}</span>
           <span>{{ draft.length }}/500</span>
         </div>
       </div>
@@ -30,7 +30,7 @@
         >
           <Loader2 v-if="isLoading" :size="17" class="animate-spin" />
           <Send v-else :size="17" />
-          <span>{{ isLoading ? "Asking..." : "Ask" }}</span>
+          <span>{{ isLoading ? t("portfolioAgent.asking") : t("portfolioAgent.ask") }}</span>
         </button>
         <p v-if="errorMessage" class="text-sm text-red-700 dark:text-red-300" role="alert">
           {{ errorMessage }}
@@ -40,7 +40,7 @@
 
     <div class="mt-6">
       <p class="text-xs font-semibold uppercase text-secondary-500 dark:text-secondary-400">
-        Suggested questions
+        {{ t("portfolioAgent.suggestedHeading") }}
       </p>
       <div class="mt-3 flex flex-wrap gap-2">
         <button
@@ -73,6 +73,7 @@ const emit = defineEmits<{
 }>();
 
 const draft = ref("");
+const { t } = useI18n();
 
 const submitQuestion = () => {
   const question = draft.value.trim();

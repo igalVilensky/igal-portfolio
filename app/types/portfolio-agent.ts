@@ -37,5 +37,6 @@ export type PortfolioConversationMessage = {
 
 export type PortfolioAgentRequest = {
   question: string;
+  locale?: "en" | "de" | "ru";
   conversation?: PortfolioConversationMessage[];
 };

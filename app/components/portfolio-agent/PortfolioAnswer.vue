@@ -18,7 +18,7 @@
 
     <div v-if="response.suggestedQuestions.length" class="mt-5 border-t border-secondary-200 pt-4 dark:border-dark-border">
       <p class="text-xs font-semibold uppercase text-secondary-500 dark:text-secondary-400">
-        Follow up
+        {{ t("portfolioAgent.followUp") }}
       </p>
       <div class="mt-2 flex flex-wrap gap-2">
         <button
@@ -44,16 +44,19 @@ import PortfolioSources from "./PortfolioSources.vue";
 const props = defineProps<{
   response: PortfolioAgentResponse;
 }>();
+const { t } = useI18n();
 
 defineEmits<{
   ask: [question: string];
 }>();
 
 const statusLabel = computed(() => {
-  if (props.response.status === "answered") return "Answered";
-  if (props.response.status === "partial") return "Partial";
-  return "Unknown";
+  if (props.response.status === "answered") return t("portfolioAgent.status.answered");
+  if (props.response.status === "partial") return t("portfolioAgent.status.partial");
+  return t("portfolioAgent.status.unknown");
 });
 
-const confidenceLabel = computed(() => `Confidence: ${props.response.confidence}`);
+const confidenceLabel = computed(() =>
+  `${t("portfolioAgent.confidence.label")}: ${t(`portfolioAgent.confidence.${props.response.confidence}`)}`
+);
 </script>

@@ -10,10 +10,101 @@
     "experiments": "Experiments",
     "askIgal": "Ask Igal",
     "ai": "AI",
+    "menu": "Menu",
+    "close": "Close",
+    "light": "Light",
+    "dark": "Dark",
+    "language": "Language",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
     "backToHome": "Back to Home",
     "home": "Home"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "german": "Deutsch",
+    "russian": "Русский",
+    "switchTo": "Switch language to {language}"
+  },
+  "homePage": {
+    "seoTitle": "Igal Vilensky - Full-Stack Developer",
+    "seoDescription": "Portfolio of Igal Vilensky, a Leipzig-based full-stack developer building SaaS products, web applications, and AI-assisted tools.",
+    "heroSubtitle": "Full-stack developer building SaaS products, web applications, and practical AI-assisted workflows.",
+    "askCta": "Ask Igal’s Portfolio",
+    "askSupport": "Ask about Igal’s experience, projects, skills, AI work, or role fit.",
+    "heroLinksLabel": "Homepage links",
+    "work": "Work",
+    "cv": "CV",
+    "email": "Email",
+    "selectedWorkTitle": "Selected work",
+    "selectedWorkIntro": "Five projects that show SaaS product work, full-stack delivery, and practical AI-assisted tooling.",
+    "moreWork": "More work",
+    "viewCaseStudy": "View case study",
+    "openTool": "Open tool",
+    "openLiveDemo": "Open live demo",
+    "viewGithub": "View GitHub",
+    "contactTitle": "Contact"
+  },
+  "portfolioAgent": {
+    "seoTitle": "Igal, Explained — Ask Igal’s Portfolio",
+    "seoDescription": "Ask an interactive portfolio guide about Igal Vilensky’s software development experience, projects, skills, AI work, and role fit.",
+    "kicker": "Interactive portfolio guide",
+    "title": "Igal, Explained",
+    "description": "Ask about Igal’s experience, projects, technical background, AI work, or suitability for a role.",
+    "badgeKnowledge": "Verified portfolio knowledge",
+    "badgeSources": "Sources included",
+    "badgeNoBrowsing": "No browsing",
+    "inputLabel": "Ask a portfolio question",
+    "placeholder": "Ask about role fit, Vue experience, AI projects, collaboration style, or what to review first.",
+    "groundingNote": "Answers stay grounded in portfolio content.",
+    "ask": "Ask",
+    "asking": "Asking...",
+    "suggestedHeading": "Suggested questions",
+    "emptyTitle": "Start with a hiring question, a technical question, or a project question.",
+    "emptyDescription": "The guide answers from structured portfolio content and shows the evidence it used. If the portfolio does not verify something, it will say so.",
+    "loading": "Checking the verified portfolio knowledge...",
+    "evidence": "Evidence",
+    "followUp": "Follow up",
+    "status": {
+      "answered": "Answered",
+      "partial": "Partial",
+      "unknown": "Unknown"
+    },
+    "confidence": {
+      "label": "Confidence",
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    },
+    "errorTooLong": "Please keep the question under 500 characters.",
+    "errorUnavailable": "Igal, Explained is unavailable right now. Please try again in a moment.",
+    "sidebarTitle": "Good questions to ask",
+    "sidebarRole": "Role fit for a specific frontend, full-stack, SaaS, or AI workflow opening.",
+    "sidebarProject": "Which project gives the strongest proof for a hiring manager.",
+    "sidebarTech": "How documented experience maps to Vue, Nuxt, React, APIs, or automation.",
+    "browseCaseStudies": "Browse case studies",
+    "unknownAnswer": "I don’t have a verified answer to that yet.",
+    "fallbackAnswer": "The AI guide is unavailable right now, but the portfolio has relevant verified material. Try again in a moment, or use the sources below to review the evidence directly.",
+    "enterQuestion": "Please enter a question.",
+    "actions": {
+      "viewCaseStudy": "View case study",
+      "openProject": "Open project",
+      "downloadCv": "Download CV",
+      "contactIgal": "Contact Igal"
+    },
+    "sources": {
+      "cvProfile": "CV profile",
+      "experience": "{organization} experience"
+    },
+    "questions": {
+      "roleFit": "What roles is Igal a strong fit for?",
+      "frontendExperience": "What is his frontend experience?",
+      "aiAutomation": "What has he built with AI and automation?",
+      "strongestProject": "Which project should I review first?",
+      "debugging": "How does he approach debugging?",
+      "recruiterSummary": "Summarize Igal for a hiring manager."
+    }
   },
   "hero": {
     "title": "Igal",
@@ -113,7 +204,7 @@
       "description": "Immerse yourself in the world of poetry, where every word is a ray of light illuminating the depths of the soul."
     },
     "psyBlog": {
-      "title": "Your Path to Personal Growth",
+      "title": "mindQlab - Your Path to Personal Growth",
       "description": "mindQlab blends Kabbalah and psychology into a 10-week journey through the Tree of Self. Daily progress earns points, levels, and balance guided by the Energy of the Day."
     },
     "urlShortener": {
