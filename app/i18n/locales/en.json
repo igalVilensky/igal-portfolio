@@ -14,9 +14,11 @@
     "close": "Close",
     "light": "Light",
     "dark": "Dark",
+    "theme": "Theme",
     "language": "Language",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
+    "toggleTheme": "Toggle color theme",
     "backToHome": "Back to Home",
     "home": "Home"
   },

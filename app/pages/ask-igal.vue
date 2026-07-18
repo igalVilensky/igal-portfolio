@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import PortfolioAgentHero from "~/components/portfolio-agent/PortfolioAgentHero.vue";
 import PortfolioConversation from "~/components/portfolio-agent/PortfolioConversation.vue";
 import PortfolioQuestionForm from "~/components/portfolio-agent/PortfolioQuestionForm.vue";
@@ -100,6 +100,31 @@ const buildConversationPayload = (): PortfolioConversationMessage[] =>
     })
     .slice(-6);
 
+const waitForPaint = () =>
+  new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+
+const scrollToElement = async (elementId: string, behavior: ScrollBehavior = "smooth") => {
+  await nextTick();
+  if (!import.meta.client) return;
+
+  await waitForPaint();
+
+  const element = document.getElementById(elementId);
+  const scrollingElement = document.scrollingElement || document.documentElement;
+  if (!element || !scrollingElement) return;
+
+  const navbarOffset = 112;
+  const top = element.getBoundingClientRect().top + window.scrollY - navbarOffset;
+  scrollingElement.scrollTo({
+    top: Math.max(top, 0),
+    behavior,
+  });
+};
+
 const askQuestion = async (rawQuestion: string) => {
   const question = rawQuestion.trim();
   if (!question || isLoading.value) return;
@@ -119,13 +144,17 @@ const askQuestion = async (rawQuestion: string) => {
   };
 
   conversationItems.value.push(item);
+  void scrollToElement("portfolio-answer-loading");
 
   try {
-    item.response = await portfolioAgent({
+    const response = await portfolioAgent({
       question,
       locale: locale.value,
       conversation: buildConversationPayload().slice(0, -1),
     });
+    item.response = response;
+    isLoading.value = false;
+    await scrollToElement(`portfolio-answer-${item.id}`);
   } catch {
     errorMessage.value = t("portfolioAgent.errorUnavailable");
     conversationItems.value = conversationItems.value.filter((entry) => entry.id !== item.id);

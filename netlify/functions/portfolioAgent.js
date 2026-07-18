@@ -1,20 +1,17 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import {
+  agentData,
+  experienceData,
+  faqData,
+  profileData,
+  projectsData,
+  roleFitData,
+  skillsData,
+} from "./lib/portfolioKnowledge.js";
 
 const MAX_QUESTION_LENGTH = 500;
 const MAX_HISTORY_MESSAGES = 6;
 const MIN_RELEVANCE_SCORE = 2.4;
 const MAX_RETRIEVED_ITEMS = 7;
-
-const readJson = (path) => JSON.parse(readFileSync(join(process.cwd(), path), "utf8"));
-
-const profileData = readJson("content/profile.json");
-const projectsData = readJson("content/projects.json");
-const experienceData = readJson("content/experience.json");
-const skillsData = readJson("content/skills.json");
-const roleFitData = readJson("content/role-fit.json");
-const faqData = readJson("content/faq.json");
-const agentData = readJson("content/portfolio-agent.json");
 
 const localeCopy = {
   en: {
@@ -149,6 +146,36 @@ const normalizeTokens = (value) =>
     .filter((token) => token.length > 1 && !stopWords.has(token));
 
 const unique = (items) => Array.from(new Set(items));
+
+const localizedSearchExpansions = {
+  de: [
+    { patterns: ["frontend", "oberfläche", "vue", "nuxt", "react"], text: "frontend experience vue nuxt react typescript ui" },
+    { patterns: ["rolle", "rollen", "eignung", "passt"], text: "role fit target roles suitability" },
+    { patterns: ["ki", "automatisierung", "automation"], text: "ai automation groq agents workflow" },
+    { patterns: ["projekt", "case study", "zuerst"], text: "project case study strongest review first" },
+    { patterns: ["debug", "fehler"], text: "debugging problem solving testing troubleshooting" },
+    { patterns: ["hiring", "recruiter", "zusammenfassung"], text: "recruiter summary hiring manager profile" },
+  ],
+  ru: [
+    { patterns: ["фронтенд", "frontend", "vue", "nuxt", "react"], text: "frontend experience vue nuxt react typescript ui" },
+    { patterns: ["роль", "роли", "подходит", "соответств"], text: "role fit target roles suitability" },
+    { patterns: ["ии", "ai", "автоматизац"], text: "ai automation groq agents workflow" },
+    { patterns: ["проект", "кейс", "сначала"], text: "project case study strongest review first" },
+    { patterns: ["debug", "дебаг", "ошиб"], text: "debugging problem solving testing troubleshooting" },
+    { patterns: ["hiring", "recruiter", "рекрутер"], text: "recruiter summary hiring manager profile" },
+  ],
+};
+
+const expandLocalizedSearchText = (value, locale) => {
+  const lower = value.toLowerCase();
+  const expansions = localizedSearchExpansions[locale] ?? [];
+  return [
+    value,
+    ...expansions
+      .filter((entry) => entry.patterns.some((pattern) => lower.includes(pattern)))
+      .map((entry) => entry.text),
+  ].join(" ");
+};
 
 const projectHref = (project) => {
   if (project.links.case_study) return project.links.case_study;
@@ -325,13 +352,13 @@ const scoreItem = (item, queryTokens) => {
   return score;
 };
 
-const retrieveKnowledge = (question, conversation) => {
+const retrieveKnowledge = (question, conversation, locale) => {
   const recentUserContext = conversation
     .filter((message) => message.role === "user")
     .slice(-2)
     .map((message) => message.content)
     .join(" ");
-  const queryTokens = unique(normalizeTokens(`${recentUserContext} ${question}`));
+  const queryTokens = unique(normalizeTokens(expandLocalizedSearchText(`${recentUserContext} ${question}`, locale)));
 
   if (!queryTokens.length) return [];
 
@@ -398,8 +425,34 @@ const extractJson = (value) => {
   const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
   if (fenced?.[1]) return fenced[1];
   const firstBrace = trimmed.indexOf("{");
-  const lastBrace = trimmed.lastIndexOf("}");
-  if (firstBrace >= 0 && lastBrace > firstBrace) return trimmed.slice(firstBrace, lastBrace + 1);
+  if (firstBrace >= 0) {
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+
+    for (let index = firstBrace; index < trimmed.length; index += 1) {
+      const char = trimmed[index];
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+
+      if (char === '"') {
+        inString = !inString;
+        continue;
+      }
+
+      if (inString) continue;
+      if (char === "{") depth += 1;
+      if (char === "}") depth -= 1;
+      if (depth === 0) return trimmed.slice(firstBrace, index + 1);
+    }
+  }
   return trimmed;
 };
 
@@ -495,20 +548,40 @@ const callGroq = async (apiKey, question, conversation, retrievedItems, locale) 
         messages,
         temperature: 0.2,
         max_tokens: 900,
-        response_format: { type: "json_object" },
       }),
       signal: controller.signal,
     });
 
     const text = await response.text();
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error("portfolioAgent Groq API error", {
+        status: response.status,
+        body: text.slice(0, 500),
+      });
+      return null;
+    }
 
     const json = JSON.parse(text);
     const content = json?.choices?.[0]?.message?.content;
     if (typeof content !== "string") return null;
 
-    return sanitizeModelResponse(JSON.parse(extractJson(content)), retrievedItems, locale);
-  } catch {
+    let parsedModelResponse;
+    try {
+      parsedModelResponse = JSON.parse(extractJson(content));
+    } catch (error) {
+      console.error("portfolioAgent model JSON parse failed", {
+        name: error?.name,
+        message: error?.message,
+      });
+      return null;
+    }
+
+    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale);
+  } catch (error) {
+    console.error("portfolioAgent Groq request failed", {
+      name: error?.name,
+      message: error?.message,
+    });
     return null;
   } finally {
     clearTimeout(timeout);
@@ -545,39 +618,48 @@ const jsonResponse = (statusCode, body) => ({
 });
 
 export const handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return jsonResponse(405, { error: "Method Not Allowed" });
-  }
-
-  let body;
   try {
-    body = parseBody(event);
-  } catch {
-    return jsonResponse(400, { error: "Invalid request body." });
+    if (event.httpMethod !== "POST") {
+      return jsonResponse(405, { error: "Method Not Allowed" });
+    }
+
+    let body;
+    try {
+      body = parseBody(event);
+    } catch {
+      return jsonResponse(400, { error: "Invalid request body." });
+    }
+
+    const locale = validateLocale(body?.locale);
+    const question = typeof body?.question === "string" ? body.question.trim() : "";
+
+    if (!question) {
+      return jsonResponse(400, { error: localeCopy[locale].enterQuestion });
+    }
+
+    if (question.length > MAX_QUESTION_LENGTH) {
+      return jsonResponse(400, { error: localeCopy[locale].tooLong });
+    }
+
+    const conversation = cleanConversation(body.conversation);
+    const retrievedItems = retrieveKnowledge(question, conversation, locale);
+
+    if (!retrievedItems.length) {
+      return jsonResponse(200, unknownResponse(locale));
+    }
+
+    if (!process.env.GROQ_API_KEY) {
+      return jsonResponse(200, fallbackResponse(retrievedItems, locale));
+    }
+
+    const modelResponse = await callGroq(process.env.GROQ_API_KEY, question, conversation, retrievedItems, locale);
+    return jsonResponse(200, modelResponse ?? fallbackResponse(retrievedItems, locale));
+  } catch (error) {
+    console.error("portfolioAgent failed", {
+      name: error?.name,
+      message: error?.message,
+      stack: error?.stack,
+    });
+    return jsonResponse(200, unknownResponse("en"));
   }
-
-  const locale = validateLocale(body?.locale);
-  const question = typeof body?.question === "string" ? body.question.trim() : "";
-
-  if (!question) {
-    return jsonResponse(400, { error: localeCopy[locale].enterQuestion });
-  }
-
-  if (question.length > MAX_QUESTION_LENGTH) {
-    return jsonResponse(400, { error: localeCopy[locale].tooLong });
-  }
-
-  const conversation = cleanConversation(body.conversation);
-  const retrievedItems = retrieveKnowledge(question, conversation);
-
-  if (!retrievedItems.length) {
-    return jsonResponse(200, unknownResponse(locale));
-  }
-
-  if (!process.env.GROQ_API_KEY) {
-    return jsonResponse(200, fallbackResponse(retrievedItems, locale));
-  }
-
-  const modelResponse = await callGroq(process.env.GROQ_API_KEY, question, conversation, retrievedItems, locale);
-  return jsonResponse(200, modelResponse ?? fallbackResponse(retrievedItems, locale));
 };

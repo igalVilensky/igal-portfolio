@@ -32,25 +32,11 @@
 
         <div class="hidden items-center md:flex">
           <LanguageSwitcher class="mr-5" />
-          <button
-            type="button"
-            class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
-            :aria-label="colorMode.value === 'dark' ? t('nav.switchToLight') : t('nav.switchToDark')"
-            @click="toggleColorMode"
-          >
-            {{ colorMode.value === "dark" ? t("nav.light") : t("nav.dark") }}
-          </button>
+          <ThemeToggle />
         </div>
 
         <div class="flex items-center gap-4 md:hidden">
-          <button
-            type="button"
-            class="py-1 text-sm text-secondary-500 transition-colors hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white"
-            :aria-label="colorMode.value === 'dark' ? t('nav.switchToLight') : t('nav.switchToDark')"
-            @click="toggleColorMode"
-          >
-            {{ colorMode.value === "dark" ? t("nav.light") : t("nav.dark") }}
-          </button>
+          <ThemeToggle />
 
           <button
             type="button"
@@ -96,13 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { useColorMode } from "#imports";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import { Home, Briefcase, FlaskConical, MessageCircle, Bot, User } from "lucide-vue-next";
 import LanguageSwitcher from "~/components/LanguageSwitcher.vue";
+import ThemeToggle from "~/components/ThemeToggle.vue";
 
-const colorMode = useColorMode();
 const route = useRoute();
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -118,11 +103,6 @@ const navigationItems = computed(() => [
   { id: "ai-automation", path: "/ai-automation", label: t("nav.ai"), icon: Bot },
   { id: "about", path: "/about", label: t("nav.about"), icon: User },
 ]);
-
-const toggleColorMode = () => {
-  const isDark = colorMode.value === 'dark';
-  colorMode.preference = isDark ? 'light' : 'dark';
-};
 
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false;

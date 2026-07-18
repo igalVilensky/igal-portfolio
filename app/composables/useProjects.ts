@@ -119,7 +119,7 @@ export const portfolioProjects: PortfolioProject[] = [
       "Exposes agent status, provider attempts, execution trace, risk outcomes, and approval gates",
       "Generates inactive n8n workflow JSON drafts with placeholder credentials and safety validation",
     ],
-    liveUrl: "https://igalvilensky.netlify.app/",
+    liveUrl: "https://flowforge-igal.netlify.app/",
     githubUrl: "https://github.com/igalVilensky/flowforge",
     visual: {
       initials: "FF",

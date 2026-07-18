@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-[360px]">
+  <section class="min-h-[360px]" :class="{ 'pb-[45vh]': items.length }">
     <div v-if="!items.length && !isLoading" class="border border-dashed border-secondary-300 bg-white p-6 dark:border-dark-border dark:bg-dark-surface">
       <h2 class="text-lg font-semibold text-secondary-950 dark:text-white">
         {{ t("portfolioAgent.emptyTitle") }}
@@ -10,18 +10,28 @@
     </div>
 
     <div class="space-y-5" aria-live="polite">
-      <div v-for="item in items" :key="item.id" class="grid gap-3">
+      <div
+        v-for="item in items"
+        :id="`portfolio-entry-${item.id}`"
+        :key="item.id"
+        class="grid scroll-mt-28 gap-3"
+      >
         <div class="ml-auto max-w-[90%] rounded-md bg-secondary-950 px-4 py-3 text-sm leading-6 text-white dark:bg-secondary-100 dark:text-secondary-950">
           {{ item.question }}
         </div>
-        <PortfolioAnswer
-          v-if="item.response"
-          :response="item.response"
-          @ask="$emit('ask', $event)"
-        />
+        <div v-if="item.response" :id="`portfolio-answer-${item.id}`" class="scroll-mt-28">
+          <PortfolioAnswer
+            :response="item.response"
+            @ask="$emit('ask', $event)"
+          />
+        </div>
       </div>
 
-      <div v-if="isLoading" class="border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
+      <div
+        v-if="isLoading"
+        id="portfolio-answer-loading"
+        class="scroll-mt-28 border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface"
+      >
         <div class="flex items-center gap-3 text-sm text-secondary-600 dark:text-secondary-300">
           <Loader2 :size="18" class="animate-spin" />
           {{ t("portfolioAgent.loading") }}

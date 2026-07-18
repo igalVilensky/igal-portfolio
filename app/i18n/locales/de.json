@@ -14,9 +14,11 @@
     "close": "Schließen",
     "light": "Hell",
     "dark": "Dunkel",
+    "theme": "Design",
     "language": "Sprache",
     "switchToLight": "Zum Hellen Modus wechseln",
     "switchToDark": "Zum Dunklen Modus wechseln",
+    "toggleTheme": "Farbschema wechseln",
     "backToHome": "Zurück zur Startseite",
     "home": "Start"
   },

@@ -184,6 +184,36 @@ const normalizeTokens = (value: string) =>
 
 const unique = <T>(items: T[]) => Array.from(new Set(items));
 
+const localizedSearchExpansions: Partial<Record<LocaleCode, Array<{ patterns: string[]; text: string }>>> = {
+  de: [
+    { patterns: ["frontend", "oberfläche", "vue", "nuxt", "react"], text: "frontend experience vue nuxt react typescript ui" },
+    { patterns: ["rolle", "rollen", "eignung", "passt"], text: "role fit target roles suitability" },
+    { patterns: ["ki", "automatisierung", "automation"], text: "ai automation groq agents workflow" },
+    { patterns: ["projekt", "case study", "zuerst"], text: "project case study strongest review first" },
+    { patterns: ["debug", "fehler"], text: "debugging problem solving testing troubleshooting" },
+    { patterns: ["hiring", "recruiter", "zusammenfassung"], text: "recruiter summary hiring manager profile" },
+  ],
+  ru: [
+    { patterns: ["фронтенд", "frontend", "vue", "nuxt", "react"], text: "frontend experience vue nuxt react typescript ui" },
+    { patterns: ["роль", "роли", "подходит", "соответств"], text: "role fit target roles suitability" },
+    { patterns: ["ии", "ai", "автоматизац"], text: "ai automation groq agents workflow" },
+    { patterns: ["проект", "кейс", "сначала"], text: "project case study strongest review first" },
+    { patterns: ["debug", "дебаг", "ошиб"], text: "debugging problem solving testing troubleshooting" },
+    { patterns: ["hiring", "recruiter", "рекрутер"], text: "recruiter summary hiring manager profile" },
+  ],
+};
+
+const expandLocalizedSearchText = (value: string, locale: LocaleCode) => {
+  const lower = value.toLowerCase();
+  const expansions = localizedSearchExpansions[locale] ?? [];
+  return [
+    value,
+    ...expansions
+      .filter((entry) => entry.patterns.some((pattern) => lower.includes(pattern)))
+      .map((entry) => entry.text),
+  ].join(" ");
+};
+
 const projectHref = (project: (typeof projectsData.projects)[number]) => {
   if (project.links.case_study) return project.links.case_study;
   if (project.links.live && project.links.live !== profileData.links.portfolio) return project.links.live;
@@ -359,13 +389,13 @@ const scoreItem = (item: KnowledgeItem, queryTokens: string[]) => {
   return score;
 };
 
-const retrieveKnowledge = (question: string, conversation: PortfolioConversationMessage[]) => {
+const retrieveKnowledge = (question: string, conversation: PortfolioConversationMessage[], locale: LocaleCode) => {
   const recentUserContext = conversation
     .filter((message) => message.role === "user")
     .slice(-2)
     .map((message) => message.content)
     .join(" ");
-  const queryTokens = unique(normalizeTokens(`${recentUserContext} ${question}`));
+  const queryTokens = unique(normalizeTokens(expandLocalizedSearchText(`${recentUserContext} ${question}`, locale)));
 
   if (!queryTokens.length) return [];
 
@@ -429,8 +459,34 @@ const extractJson = (value: string) => {
   const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
   if (fenced?.[1]) return fenced[1];
   const firstBrace = trimmed.indexOf("{");
-  const lastBrace = trimmed.lastIndexOf("}");
-  if (firstBrace >= 0 && lastBrace > firstBrace) return trimmed.slice(firstBrace, lastBrace + 1);
+  if (firstBrace >= 0) {
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+
+    for (let index = firstBrace; index < trimmed.length; index += 1) {
+      const char = trimmed[index];
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+
+      if (char === '"') {
+        inString = !inString;
+        continue;
+      }
+
+      if (inString) continue;
+      if (char === "{") depth += 1;
+      if (char === "}") depth -= 1;
+      if (depth === 0) return trimmed.slice(firstBrace, index + 1);
+    }
+  }
   return trimmed;
 };
 
@@ -468,10 +524,19 @@ const sanitizeModelResponse = (raw: unknown, retrievedItems: KnowledgeItem[], lo
         .slice(0, 3)
     : [];
 
+  const status: PortfolioAgentResponse["status"] =
+    typeof data.status === "string" && (validStatuses as ReadonlySet<string>).has(data.status)
+      ? data.status as PortfolioAgentResponse["status"]
+      : "partial";
+  const confidence: PortfolioAgentResponse["confidence"] =
+    typeof data.confidence === "string" && (validConfidences as ReadonlySet<string>).has(data.confidence)
+      ? data.confidence as PortfolioAgentResponse["confidence"]
+      : "medium";
+
   return {
-    status: validStatuses.has(data.status) ? data.status as PortfolioAgentResponse["status"] : "partial",
+    status,
     answer,
-    confidence: validConfidences.has(data.confidence) ? data.confidence as PortfolioAgentResponse["confidence"] : "medium",
+    confidence,
     sources: sources.length
       ? sources
       : retrievedItems.slice(0, 3).map((item) => formatSource(item, locale)),
@@ -538,20 +603,40 @@ const callGroq = async (
         messages,
         temperature: 0.2,
         max_tokens: 900,
-        response_format: { type: "json_object" },
       }),
       signal: controller.signal,
     });
 
     const text = await response.text();
-    if (!response.ok) return null;
+    if (!response.ok) {
+      console.error("portfolioAgent Groq API error", {
+        status: response.status,
+        body: text.slice(0, 500),
+      });
+      return null;
+    }
 
     const json = JSON.parse(text);
     const content = json?.choices?.[0]?.message?.content;
     if (typeof content !== "string") return null;
 
-    return sanitizeModelResponse(JSON.parse(extractJson(content)), retrievedItems, locale);
-  } catch {
+    let parsedModelResponse: unknown;
+    try {
+      parsedModelResponse = JSON.parse(extractJson(content));
+    } catch (error) {
+      console.error("portfolioAgent model JSON parse failed", {
+        name: error instanceof Error ? error.name : "UnknownError",
+        message: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+
+    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale);
+  } catch (error) {
+    console.error("portfolioAgent Groq request failed", {
+      name: error instanceof Error ? error.name : "UnknownError",
+      message: error instanceof Error ? error.message : String(error),
+    });
     return null;
   } finally {
     clearTimeout(timeout);
@@ -591,7 +676,7 @@ export default defineEventHandler(async (event): Promise<PortfolioAgentResponse>
   }
 
   const conversation = cleanConversation(body.conversation);
-  const retrievedItems = retrieveKnowledge(question, conversation);
+  const retrievedItems = retrieveKnowledge(question, conversation, locale);
 
   if (!retrievedItems.length) {
     return unknownResponse(locale);
