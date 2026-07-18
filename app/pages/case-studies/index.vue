@@ -109,6 +109,7 @@ type ProjectRow = PortfolioProject & {
 const { projects } = useProjects();
 
 const primaryProjectIds = [
+  "flowforge",
   "flowplace-role-compass",
   "openme",
   "decision-matrix-ai",

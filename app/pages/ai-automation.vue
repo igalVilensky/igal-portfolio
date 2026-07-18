@@ -255,7 +255,7 @@ type AiWorkItem = {
 };
 
 const aiProductsIds = ["decision-matrix-ai", "ai-compliance-compass", "sunlit-tales"];
-const aiWorkflowsIds = ["job-command-center", "openme"];
+const aiWorkflowsIds = ["flowforge", "job-command-center", "openme"];
 
 const projectSummaries: Record<string, string> = {
   "decision-matrix-ai":
@@ -266,6 +266,8 @@ const projectSummaries: Record<string, string> = {
     "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
   "job-command-center":
     "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+  flowforge:
+    "Multi-agent automation compiler that turns plain-language ideas into safe, human-reviewable workflow blueprints and inactive n8n JSON drafts.",
   openme:
     "SaaS MVP with public endpoints, owner inbox flows, and an optional Python/FastAPI AI service layer for incoming submission summaries.",
 };
@@ -279,6 +281,8 @@ const demonstratedRoles: Record<string, string> = {
     "Server-side Groq call through Netlify Functions, structured JSON generation, and validating model response against source poem text.",
   "job-command-center":
     "AI extraction, AI review, budget-aware processing, rule-based prefiltering, and command queue grouped by next action.",
+  flowforge:
+    "Guided clarification, multi-agent routing and blueprint generation, safety review, agent trace visibility, and non-executing n8n handoff drafts.",
   openme:
     "Automation-oriented product thinking through public endpoints, owner workflows, and AI-assisted inbox review.",
 };

@@ -7,7 +7,7 @@
             Selected work
           </h2>
           <p class="mt-3 max-w-2xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            Four projects that show SaaS product work, full-stack delivery, and practical AI-assisted tooling.
+            Five projects that show SaaS product work, full-stack delivery, and practical AI-assisted tooling.
           </p>
         </div>
         <NuxtLink to="/case-studies" class="text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">

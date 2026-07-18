@@ -84,6 +84,56 @@ export const skillGroups: SkillGroup[] = [
 
 export const portfolioProjects: PortfolioProject[] = [
   {
+    id: "flowforge",
+    title: "FlowForge",
+    category: "AI Automation Compiler / Multi-Agent Safety Tool",
+    shortDescription:
+      "Multi-agent tool that turns plain-language automation ideas into safe, human-reviewable workflow blueprints and importable n8n JSON drafts.",
+    longDescription:
+      "FlowForge is a non-executing safety and observability layer for AI automation prototypes. It guides users through vague requirements, routes requests through a multi-agent compiler, generates structured workflow blueprints, exposes safety decisions and agent traces, and can produce inactive n8n JSON drafts for human review.",
+    technologies: [
+      "Nuxt 4",
+      "Vue 3",
+      "TypeScript",
+      "Nuxt Server Routes",
+      "Zod",
+      "Groq API",
+      "Gemini",
+      "n8n",
+      "AI Agents",
+    ],
+    tags: [
+      "Nuxt",
+      "Vue",
+      "TypeScript",
+      "AI Agents",
+      "AI Automation",
+      "n8n",
+      "Groq",
+      "Zod",
+      "Responsible AI",
+    ],
+    highlights: [
+      "Multi-agent compiler with guided clarification, routing, blueprint generation, and safety review",
+      "Turns plain-language automation ideas into structured, non-executing workflow previews",
+      "Exposes agent status, provider attempts, execution trace, risk outcomes, and approval gates",
+      "Generates inactive n8n workflow JSON drafts with placeholder credentials and safety validation",
+    ],
+    liveUrl: "https://igalvilensky.netlify.app/",
+    githubUrl: "https://github.com/igalVilensky/flowforge",
+    visual: {
+      initials: "FF",
+      accent: "#8b5cf6",
+      soft: "#ede9fe",
+      metricA: "Agents",
+      metricB: "Safety",
+      metricC: "n8n",
+    },
+    projectType: "work",
+    featuredHome: true,
+    featuredWork: true,
+  },
+  {
     id: "openme",
     title: "OpenMe",
     category: "SaaS MVP / AI-Assisted Platform / Full-Stack Product",

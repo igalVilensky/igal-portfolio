@@ -1,6 +1,54 @@
 {
   "projects": [
     {
+      "id": "flowforge",
+      "title": "FlowForge",
+      "category": "AI Automation Compiler / Multi-Agent Safety Tool",
+      "priority": "featured",
+      "short_description": "Multi-agent tool that turns plain-language automation ideas into safe, human-reviewable workflow blueprints and importable n8n JSON drafts.",
+      "long_description": "FlowForge is a non-executing safety and observability layer for AI automation prototypes. It guides users through vague requirements, routes requests through a multi-agent compiler, generates structured workflow blueprints, exposes safety decisions and agent traces, and can produce inactive n8n JSON drafts for human review.",
+      "role": "Product creator and full-stack developer responsible for the product concept, frontend experience, server-side compiler pipeline, agent orchestration, safety boundaries, and n8n draft generation.",
+      "technologies": [
+        "Nuxt 4",
+        "Vue 3",
+        "TypeScript",
+        "Nuxt Server Routes",
+        "Zod",
+        "Groq API",
+        "Gemini",
+        "n8n",
+        "AI Agents"
+      ],
+      "highlights": [
+        "Multi-agent compiler with guided clarification, routing, blueprint generation, and safety review.",
+        "Produces structured, non-executing automation blueprints with human approval gates and blocked actions.",
+        "Provides agent trace, provider fallback, risk, safety, and run observability information.",
+        "Generates inactive n8n JSON drafts with placeholder credentials and validation against unsafe side effects."
+      ],
+      "outcome_or_proof": [
+        "Working application and public GitHub repository are available.",
+        "Generated n8n drafts can be copied, downloaded, and imported for further human review.",
+        "No production actions are executed by the application."
+      ],
+      "role_relevance": [
+        "Full-Stack Software Developer",
+        "AI Software Developer",
+        "AI Automation Developer",
+        "AI Agent Developer",
+        "Vue.js Developer",
+        "TypeScript Developer",
+        "API Integration Developer"
+      ],
+      "links": {
+        "live": "https://igalvilensky.netlify.app/",
+        "github": "https://github.com/igalVilensky/flowforge",
+        "case_study": null
+      },
+      "source_notes": [
+        "Derived from the FlowForge repository and README."
+      ]
+    },
+    {
       "id": "flowplace-role-compass",
       "title": "Flowplace: Role Compass",
       "category": "SaaS Product Engineering / Professional Case Study",
@@ -592,6 +640,7 @@
     }
   ],
   "featured_project_order": [
+    "flowforge",
     "flowplace-role-compass",
     "openme",
     "decision-matrix-ai",
