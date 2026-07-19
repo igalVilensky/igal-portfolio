@@ -44,9 +44,14 @@ const localeCopy = {
     salary: {
       answer: (range) =>
         `Based on the role you described, a reasonable starting range would be around ${range} gross per year. Igal is flexible, though, and the exact number would depend on the responsibilities, overall package, and growth opportunity. For a precise discussion, it’s best to contact him directly.`,
+      monthlyAnswer: (monthlyRange, annualRange) =>
+        `Based on the role you described, a reasonable starting range would be around ${monthlyRange} gross per month, which corresponds to about ${annualRange} gross per year. Igal is flexible, though, and the exact number would depend on the responsibilities, overall package, and growth opportunity. For a precise discussion, it’s best to contact him directly.`,
       rangeBasic: "EUR 45,000–50,000",
       rangeProduct: "EUR 45,000–55,000",
       rangeSenior: "EUR 50,000–60,000",
+      monthlyRangeBasic: "EUR 3,750–4,170",
+      monthlyRangeProduct: "EUR 3,750–4,580",
+      monthlyRangeSenior: "EUR 4,170–5,000",
     },
     questions: {
       "role-fit": "What roles is Igal a strong fit for?",
@@ -90,9 +95,14 @@ const localeCopy = {
     salary: {
       answer: (range) =>
         `Auf Basis der beschriebenen Rolle wäre eine realistische Einstiegsrange ungefähr ${range} brutto pro Jahr. Igal ist flexibel; die genaue Zahl hängt von Verantwortung, Gesamtpaket und Entwicklungsmöglichkeiten ab. Für eine präzise Abstimmung ist es am besten, ihn direkt zu kontaktieren.`,
+      monthlyAnswer: (monthlyRange, annualRange) =>
+        `Auf Basis der beschriebenen Rolle wäre eine realistische Einstiegsrange ungefähr ${monthlyRange} brutto pro Monat, also etwa ${annualRange} brutto pro Jahr. Igal ist flexibel; die genaue Zahl hängt von Verantwortung, Gesamtpaket und Entwicklungsmöglichkeiten ab. Für eine präzise Abstimmung ist es am besten, ihn direkt zu kontaktieren.`,
       rangeBasic: "EUR 45.000–50.000",
       rangeProduct: "EUR 45.000–55.000",
       rangeSenior: "EUR 50.000–60.000",
+      monthlyRangeBasic: "EUR 3.750–4.170",
+      monthlyRangeProduct: "EUR 3.750–4.580",
+      monthlyRangeSenior: "EUR 4.170–5.000",
     },
     questions: {
       "role-fit": "Für welche Rollen passt Igal besonders gut?",
@@ -136,9 +146,14 @@ const localeCopy = {
     salary: {
       answer: (range) =>
         `С учетом описанной роли разумный стартовый диапазон был бы примерно ${range} gross в год. Игаль гибок, а точная сумма зависит от обязанностей, общего пакета и возможностей роста. Для точного обсуждения лучше связаться с ним напрямую.`,
+      monthlyAnswer: (monthlyRange, annualRange) =>
+        `С учетом описанной роли разумный стартовый диапазон был бы примерно ${monthlyRange} gross в месяц, что соответствует примерно ${annualRange} gross в год. Игаль гибок, а точная сумма зависит от обязанностей, общего пакета и возможностей роста. Для точного обсуждения лучше связаться с ним напрямую.`,
       rangeBasic: "EUR 45,000–50,000",
       rangeProduct: "EUR 45,000–55,000",
       rangeSenior: "EUR 50,000–60,000",
+      monthlyRangeBasic: "EUR 3,750–4,170",
+      monthlyRangeProduct: "EUR 3,750–4,580",
+      monthlyRangeSenior: "EUR 4,170–5,000",
     },
     questions: {
       "role-fit": "Для каких ролей Игаль особенно подходит?",
@@ -599,36 +614,75 @@ const contactAction = (locale) => ({
 
 const lowerText = (value) => value.toLocaleLowerCase();
 
-const salaryTerms = [
-  "salary",
-  "compensation",
-  "pay",
-  "expected salary",
-  "salary expectation",
-  "how much does igal want",
-  "gehalt",
-  "gehaltsvorstellung",
-  "vergütung",
-  "gehaltswunsch",
-  "зарплата",
-  "ожидания по зарплате",
-  "желаемая зарплата",
-  "оплата",
+const salaryPatterns = [
+  /\bsalary\b/u,
+  /\bcompensation\b/u,
+  /\bpay\b/u,
+  /\bexpected salary\b/u,
+  /\bsalary expectation\b/u,
+  /\bhow much does igal want\b/u,
+  /\bhow much money\b/u,
+  /\bearn\b/u,
+  /\bincome\b/u,
+  /\bmonthly\b/u,
+  /\bper month\b/u,
+  /\ba month\b/u,
+  /\bgehalt\b/u,
+  /\bgehaltsvorstellung\b/u,
+  /\bvergütung\b/u,
+  /\bgehaltswunsch\b/u,
+  /\bverdienen\b/u,
+  /\bmonatlich\b/u,
+  /\bpro monat\b/u,
+  /\bim monat\b/u,
+  /зарплат/u,
+  /ожидания по зарплате/u,
+  /желаемая зарплата/u,
+  /оплата/u,
+  /зарабат/u,
+  /доход/u,
+  /в месяц/u,
+  /ежемесяч/u,
 ];
 
-const hasSalaryIntent = (question, conversation) => {
+const hasDirectSalaryIntent = (question) => {
+  const text = lowerText(question);
+  return salaryPatterns.some((pattern) => pattern.test(text));
+};
+
+const monthlySalaryPatterns = [
+  /\bmonthly\b/u,
+  /\bper month\b/u,
+  /\ba month\b/u,
+  /\bmonth\b/u,
+  /\bmonatlich\b/u,
+  /\bpro monat\b/u,
+  /\bim monat\b/u,
+  /\bmonat\b/u,
+  /в месяц/u,
+  /ежемесяч/u,
+  /месяц/u,
+];
+
+const asksForMonthlySalary = (question, conversation) => {
   const recentUserContext = conversation
     .filter((message) => message.role === "user")
     .slice(-2)
     .map((message) => message.content)
     .join(" ");
   const text = lowerText(`${recentUserContext} ${question}`);
-  return salaryTerms.some((term) => text.includes(term));
+  return monthlySalaryPatterns.some((pattern) => pattern.test(text));
 };
 
 const roleContextSignals = [
   "frontend",
   "front-end",
+  "front end",
+  "front",
+  "front engineer",
+  "frontend engineer",
+  "front-end engineer",
+  "front end engineer",
   "full-stack",
   "fullstack",
   "backend",
@@ -647,6 +701,11 @@ const roleContextSignals = [
   "product ownership",
   "responsibility",
   "responsibilities",
+  "engineer",
+  "developer",
+  "role",
+  "road",
+  "draw",
   "verantwort",
   "germany",
   "deutschland",
@@ -685,7 +744,21 @@ const hasSufficientSalaryContext = (question, conversation) => {
   return unique(matches).length >= 2;
 };
 
-const selectSalaryRange = (question, conversation, locale) => {
+const hasSalaryFollowUpIntent = (question, conversation) => {
+  const recentUserContext = conversation
+    .filter((message) => message.role === "user")
+    .slice(-2)
+    .map((message) => message.content)
+    .join(" ");
+
+  if (!recentUserContext || !hasDirectSalaryIntent(recentUserContext)) return false;
+  return hasSufficientSalaryContext(question, []);
+};
+
+const hasSalaryIntent = (question, conversation) =>
+  hasDirectSalaryIntent(question) || hasSalaryFollowUpIntent(question, conversation);
+
+const selectSalaryRangeKey = (question, conversation) => {
   const recentContext = conversation
     .filter((message) => message.role === "user")
     .slice(-3)
@@ -695,21 +768,85 @@ const selectSalaryRange = (question, conversation, locale) => {
   const seniorSignals = ["senior", "lead", "architect", "leitung", "руковод"];
   const productSignals = ["product", "ownership", "saas", "full-stack", "fullstack", "api", "automation", "automatisierung"];
 
-  if (seniorSignals.some((signal) => text.includes(signal))) return localeCopy[locale].salary.rangeSenior;
-  if (productSignals.some((signal) => text.includes(signal))) return localeCopy[locale].salary.rangeProduct;
-  return localeCopy[locale].salary.rangeBasic;
+  if (seniorSignals.some((signal) => text.includes(signal))) return "Senior";
+  if (productSignals.some((signal) => text.includes(signal))) return "Product";
+  return "Basic";
+};
+
+const selectSalaryRange = (question, conversation, locale) => {
+  const rangeKey = selectSalaryRangeKey(question, conversation);
+  return localeCopy[locale].salary[`range${rangeKey}`];
+};
+
+const selectMonthlySalaryRange = (question, conversation, locale) => {
+  const rangeKey = selectSalaryRangeKey(question, conversation);
+  return localeCopy[locale].salary[`monthlyRange${rangeKey}`];
 };
 
 const salaryResponse = (question, conversation, locale, mode) => {
   const range = selectSalaryRange(question, conversation, locale);
+  const monthlyRange = selectMonthlySalaryRange(question, conversation, locale);
+  const answer = asksForMonthlySalary(question, conversation)
+    ? localeCopy[locale].salary.monthlyAnswer(monthlyRange, range)
+    : localeCopy[locale].salary.answer(range);
 
   return {
     status: "answered",
-    answer: localeCopy[locale].salary.answer(range),
+    answer,
     confidence: "medium",
     sources: [formatSource(compensationSource(), locale)],
     suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 3),
     actions: [contactAction(locale)],
+  };
+};
+
+const conversationRecallPatterns = [
+  /\bdid i already ask\b/u,
+  /\bhave i already asked\b/u,
+  /\bdid i ask\b/u,
+  /\balready asked\b/u,
+];
+
+const conversationRecallTopicPatterns = [
+  { key: "lgbtq", patterns: [/\blgbtq\+?\b/u, /\blgbt\+?\b/u, /\bqueer\b/u] },
+  { key: "salary", patterns: salaryPatterns },
+];
+
+const conversationRecallResponse = (question, conversation, locale, mode) => {
+  const text = lowerText(question);
+  if (!conversationRecallPatterns.some((pattern) => pattern.test(text))) return null;
+
+  const topic = conversationRecallTopicPatterns.find((entry) => entry.patterns.some((pattern) => pattern.test(text)));
+  if (!topic) return null;
+
+  const previousUserMessages = conversation
+    .filter((message) => message.role === "user")
+    .map((message) => lowerText(message.content));
+  const wasAsked = previousUserMessages.some((message) =>
+    topic.patterns.some((pattern) => pattern.test(message))
+  );
+
+  const answers = {
+    en: {
+      yes: `Yes. Earlier in this page conversation, you asked about ${topic.key}.`,
+      no: `No, I do not see an earlier ${topic.key} question in this page conversation.`,
+    },
+    de: {
+      yes: `Ja. In dieser Seiten-Konversation hast du vorher nach ${topic.key} gefragt.`,
+      no: `Nein, ich sehe in dieser Seiten-Konversation keine frühere Frage zu ${topic.key}.`,
+    },
+    ru: {
+      yes: `Да. Ранее в этом разговоре на странице вы спрашивали про ${topic.key}.`,
+      no: `Нет, в этом разговоре на странице я не вижу более раннего вопроса про ${topic.key}.`,
+    },
+  };
+
+  return {
+    status: "answered",
+    answer: wasAsked ? answers[locale].yes : answers[locale].no,
+    confidence: "high",
+    sources: [],
+    suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 3),
   };
 };
 
@@ -1165,6 +1302,11 @@ export const handler = async (event) => {
     }
 
     const conversation = cleanConversation(body.conversation);
+    const recallResponse = conversationRecallResponse(question, conversation, locale, mode);
+    if (recallResponse) {
+      return jsonResponse(200, recallResponse);
+    }
+
     if (discriminatoryAgeIntent(question)) {
       return jsonResponse(200, discriminatoryAgeResponse(locale, mode));
     }
