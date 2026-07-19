@@ -9,17 +9,17 @@
       </p>
     </div>
 
-    <div class="space-y-5" aria-live="polite">
+    <div class="space-y-7" aria-live="polite">
       <div
         v-for="item in items"
         :id="`portfolio-entry-${item.id}`"
         :key="item.id"
         class="grid scroll-mt-28 gap-3"
       >
-        <div class="ml-auto max-w-[90%] rounded-md bg-secondary-950 px-4 py-3 text-sm leading-6 text-white dark:bg-secondary-100 dark:text-secondary-950">
+        <div class="ml-auto max-w-[88%] rounded-md bg-secondary-950 px-4 py-3 text-sm leading-6 text-white shadow-sm dark:bg-secondary-100 dark:text-secondary-950 sm:max-w-[76%]">
           {{ item.question }}
         </div>
-        <div v-if="item.response" :id="`portfolio-answer-${item.id}`" class="scroll-mt-28">
+        <div v-if="item.response" :id="`portfolio-answer-${item.id}`" class="max-w-3xl scroll-mt-28">
           <PortfolioAnswer
             :response="item.response"
             @ask="$emit('ask', $event)"

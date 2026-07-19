@@ -57,6 +57,12 @@
     "badgeKnowledge": "Verifiziertes Portfolio-Wissen",
     "badgeSources": "Quellen enthalten",
     "badgeNoBrowsing": "Kein Browsing",
+    "guideLabel": "Igals Portfolio-Guide",
+    "conversationStyle": "Gesprächsstil",
+    "mode": {
+      "professional": "Professionell",
+      "conversational": "Locker"
+    },
     "inputLabel": "Portfolio-Frage stellen",
     "placeholder": "Frage nach Rollen-Fit, Vue-Erfahrung, KI-Projekten, Zusammenarbeit oder dem besten ersten Projekt.",
     "groundingNote": "Antworten bleiben auf Portfolio-Inhalte gestützt.",
@@ -71,7 +77,8 @@
     "status": {
       "answered": "Beantwortet",
       "partial": "Teilweise",
-      "unknown": "Unbekannt"
+      "unknown": "Unbekannt",
+      "needsClarification": "Rückfrage"
     },
     "confidence": {
       "label": "Sicherheit",
@@ -97,7 +104,20 @@
     },
     "sources": {
       "cvProfile": "Lebenslauf-Profil",
-      "experience": "Erfahrung bei {organization}"
+      "experience": "Erfahrung bei {organization}",
+      "personalProfile": "Persönliches Profil",
+      "compensationPreferences": "Rollen- und Gehaltspräferenzen"
+    },
+    "clarification": {
+      "salary": "Das hängt stark von der Rolle ab. Geht es hauptsächlich um Frontend, Full-Stack oder KI-Automatisierung? Hilfreich wären auch Verantwortungsebene, Standort und ob die Stelle remote, hybrid oder vor Ort ist.",
+      "role": "Möglich — um welche Rolle geht es? Ein Jobtitel oder eine kurze Beschreibung der wichtigsten Aufgaben würde helfen, sie mit Igals Erfahrung zu vergleichen.",
+      "fallback": "Ein wenig mehr Kontext würde helfen, das sauber zu beantworten."
+    },
+    "salary": {
+      "answer": "Auf Basis der beschriebenen Rolle wäre eine realistische Einstiegsrange ungefähr {range} brutto pro Jahr. Igal ist flexibel; die genaue Zahl hängt von Verantwortung, Gesamtpaket und Entwicklungsmöglichkeiten ab. Für eine präzise Abstimmung ist es am besten, ihn direkt zu kontaktieren.",
+      "rangeBasic": "EUR 45.000–50.000",
+      "rangeProduct": "EUR 45.000–55.000",
+      "rangeSenior": "EUR 50.000–60.000"
     },
     "questions": {
       "roleFit": "Für welche Rollen passt Igal besonders gut?",
@@ -105,7 +125,11 @@
       "aiAutomation": "Was hat er mit KI und Automatisierung gebaut?",
       "strongestProject": "Welches Projekt sollte ich zuerst ansehen?",
       "debugging": "Wie geht er an Debugging heran?",
-      "recruiterSummary": "Fasse Igal für einen Hiring Manager zusammen."
+      "recruiterSummary": "Fasse Igal für einen Hiring Manager zusammen.",
+      "personalJourney": "Wie sieht Igals persönlicher Weg aus?",
+      "beforeIt": "Was hat Igal vor der Entwicklung gemacht?",
+      "creativeBackground": "Hat Igal einen kreativen Hintergrund?",
+      "unusualBackground": "Was macht Igals Hintergrund ungewöhnlich?"
     }
   },
   "hero": {

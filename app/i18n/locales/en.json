@@ -57,6 +57,12 @@
     "badgeKnowledge": "Verified portfolio knowledge",
     "badgeSources": "Sources included",
     "badgeNoBrowsing": "No browsing",
+    "guideLabel": "Igal’s portfolio guide",
+    "conversationStyle": "Conversation style",
+    "mode": {
+      "professional": "Professional",
+      "conversational": "Conversational"
+    },
     "inputLabel": "Ask a portfolio question",
     "placeholder": "Ask about role fit, Vue experience, AI projects, collaboration style, or what to review first.",
     "groundingNote": "Answers stay grounded in portfolio content.",
@@ -71,7 +77,8 @@
     "status": {
       "answered": "Answered",
       "partial": "Partial",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "needsClarification": "Clarifying"
     },
     "confidence": {
       "label": "Confidence",
@@ -97,7 +104,20 @@
     },
     "sources": {
       "cvProfile": "CV profile",
-      "experience": "{organization} experience"
+      "experience": "{organization} experience",
+      "personalProfile": "Personal profile",
+      "compensationPreferences": "Role and compensation preferences"
+    },
+    "clarification": {
+      "salary": "That depends quite a bit on the role. Is it mainly frontend, full-stack, or AI automation work? It would also help to know the expected level of responsibility, location, and whether the position is remote, hybrid, or on-site.",
+      "role": "Possibly — what kind of role is it? A job title or a short description of the main responsibilities would help me compare it with his experience.",
+      "fallback": "A little more context would help me answer that properly."
+    },
+    "salary": {
+      "answer": "Based on the role you described, a reasonable starting range would be around {range} gross per year. Igal is flexible, though, and the exact number would depend on the responsibilities, overall package, and growth opportunity. For a precise discussion, it’s best to contact him directly.",
+      "rangeBasic": "EUR 45,000–50,000",
+      "rangeProduct": "EUR 45,000–55,000",
+      "rangeSenior": "EUR 50,000–60,000"
     },
     "questions": {
       "roleFit": "What roles is Igal a strong fit for?",
@@ -105,7 +125,11 @@
       "aiAutomation": "What has he built with AI and automation?",
       "strongestProject": "Which project should I review first?",
       "debugging": "How does he approach debugging?",
-      "recruiterSummary": "Summarize Igal for a hiring manager."
+      "recruiterSummary": "Summarize Igal for a hiring manager.",
+      "personalJourney": "What is Igal’s personal journey?",
+      "beforeIt": "What did Igal do before becoming a developer?",
+      "creativeBackground": "Does Igal have a creative background?",
+      "unusualBackground": "What makes Igal’s background unusual?"
     }
   },
   "hero": {

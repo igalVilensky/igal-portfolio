@@ -1,12 +1,15 @@
-export type PortfolioAgentStatus = "answered" | "partial" | "unknown";
+export type PortfolioAgentStatus = "answered" | "partial" | "unknown" | "needs_clarification";
 export type PortfolioAgentConfidence = "high" | "medium" | "low";
+export type PortfolioAgentMode = "professional" | "conversational";
 export type PortfolioSourceType =
   | "profile"
   | "project"
   | "experience"
   | "skill"
   | "faq"
-  | "role-fit";
+  | "role-fit"
+  | "personal"
+  | "compensation";
 
 export type PortfolioAgentSource = {
   id: string;
@@ -28,6 +31,10 @@ export type PortfolioAgentResponse = {
   sources: PortfolioAgentSource[];
   suggestedQuestions: string[];
   actions: PortfolioAgentAction[];
+  clarification?: {
+    question: string;
+    topic: "role" | "salary" | "project" | "experience" | "availability" | "other";
+  };
 };
 
 export type PortfolioConversationMessage = {
@@ -38,5 +45,6 @@ export type PortfolioConversationMessage = {
 export type PortfolioAgentRequest = {
   question: string;
   locale?: "en" | "de" | "ru";
+  mode?: PortfolioAgentMode;
   conversation?: PortfolioConversationMessage[];
 };

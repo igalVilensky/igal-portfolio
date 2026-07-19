@@ -3,7 +3,8 @@
     "name": "Igal, Explained",
     "description": "A recruiter-focused guide to Igal Vilensky's portfolio."
   },
-  "suggested_questions": [
+  "suggested_questions": {
+    "professional": [
     {
       "id": "role-fit",
       "translation_key": "portfolioAgent.questions.roleFit"
@@ -28,7 +29,34 @@
       "id": "recruiter-summary",
       "translation_key": "portfolioAgent.questions.recruiterSummary"
     }
-  ],
+    ],
+    "conversational": [
+      {
+        "id": "personal-journey",
+        "translation_key": "portfolioAgent.questions.personalJourney"
+      },
+      {
+        "id": "before-it",
+        "translation_key": "portfolioAgent.questions.beforeIt"
+      },
+      {
+        "id": "creative-background",
+        "translation_key": "portfolioAgent.questions.creativeBackground"
+      },
+      {
+        "id": "unusual-background",
+        "translation_key": "portfolioAgent.questions.unusualBackground"
+      },
+      {
+        "id": "frontend-experience",
+        "translation_key": "portfolioAgent.questions.frontendExperience"
+      },
+      {
+        "id": "ai-automation",
+        "translation_key": "portfolioAgent.questions.aiAutomation"
+      }
+    ]
+  },
   "missing_topics": [
     "Detailed debugging examples",
     "Recent collaboration examples",

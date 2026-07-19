@@ -9,6 +9,8 @@
             :is-loading="isLoading"
             :error-message="errorMessage"
             :suggested-questions="currentSuggestions"
+            :mode="selectedMode"
+            @update:mode="setMode"
             @ask="askQuestion"
           />
 
@@ -40,12 +42,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import PortfolioAgentHero from "~/components/portfolio-agent/PortfolioAgentHero.vue";
 import PortfolioConversation from "~/components/portfolio-agent/PortfolioConversation.vue";
 import PortfolioQuestionForm from "~/components/portfolio-agent/PortfolioQuestionForm.vue";
 import type {
   PortfolioAgentResponse,
+  PortfolioAgentMode,
   PortfolioConversationMessage,
 } from "~/types/portfolio-agent";
 import agentData from "../../content/portfolio-agent.json";
@@ -77,9 +80,11 @@ const portfolioAgent = usePortfolioAgent();
 const conversationItems = ref<ConversationItem[]>([]);
 const isLoading = ref(false);
 const errorMessage = ref("");
+const selectedMode = ref<PortfolioAgentMode>("professional");
 
 const defaultSuggestions = computed(() =>
-  agentData.suggested_questions.map((question) => t(question.translation_key))
+  (agentData.suggested_questions[selectedMode.value] ?? agentData.suggested_questions.professional)
+    .map((question) => t(question.translation_key))
 );
 
 const currentSuggestions = computed(() => {
@@ -125,6 +130,20 @@ const scrollToElement = async (elementId: string, behavior: ScrollBehavior = "sm
   });
 };
 
+const setMode = (mode: PortfolioAgentMode) => {
+  selectedMode.value = mode;
+  if (import.meta.client) {
+    sessionStorage.setItem("ask-igal-mode", mode);
+  }
+};
+
+onMounted(() => {
+  const storedMode = sessionStorage.getItem("ask-igal-mode");
+  if (storedMode === "professional" || storedMode === "conversational") {
+    selectedMode.value = storedMode;
+  }
+});
+
 const askQuestion = async (rawQuestion: string) => {
   const question = rawQuestion.trim();
   if (!question || isLoading.value) return;
@@ -150,6 +169,7 @@ const askQuestion = async (rawQuestion: string) => {
     const response = await portfolioAgent({
       question,
       locale: locale.value,
+      mode: selectedMode.value,
       conversation: buildConversationPayload().slice(0, -1),
     });
     item.response = response;

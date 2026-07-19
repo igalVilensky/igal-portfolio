@@ -1,6 +1,28 @@
 <template>
   <section class="border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface md:p-6">
     <form class="grid gap-4" @submit.prevent="submitQuestion">
+      <fieldset class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <legend class="text-sm font-semibold text-secondary-950 dark:text-white">
+          {{ t("portfolioAgent.conversationStyle") }}
+        </legend>
+        <div class="inline-flex w-fit rounded-md border border-secondary-200 bg-secondary-50 p-1 dark:border-dark-border dark:bg-dark-bg">
+          <button
+            v-for="option in modeOptions"
+            :key="option.value"
+            type="button"
+            class="rounded px-3 py-1.5 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-primary-400"
+            :class="mode === option.value
+              ? 'bg-white text-secondary-950 shadow-sm dark:bg-dark-surface dark:text-white'
+              : 'text-secondary-600 hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white'"
+            :aria-pressed="mode === option.value"
+            :disabled="isLoading"
+            @click="$emit('update:mode', option.value)"
+          >
+            {{ t(option.labelKey) }}
+          </button>
+        </div>
+      </fieldset>
+
       <div>
         <label for="portfolio-question" class="text-sm font-semibold text-secondary-950 dark:text-white">
           {{ t("portfolioAgent.inputLabel") }}
@@ -61,19 +83,26 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Loader2, Send } from "lucide-vue-next";
+import type { PortfolioAgentMode } from "~/types/portfolio-agent";
 
 const props = defineProps<{
   isLoading: boolean;
   errorMessage: string;
   suggestedQuestions: string[];
+  mode: PortfolioAgentMode;
 }>();
 
 const emit = defineEmits<{
   ask: [question: string];
+  "update:mode": [mode: PortfolioAgentMode];
 }>();
 
 const draft = ref("");
 const { t } = useI18n();
+const modeOptions: Array<{ value: PortfolioAgentMode; labelKey: string }> = [
+  { value: "professional", labelKey: "portfolioAgent.mode.professional" },
+  { value: "conversational", labelKey: "portfolioAgent.mode.conversational" },
+];
 
 const submitQuestion = () => {
   const question = draft.value.trim();

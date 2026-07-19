@@ -116,6 +116,54 @@ export const profileData = {
   ]
 };
 
+export const personalProfileData = {
+  "visibility": "agent_answerable",
+  "identity": {
+    "full_name": "Igal Vilensky",
+    "date_of_birth": "1985-03-28",
+    "current_age": 41,
+    "birth_country": "Belarus",
+    "current_location": "Leipzig, Germany"
+  },
+  "personal_history": [
+    {
+      "period": "1985-1996",
+      "summary": "Born in Belarus and lived there until the age of 11."
+    },
+    {
+      "period": "1996-2019",
+      "summary": "Moved to Israel at age 11 and lived there until 2019."
+    },
+    {
+      "period": "2019-present",
+      "summary": "Moved to Germany in 2019 and currently lives in Leipzig."
+    }
+  ],
+  "family": {
+    "visibility": "agent_answerable",
+    "has_family": true,
+    "children_count": 3,
+    "approved_scope": "The assistant may answer only the general fact that Igal has a family and three children when directly relevant or directly asked. It must not reveal or invent names, ages, schools, addresses, or other family-member details."
+  },
+  "personal_traits": [
+    "open-minded",
+    "communicative",
+    "creative"
+  ],
+  "creative_background": [
+    "Played piano before moving into IT.",
+    "Worked as an actor in theatre.",
+    "Appeared in movies.",
+    "Appeared in television series.",
+    "Appeared in commercials."
+  ],
+  "salary": {
+    "visibility": "agent_answerable",
+    "internal_minimum_eur_gross_yearly": 45000,
+    "public_answer_policy": "Do not immediately state a salary number. First ask about the role, responsibilities, seniority expectations, location, employment type, and compensation structure. After receiving enough context, provide a reasonable range starting around EUR 45,000 gross per year and explain that Igal is flexible and prefers to discuss the exact figure directly."
+  }
+};
+
 export const projectsData = {
   "projects": [
     {
@@ -1606,32 +1654,60 @@ export const agentData = {
     "name": "Igal, Explained",
     "description": "A recruiter-focused guide to Igal Vilensky's portfolio."
   },
-  "suggested_questions": [
-    {
-      "id": "role-fit",
-      "translation_key": "portfolioAgent.questions.roleFit"
-    },
-    {
-      "id": "frontend-experience",
-      "translation_key": "portfolioAgent.questions.frontendExperience"
-    },
-    {
-      "id": "ai-automation",
-      "translation_key": "portfolioAgent.questions.aiAutomation"
-    },
-    {
-      "id": "strongest-project",
-      "translation_key": "portfolioAgent.questions.strongestProject"
-    },
-    {
-      "id": "debugging",
-      "translation_key": "portfolioAgent.questions.debugging"
-    },
-    {
-      "id": "recruiter-summary",
-      "translation_key": "portfolioAgent.questions.recruiterSummary"
-    }
-  ],
+  "suggested_questions": {
+    "professional": [
+      {
+        "id": "role-fit",
+        "translation_key": "portfolioAgent.questions.roleFit"
+      },
+      {
+        "id": "frontend-experience",
+        "translation_key": "portfolioAgent.questions.frontendExperience"
+      },
+      {
+        "id": "ai-automation",
+        "translation_key": "portfolioAgent.questions.aiAutomation"
+      },
+      {
+        "id": "strongest-project",
+        "translation_key": "portfolioAgent.questions.strongestProject"
+      },
+      {
+        "id": "debugging",
+        "translation_key": "portfolioAgent.questions.debugging"
+      },
+      {
+        "id": "recruiter-summary",
+        "translation_key": "portfolioAgent.questions.recruiterSummary"
+      }
+    ],
+    "conversational": [
+      {
+        "id": "personal-journey",
+        "translation_key": "portfolioAgent.questions.personalJourney"
+      },
+      {
+        "id": "before-it",
+        "translation_key": "portfolioAgent.questions.beforeIt"
+      },
+      {
+        "id": "creative-background",
+        "translation_key": "portfolioAgent.questions.creativeBackground"
+      },
+      {
+        "id": "unusual-background",
+        "translation_key": "portfolioAgent.questions.unusualBackground"
+      },
+      {
+        "id": "frontend-experience",
+        "translation_key": "portfolioAgent.questions.frontendExperience"
+      },
+      {
+        "id": "ai-automation",
+        "translation_key": "portfolioAgent.questions.aiAutomation"
+      }
+    ]
+  },
   "missing_topics": [
     "Detailed debugging examples",
     "Recent collaboration examples",
