@@ -1,123 +1,106 @@
 <template>
-  <section class="border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface md:p-6">
-    <form class="grid gap-4" @submit.prevent="submitQuestion">
-      <fieldset class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <legend class="text-sm font-semibold text-secondary-950 dark:text-white">
-          {{ t("portfolioAgent.conversationStyle") }}
-        </legend>
-        <div class="inline-flex w-fit rounded-md border border-secondary-200 bg-secondary-50 p-1 dark:border-dark-border dark:bg-dark-bg">
+  <div>
+    <form class="relative" @submit.prevent="submitQuestion">
+      <div
+        class="flex items-end gap-2 rounded-2xl border border-secondary-300 bg-white px-3 py-2 shadow-sm transition focus-within:border-primary-400 dark:border-dark-border dark:bg-dark-surface"
+      >
+        <button
+          v-if="isSpeechReady && speechSupported"
+          type="button"
+          class="mb-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-secondary-500 transition hover:bg-secondary-100 hover:text-secondary-800 disabled:cursor-not-allowed disabled:opacity-50 dark:text-secondary-400 dark:hover:bg-white/10 dark:hover:text-secondary-100"
+          :class="speechStatus === 'listening' ? 'text-primary-700 dark:text-primary-300' : ''"
+          :aria-label="voiceButtonLabel"
+          :aria-pressed="speechStatus === 'listening'"
+          :title="voiceButtonLabel"
+          :disabled="isLoading"
+          @click="toggleSpeechRecognition"
+        >
+          <Mic :size="17" :class="speechStatus === 'listening' ? 'animate-pulse' : ''" />
+        </button>
+
+        <textarea
+          id="portfolio-question"
+          ref="textareaRef"
+          v-model="draft"
+          rows="1"
+          maxlength="500"
+          class="max-h-40 min-h-[2.5rem] flex-1 resize-none bg-transparent py-2 text-base leading-6 text-secondary-900 placeholder:text-secondary-400 focus:outline-none dark:text-secondary-100 dark:placeholder:text-secondary-500"
+          placeholder="Ask about a skill, or role fit…"
+          :disabled="isLoading"
+          aria-describedby="portfolio-voice-status"
+          @keydown="handleKeydown"
+          @input="autoGrow"
+        />
+
+        <button
+          type="submit"
+          class="mb-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary-950 text-white transition hover:bg-secondary-800 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-white dark:text-secondary-950 dark:hover:bg-secondary-100"
+          :disabled="isLoading || !draft.trim()"
+          aria-label="Send"
+        >
+          <Loader2 v-if="isLoading" :size="16" class="animate-spin" />
+          <Send v-else :size="16" />
+        </button>
+      </div>
+
+      <div class="mt-1.5 flex items-center justify-between px-1">
+        <div class="flex items-center gap-3 text-[11px] text-secondary-400 dark:text-secondary-500">
+          <span class="hidden sm:inline">Enter to send, Shift+Enter for a new line</span>
+          <span v-if="draft.length > 400">{{ draft.length }}/500</span>
+        </div>
+
+        <div class="inline-flex items-center gap-1 text-[11px]">
           <button
             v-for="option in modeOptions"
             :key="option.value"
             type="button"
-            class="rounded px-3 py-1.5 text-xs font-semibold transition focus:outline-none focus:ring-2 focus:ring-primary-400"
+            class="rounded-full px-2 py-0.5 font-medium transition"
             :class="mode === option.value
-              ? 'bg-white text-secondary-950 shadow-sm dark:bg-dark-surface dark:text-white'
-              : 'text-secondary-600 hover:text-secondary-950 dark:text-secondary-400 dark:hover:text-white'"
+              ? 'bg-secondary-100 text-secondary-800 dark:bg-white/10 dark:text-secondary-100'
+              : 'text-secondary-400 hover:text-secondary-700 dark:text-secondary-500 dark:hover:text-secondary-200'"
             :aria-pressed="mode === option.value"
             :disabled="isLoading"
             @click="$emit('update:mode', option.value)"
           >
-            {{ t(option.labelKey) }}
+            {{ option.label }}
           </button>
         </div>
-      </fieldset>
-
-      <div>
-        <label for="portfolio-question" class="text-sm font-semibold text-secondary-950 dark:text-white">
-          {{ t("portfolioAgent.inputLabel") }}
-        </label>
-        <div class="relative mt-3">
-          <textarea
-            id="portfolio-question"
-            v-model="draft"
-            rows="4"
-            maxlength="500"
-            class="w-full resize-none rounded-md border border-secondary-300 bg-secondary-50 px-4 py-3 pr-14 text-base leading-7 text-secondary-900 transition placeholder:text-secondary-400 focus:border-primary-400 dark:border-dark-border dark:bg-dark-bg dark:text-secondary-100 dark:placeholder:text-secondary-500"
-            :placeholder="t('portfolioAgent.placeholder')"
-            :disabled="isLoading"
-            aria-describedby="portfolio-question-hint portfolio-question-meta portfolio-voice-status"
-            @keydown="handleKeydown"
-          />
-          <button
-            v-if="isSpeechReady && speechSupported"
-            type="button"
-            class="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-md border bg-white text-secondary-600 transition hover:border-primary-300 hover:text-primary-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-dark-surface dark:text-secondary-300 dark:hover:border-primary-700 dark:hover:text-primary-200"
-            :class="speechStatus === 'listening'
-              ? 'border-primary-500 text-primary-700 shadow-sm ring-2 ring-primary-200 dark:border-primary-400 dark:text-primary-200 dark:ring-primary-900'
-              : 'border-secondary-200 dark:border-dark-border'"
-            :aria-label="voiceButtonLabel"
-            :aria-pressed="speechStatus === 'listening'"
-            :title="voiceButtonLabel"
-            :disabled="isLoading"
-            @click="toggleSpeechRecognition"
-          >
-            <Mic :size="18" :class="speechStatus === 'listening' ? 'animate-pulse' : ''" />
-          </button>
-        </div>
-        <div
-          id="portfolio-question-meta"
-          class="mt-2 flex flex-col gap-1 text-xs text-secondary-500 dark:text-secondary-400 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
-        >
-          <span>{{ t("portfolioAgent.groundingNote") }}</span>
-          <span>{{ draft.length }}/500</span>
-        </div>
-        <div
-          id="portfolio-question-hint"
-          class="mt-1 flex flex-col gap-1 text-xs text-secondary-500 dark:text-secondary-400 sm:flex-row sm:items-center sm:gap-3"
-        >
-          <span>{{ t("portfolioAgent.keyboardHint") }}</span>
-          <span v-if="isSpeechReady && speechSupported">{{ t("portfolioAgent.voice.privacyNote") }}</span>
-        </div>
-        <p
-          v-if="voiceStatusMessage"
-          id="portfolio-voice-status"
-          class="mt-2 text-xs text-secondary-600 dark:text-secondary-300"
-          :class="speechStatus === 'error' || speechStatus === 'permission-denied' || speechStatus === 'unsupported' ? 'text-red-700 dark:text-red-300' : ''"
-          aria-live="polite"
-        >
-          {{ voiceStatusMessage }}
-        </p>
       </div>
 
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <button
-          type="submit"
-          class="btn-primary inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 disabled:cursor-not-allowed disabled:opacity-60"
-          :disabled="isLoading || !draft.trim()"
-        >
-          <Loader2 v-if="isLoading" :size="17" class="animate-spin" />
-          <Send v-else :size="17" />
-          <span>{{ isLoading ? t("portfolioAgent.asking") : t("portfolioAgent.ask") }}</span>
-        </button>
-        <p v-if="errorMessage" class="text-sm text-red-700 dark:text-red-300" role="alert">
-          {{ errorMessage }}
-        </p>
-      </div>
+      <p
+        v-if="voiceStatusMessage"
+        id="portfolio-voice-status"
+        class="mt-1.5 px-1 text-xs"
+        :class="speechStatus === 'error' || speechStatus === 'permission-denied' || speechStatus === 'unsupported'
+          ? 'text-red-700 dark:text-red-300'
+          : 'text-secondary-500 dark:text-secondary-400'"
+        aria-live="polite"
+      >
+        {{ voiceStatusMessage }}
+      </p>
+
+      <p v-if="errorMessage" class="mt-1.5 px-1 text-sm text-red-700 dark:text-red-300" role="alert">
+        {{ errorMessage }}
+      </p>
     </form>
 
-    <div class="mt-6">
-      <p class="text-xs font-semibold uppercase text-secondary-500 dark:text-secondary-400">
-        {{ t("portfolioAgent.suggestedHeading") }}
-      </p>
-      <div class="mt-3 flex flex-wrap gap-2">
-        <button
-          v-for="question in suggestedQuestions"
-          :key="question"
-          type="button"
-          class="rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-left text-xs font-medium text-secondary-700 transition hover:border-primary-300 hover:bg-primary-50 hover:text-primary-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-dark-border dark:bg-dark-bg dark:text-secondary-300 dark:hover:border-primary-700 dark:hover:bg-primary-950 dark:hover:text-primary-200"
-          :disabled="isLoading"
-          @click="$emit('ask', question)"
-        >
-          {{ question }}
-        </button>
-      </div>
+    <div v-if="showSuggestions && suggestedQuestions.length" class="mt-4 flex flex-wrap justify-center gap-2">
+      <button
+        v-for="question in suggestedQuestions.slice(0, 4)"
+        :key="question"
+        type="button"
+        class="rounded-full border border-secondary-200 bg-white px-3 py-1.5 text-xs font-medium text-secondary-600 transition hover:border-primary-300 hover:text-primary-800 disabled:cursor-not-allowed disabled:opacity-60 dark:border-dark-border dark:bg-dark-surface dark:text-secondary-300 dark:hover:border-primary-700 dark:hover:text-primary-200"
+        :disabled="isLoading"
+        @click="$emit('ask', question)"
+      >
+        {{ question }}
+      </button>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { Loader2, Mic, Send } from "lucide-vue-next";
 import type { PortfolioAgentMode } from "~/types/portfolio-agent";
 
@@ -153,6 +136,7 @@ const props = defineProps<{
   errorMessage: string;
   suggestedQuestions: string[];
   mode: PortfolioAgentMode;
+  showSuggestions: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -161,16 +145,18 @@ const emit = defineEmits<{
 }>();
 
 const draft = ref("");
-const { locale, t } = useI18n();
+const { locale } = useI18n();
 const isSpeechReady = ref(false);
 const speechSupported = ref(false);
 const speechStatus = ref<SpeechStatus>("idle");
-const speechMessageKey = ref("");
+const speechMessage = ref("");
 const recognition = ref<SpeechRecognitionLike | null>(null);
 const speechBaseText = ref("");
-const modeOptions: Array<{ value: PortfolioAgentMode; labelKey: string }> = [
-  { value: "professional", labelKey: "portfolioAgent.mode.professional" },
-  { value: "conversational", labelKey: "portfolioAgent.mode.conversational" },
+const textareaRef = ref<HTMLTextAreaElement | null>(null);
+
+const modeOptions: Array<{ value: PortfolioAgentMode; label: string }> = [
+  { value: "professional", label: "Professional" },
+  { value: "conversational", label: "Casual" },
 ];
 
 const speechLocales: Record<string, string> = {
@@ -182,17 +168,28 @@ const speechLocales: Record<string, string> = {
 const speechLocale = computed(() => speechLocales[locale.value] ?? speechLocales.en);
 
 const voiceButtonLabel = computed(() =>
-  speechStatus.value === "listening"
-    ? t("portfolioAgent.voice.stop")
-    : t("portfolioAgent.voice.start")
+  speechStatus.value === "listening" ? "Stop voice input" : "Ask with your voice"
 );
 
 const voiceStatusMessage = computed(() => {
-  if (speechStatus.value === "listening") return t("portfolioAgent.voice.listening");
-  if (speechStatus.value === "unsupported") return t("portfolioAgent.voice.unsupported");
-  if (speechMessageKey.value) return t(speechMessageKey.value);
-  return "";
+  if (speechStatus.value === "listening") return "Listening…";
+  if (speechStatus.value === "unsupported") return "";
+  return speechMessage.value;
 });
+
+const autoGrow = () => {
+  const el = textareaRef.value;
+  if (!el) return;
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
+};
+
+const resetHeight = () => {
+  nextTick(() => {
+    const el = textareaRef.value;
+    if (el) el.style.height = "auto";
+  });
+};
 
 const getSpeechRecognitionConstructor = (): SpeechRecognitionConstructor | null => {
   if (!import.meta.client) return null;
@@ -248,26 +245,26 @@ const handleSpeechError = (event: SpeechRecognitionErrorEventLike) => {
 
   if (event.error === "aborted") {
     speechStatus.value = "idle";
-    speechMessageKey.value = "";
+    speechMessage.value = "";
     return;
   }
 
   if (event.error === "not-allowed" || event.error === "service-not-allowed") {
     speechStatus.value = "permission-denied";
-    speechMessageKey.value = "portfolioAgent.voice.permissionDenied";
+    speechMessage.value = "Microphone access was denied.";
     return;
   }
 
   speechStatus.value = "error";
 
   if (event.error === "no-speech") {
-    speechMessageKey.value = "portfolioAgent.voice.noSpeech";
+    speechMessage.value = "Didn't catch that — try again.";
   } else if (event.error === "audio-capture") {
-    speechMessageKey.value = "portfolioAgent.voice.audioCapture";
+    speechMessage.value = "No microphone was found.";
   } else if (event.error === "network") {
-    speechMessageKey.value = "portfolioAgent.voice.networkError";
+    speechMessage.value = "Voice input needs a network connection.";
   } else {
-    speechMessageKey.value = "portfolioAgent.voice.genericError";
+    speechMessage.value = "Voice input hit an error — try typing instead.";
   }
 };
 
@@ -283,7 +280,7 @@ const startListening = () => {
 
   stopListening(true);
   speechBaseText.value = draft.value;
-  speechMessageKey.value = "";
+  speechMessage.value = "";
 
   const activeRecognition = new SpeechRecognitionConstructor();
   activeRecognition.continuous = false;
@@ -298,10 +295,11 @@ const startListening = () => {
     let transcript = "";
 
     for (let index = 0; index < event.results.length; index += 1) {
-      transcript += event.results[index][0]?.transcript ?? "";
+      transcript += event.results?.[index]?.[0]?.transcript ?? "";
     }
 
     draft.value = appendTranscript(speechBaseText.value, transcript);
+    autoGrow();
   };
 
   activeRecognition.onerror = handleSpeechError;
@@ -319,7 +317,7 @@ const startListening = () => {
   } catch {
     cleanupRecognition();
     speechStatus.value = "error";
-    speechMessageKey.value = "portfolioAgent.voice.genericError";
+    speechMessage.value = "Voice input hit an error — try typing instead.";
   }
 };
 
@@ -346,6 +344,7 @@ const submitQuestion = () => {
   stopListening();
   emit("ask", question);
   draft.value = "";
+  resetHeight();
 };
 
 onMounted(() => {

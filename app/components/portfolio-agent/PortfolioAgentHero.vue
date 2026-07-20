@@ -1,20 +1,16 @@
 <template>
-  <header class="page-header">
-    <div class="page-header-main">
-      <p class="page-kicker">{{ t("portfolioAgent.kicker") }}</p>
-      <h1 class="page-title">{{ t("portfolioAgent.title") }}</h1>
-    </div>
-    <div class="page-header-side">
-      <p class="page-intro">
-        {{ t("portfolioAgent.description") }}
-      </p>
-      <div class="mt-5 flex flex-wrap gap-2 text-xs text-secondary-600 dark:text-secondary-400">
-        <span class="rounded bg-white px-2 py-1 dark:bg-white/5">{{ t("portfolioAgent.badgeKnowledge") }}</span>
-        <span class="rounded bg-white px-2 py-1 dark:bg-white/5">{{ t("portfolioAgent.badgeSources") }}</span>
-        <span class="rounded bg-white px-2 py-1 dark:bg-white/5">{{ t("portfolioAgent.badgeNoBrowsing") }}</span>
-      </div>
-    </div>
-  </header>
+  <div class="pb-8 pt-10 text-center sm:pt-16">
+    <p class="text-xs font-semibold uppercase tracking-wide text-primary-700 dark:text-primary-300">
+      Ask Igal
+    </p>
+    <h1 class="mt-3 text-2xl font-semibold text-secondary-950 dark:text-white sm:text-3xl">
+      Ask about my experience, projects, and fit for your role
+    </h1>
+    <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
+      An AI assistant grounded in my portfolio — ask about a specific project, a technical
+      decision, or whether I'm a fit for a role you're hiring for.
+    </p>
+  </div>
 </template>
 
 <script setup lang="ts">

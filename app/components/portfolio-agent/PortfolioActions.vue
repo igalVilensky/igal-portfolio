@@ -1,5 +1,5 @@
 <template>
-  <div v-if="actions.length" class="mt-5 flex flex-wrap gap-2">
+  <div v-if="actions.length" class="flex flex-wrap gap-2">
     <component
       :is="action.type === 'internal' ? resolveComponent('NuxtLink') : 'a'"
       v-for="action in actions"

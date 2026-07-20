@@ -1,41 +1,30 @@
 <template>
   <div class="page-shell">
-    <div class="page-container">
-      <PortfolioAgentHero />
+    <div class="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl flex-col px-4 sm:px-6">
+      <PortfolioAgentHero v-if="!conversationItems.length" />
 
-      <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-        <div class="grid gap-6">
-          <PortfolioQuestionForm
-            :is-loading="isLoading"
-            :error-message="errorMessage"
-            :suggested-questions="currentSuggestions"
-            :mode="selectedMode"
-            @update:mode="setMode"
-            @ask="askQuestion"
-          />
+      <PortfolioConversation
+        :items="conversationItems"
+        :is-loading="isLoading"
+        class="flex-1"
+        @ask="askQuestion"
+      />
 
-          <PortfolioConversation
-            :items="conversationItems"
-            :is-loading="isLoading"
-            @ask="askQuestion"
-          />
-        </div>
-
-        <aside class="border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
-          <h2 class="text-sm font-semibold text-secondary-950 dark:text-white">
-            {{ t("portfolioAgent.sidebarTitle") }}
-          </h2>
-          <ul class="mt-4 space-y-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            <li>{{ t("portfolioAgent.sidebarRole") }}</li>
-            <li>{{ t("portfolioAgent.sidebarProject") }}</li>
-            <li>{{ t("portfolioAgent.sidebarTech") }}</li>
-          </ul>
-          <div class="mt-5 border-t border-secondary-200 pt-4 dark:border-dark-border">
-            <NuxtLink :to="localePath('/case-studies')" class="text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
-              {{ t("portfolioAgent.browseCaseStudies") }}
-            </NuxtLink>
-          </div>
-        </aside>
+      <div
+        class="sticky bottom-0 z-10"
+        :class="conversationItems.length
+          ? '-mx-4 border-t border-secondary-200/70 bg-white/90 px-4 pb-4 pt-3 backdrop-blur dark:border-dark-border/70 dark:bg-dark-surface/90 sm:-mx-6 sm:px-6'
+          : 'static mt-2'"
+      >
+        <PortfolioQuestionForm
+          :is-loading="isLoading"
+          :error-message="errorMessage"
+          :suggested-questions="currentSuggestions"
+          :mode="selectedMode"
+          :show-suggestions="!conversationItems.length"
+          @update:mode="setMode"
+          @ask="askQuestion"
+        />
       </div>
     </div>
   </div>
@@ -54,7 +43,6 @@ import type {
 import agentData from "../../content/portfolio-agent.json";
 
 const { locale, t } = useI18n();
-const localePath = useLocalePath();
 
 definePageMeta({
   layout: "default",
@@ -149,7 +137,7 @@ const askQuestion = async (rawQuestion: string) => {
   if (!question || isLoading.value) return;
 
   if (question.length > 500) {
-    errorMessage.value = t("portfolioAgent.errorTooLong");
+    errorMessage.value = "That question is a bit too long — try trimming it to 500 characters.";
     return;
   }
 
@@ -176,7 +164,7 @@ const askQuestion = async (rawQuestion: string) => {
     isLoading.value = false;
     await scrollToElement(`portfolio-answer-${item.id}`);
   } catch {
-    errorMessage.value = t("portfolioAgent.errorUnavailable");
+    errorMessage.value = "Something went wrong reaching the assistant. Please try again.";
     conversationItems.value = conversationItems.value.filter((entry) => entry.id !== item.id);
   } finally {
     isLoading.value = false;
