@@ -1,41 +1,97 @@
 # Current State
 
-## Project
+## Active snapshot — 2026-10-10
 
-Repository:
+Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. Preserve the restrained, document-like design.
 
-```text
-igalVilensky/igal-portfolio
-```
+Igal is an **AI Software Engineer at Agorando Technologies GmbH since August 2026**. Work areas include software engineering, internal business tools, enterprise system integrations, automation, AI-related workflows, requirements analysis, and operational process improvements. **AI Agents & Automations at WBS CODING SCHOOL was completed in July 2026.** These user-confirmed facts supersede the older education and job-search framing below.
 
-This is an existing Nuxt/Vue/TypeScript portfolio site. Refactor it in place. Do not create a new app or migrate frameworks unless explicitly requested.
+Agorando may be described only at this confirmed high level. Do not publish or invent private project details, code, internal architecture, operational metrics, employee/customer data, credentials, or confidential business figures. More detail requires confirmation of accuracy and public disclosure suitability.
 
-## Strategic Direction
+## Milestone 1 completed — documentation only
 
-The portfolio is being repositioned into a mature, recruiter-friendly product-engineering portfolio.
+Updated positioning, visual direction, project brief, implementation rules, site map, build order, current state, and next task. The active strategy supersedes conflicting historical recruiter-first, target-role, CV-led, and ongoing-WBS instructions. Application code, structured JSON, dependencies, routes, experiments, and deployment settings are unchanged. No commit or push was made.
 
-Core positioning:
+At completion of Milestone 1, the next task was factual content modernization. That work is now completed below; the former OpenMe/Decision Matrix AI case-study task remains deferred.
 
-> Full-stack software developer building SaaS products and practical AI-assisted workflows.
+## Milestone 2 completed — factual content modernization
 
-Igal should be positioned as a software developer with real product experience who is expanding into AI agents, automations, and AI-assisted workflows.
+Completed 2026-10-10. Updated `content/profile.json`, `content/experience.json`, and `content/professional-narrative.md`, with focused factual corrections in `content/faq.json` and `content/role-fit.json`.
 
-## Documentation Foundation
+* The profile and experience record now describe current employment as AI Software Engineer at Agorando Technologies GmbH since August 2026, using only confirmed high-level work areas. Employer location, stack, deliveries, and metrics were not inferred.
+* Flowplace GmbH is retained as previous employment in 2023–2025. Other historical experience entries are unchanged.
+* WBS AI Agents & Automations is completed education, July 2026, in profile, experience, narrative, and dependent FAQ/role-fit passages.
+* `current_focus` now holds professional focus areas. Active job availability was replaced with neutral contact wording; `target_roles` is an empty array.
+* The narrative distinguishes shipped professional work, deployed independent MVPs, current responsibilities, and exploratory tools. No independent initiative is labeled actively in progress without evidence; current maintenance/development status requires confirmation.
+* Technology descriptions distinguish documented professional Vue/Nuxt/TypeScript/API work from independent-project and coursework experience. No equal depth across technologies or employer-specific stack is implied.
+* Reviewed `content/agent-knowledge/personal-profile.json` and left it unchanged. Its compensation policy and personal visibility scope remain deferred to a coordinated assistant review; no sensitive values are reproduced here.
 
-These planning docs are present:
+### Compatibility decisions
 
-```text
-docs/strategy/positioning.md
-docs/design/visual-direction.md
-docs/codex/project-brief.md
-docs/codex/implementation-rules.md
-docs/product/site-map.md
-docs/product/build-order.md
-docs/codex/current-state.md
-docs/codex/next-task.md
-```
+Repository-wide consumer searches covered app code, server routes, and Netlify functions before edits. No JSON key or existing entry ID was removed. `current_course` retains its legacy name and shape but now has completed status and timeframe; `availability.summary` remains a string used by Home. `target_roles` remains an array so existing `.join()` and spread consumers work. Existing FAQ IDs/questions and role-fit structures remain compatible; their recruiting-oriented purpose is still a later migration.
 
-They define positioning, target roles, visual direction, implementation rules, site map, build order, state, and next tasks.
+Both assistant implementations currently reference `experienceData.entries[0]` as the source of a historical-work answer. Flowplace remains first to preserve that behavior; Agorando was added after existing work entries and before education. Array order is not a chronological contract. A future assistant refactor should select evidence by ID instead of index before reordering.
+
+The production assistant does not import canonical JSON directly: `netlify/functions/lib/portfolioKnowledge.js` contains generated data literals. Refreshed only its four changed exports (profile, experience, FAQ, role-fit) to prevent stale production facts. This necessary consumer-data synchronization supersedes the earlier proposed restriction on touching the Netlify snapshot; no handler, provider integration, or deployment configuration was changed. Other bundled exports are unchanged. Future content edits must keep this snapshot synchronized until generation is automated in a separately scoped task.
+
+### Verification
+
+* All top-level content JSON and the inspected personal-profile JSON parsed successfully.
+* Compatibility assertions passed for existing keys/types, IDs, untouched historical entries, preserved first experience entry, and empty target-role handling.
+* The four changed generated exports exactly match canonical JSON; unrelated exports and project/personal data are unchanged.
+* `npm run build` passed (Nuxt client and server production build). This was not a deployed-provider integration test or a separate TypeScript typecheck.
+* Content/documentation diff and whitespace review passed. No Vue, navigation, page, provider integration, dependency, or deployment changes; no commit or push.
+
+Next proposed task: **Milestone 3 — public factual copy consistency**, bounded in `docs/codex/next-task.md`. Stop after Milestone 2; the next task is not automatically authorized.
+
+## Current implementation observed in the repository
+
+This snapshot supersedes older implementation descriptions below where code has since evolved. It is based on source inspection, not a fresh runtime or deployment test.
+
+* Nuxt/Vue/TypeScript, Tailwind, i18n, color mode, and Netlify remain the foundation.
+* Home currently renders HomeHero, SelectedWork, and HomeContactCTA. It reads profile/project JSON; the assistant is no longer a homepage component.
+* The navbar currently links Home, Work, Experiments, Ask Igal, AI, and About. `/contact`, `/education`, and `/ai-compliance-compass` also exist.
+* `/ask-igal` uses `usePortfolioAgent`, the portfolio-agent components, `/api/portfolioAgent` in development, and `/.netlify/functions/portfolioAgent` in production. Server and Netlify knowledge implementations use structured content. The historical compact homepage guide is not the current implementation.
+* The assistant includes role-fit/recruiter questions and personal/compensation knowledge that need a coordinated purpose and visibility review. Do not copy sensitive knowledge into planning docs or assume that server-side storage prevents public disclosure.
+* Existing Work detail routes map Flowplace to `/case-studies/flowplace`, ARI Motors to `/case-studies/leanera`, LeanERA to `/case-studies/cashdo`, and Security Playground to `/case-studies/security`. OpenMe and Decision Matrix AI have no dedicated case-study pages in this checkout.
+* Experiments and the Security Playground remain interactive. Preserve all useful projects, including job-related tools as historical engineering work.
+* Localization exists in both `i18n/locales/` and `app/i18n/locales/`. Trace the active configuration and any duplication before later copy changes; preserve the fallback contract in `docs/i18n-content.md`.
+
+## Outdated public-facing content backlog
+
+Source-inspected inventory, updated after Milestone 2. Completed factual work is distinguished from remaining public-copy and assistant migrations.
+
+| Surface / source | Follow-up |
+| --- | --- |
+| `content/profile.json`, `content/experience.json` | Completed in Milestone 2; preserve compatibility keys until consumers migrate |
+| `content/professional-narrative.md` | Completed in Milestone 2; shipped work, MVPs, and exploration are distinguished without inventing in-progress status |
+| `content/faq.json`, `content/role-fit.json` | Dependent factual corrections completed in Milestone 2; legacy questions, role labels, and candidate-evaluation purpose remain for assistant review |
+| `app/components/home/HomeHero.vue`, `HomeContactCTA.vue`, `app/pages/index.vue`, locale home/SEO strings | Review rendered identity, CV emphasis, role-fit invitation, and contact wording after data updates (Milestone 3) |
+| `app/pages/about.vue`, `app/pages/ai-automation.vue` | Replace hardcoded ongoing-WBS/current-learning framing; reflect current employment and completed education; update AI-page assistant description and metadata (Milestone 3) |
+| `app/components/Contact.vue`, `app/pages/contact.vue` | Remove open-role/recruiting and unconfirmed freelance availability framing; preserve simple contact links (Milestone 3) |
+| `app/pages/education.vue`, `app/components/Education.vue`, education locale strings | Audit rendered completion facts and labels (Milestone 3) |
+| `i18n/locales/{en,de,ru}.json`, `app/i18n/locales/{en,de,ru}.json` | Review supported-language copy, metadata, availability, current-learning and assistant strings; determine active sources before editing (Milestones 3–4) |
+| `content/portfolio-agent.json`, `content/agent-knowledge/personal-profile.json` | Review recruiter description/prompts, compensation behavior, and public personal knowledge scope without reproducing sensitive values (Milestone 4) |
+| `app/pages/ask-igal.vue`, `app/components/portfolio-agent/`, `app/composables/usePortfolioAgent.ts`, `app/types/portfolio-agent.ts` | Review candidate-evaluation prompts, CV actions, labels, and contracts together (Milestone 4) |
+| `server/api/portfolioAgent.post.ts`, `netlify/functions/portfolioAgent.js`, `netlify/functions/lib/portfolioKnowledge.js` | Canonical factual data synchronized to the generated knowledge snapshot in Milestone 2. Runtime labels such as “Target roles”/“Availability,” localized prompts, role matching, compensation behavior, sources, and fallback still need coordinated review (Milestone 4) |
+| `content/projects.json`, `app/composables/useProjects.ts`, case-study pages | Later verify claims and source provenance before expanding case studies; existing metrics are not newly verified by this milestone (Milestone 5) |
+| `README.md`, linked CV/certificate assets | Audit currency in later copy work; do not infer that an existing certificate documents July 2026 WBS completion or fabricate replacement credentials |
+
+## Decisions still open
+
+* Assistant name, navigation prominence, and appropriate personal/compensation knowledge scope.
+* Whether AI remains a top-level navigation item or becomes a linked specialization page.
+* Contact prominence and any secondary CV placement.
+* Actual writing and selected personal context for Notes/About; Notes remains optional.
+* Final featured-work order and evidence for additional case studies. No Agorando case study is required; detailed employer work requires confirmation.
+
+## Milestone 1 verification
+
+Reviewed documentation against source files and the requested scope; checked the documentation diff for conflicting active guidance and whitespace. Only the eight requested Markdown files were changed. Application behavior is unchanged by this milestone. No build was run for documentation-only edits; build results below belong to historical implementation tasks.
+
+## Historical implementation record — not active instructions
+
+The remainder preserves previous completed work and its reported checks, including the earlier milestone numbering and June 2026 timestamps. Words such as “current,” “now,” and “next” below refer to the time of those reports. Earlier WBS dates, recruiter framing, homepage assistant descriptions, and navigation lists are superseded by the active snapshot and strategy above. Do not use these historical descriptions to restore obsolete requirements or override current facts.
 
 ## Content Source Of Truth Added
 
@@ -397,8 +453,6 @@ Verification:
 
 * `npm run build` passed after the Experiments workbench redesign.
 
-## Next Recommended Phase
-
 ## UI/UX Consistency Pass
 
 A controlled UI/UX improvement pass was applied across the portfolio to improve scanability, visual hierarchy, and perceived polish without changing the existing minimal, document-like aesthetic or altering existing interactive tool logic.
@@ -458,21 +512,7 @@ Verification:
 
 2026-06-16 after the UI/UX consistency pass.
 
-The next phase should be:
-
-> Add concise case-study pages for OpenMe and Decision Matrix AI.
-
-The visible public pages now follow the minimal portfolio direction: Home, Work, Experiments, AI, About, the global shell, and the first existing case-study detail pages. The strongest remaining content gap is that OpenMe and Decision Matrix AI are primary projects but do not yet have their own concise case-study pages.
-
-Focus areas:
-
-* create document-style case studies for OpenMe and Decision Matrix AI if no existing route conflicts exist
-* use only documented project facts from `app/composables/useProjects.ts`, `content/projects.json`, existing docs, and linked repositories if inspected
-* update project data links only after the new pages exist
-* preserve the existing legacy route mappings for Flowplace, ARI Motors, LeanERA, and Security Playground
-* avoid redesigning unrelated pages in the same task
-* avoid new providers, dependencies, ungrounded metrics, or invented claims
-* run the build after implementation
+Historical next-task proposal: OpenMe and Decision Matrix AI case-study pages were recommended but not implemented in this record. That proposal is deferred by the active roadmap; Milestone 2 now modernizes factual content first. Existing legacy route mappings remain preserved.
 
 ## Known Constraints
 

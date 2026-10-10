@@ -1,46 +1,35 @@
 {
   "identity": {
     "name": "Igal Vilensky",
-    "profession": "Full-Stack Software Developer",
+    "profession": "AI Software Engineer",
     "location": {
       "city": "Leipzig",
       "country": "Germany"
     },
     "based_in": "Leipzig, Germany"
   },
-  "headline": "Full-stack software developer building SaaS products and practical AI-assisted workflows.",
-  "summary": "Igal Vilensky is a full-stack software developer based in Leipzig, Germany. He builds SaaS products, frontend interfaces, API-connected workflows, and practical AI-assisted tools using TypeScript, Vue/Nuxt, React/Next, Node.js, Python/FastAPI, APIs, and automation platforms.",
-  "cv_summary": "Full-Stack Developer with 3+ years of experience in SaaS and web projects. Works with TypeScript, Vue.js/Nuxt.js, React.js, Node.js, and headless CMS to build user-friendly, scalable apps using Agile and test-driven methods.",
+  "headline": "Software engineering, AI, automation, and system integrations.",
+  "summary": "Igal Vilensky is a software engineer based in Leipzig, Germany, working as an AI Software Engineer at Agorando Technologies GmbH since August 2026. His current focus includes software development, enterprise integrations, internal applications, AI and process automation. His previous SaaS and web application experience includes Flowplace GmbH, LeanERA, and ARI Motors.",
+  "cv_summary": "Software engineer with professional SaaS and web application experience, currently at Agorando Technologies GmbH. Professional Vue/Nuxt, TypeScript, and API work is documented at Flowplace and LeanERA; React, Node.js, Python, and automation workflows also appear in independent projects and training. Experience varies by technology and context; this background is not a claim of equal professional depth across the stack.",
   "experience_level": {
     "label": "3+ years",
     "note": "The 3+ years claim appears in the existing CV and locale hero copy."
   },
   "current_focus": [
-    "AI agents",
-    "automations",
-    "practical AI-assisted product workflows",
-    "automation-ready web applications"
+    "Software development",
+    "Enterprise integrations",
+    "Internal applications",
+    "AI workflows",
+    "Process automation"
   ],
   "current_course": {
     "program": "AI Agents & Automations",
     "institution": "WBS CODING SCHOOL",
-    "timeframe": "2026 - Present",
-    "status": "current",
-    "note": "Timeframe provided by the user during the content accuracy correction pass."
+    "timeframe": "Completed July 2026",
+    "status": "completed",
+    "note": "Completion in July 2026 confirmed by the user in October 2026. The legacy current_course key is retained for existing consumers; this is completed education."
   },
-  "target_roles": [
-    "Full-Stack Software Developer",
-    "Frontend Developer",
-    "Vue.js Developer",
-    "React Developer",
-    "TypeScript Developer",
-    "Software Developer",
-    "AI Software Developer",
-    "AI Automation Developer",
-    "AI Workflow Developer",
-    "SaaS Developer",
-    "API Integration Developer"
-  ],
+  "target_roles": [],
   "core_technologies": [
     "TypeScript",
     "JavaScript",
@@ -104,11 +93,13 @@
     "certificate": "/certificate.pdf"
   },
   "availability": {
-    "summary": "Open to full-stack, frontend, SaaS, and AI automation-related software developer roles in Germany, Leipzig, hybrid, or remote EU contexts.",
-    "source_note": "Derived from the positioning and contact docs."
+    "summary": "For questions about my work, projects, or engineering ideas, get in touch by email or LinkedIn.",
+    "source_note": "Neutral contact wording; no availability for employment or freelance work is asserted."
   },
   "source_notes": [
-    "Profile facts come from the CV PDF, README, current portfolio copy, project docs, and positioning documentation.",
-    "No private or external profile data was added."
+    "Current role at Agorando Technologies GmbH since August 2026, Flowplace GmbH employment in 2023–2025, WBS completion in July 2026, Leipzig location, and current professional scope were confirmed by the user in October 2026.",
+    "Earlier career, project, language, and technology details are retained from existing repository sources; technology lists span professional work, independent projects, and education and do not imply equal experience.",
+    "Professional focus areas are recorded in current_focus. target_roles remains an empty array for assistant compatibility and does not represent a job search.",
+    "Only confirmed high-level Agorando work areas are included; no employer-specific technologies, internal project details, or outcomes are asserted."
   ]
 }

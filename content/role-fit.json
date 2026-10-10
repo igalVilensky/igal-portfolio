@@ -38,7 +38,7 @@
     },
     {
       "role_title": "Frontend Developer",
-      "fit_summary": "Igal's professional work includes responsive UI implementation, usability improvements, frontend workflows, and modern Vue/Nuxt and React/Next interfaces.",
+      "fit_summary": "Igal's professional frontend work includes Vue/Nuxt, TypeScript, responsive interfaces, usability improvements, and API-connected workflows. React/Next.js experience is also represented in independent projects and training, rather than being asserted here as equivalent employer experience.",
       "relevant_skills": [
         "TypeScript",
         "JavaScript",
@@ -195,7 +195,7 @@
     },
     {
       "role_title": "AI Software Developer",
-      "fit_summary": "Igal is expanding an existing software development background into AI-assisted product workflows through WBS CODING SCHOOL and AI-enabled portfolio projects.",
+      "fit_summary": "Igal is an AI Software Engineer at Agorando Technologies GmbH since August 2026, working across software development, enterprise integrations, internal applications, AI and process automation. He completed AI Agents & Automations at WBS CODING SCHOOL in July 2026; AI-enabled independent projects provide separate public examples.",
       "relevant_skills": [
         "LLM APIs",
         "Groq API",
@@ -225,7 +225,7 @@
     },
     {
       "role_title": "AI Automation Developer",
-      "fit_summary": "Igal's current direction is practical AI automation using APIs, webhooks, n8n, Make, and human-in-the-loop product workflows.",
+      "fit_summary": "Igal’s current professional scope includes AI and process automation at Agorando Technologies GmbH. His broader background includes APIs, automation coursework, and independent AI-assisted applications; specific tools are not attributed to his employer.",
       "relevant_skills": [
         "AI agents",
         "n8n",
@@ -242,7 +242,7 @@
         "ai-compliance-compass"
       ],
       "proof_points": [
-        "The WBS AI Agents & Automations course is documented as the current course.",
+        "Completed AI Agents & Automations at WBS CODING SCHOOL in July 2026; coursework included n8n, Make, APIs, webhooks, and Python automations.",
         "OpenMe and Decision Matrix AI show AI-assisted workflow thinking.",
         "Current portfolio docs explicitly position AI as an extension of existing software engineering."
       ],
@@ -349,7 +349,8 @@
     }
   ],
   "source_notes": [
-    "Role fit is based only on the target role docs, CV, structured project data, and existing repository content.",
-    "AI role fit is framed as current specialization and practical project direction, not as senior AI expert positioning."
+    "Legacy role labels and search keywords remain for assistant compatibility; they organize existing evidence and do not describe current job targets or availability.",
+    "Current employment and WBS completion were corrected from user-confirmed information in October 2026. Earlier project evidence is retained from repository sources.",
+    "Relevant skill lists span professional work, independent projects, and education; they are not a claim of equal professional experience or senior AI expertise."
   ]
 }

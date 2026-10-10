@@ -1,308 +1,49 @@
 # Build Order
 
-## Principle
+## Scope and historical continuity
 
-Do not ask Codex to rebuild the whole portfolio at once.
+Active roadmap, 2026-10-10, for the **Hybrid Personal Engineering Website**. Milestone numbering restarts for this repositioning. The original documentation/content foundation, visual simplification, case-study redesigns, interactive labs, and assistant work remain completed history in `docs/codex/current-state.md`; this roadmap does not ask to rebuild them.
 
-This project should be developed in controlled milestones.
+Each milestone is a separate bounded task. Future milestones are proposals, not authorization to implement them during documentation work.
 
-Each milestone should leave the site in a working state.
+## 1. Strategic repositioning — documentation only
 
-## Milestone 1: Documentation Foundation
+Update the eight strategy/design/product/Codex documents. Establish the current Agorando role, July 2026 WBS completion, confidentiality rules, proposed architecture, content backlog, and next task. Preserve implementation history and distinguish current code from intended direction.
 
-Goal:
+Exit: consistent documentation; no application, JSON, dependency, route, or deployment changes.
 
-Add the source-of-truth documentation that defines the portfolio strategy, visual direction, and Codex workflow.
+## 2. Factual content modernization — next
 
-Files:
+Correct the structured profile and experience, professional narrative, and directly dependent factual FAQ/role-fit statements. Add the confirmed current role and completed education, and replace asserted job availability with neutral contact language. Keep existing schemas and consumers working; inventory incompatible legacy fields rather than performing a broad migration.
 
-```text
-docs/strategy/positioning.md
-docs/design/visual-direction.md
-docs/codex/project-brief.md
-docs/codex/implementation-rules.md
-docs/product/site-map.md
-docs/product/build-order.md
-docs/codex/current-state.md
-docs/codex/next-task.md
-```
+Exact scope and checks: `docs/codex/next-task.md`. Do not redesign pages, rename assistant questions, or rewrite every project.
 
-Outcome:
+Exit: accurate core facts in the bounded content sources, preserved history, valid data, working build, and a clear list of stale hardcoded public surfaces still needing work.
 
-Codex can understand the intended direction before touching UI code.
+## 3. Public copy consistency
 
-Do not modify the actual site yet except for docs.
+Update Home, About, Contact, Education, and AI page copy, locale strings, SEO descriptions, and directly related labels to consume or accurately reflect the modernized facts. Review CV/certificate assets and README claims without inventing replacement documents. Keep layouts and routes stable.
 
-## Milestone 2: Content Source of Truth
+Exit: no outdated current-course or job-seeking claims on reviewed public surfaces in supported locales; ordinary links still work. Trace duplicate locale directories before editing and keep translations factually equivalent.
 
-Goal:
+## 4. Assistant purpose and knowledge review
 
-Create structured content files so the site and future AI guide can use reliable profile data.
+Reposition the existing `/ask-igal` experience as project/knowledge exploration. Coordinate suggested prompts, FAQ/role-fit compatibility, public knowledge, server and Netlify paths, localized copy, and fallback behavior. Review compensation answers, personal-data visibility, and CV emphasis against the new purpose. Decide name and placement here; preserve the implementation and existing provider.
 
-Possible files:
+Exit: useful work-oriented questions, accurate source-grounded answers or explicit unknowns, no confidential employer context, and checked development/production behavior without adding providers or agent actions.
 
-```text
-content/profile.json
-content/experience.json
-content/projects.json
-content/skills.json
-content/role-fit.json
-content/faq.json
-content/professional-narrative.md
-```
+## 5. Information architecture and selected work
 
-Content should be based on:
+Apply agreed navigation and homepage composition in a focused pass. Decide how AI, assistant, and Contact fit the proposed architecture while preserving routes and experiments. Then scope case-study additions separately, starting with the previously planned OpenMe and Decision Matrix AI pages if sufficient evidence exists.
 
-* Igal’s CV
-* transferable skills exercise
-* SMART goal
-* alternative job titles
-* professional narrative
-* existing project data
+Exit: clear paths to professional work and independent projects, documented decisions/trade-offs where evidence exists, no unsupported metrics or invented employer case studies.
 
-Outcome:
+## 6. Notes and final quality review — content dependent
 
-The portfolio has a clean data layer for profile, projects, role fit, and AI guide answers.
+Launch Notes only with meaningful authored material. Confirm selected personal context for About. Check accessibility, mobile interaction, links, localized metadata, and consistency as relevant to implemented changes. Preserve interactive experiments and restrained visual design.
 
-No real AI integration yet.
+Exit: a coherent, useful personal engineering site. Notes may remain deferred; publishing filler is not a completion requirement.
 
-## Milestone 3: Homepage Information Architecture
+## Prioritization rule
 
-Goal:
-
-Refactor the homepage structure around recruiter scanning.
-
-Target homepage sections:
-
-1. Hero
-2. Recruiter Snapshot
-3. Ask My Portfolio preview
-4. Selected Work
-5. How I Work
-6. AI / Automation Focus
-7. Experience Snapshot
-8. Contact CTA
-
-Outcome:
-
-Homepage structure matches the new positioning.
-
-Visuals can still be basic at this stage.
-
-Avoid heavy styling changes until structure is stable.
-
-## Milestone 4: Visual System Refactor
-
-Goal:
-
-Move the design toward a mature, calm product-engineering style.
-
-Tasks may include:
-
-* simplify color palette
-* reduce gradients
-* reduce flashy animations
-* improve typography
-* improve spacing
-* improve cards
-* improve buttons
-* improve mobile layout
-* remove or simplify visual noise
-
-Outcome:
-
-The site feels professional, readable, and recruiter-friendly.
-
-## Milestone 5: Selected Work Refactor
-
-Goal:
-
-Rework projects into a clearer proof hierarchy.
-
-Homepage featured projects:
-
-1. Flowplace Role Compass
-2. OpenMe
-3. Decision Matrix AI
-4. ARI Motors EV Portal
-
-Tasks:
-
-* update project cards
-* show role/proof/stack/outcome
-* reduce equal-weight project overload
-* separate featured work from lab/secondary projects
-* improve case-study links
-
-Outcome:
-
-Recruiters can quickly identify strongest proof.
-
-## Milestone 6: Case Study Pages
-
-Goal:
-
-Improve selected case studies for hiring managers and technical reviewers.
-
-Prioritize:
-
-1. Flowplace Role Compass
-2. OpenMe
-3. Decision Matrix AI
-4. ARI Motors EV Portal
-
-Each case study should include:
-
-* overview
-* context/problem
-* Igal’s role
-* tech stack
-* key contributions
-* outcome/proof
-* technical decisions
-* what it demonstrates for target roles
-
-Outcome:
-
-Selected projects become persuasive technical/professional proof.
-
-## Milestone 7: Static Ask My Portfolio MVP
-
-Goal:
-
-Add a safe, deterministic AI guide prototype without a real LLM.
-
-Features:
-
-* prompt chips
-* predefined answers
-* links to relevant sections/projects
-* clear “based on portfolio data” framing
-* no API key
-* no external requests
-* no hallucination risk
-
-Suggested questions:
-
-* What roles is Igal a good fit for?
-* Summarize Igal for a recruiter.
-* What is his frontend experience?
-* Does he have SaaS experience?
-* Show his strongest AI-related projects.
-* Which project should I review first?
-
-Outcome:
-
-The site demonstrates AI/product thinking while staying safe and simple.
-
-## Milestone 8: Structured AI Guide Content
-
-Goal:
-
-Connect the static AI guide to local structured content files.
-
-Use:
-
-```text
-content/profile.json
-content/projects.json
-content/experience.json
-content/skills.json
-content/role-fit.json
-content/faq.json
-```
-
-Outcome:
-
-The AI guide becomes data-driven and easier to maintain.
-
-Still no real LLM required.
-
-## Milestone 9: Optional LLM-Backed AI Guide
-
-Goal:
-
-Add optional real AI only after the static guide and structured content work.
-
-Architecture:
-
-* frontend calls Nuxt server route
-* server route reads structured content
-* server route calls AI provider if configured
-* API key stays server-side
-* fallback works without API key
-
-Rules:
-
-* no API keys in frontend
-* no external actions
-* no job applications
-* no email sending
-* no scheduling
-* no browsing
-* answer only from provided data
-* say when information is unavailable
-
-Outcome:
-
-A grounded “Ask My Portfolio” feature that demonstrates practical AI integration safely.
-
-## Milestone 10: Polish
-
-Goal:
-
-Prepare for public use and job applications.
-
-Tasks:
-
-* mobile QA
-* accessibility QA
-* SEO metadata
-* Open Graph image/text
-* performance cleanup
-* README update
-* remove unused code/assets
-* check broken links
-* check CV/contact links
-* verify deployment
-
-Outcome:
-
-Portfolio is ready to share with recruiters.
-
-## Suggested First Codex Task
-
-After all docs are created, the first Codex implementation task should be:
-
-```text
-Add the documentation foundation files exactly as provided. Do not change application code yet. Then create docs/codex/current-state.md and docs/codex/next-task.md summarizing that the documentation foundation is complete and recommending the next task: create structured content source files.
-```
-
-## What Not To Do First
-
-Do not start with:
-
-* real AI integration
-* RAG
-* MCP
-* redesigning all components
-* deleting old pages
-* framework migration
-* new repo
-* large animation system
-* new dependency stack
-* perfect case studies
-
-Start with strategy, structure, and content.
-
-## Success Criteria
-
-The build order is successful if:
-
-* every Codex task is narrow
-* the site remains working after each milestone
-* docs stay updated
-* design does not drift into flashiness
-* content remains truthful
-* AI guide evolves safely
-* recruiter usefulness remains the main priority
+Fix factual inaccuracies before changing presentation, assistant purpose, or adding pages. Preserve useful engineering work and historical facts. More detailed Agorando material requires confirmation of accuracy and suitability for public disclosure; it is not a prerequisite for any milestone.

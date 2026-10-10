@@ -2,7 +2,7 @@
   "entries": [
     {
       "id": "flowplace",
-      "organization": "Flowplace",
+      "organization": "Flowplace GmbH",
       "title": "Software Developer",
       "timeframe": "2023 - 2025",
       "location": "Leipzig",
@@ -24,7 +24,7 @@
         "CI/CD"
       ],
       "source_notes": [
-        "Role and timeframe were corrected from user-provided information during the content accuracy pass.",
+        "Employer name and 2023–2025 timeframe confirmed by the user in October 2026; the Software Developer title is retained from the earlier user-provided correction.",
         "Role Compass outcome comes from the project docs and existing case study page."
       ]
     },
@@ -108,18 +108,38 @@
       ]
     },
     {
+      "id": "agorando",
+      "organization": "Agorando Technologies GmbH",
+      "title": "AI Software Engineer",
+      "timeframe": "August 2026 - Present",
+      "location": "",
+      "type": "work",
+      "summary": "Current employment since August 2026, covering software development, enterprise integrations, internal applications, AI and process automation.",
+      "highlights": [
+        "Software engineering and internal business tools.",
+        "Enterprise system integrations.",
+        "AI-related workflows and process automation.",
+        "Requirements analysis and operational process improvements."
+      ],
+      "technologies": [],
+      "source_notes": [
+        "Current role, start month, and high-level work areas confirmed by the user in October 2026.",
+        "Employer location, specific technologies, project details, and outcomes are not specified. Leipzig is the personal location, not an asserted employer location."
+      ]
+    },
+    {
       "id": "wbs-ai-agents-automations",
       "organization": "WBS CODING SCHOOL",
-      "title": "AI Agents & Automations course",
-      "timeframe": "2026 - Present",
+      "title": "AI Agents & Automations",
+      "timeframe": "Completed July 2026",
       "location": "Online",
       "type": "education",
-      "summary": "Current course focused on strengthening software development experience with AI agents, automations, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
+      "summary": "Completed the AI Agents & Automations program in July 2026. The documented curriculum covered AI agents, automation, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
       "highlights": [
-        "Learning LLM workflows and prompt engineering.",
-        "Learning AI agents and automation workflows.",
-        "Working with n8n, Make, APIs, and webhooks.",
-        "Connecting Python automations and AI safety to existing full-stack development experience."
+        "Completed the program in July 2026.",
+        "Studied LLM workflows, prompt engineering, AI agents, and automation workflows.",
+        "Coursework included n8n, Make, APIs, and webhooks.",
+        "Covered Python automations and AI safety alongside an existing software development background."
       ],
       "technologies": [
         "LLM APIs",
@@ -133,7 +153,8 @@
         "AI safety"
       ],
       "source_notes": [
-        "Timeframe and location were corrected from user-provided information during the content accuracy pass."
+        "Completion in July 2026 confirmed by the user in October 2026; no exact start date is asserted.",
+        "Online location and curriculum topics are retained from existing repository content; coursework does not imply equivalent professional experience with each technology."
       ]
     },
     {

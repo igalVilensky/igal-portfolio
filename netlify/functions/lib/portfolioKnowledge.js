@@ -4,46 +4,35 @@
 export const profileData = {
   "identity": {
     "name": "Igal Vilensky",
-    "profession": "Full-Stack Software Developer",
+    "profession": "AI Software Engineer",
     "location": {
       "city": "Leipzig",
       "country": "Germany"
     },
     "based_in": "Leipzig, Germany"
   },
-  "headline": "Full-stack software developer building SaaS products and practical AI-assisted workflows.",
-  "summary": "Igal Vilensky is a full-stack software developer based in Leipzig, Germany. He builds SaaS products, frontend interfaces, API-connected workflows, and practical AI-assisted tools using TypeScript, Vue/Nuxt, React/Next, Node.js, Python/FastAPI, APIs, and automation platforms.",
-  "cv_summary": "Full-Stack Developer with 3+ years of experience in SaaS and web projects. Works with TypeScript, Vue.js/Nuxt.js, React.js, Node.js, and headless CMS to build user-friendly, scalable apps using Agile and test-driven methods.",
+  "headline": "Software engineering, AI, automation, and system integrations.",
+  "summary": "Igal Vilensky is a software engineer based in Leipzig, Germany, working as an AI Software Engineer at Agorando Technologies GmbH since August 2026. His current focus includes software development, enterprise integrations, internal applications, AI and process automation. His previous SaaS and web application experience includes Flowplace GmbH, LeanERA, and ARI Motors.",
+  "cv_summary": "Software engineer with professional SaaS and web application experience, currently at Agorando Technologies GmbH. Professional Vue/Nuxt, TypeScript, and API work is documented at Flowplace and LeanERA; React, Node.js, Python, and automation workflows also appear in independent projects and training. Experience varies by technology and context; this background is not a claim of equal professional depth across the stack.",
   "experience_level": {
     "label": "3+ years",
     "note": "The 3+ years claim appears in the existing CV and locale hero copy."
   },
   "current_focus": [
-    "AI agents",
-    "automations",
-    "practical AI-assisted product workflows",
-    "automation-ready web applications"
+    "Software development",
+    "Enterprise integrations",
+    "Internal applications",
+    "AI workflows",
+    "Process automation"
   ],
   "current_course": {
     "program": "AI Agents & Automations",
     "institution": "WBS CODING SCHOOL",
-    "timeframe": "2026 - Present",
-    "status": "current",
-    "note": "Timeframe provided by the user during the content accuracy correction pass."
+    "timeframe": "Completed July 2026",
+    "status": "completed",
+    "note": "Completion in July 2026 confirmed by the user in October 2026. The legacy current_course key is retained for existing consumers; this is completed education."
   },
-  "target_roles": [
-    "Full-Stack Software Developer",
-    "Frontend Developer",
-    "Vue.js Developer",
-    "React Developer",
-    "TypeScript Developer",
-    "Software Developer",
-    "AI Software Developer",
-    "AI Automation Developer",
-    "AI Workflow Developer",
-    "SaaS Developer",
-    "API Integration Developer"
-  ],
+  "target_roles": [],
   "core_technologies": [
     "TypeScript",
     "JavaScript",
@@ -107,12 +96,14 @@ export const profileData = {
     "certificate": "/certificate.pdf"
   },
   "availability": {
-    "summary": "Open to full-stack, frontend, SaaS, and AI automation-related software developer roles in Germany, Leipzig, hybrid, or remote EU contexts.",
-    "source_note": "Derived from the positioning and contact docs."
+    "summary": "For questions about my work, projects, or engineering ideas, get in touch by email or LinkedIn.",
+    "source_note": "Neutral contact wording; no availability for employment or freelance work is asserted."
   },
   "source_notes": [
-    "Profile facts come from the CV PDF, README, current portfolio copy, project docs, and positioning documentation.",
-    "No private or external profile data was added."
+    "Current role at Agorando Technologies GmbH since August 2026, Flowplace GmbH employment in 2023–2025, WBS completion in July 2026, Leipzig location, and current professional scope were confirmed by the user in October 2026.",
+    "Earlier career, project, language, and technology details are retained from existing repository sources; technology lists span professional work, independent projects, and education and do not imply equal experience.",
+    "Professional focus areas are recorded in current_focus. target_roles remains an empty array for assistant compatibility and does not represent a job search.",
+    "Only confirmed high-level Agorando work areas are included; no employer-specific technologies, internal project details, or outcomes are asserted."
   ]
 };
 
@@ -822,7 +813,7 @@ export const experienceData = {
   "entries": [
     {
       "id": "flowplace",
-      "organization": "Flowplace",
+      "organization": "Flowplace GmbH",
       "title": "Software Developer",
       "timeframe": "2023 - 2025",
       "location": "Leipzig",
@@ -844,7 +835,7 @@ export const experienceData = {
         "CI/CD"
       ],
       "source_notes": [
-        "Role and timeframe were corrected from user-provided information during the content accuracy pass.",
+        "Employer name and 2023–2025 timeframe confirmed by the user in October 2026; the Software Developer title is retained from the earlier user-provided correction.",
         "Role Compass outcome comes from the project docs and existing case study page."
       ]
     },
@@ -928,18 +919,38 @@ export const experienceData = {
       ]
     },
     {
+      "id": "agorando",
+      "organization": "Agorando Technologies GmbH",
+      "title": "AI Software Engineer",
+      "timeframe": "August 2026 - Present",
+      "location": "",
+      "type": "work",
+      "summary": "Current employment since August 2026, covering software development, enterprise integrations, internal applications, AI and process automation.",
+      "highlights": [
+        "Software engineering and internal business tools.",
+        "Enterprise system integrations.",
+        "AI-related workflows and process automation.",
+        "Requirements analysis and operational process improvements."
+      ],
+      "technologies": [],
+      "source_notes": [
+        "Current role, start month, and high-level work areas confirmed by the user in October 2026.",
+        "Employer location, specific technologies, project details, and outcomes are not specified. Leipzig is the personal location, not an asserted employer location."
+      ]
+    },
+    {
       "id": "wbs-ai-agents-automations",
       "organization": "WBS CODING SCHOOL",
-      "title": "AI Agents & Automations course",
-      "timeframe": "2026 - Present",
+      "title": "AI Agents & Automations",
+      "timeframe": "Completed July 2026",
       "location": "Online",
       "type": "education",
-      "summary": "Current course focused on strengthening software development experience with AI agents, automations, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
+      "summary": "Completed the AI Agents & Automations program in July 2026. The documented curriculum covered AI agents, automation, LLM workflows, prompt engineering, APIs, webhooks, and AI safety.",
       "highlights": [
-        "Learning LLM workflows and prompt engineering.",
-        "Learning AI agents and automation workflows.",
-        "Working with n8n, Make, APIs, and webhooks.",
-        "Connecting Python automations and AI safety to existing full-stack development experience."
+        "Completed the program in July 2026.",
+        "Studied LLM workflows, prompt engineering, AI agents, and automation workflows.",
+        "Coursework included n8n, Make, APIs, and webhooks.",
+        "Covered Python automations and AI safety alongside an existing software development background."
       ],
       "technologies": [
         "LLM APIs",
@@ -953,7 +964,8 @@ export const experienceData = {
         "AI safety"
       ],
       "source_notes": [
-        "Timeframe and location were corrected from user-provided information during the content accuracy pass."
+        "Completion in July 2026 confirmed by the user in October 2026; no exact start date is asserted.",
+        "Online location and curriculum topics are retained from existing repository content; coursework does not imply equivalent professional experience with each technology."
       ]
     },
     {
@@ -1157,7 +1169,7 @@ export const roleFitData = {
     },
     {
       "role_title": "Frontend Developer",
-      "fit_summary": "Igal's professional work includes responsive UI implementation, usability improvements, frontend workflows, and modern Vue/Nuxt and React/Next interfaces.",
+      "fit_summary": "Igal's professional frontend work includes Vue/Nuxt, TypeScript, responsive interfaces, usability improvements, and API-connected workflows. React/Next.js experience is also represented in independent projects and training, rather than being asserted here as equivalent employer experience.",
       "relevant_skills": [
         "TypeScript",
         "JavaScript",
@@ -1314,7 +1326,7 @@ export const roleFitData = {
     },
     {
       "role_title": "AI Software Developer",
-      "fit_summary": "Igal is expanding an existing software development background into AI-assisted product workflows through WBS CODING SCHOOL and AI-enabled portfolio projects.",
+      "fit_summary": "Igal is an AI Software Engineer at Agorando Technologies GmbH since August 2026, working across software development, enterprise integrations, internal applications, AI and process automation. He completed AI Agents & Automations at WBS CODING SCHOOL in July 2026; AI-enabled independent projects provide separate public examples.",
       "relevant_skills": [
         "LLM APIs",
         "Groq API",
@@ -1344,7 +1356,7 @@ export const roleFitData = {
     },
     {
       "role_title": "AI Automation Developer",
-      "fit_summary": "Igal's current direction is practical AI automation using APIs, webhooks, n8n, Make, and human-in-the-loop product workflows.",
+      "fit_summary": "Igal’s current professional scope includes AI and process automation at Agorando Technologies GmbH. His broader background includes APIs, automation coursework, and independent AI-assisted applications; specific tools are not attributed to his employer.",
       "relevant_skills": [
         "AI agents",
         "n8n",
@@ -1361,7 +1373,7 @@ export const roleFitData = {
         "ai-compliance-compass"
       ],
       "proof_points": [
-        "The WBS AI Agents & Automations course is documented as the current course.",
+        "Completed AI Agents & Automations at WBS CODING SCHOOL in July 2026; coursework included n8n, Make, APIs, webhooks, and Python automations.",
         "OpenMe and Decision Matrix AI show AI-assisted workflow thinking.",
         "Current portfolio docs explicitly position AI as an extension of existing software engineering."
       ],
@@ -1468,8 +1480,9 @@ export const roleFitData = {
     }
   ],
   "source_notes": [
-    "Role fit is based only on the target role docs, CV, structured project data, and existing repository content.",
-    "AI role fit is framed as current specialization and practical project direction, not as senior AI expert positioning."
+    "Legacy role labels and search keywords remain for assistant compatibility; they organize existing evidence and do not describe current job targets or availability.",
+    "Current employment and WBS completion were corrected from user-confirmed information in October 2026. Earlier project evidence is retained from repository sources.",
+    "Relevant skill lists span professional work, independent projects, and education; they are not a claim of equal professional experience or senior AI expertise."
   ]
 };
 
@@ -1478,7 +1491,7 @@ export const faqData = {
     {
       "id": "role-fit",
       "question": "What roles is Igal a good fit for?",
-      "answer": "Igal is a good fit for full-stack, frontend, Vue/Nuxt, React/Next, TypeScript, SaaS, API integration, and AI automation-related software developer roles. The strongest match is product-focused software work that combines frontend UX, APIs, SaaS workflows, and practical AI-assisted features.",
+      "answer": "Igal's professional focus is software development, enterprise integrations, internal applications, AI and process automation. He is an AI Software Engineer at Agorando Technologies GmbH since August 2026. His previous professional work includes Vue/Nuxt, TypeScript, SaaS features, and API integration; independent projects and training broaden that background. This describes his work, not availability for a new role.",
       "related_roles": [
         "Full-Stack Software Developer",
         "Frontend Developer",
@@ -1499,7 +1512,7 @@ export const faqData = {
     {
       "id": "recruiter-summary",
       "question": "Summarize Igal for a recruiter.",
-      "answer": "Igal Vilensky is a full-stack software developer based in Leipzig, Germany. He has professional experience building SaaS and web products with TypeScript, Vue/Nuxt, React/Next, Node.js, REST APIs, and headless CMS tools. He is currently extending that background through an AI Agents & Automations course at WBS CODING SCHOOL, with a focus on LLM workflows, AI agents, n8n, Make, APIs, webhooks, and AI safety.",
+      "answer": "Igal Vilensky is a software engineer based in Leipzig, Germany, working as an AI Software Engineer at Agorando Technologies GmbH since August 2026. His current focus includes software development, enterprise integrations, internal applications, AI and process automation. His previous SaaS and web application experience includes Flowplace GmbH, LeanERA, and ARI Motors. He completed AI Agents & Automations at WBS CODING SCHOOL in July 2026. Professional Vue/Nuxt and TypeScript experience is distinct from technologies explored in independent projects and training.",
       "related_roles": [
         "Full-Stack Software Developer",
         "Frontend Developer",
@@ -1545,7 +1558,7 @@ export const faqData = {
     {
       "id": "ai-automation-experience",
       "question": "What is his AI/automation experience?",
-      "answer": "Since 2026, Igal has been expanding his existing software development background through the AI Agents & Automations course at WBS CODING SCHOOL. The docs list LLM workflows, prompt engineering, AI agents, n8n, Make, Python automations, APIs, webhooks, and AI safety as current focus areas. Project proof includes Decision Matrix AI, OpenMe's AI-assisted submission summaries, and AI Compliance Compass.",
+      "answer": "Since August 2026, Igal has worked as an AI Software Engineer at Agorando Technologies GmbH, with a high-level scope that includes enterprise integrations, internal applications, AI and process automation. He completed AI Agents & Automations at WBS CODING SCHOOL in July 2026. Independent project examples include Decision Matrix AI, OpenMe’s AI-assisted submission summaries, and AI Compliance Compass; these are separate from his employer’s internal work.",
       "related_roles": [
         "AI Software Developer",
         "AI Automation Developer",
@@ -1576,7 +1589,7 @@ export const faqData = {
     {
       "id": "not-junior",
       "question": "What makes him different from a junior developer?",
-      "answer": "Igal is not positioned as someone entering tech from zero. The repository documents professional roles at Flowplace, LeanERA, and ARI Motors, including shipped SaaS features, responsive UI work, REST API integration, production bug-fix and release support in the positioning docs, and solo delivery of an EV comparison portal from concept to production in under three months.",
+      "answer": "Igal has professional software development experience at Flowplace GmbH (2023–2025), LeanERA, and ARI Motors, including SaaS features, responsive interfaces, API integration, and a production EV comparison portal. Since August 2026, he has worked as an AI Software Engineer at Agorando Technologies GmbH. These are documented work contexts rather than a claim of a particular seniority level.",
       "related_roles": [
         "Full-Stack Software Developer",
         "Software Developer",
@@ -1591,7 +1604,7 @@ export const faqData = {
     {
       "id": "technologies",
       "question": "What technologies does he use?",
-      "answer": "His core stack includes TypeScript, JavaScript, Vue, Nuxt, React, Next.js, Node.js, Express, Python, FastAPI, REST APIs, Tailwind CSS, Directus, MongoDB, PostgreSQL, Prisma, Firebase, Git, Docker, Netlify, Vercel, and Render. His current AI/automation stack includes LLM APIs, Groq API, prompt engineering, AI agents, n8n, Make, APIs, webhooks, and AI-assisted workflows.",
+      "answer": "His background includes Vue, Nuxt, TypeScript, React, Node.js, APIs, Python, and automation workflows. Professional Vue/Nuxt, TypeScript, and API work is documented at Flowplace and LeanERA. React/Next.js, Node.js, and Python/FastAPI also appear in independent projects such as OpenMe, while WBS coursework covered AI agents and automation tools. The depth and context of experience vary by technology; no specific employer stack is asserted for Agorando.",
       "related_roles": [
         "TypeScript Developer",
         "Full-Stack Software Developer",
@@ -1606,7 +1619,7 @@ export const faqData = {
     {
       "id": "location",
       "question": "Where is he based?",
-      "answer": "Igal is based in Leipzig, Germany. The portfolio positioning is aimed at Germany, Leipzig, hybrid, and remote EU contexts.",
+      "answer": "Igal is based in Leipzig, Germany.",
       "related_roles": [
         "Full-Stack Software Developer",
         "Frontend Developer"
@@ -1623,7 +1636,7 @@ export const faqData = {
     {
       "id": "wbs-fit",
       "question": "How does the WBS AI Agents & Automations course fit into his profile?",
-      "answer": "The WBS AI Agents & Automations course, running from 2026 to present, is framed as a continuation of Igal's existing software development profile, not a career reset. It strengthens his product engineering background with LLM workflows, prompt engineering, AI agents, n8n, Make, Python automations, APIs, webhooks, and AI safety.",
+      "answer": "Igal completed AI Agents & Automations at WBS CODING SCHOOL in July 2026. The documented curriculum covered LLM workflows, prompt engineering, AI agents, n8n, Make, Python automations, APIs, webhooks, and AI safety. It complements his software engineering background; coursework is distinct from shipped professional work.",
       "related_roles": [
         "AI Software Developer",
         "AI Automation Developer",
@@ -1644,8 +1657,9 @@ export const faqData = {
     }
   ],
   "source_notes": [
-    "FAQ answers are written for a future deterministic portfolio guide and use only repository and documentation facts.",
-    "Where exact dates or metrics are missing, the answer avoids adding them."
+    "Employment and education facts were updated from user-confirmed information in October 2026; existing project evidence and links are preserved.",
+    "Legacy question IDs, question wording, and related-role fields remain compatible with the existing assistant pending its coordinated purpose review. They do not establish job availability.",
+    "Professional work, independent projects, and coursework provide different kinds of evidence; technology lists do not imply equal professional depth."
   ]
 };
 

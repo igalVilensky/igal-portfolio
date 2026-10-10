@@ -1,423 +1,57 @@
 # Codex Implementation Rules
 
-## Purpose
+## Authority and work style
 
-These rules guide all Codex work on Igal Vilensky’s portfolio refactor.
+Active rules, 2026-10-10. Build a **Hybrid Personal Engineering Website** according to `docs/strategy/positioning.md`. Latest user instructions take precedence. These active documents supersede conflicting historical job-search, recruiter-first, target-role, CV-driven, and ongoing-course requirements.
 
-The goal is a controlled rebuild of the existing portfolio into a mature, recruiter-friendly developer portfolio aligned with Igal’s current positioning:
+Read the strategy, visual direction, project brief, site map, build order, current state, and next task before relevant changes. Work in small milestones with explicit scope. Preserve useful history; label superseded instructions rather than treating them as current tasks.
 
-> Full-stack software developer building SaaS products and practical AI-assisted workflows.
+## Milestone 1 boundaries
 
-Codex must follow these rules unless the user explicitly changes them.
+Modify only the eight requested documentation files. Do not change Vue components, application behavior, structured JSON, dependencies, framework, routes, experiments, or deployment. Do not commit or push automatically. A future roadmap item is not authorization to implement it in this milestone.
 
-## Work Style
+## Factual content
 
-Do not build the whole site at once.
+* Current role: AI Software Engineer, Agorando Technologies GmbH, since August 2026.
+* WBS CODING SCHOOL, AI Agents & Automations: completed July 2026.
+* Preserve previous professional history, including Flowplace, LeanERA, and ARI Motors.
+* Use user-confirmed facts and traceable project evidence. Older repo copy and CV claims may be stale; repeated claims are not independent verification.
+* Do not infer employer technologies, ownership, business impact, user counts, credentials, course start dates, or availability for work.
+* Record unresolved facts as **Requires confirmation** in internal planning. Omit unsupported public assertions; do not display invented filler.
+* Keep translations factually equivalent and follow `docs/i18n-content.md`. Preserve content contracts until consumers can be changed together in an authorized task.
 
-Work in small, scoped milestones.
+## Confidentiality
 
-Each task should have:
+Agorando may be described using only the confirmed high-level role and work areas: software engineering, internal business tools, enterprise system integrations, automation, AI-related workflows, requirements analysis, and operational process improvements.
 
-* a clear objective
-* a small file/change scope
-* no unrelated refactors
-* a clear before/after purpose
-* updated documentation when meaningful
+Do not publish or invent private project details, source code, internal architecture, operational metrics, employee data, credentials, customer information, or confidential business figures. Apply this to public copy, assets, metadata, assistant knowledge, prompts, and downloadable documents. Server-side data is still potentially public if the assistant can answer from it.
 
-Prefer controlled progress over big rewrites.
+More detailed employer material requires confirmation of factual accuracy and public disclosure suitability. Do not place private details into a public repository as confirmation placeholders. Preserve existing personal-information boundaries; expanded personal storytelling requires confirmed publishable material.
 
-## Source of Truth
+## Presentation
 
-Before making content, design, or structure changes, read the relevant docs:
+Show work and engineering thinking through context, problems, contribution, approach, trade-offs, outcomes, and limitations. Keep AI important without making it the entire identity. Use a restrained personal voice and simple contact links. Do not prescribe recruiter snapshots, candidate evaluation, target-role promotion, hiring CTAs, or active-job-search messaging.
 
-```text
-docs/strategy/positioning.md
-docs/design/visual-direction.md
-docs/codex/project-brief.md
-docs/codex/implementation-rules.md
-docs/product/site-map.md
-docs/product/build-order.md
-docs/codex/current-state.md
-docs/codex/next-task.md
-```
+Preserve the document-like design and shared primitives. Avoid generic SaaS landing pages, decorative AI imagery, large badge collections, flashy motion, and promotional panels. Notes are optional until meaningful content exists.
 
-If a requested change conflicts with the docs, follow the user’s latest instruction and update the docs to reflect the new decision.
+## Existing code and routes
 
-## Existing App
+Preserve Nuxt/Vue/TypeScript, Tailwind, i18n, color mode, static generation, and Netlify. No new app, framework migration, dependencies, providers, deployment changes, or route deletion without explicit task scope.
 
-This is an existing Nuxt/Vue/TypeScript portfolio.
+Keep legacy case-study mappings intact; see `docs/product/site-map.md`. Keep experiments interactive, including Security Playground. Do not remove a useful project merely because its subject relates to jobs or recruiting.
 
-Do not start a new app.
+For future authorized changes, prefer small readable typed components, shared layout primitives, existing data sources, and accessible semantic HTML. Avoid unrelated refactors and duplicated facts. Preserve keyboard navigation, focus visibility, contrast, mobile usability, reduced motion, and clear loading/error states.
 
-Preserve the existing project unless explicitly asked to change architecture.
+## Assistant
 
-Current foundation to preserve unless instructed otherwise:
+Preserve `/ask-igal` and its implementation. Review its purpose as project/knowledge exploration, with sourced answers and explicit unknown handling. Do not rebuild an already implemented feature from historical MVP instructions.
 
-* Nuxt
-* Vue
-* TypeScript
-* Tailwind CSS
-* static generation
-* Netlify deployment
-* existing project/content data where still useful
+Use only approved public knowledge. Do not invent facts, disclose private context, impersonate Igal, promise hiring outcomes, or perform external actions such as sending messages or scheduling. Keep keys server-side and preserve safe unavailable-provider behavior. No new RAG infrastructure, MCP, autonomous actions, or providers are required for this repositioning.
 
-## Design Rules
+Recruiter prompts, role-fit data, compensation behavior, personal knowledge visibility, and CV actions need coordinated review across consumers before changing contracts. They are legacy surfaces, not current strategic requirements.
 
-The design must follow:
+## Verification and handoff
 
-```text
-docs/design/visual-direction.md
-```
+For documentation-only changes, review the full diff for contradictions, check links/paths and whitespace, and verify only intended Markdown files changed. Do not claim an application build was run if it was not.
 
-Core design direction:
-
-* clean
-* mature
-* calm
-* readable
-* recruiter-friendly
-* product-minded
-* case-study-driven
-* lightly technical
-* not flashy
-
-Avoid:
-
-* loud gradients
-* neon/cyberpunk AI styling
-* excessive animation
-* large decorative effects
-* generic AI portfolio aesthetics
-* visual clutter
-* playful chatbot mascot design
-* overdesigned cards
-* dense skill clouds
-
-Use motion sparingly and respect reduced-motion preferences.
-
-## Content Rules
-
-Do not invent facts about Igal.
-
-Only use information available in:
-
-* existing portfolio repo
-* CV content
-* career positioning docs
-* project data
-* user-provided details
-
-If information is missing, leave a placeholder or ask the user instead of inventing.
-
-Do not exaggerate experience.
-
-Avoid language like:
-
-* AI expert
-* guru
-* ninja
-* visionary
-* rockstar
-* revolutionary
-* cutting-edge without proof
-* world-class
-* thought leader
-
-Prefer grounded language:
-
-* full-stack software developer
-* SaaS product development
-* frontend development
-* API integration
-* AI-assisted workflows
-* automation-ready applications
-* product-focused engineering
-* human-in-the-loop AI features
-
-## Positioning Rules
-
-Igal should not be positioned as someone entering tech from zero.
-
-He should be positioned as:
-
-> A software developer with real product experience, now expanding into AI agents, automations, and AI-assisted workflows.
-
-The site should support these target roles:
-
-* Full-Stack Software Developer
-* Frontend Developer
-* Vue.js Developer
-* React Developer
-* TypeScript Developer
-* AI Software Developer
-* AI Automation Developer
-* AI Workflow Developer
-* SaaS Developer
-* API Integration Developer
-
-## Homepage Rules
-
-The homepage must answer these questions quickly:
-
-1. Who is Igal?
-2. What roles is he relevant for?
-3. What stack does he use?
-4. What has he built?
-5. What is his AI/automation direction?
-6. How can someone contact him or view proof?
-
-Do not overload the homepage.
-
-Prioritize:
-
-* clear hero
-* recruiter snapshot
-* selected case studies
-* AI/automation focus
-* experience summary
-* contact CTA
-
-## Project Rules
-
-Featured homepage projects should be limited and strategic.
-
-Preferred featured projects:
-
-1. Flowplace Role Compass
-2. OpenMe
-3. Decision Matrix AI
-4. ARI Motors EV Portal
-
-Secondary projects can live on a broader projects or lab page.
-
-Each featured project should explain:
-
-* what it is
-* why it matters
-* Igal’s role
-* technologies used
-* outcome or proof
-* relevance to target roles
-
-Do not present every project with equal weight.
-
-## AI Guide Rules
-
-The AI guide is an optional enhancement, not the core website.
-
-Preferred name:
-
-* Ask My Portfolio
-
-Acceptable alternatives:
-
-* Portfolio Guide
-* Recruiter Guide
-* AI Portfolio Guide
-
-The AI guide must feel like a grounded professional assistant or smart search layer, not a gimmick.
-
-It should help recruiters ask questions such as:
-
-* What roles is Igal a good fit for?
-* Summarize Igal for a recruiter.
-* What is his frontend experience?
-* Does he have SaaS experience?
-* Show his strongest AI-related projects.
-* Which project should I review first?
-
-## AI Guide MVP Rules
-
-Do not start with a full LLM integration.
-
-Build in phases:
-
-### Phase 1
-
-Static or deterministic AI guide prototype.
-
-* suggested questions
-* predefined grounded answers
-* no external API keys
-* no LLM dependency
-* works on static deployment
-
-### Phase 2
-
-Structured local content layer.
-
-* profile data
-* projects data
-* experience data
-* skills data
-* role-fit data
-* FAQ data
-
-### Phase 3
-
-Optional server-side LLM route.
-
-* API key stays server-side
-* model receives selected structured context
-* safe fallback when API key is missing
-* assistant says when information is unavailable
-
-Do not add RAG, vector database, MCP, or autonomous agent behavior in MVP.
-
-## AI Safety Rules
-
-The AI guide must not:
-
-* invent facts
-* claim private information
-* apply to jobs
-* send emails
-* schedule meetings
-* browse the web
-* expose API keys
-* pretend to be Igal
-* make hiring guarantees
-* collect sensitive information unnecessarily
-
-The AI guide should:
-
-* answer only from portfolio data
-* be transparent about limitations
-* suggest relevant sections/projects
-* be concise by default
-* include contact links when appropriate
-* say when something is not available
-
-## Code Rules
-
-Prefer:
-
-* readable components
-* data-driven content
-* small components
-* clear names
-* TypeScript types where helpful
-* accessible HTML
-* reusable layout primitives
-* mobile-first UI
-* simple state management
-* minimal dependencies
-
-Avoid:
-
-* unnecessary libraries
-* overengineering
-* huge components
-* deeply nested logic
-* content hardcoded across many components
-* framework migration
-* duplicated project data
-* unused files
-* magic values without explanation
-
-## Styling Rules
-
-Use Tailwind consistently.
-
-Prefer:
-
-* consistent spacing scale
-* restrained colors
-* semantic component classes if already present
-* accessible contrast
-* readable text sizes
-* visible focus states
-
-Avoid:
-
-* too many one-off colors
-* excessive shadows
-* excessive rounded corners
-* heavy glassmorphism
-* visual effects that compete with content
-
-## Accessibility Rules
-
-Every change should preserve or improve accessibility.
-
-Requirements:
-
-* semantic headings
-* proper link/button usage
-* keyboard-accessible interactions
-* visible focus states
-* alt text for meaningful images
-* readable contrast
-* reduced-motion support
-* no important content available only on hover
-
-## Mobile Rules
-
-Mobile is critical.
-
-Recruiters may open the site from LinkedIn or email on mobile.
-
-Mobile requirements:
-
-* no horizontal scrolling
-* readable hero
-* clear CTAs
-* concise project cards
-* easy navigation
-* fast access to contact/CV
-* AI guide must not dominate screen space
-
-## Documentation Rules
-
-After meaningful implementation work, update:
-
-```text
-docs/codex/current-state.md
-```
-
-Include:
-
-* what changed
-* relevant files
-* what works
-* known limitations
-* next recommended step
-
-When appropriate, update:
-
-```text
-docs/codex/next-task.md
-```
-
-Keep docs concise and useful.
-
-## Commit / Task Hygiene
-
-Each Codex task should be narrow.
-
-Good task examples:
-
-* Add initial documentation files.
-* Refactor homepage hero according to positioning docs.
-* Create recruiter snapshot component.
-* Replace project card layout for featured projects.
-* Add static Ask My Portfolio component.
-* Create structured profile content file.
-
-Bad task examples:
-
-* Redesign the whole website.
-* Make it modern.
-* Add AI everywhere.
-* Improve everything.
-* Rebuild all pages.
-
-## Final Rule
-
-When in doubt, choose:
-
-* clarity over cleverness
-* proof over decoration
-* maturity over flashiness
-* recruiter usefulness over personal expression
-* grounded AI over AI hype
+For later content/code changes, validate changed data and its consumers, run appropriate existing checks/build, and report blockers. Preserve previously recorded checks as historical evidence, not verification of new changes. Update current state and next task after meaningful work. Do not automatically commit or push.

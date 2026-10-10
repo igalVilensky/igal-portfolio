@@ -1,487 +1,55 @@
 # Site Map
 
-## Purpose
+Active proposal, 2026-10-10, for the **Hybrid Personal Engineering Website**. This supersedes earlier recruiter journeys and CV-led page requirements. No navigation or route change is implemented in Milestone 1.
 
-This document defines the target structure for the repositioned portfolio.
+## Proposed information architecture
 
-The portfolio should be simple, recruiter-friendly, and easy to scan.
+| Area | Purpose | Route / implementation status |
+| --- | --- | --- |
+| Home | Professional identity, current focus, selected work, short personal introduction | Existing `/`; copy and composition changes are later work |
+| Work | Professional case studies and significant independent projects; problems, approaches, trade-offs, outcomes | Preserve `/case-studies` and existing detail routes |
+| Notes | Technical writing, engineering observations, ideas, and learning | Optional future `/notes`; no page or navigation item until meaningful content exists |
+| Experiments | Interactive tools, prototypes, and smaller projects | Preserve `/experiments` and linked tool routes |
+| About | Professional background and selected personal context; current Agorando role and completed WBS education | Existing `/about` |
+| Contact | Simple email and profile links without inferred job/freelance availability | Existing `/contact`; future navigation placement to decide |
 
-The goal is not to create many pages. The goal is to create a clear path from first impression to proof.
+The intended core navigation follows these areas, with Notes omitted until ready. Work retains its existing URL; a `/work` migration is unnecessary. This is an information architecture proposal, not a mandate for six equal top-level links.
 
-## Primary User Journeys
+## Current routes and features to preserve
 
-### Recruiter / HR Screener
+Current navbar: Home, Work, Experiments, Ask Igal, AI, About. These link to `/`, `/case-studies`, `/experiments`, `/ask-igal`, `/ai-automation`, and `/about`. Contact is also accessible through existing links.
 
-Goal: quickly understand if Igal fits the role.
+* `/ask-igal`: existing assistant. Review as project/knowledge exploration; final label and navigation prominence remain undecided. Do not delete its implementation.
+* `/ai-automation`: existing specialization page. Keep accessible while deciding whether it remains a navigation item or is linked within Work/About. AI remains a specialization rather than the whole identity.
+* `/ai-compliance-compass`: preserve the interactive tool and its existing access paths.
+* `/education`: preserve the existing route; correct its educational facts in later content work. About can summarize education without deleting this page.
+* `/experience`: previously removed; do not recreate it as part of this milestone. Structured experience remains useful for About, Work, and the assistant.
 
-Expected path:
+Routes listed here are base paths; preserve the existing locale routing behavior.
 
-1. Land on homepage.
-2. Read hero positioning.
-3. Scan recruiter snapshot.
-4. Review selected work.
-5. Check skills/experience.
-6. Open CV, LinkedIn, GitHub, or contact.
+## Existing case-study mappings
 
-### Hiring Manager / Engineering Manager
+| Route | Actual content |
+| --- | --- |
+| `/case-studies/flowplace` | Flowplace Role Compass |
+| `/case-studies/leanera` | ARI Motors EV Portal; legacy path |
+| `/case-studies/cashdo` | LeanERA Digital Transition; legacy path |
+| `/case-studies/security` | Interactive Security Playground |
 
-Goal: evaluate technical/product credibility.
+Do not rename legacy paths during repositioning. OpenMe and Decision Matrix AI remain useful featured projects without dedicated detail pages; their previously planned case studies are deferred until factual modernization is complete.
 
-Expected path:
+## Reading paths and content hierarchy
 
-1. Land on homepage.
-2. Review selected projects.
-3. Open one or two case studies.
-4. Check stack, role, architecture, and outcomes.
-5. Check GitHub links.
-6. Contact or save profile.
+* A new visitor reads Home, explores selected Work, and finds About or Contact.
+* An engineer reads a case study for context, decisions, trade-offs, limitations, and available source/demo links.
+* A tool user goes directly to Experiments and can explore related projects.
+* A returning reader can visit Notes once actual writing exists.
+* Any visitor may use the optional assistant to locate documented work; ordinary navigation must remain sufficient.
 
-### Technical Interviewer
+Home should favor selected work over a résumé timeline or skills inventory. Work can retain Flowplace Role Compass, OpenMe, Decision Matrix AI, and ARI Motors EV Portal as its initial featured set. Independent applications and smaller experiments remain discoverable. About carries concise professional history and confirmed personal context.
 
-Goal: understand technical depth and project ownership.
+Case studies should explain problem, role, approach, trade-offs, and documented outcomes or limitations. Do not invent missing sections. Agorando has only a high-level role description at present; a detailed employer case study is not assumed or required.
 
-Expected path:
+## Decisions deferred
 
-1. Open selected work or projects page.
-2. Review case studies.
-3. Check implementation details and GitHub links.
-4. Review AI/automation focus.
-5. Ask AI guide targeted questions if available.
-
-### Busy Visitor
-
-Goal: get the 30-second summary.
-
-Expected path:
-
-1. Land on homepage.
-2. Read hero.
-3. Use “Ask My Portfolio” or recruiter snapshot.
-4. Click CV or contact.
-
-## Target Navigation
-
-Primary navigation:
-
-```text
-Igal Vilensky
-Work
-Experience
-AI Guide
-Contact
-```
-
-Optional external actions:
-
-```text
-CV
-GitHub
-LinkedIn
-```
-
-Keep navigation minimal.
-
-## Target Pages
-
-### 1. Home
-
-Route:
-
-```text
-/
-```
-
-Purpose:
-
-The main recruiter-facing landing page.
-
-Sections:
-
-1. Hero
-2. Recruiter Snapshot
-3. Ask My Portfolio preview
-4. Selected Work
-5. How I Work
-6. AI / Automation Focus
-7. Experience Snapshot
-8. Contact CTA
-
-The homepage should be strong enough that many visitors do not need to open other pages.
-
-### 2. Work / Case Studies
-
-Route:
-
-```text
-/work
-```
-
-or preserve existing route:
-
-```text
-/case-studies
-```
-
-Purpose:
-
-Show selected professional and portfolio work in a structured way.
-
-Recommended approach:
-
-Use `/case-studies` if it already exists and works. Avoid unnecessary route migration unless useful.
-
-Sections:
-
-1. Page intro
-2. Featured professional case studies
-3. AI / automation projects
-4. Additional projects / lab
-5. CTA to contact or ask AI guide
-
-Featured work:
-
-* Flowplace Role Compass
-* OpenMe
-* Decision Matrix AI
-* ARI Motors EV Portal
-
-Secondary/lab work:
-
-* AI Compliance Compass
-* User Management App
-* MindQ Lab
-* PageScope
-* i18n Linter CLI
-* Security Playground
-* Family Space
-* other older experiments only if still relevant
-
-### 3. Individual Case Study Pages
-
-Routes can remain existing routes where available.
-
-Possible target routes:
-
-```text
-/case-studies/flowplace
-/case-studies/openme
-/case-studies/decision-matrix-ai
-/case-studies/ari-motors
-```
-
-Purpose:
-
-Provide deeper proof for hiring managers and technical reviewers.
-
-Each case study should include:
-
-1. Summary
-2. Problem/context
-3. Igal’s role
-4. Tech stack
-5. Key features or contributions
-6. Outcome/proof
-7. Technical decisions
-8. What it demonstrates for target roles
-9. Links if available
-
-Not every project needs a full case study. Prioritize quality over quantity.
-
-### 4. Experience Content
-
-Standalone route:
-
-```text
-None
-```
-
-Experience should not be a separate public page in the current portfolio structure. Keep it as structured source content for About, Work/case-study context, and Ask My Portfolio.
-
-Content:
-
-* Flowplace
-* LeanERA
-* ARI Motors
-* Myfxbook/Cashdo
-* WBS Coding School AI Agents & Automations
-* DCI Web & Software Development
-
-This should not duplicate the CV exactly. It should frame experience for recruiter scanning.
-
-### 5. AI Guide
-
-Route:
-
-```text
-/ai-guide
-```
-
-Optional for MVP. The first version can be a homepage component only.
-
-Purpose:
-
-Let visitors ask or select recruiter-focused questions about Igal.
-
-MVP version:
-
-* suggested prompt buttons
-* predefined grounded answers
-* links to relevant sections/projects
-* no real LLM required
-
-Later version:
-
-* server-side AI route
-* grounded structured context
-* optional provider key
-* fallback if unavailable
-
-### 6. Contact
-
-Route:
-
-```text
-/contact
-```
-
-Purpose:
-
-Make it easy to contact Igal or open external profiles.
-
-Content:
-
-* email
-* LinkedIn
-* GitHub
-* location
-* target role availability
-* CV download/link if available
-* short note about open roles
-
-Avoid overcomplication.
-
-## Homepage Detail
-
-### Section 1: Hero
-
-Goal:
-
-Explain the positioning immediately.
-
-Should include:
-
-* name
-* professional title
-* clear headline
-* short supporting paragraph
-* role tags
-* primary CTA: View selected work
-* secondary CTA: Download/View CV
-* tertiary CTA: Ask My Portfolio
-
-Suggested headline:
-
-```text
-Full-stack developer building SaaS products and AI-assisted workflows.
-```
-
-Suggested supporting copy:
-
-```text
-I’m a software developer based in Leipzig, working with TypeScript, Vue/Nuxt, React/Next, Node.js, APIs, and practical AI automation. I help product teams turn ambiguous ideas into reliable, user-focused software.
-```
-
-### Section 2: Recruiter Snapshot
-
-Goal:
-
-Give fast structured facts.
-
-Possible fields:
-
-* Location: Leipzig, Germany
-* Target roles: Full-stack, Frontend, AI Automation
-* Core stack: TypeScript, Vue/Nuxt, React/Next, Node.js, APIs
-* AI focus: LLM APIs, n8n, Make, webhooks, AI agents
-* Languages: English C1, German B2, Hebrew/Russian native
-* Current: WBS AI Agents & Automations
-
-### Section 3: Ask My Portfolio Preview
-
-Goal:
-
-Show AI capability and help visitors navigate.
-
-Should include:
-
-* short intro
-* suggested questions
-* answer preview or interactive panel
-* clear limitation text
-
-Possible intro:
-
-```text
-Short on time? Ask a grounded portfolio guide about my experience, projects, stack, or role fit.
-```
-
-### Section 4: Selected Work
-
-Goal:
-
-Show strongest proof.
-
-Display 3–4 projects maximum on homepage.
-
-Each card should include:
-
-* project name
-* type/category
-* short description
-* role/proof
-* stack
-* why it matters
-* link to case study or GitHub
-
-### Section 5: How I Work
-
-Goal:
-
-Show product engineering maturity.
-
-Possible flow:
-
-```text
-Ambiguous idea
-→ product/user flow
-→ technical implementation
-→ testing/release support
-→ iteration
-```
-
-This section should connect transferable skills to software work.
-
-### Section 6: AI / Automation Focus
-
-Goal:
-
-Explain the current shift without making it sound like a restart.
-
-Content should show that AI is an extension of the existing software profile.
-
-Include:
-
-* LLM API integration
-* prompt/product UX
-* AI agents
-* n8n / Make
-* APIs / webhooks
-* human-in-the-loop workflows
-* AI safety
-
-### Section 7: Experience Snapshot
-
-Goal:
-
-Show professional credibility.
-
-Use concise timeline/cards.
-
-Do not overload.
-
-### Section 8: Contact CTA
-
-Goal:
-
-Make next action obvious.
-
-Possible copy:
-
-```text
-Looking for a full-stack, frontend, or AI automation developer?
-I’m open to product-focused software roles in Germany, Leipzig, hybrid, or remote EU contexts.
-```
-
-Actions:
-
-* Email
-* LinkedIn
-* GitHub
-* CV
-
-## Content Hierarchy
-
-Highest priority:
-
-1. Role positioning
-2. Professional experience
-3. Selected project proof
-4. AI/automation direction
-5. Contact
-
-Lower priority:
-
-1. Older experiments
-2. creative writing/content projects
-3. personal background details
-4. decorative visuals
-
-## Route Strategy
-
-Avoid unnecessary route churn.
-
-If existing routes work, keep them.
-
-Possible final routes:
-
-```text
-/
-/case-studies
-/case-studies/flowplace
-/case-studies/openme
-/case-studies/decision-matrix-ai
-/case-studies/ari-motors
-/contact
-```
-
-Optional later:
-
-```text
-/ai-guide
-/lab
-```
-
-## MVP Site Map
-
-For first major refactor, target:
-
-```text
-/
-  HomeHero
-  SelectedWork
-  AskPortfolioPreview
-  HomeContactCTA
-
-/case-studies
-  Work index
-  Concise case-study documents
-  Secondary work rows
-
-/contact
-  Contact details
-  Role availability
-  External links
-```
-
-This is enough for a strong first version.
-
-## Success Criteria
-
-The site map is successful if:
-
-* visitors can understand Igal quickly from the homepage
-* the strongest work is easy to find
-* the site does not feel overloaded
-* AI guide is visible but not dominant
-* contact paths are obvious
-* routes are simple and maintainable
+Confirm the assistant’s name and placement, the AI page’s navigation role, Contact prominence, and whether there is meaningful content to launch Notes. Keep existing routes and tools working while these decisions are made.
