@@ -103,19 +103,19 @@ const backgroundParagraphs = computed(() => [
   t('publicContent.stack'), t('publicContent.education'),
 ]);
 const snapshotItems = computed<SnapshotItem[]>(() => [
-  { label: t('publicContent.location'), value: profile.identity.based_in },
+  { label: t('publicContent.location'), value: t('ui.leipzig_germany') },
   { label: t('publicContent.focusTitle'), value: t('publicContent.role') },
   { label: t('publicContent.educationTitle'), value: t('publicContent.education') },
 ]);
 
-const links: AboutLink[] = [
+const links = computed<AboutLink[]>(() => ([
   {
-    label: "Work",
+    label: t('nav.work'),
     href: "/case-studies",
     internal: true,
   },
   {
-    label: "AI",
+    label: t("nav.ai"),
     href: "/ai-automation",
     internal: true,
   },
@@ -132,17 +132,17 @@ const links: AboutLink[] = [
     target: "_blank",
   },
   {
-    label: "Email",
+    label: t('homePage.email'),
     href: `mailto:${profile.links.email}`,
     internal: false,
   },
   {
-    label: "CV",
+    label: t("homePage.cv"),
     href: profile.links.cv,
     internal: false,
     target: "_blank",
   },
-];
+]));
 
 useHead(() => ({
   title: `${t('publicContent.about')} | Igal Vilensky`,

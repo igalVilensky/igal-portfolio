@@ -4,12 +4,12 @@
     <div class="mx-auto flex max-w-4xl flex-col items-center gap-4 px-5 text-center text-sm text-secondary-500 dark:text-secondary-400 sm:px-6">
       <p>© {{ currentYear }} Igal Vilensky</p>
 
-      <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2" aria-label="Footer links">
+      <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2" :aria-label="t('ui.footer_links')">
         <a
           href="mailto:vilenskyigal@gmail.com"
           class="transition-colors hover:text-secondary-950 dark:hover:text-white"
         >
-          Email
+          {{ t('homePage.email') }}
         </a>
         <a
           href="https://github.com/igalVilensky"
@@ -33,5 +33,6 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const currentYear = new Date().getFullYear();
 </script>

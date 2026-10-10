@@ -13,7 +13,7 @@
       <section aria-labelledby="ai-products-title" class="mb-14">
         <div class="mb-6 flex items-center gap-2">
           <Bot :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="ai-products-title" class="section-title m-0">AI products</h2>
+          <h2 id="ai-products-title" class="section-title m-0">{{ t('ui.ai_products') }}</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -30,7 +30,7 @@
                 {{ item.summary }}
               </p>
               <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-                <span class="font-medium text-secondary-800 dark:text-secondary-200">Demonstrates:</span>
+                <span class="font-medium text-secondary-800 dark:text-secondary-200">{{ t('ui.demonstrates') }}</span>
                 {{ item.demonstrates }}
               </p>
               <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
@@ -69,7 +69,7 @@
       <section aria-labelledby="ai-workflows-title" class="mb-14">
         <div class="mb-6 flex items-center gap-2">
           <Workflow :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="ai-workflows-title" class="section-title m-0">AI workflow / automation systems</h2>
+          <h2 id="ai-workflows-title" class="section-title m-0">{{ t('ui.ai_workflow_automation_systems') }}</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -86,7 +86,7 @@
                 {{ item.summary }}
               </p>
               <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-                <span class="font-medium text-secondary-800 dark:text-secondary-200">Demonstrates:</span>
+                <span class="font-medium text-secondary-800 dark:text-secondary-200">{{ t('ui.demonstrates') }}</span>
                 {{ item.demonstrates }}
               </p>
               <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
@@ -125,7 +125,7 @@
       <section aria-labelledby="site-feature-title" class="mb-14">
         <div class="mb-6 flex items-center gap-2">
           <Sparkles :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="site-feature-title" class="section-title m-0">Site feature</h2>
+          <h2 id="site-feature-title" class="section-title m-0">{{ t('ui.site_feature') }}</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -145,7 +145,7 @@
                 {{ portfolioAssistantItem.summary }}
               </p>
               <p class="mt-3 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-                <span class="font-medium text-secondary-800 dark:text-secondary-200">Demonstrates:</span>
+                <span class="font-medium text-secondary-800 dark:text-secondary-200">{{ t('ui.demonstrates') }}</span>
                 {{ portfolioAssistantItem.demonstrates }}
               </p>
               <p class="mt-3 text-xs leading-5 text-secondary-500 dark:text-secondary-500">
@@ -184,7 +184,7 @@
       <section aria-labelledby="patterns-title" class="mb-14 max-w-3xl">
         <div class="mb-5">
           <h2 id="patterns-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
-            Patterns demonstrated
+            {{ t('ui.patterns_demonstrated') }}
           </h2>
         </div>
 
@@ -225,6 +225,7 @@
 
 <script setup lang="ts">
 import { Bot, Workflow, Sparkles, ExternalLink } from "lucide-vue-next";
+import { getLocalizedValue } from "~/utils/localizedContent";
 import projectsData from "../../content/projects.json";
 
 definePageMeta({
@@ -249,41 +250,41 @@ type AiWorkItem = {
   links: WorkLink[];
 };
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const localePath = useLocalePath();
 
 const aiProductsIds = ["decision-matrix-ai", "ai-compliance-compass", "sunlit-tales"];
 const aiWorkflowsIds = ["flowforge", "job-command-center", "openme"];
 
-const projectSummaries: Record<string, string> = {
+const projectSummaries = computed<Record<string, string>>(() => ({
   "decision-matrix-ai":
-    "AI-assisted decision matrix app for comparing complex choices with criteria, scores, recommendations, and action checklists.",
+    t('ui.aiassisted_decision_matrix_app_for_comparing_complex_choices_with'),
   "ai-compliance-compass":
-    "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
+    t('ui.educational_ai_usecase_checker_that_turns_plainlanguage_descriptions_into'),
   "sunlit-tales":
-    "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
+    t('ui.poetrycontent_platform_with_an_ai_moodgame_feature_that_creates'),
   "job-command-center":
-    "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+    t('ui.selfhosted_budgetaware_job_search_command_center_that_triages_job'),
   flowforge:
-    "Multi-agent automation compiler that turns plain-language ideas into safe, human-reviewable workflow blueprints and inactive n8n JSON drafts.",
+    t('ui.multiagent_automation_compiler_that_turns_plainlanguage_ideas_into_safe'),
   openme:
-    "SaaS MVP with public endpoints, owner inbox flows, and an optional Python/FastAPI AI service layer for incoming submission summaries.",
-};
+    t('ui.saas_mvp_with_public_endpoints_owner_inbox_flows_and'),
+}));
 
-const demonstratedRoles: Record<string, string> = {
+const demonstratedRoles = computed<Record<string, string>>(() => ({
   "decision-matrix-ai":
-    "LLM API integration for structured decision support, editable outputs, serverless AI calls, validation, and persistence.",
+    t('ui.llm_api_integration_for_structured_decision_support_editable_outputs'),
   "ai-compliance-compass":
-    "Responsible AI boundaries, clarification flows, cautious language, and educational fallback behavior.",
+    t('ui.responsible_ai_boundaries_clarification_flows_cautious_language_and_educational'),
   "sunlit-tales":
-    "Server-side Groq call through Netlify Functions, structured JSON generation, and validating model response against source poem text.",
+    t('ui.serverside_groq_call_through_netlify_functions_structured_json_generation'),
   "job-command-center":
-    "AI extraction, AI review, budget-aware processing, rule-based prefiltering, and command queue grouped by next action.",
+    t('ui.ai_extraction_ai_review_budgetaware_processing_rulebased_prefiltering_and'),
   flowforge:
-    "Guided clarification, multi-agent routing and blueprint generation, safety review, agent trace visibility, and non-executing n8n handoff drafts.",
+    t('ui.guided_clarification_multiagent_routing_and_blueprint_generation_safety_review'),
   openme:
-    "Automation-oriented product thinking through public endpoints, owner workflows, and AI-assisted inbox review.",
-};
+    t('ui.automationoriented_product_thinking_through_public_endpoints_owner_workflows_and'),
+}));
 
 const isInternalUrl = (url: string) => url.startsWith("/");
 
@@ -292,7 +293,7 @@ const getProjectLinks = (project: Project): WorkLink[] => {
 
   if (project.links.live) {
     links.push({
-      label: project.links.live.startsWith("/") ? "Open tool" : "Live",
+      label: project.links.live.startsWith("/") ? t('ui.open_tool') : t('ui.live'),
       url: project.links.live,
       internal: isInternalUrl(project.links.live),
     });
@@ -300,7 +301,7 @@ const getProjectLinks = (project: Project): WorkLink[] => {
 
   if (project.links.case_study) {
     links.push({
-      label: "Case study",
+      label: t('ui.case_study'),
       url: project.links.case_study,
       internal: true,
     });
@@ -319,11 +320,11 @@ const getProjectLinks = (project: Project): WorkLink[] => {
 
 const toAiWorkItem = (project: Project): AiWorkItem => ({
   id: project.id,
-  title: project.title,
-  summary: projectSummaries[project.id] ?? project.short_description,
-  demonstrates: demonstratedRoles[project.id] ?? project.role,
+  title: getLocalizedValue(project.title, locale.value),
+  summary: projectSummaries.value[project.id] ?? getLocalizedValue(project.short_description, locale.value),
+  demonstrates: demonstratedRoles.value[project.id] ?? project.role,
   techLine: project.technologies.slice(0, 6).join(" / "),
-  badges: project.category.split(" / ").slice(0, 3),
+  badges: getLocalizedValue(project.category, locale.value).split(" / ").slice(0, 3),
   links: getProjectLinks(project),
 });
 
@@ -332,8 +333,8 @@ const getFeaturedItems = (ids: string[]) => ids
   .filter((project): project is Project => Boolean(project))
   .map(toAiWorkItem);
 
-const aiProducts = getFeaturedItems(aiProductsIds);
-const aiWorkflows = getFeaturedItems(aiWorkflowsIds);
+const aiProducts = computed(() => (getFeaturedItems(aiProductsIds)));
+const aiWorkflows = computed(() => (getFeaturedItems(aiWorkflowsIds)));
 
 const portfolioAssistantItem = computed<AiWorkItem>(() => ({
   id: "ask-my-portfolio",
@@ -341,29 +342,29 @@ const portfolioAssistantItem = computed<AiWorkItem>(() => ({
   summary:
     t('publicContent.assistant'),
   demonstrates:
-    "Grounded LLM assistant pattern with retrieval, structured responses, prompt boundaries, no external actions, and source-backed answers.",
+    t('ui.grounded_llm_assistant_pattern_with_retrieval_structured_responses_prompt'),
   techLine: "Nuxt / Vue 3 / TypeScript / Netlify Functions / Groq API",
-  badges: ["Portfolio Feature", "AI Assistant"],
+  badges: [t('ui.portfolio_feature'), t('ui.ai_assistant')],
   links: [
     {
-      label: "Open guide",
+      label: t('ui.open_guide'),
       url: "/ask-igal",
       internal: true,
     },
   ],
 }));
 
-const patterns = [
-  "LLM API integration",
-  "Structured prompts",
-  "Serverless AI calls",
-  "Fallback behavior",
-  "Human-in-the-loop review",
-  "API/webhook workflow thinking",
-  "Responsible AI boundaries",
-];
+const patterns = computed(() => ([
+  t('ui.llm_api_integration'),
+  t('ui.structured_prompts'),
+  t('ui.serverless_ai_calls'),
+  t('ui.fallback_behavior'),
+  t('ui.humanintheloop_review'),
+  t('ui.apiwebhook_workflow_thinking'),
+  t('ui.responsible_ai_boundaries'),
+]));
 
-const courseTopics = ["AI agents", "n8n", "Make", "Python automations", "APIs/webhooks", "AI safety"];
+const courseTopics = computed(() => ([t('ui.ai_agents'), "n8n", "Make", t('ui.python_automations'), "APIs/webhooks", t('ui.ai_safety')]));
 
 useHead(() => ({
   title: `${t('publicContent.aiTitle')} | Igal Vilensky`,

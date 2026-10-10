@@ -3,10 +3,9 @@
     <div class="page-container">
       <header class="page-header">
         <div class="page-header-main">
-          <h1 class="page-title">Work</h1>
+          <h1 class="page-title">{{ t('nav.work') }}</h1>
           <p class="page-intro mt-4">
-            Selected product and engineering work. Primary projects show SaaS product delivery,
-            full-stack systems, and practical AI-assisted tools.
+            {{ t('ui.selected_product_and_engineering_work_primary_projects_show_saas') }}
           </p>
         </div>
       </header>
@@ -14,7 +13,7 @@
       <section aria-labelledby="primary-work-title" class="mb-14">
         <div class="mb-6 flex items-center gap-2">
           <Layers :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="primary-work-title" class="section-title m-0">Primary projects</h2>
+          <h2 id="primary-work-title" class="section-title m-0">{{ t('ui.primary_projects') }}</h2>
         </div>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -50,11 +49,11 @@
           <div class="flex items-center gap-2">
             <Briefcase :size="20" class="text-secondary-950 dark:text-white" />
             <h2 id="secondary-work-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
-              Secondary work
+              {{ t('ui.secondary_work') }}
             </h2>
           </div>
           <p class="mt-2 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            Additional product, utility, and lab projects.
+            {{ t('ui.additional_product_utility_and_lab_projects') }}
           </p>
         </div>
 
@@ -90,6 +89,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { computed, defineComponent, h, resolveComponent, type PropType } from "vue";
 import { Layers, Briefcase, ExternalLink } from "lucide-vue-next";
 import type { PortfolioProject } from "~/composables/useProjects";
@@ -107,6 +107,7 @@ type ProjectRow = PortfolioProject & {
 };
 
 const { projects } = useProjects();
+const localePath = useLocalePath();
 
 const primaryProjectIds = [
   "flowforge",
@@ -123,7 +124,7 @@ const getProjectLinks = (project: PortfolioProject): ProjectLink[] => {
 
   if (project.caseStudyUrl) {
     links.push({
-      label: "Case study",
+      label: t('ui.case_study'),
       url: project.caseStudyUrl,
       internal: true,
     });
@@ -131,7 +132,7 @@ const getProjectLinks = (project: PortfolioProject): ProjectLink[] => {
 
   if (project.liveUrl && project.liveUrl !== project.githubUrl) {
     links.push({
-      label: project.liveUrl.startsWith("/") ? "Open tool" : "Live",
+      label: project.liveUrl.startsWith("/") ? t('ui.open_tool') : t('ui.live'),
       url: project.liveUrl,
       internal: isInternalUrl(project.liveUrl),
     });
@@ -157,13 +158,13 @@ const toProjectRow = (project: PortfolioProject): ProjectRow => ({
 
 const primaryProjects = computed(() =>
   primaryProjectIds
-    .map((id) => projects.find((project) => project.id === id))
+    .map((id) => projects.value.find((project) => project.id === id))
     .filter((project): project is PortfolioProject => Boolean(project))
     .map(toProjectRow)
 );
 
 const secondaryProjects = computed(() =>
-  projects
+  projects.value
     .filter((project) => !primaryProjectIds.includes(project.id))
     .map(toProjectRow)
 );
@@ -197,7 +198,7 @@ const ProjectLinks = defineComponent({
             ? h(
                 resolveComponent("NuxtLink"),
                 {
-                  to: link.url,
+                  to: localePath(link.url),
                   class: linkClass,
                 },
                 () => link.label
@@ -217,14 +218,14 @@ const ProjectLinks = defineComponent({
   },
 });
 
-useHead({
-  title: "Work | Igal Vilensky",
+useHead(() => ({
+  title: t('ui.work_igal_vilensky'),
   meta: [
     {
       name: "description",
       content:
-        "Selected work by Igal Vilensky: SaaS product engineering, full-stack projects, AI-assisted tools, and compact project case studies.",
+        t('ui.selected_work_by_igal_vilensky_saas_product_engineering_fullstack'),
     },
   ],
-});
+}));
 </script>

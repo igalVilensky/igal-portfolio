@@ -19,7 +19,7 @@ definePageMeta({
 
 const { t } = useI18n();
 
-useHead({
+useHead(() => ({
   title: t("seo.education"),
-});
+}));
 </script>

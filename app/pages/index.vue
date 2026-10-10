@@ -3,7 +3,7 @@
   <main class="min-h-screen bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100">
     <HomeHero
       :profile-name="profile.identity.name"
-      :based-in="profile.identity.based_in"
+      :based-in="t('ui.leipzig_germany')"
       :github="profile.links.github"
       :linkedin="profile.links.linkedin"
       :email="profile.links.email"

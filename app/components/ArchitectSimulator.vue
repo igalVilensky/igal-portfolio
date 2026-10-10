@@ -3,53 +3,53 @@
     <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
       <div>
         <p class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
-          Featured tool
+          {{ t('ui.featured_tool') }}
         </p>
         <h3 class="mt-1 text-xl font-semibold text-secondary-950 dark:text-white">
-          System Design Sketcher
+          {{ t('ui.system_design_sketcher') }}
         </h3>
         <p class="mt-2 max-w-2xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-          Generate a concise first-pass architecture outline from a domain, constraint, and requirement.
+          {{ t('ui.generate_a_concise_firstpass_architecture_outline_from_a_domain') }}
         </p>
       </div>
       <p class="text-xs leading-5 text-secondary-500 dark:text-secondary-500">
-        Generated sketch, not final architecture.
+        {{ t('ui.generated_sketch_not_final_architecture') }}
       </p>
     </div>
 
     <div v-if="!result" class="space-y-4">
       <div class="grid gap-4 md:grid-cols-2">
         <label class="block">
-          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Project domain</span>
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.project_domain') }}</span>
           <input
             v-model="project.domain"
             type="text"
-            placeholder="SaaS, education, ecommerce"
+            :placeholder="t('ui.saas_education_ecommerce')"
             class="mt-2 w-full rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
           />
         </label>
 
         <label class="block">
-          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Primary constraint</span>
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.primary_constraint') }}</span>
           <select
             v-model="project.constraint"
             class="mt-2 w-full rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm text-secondary-950 transition-colors focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white"
           >
-            <option value="scalability">Scalability</option>
-            <option value="security">Security</option>
-            <option value="speed">Fast MVP delivery</option>
-            <option value="complexity">Complex product logic</option>
-            <option value="performance">Performance</option>
+            <option value="scalability">{{ t('ui.scalability') }}</option>
+            <option value="security">{{ t('ui.security') }}</option>
+            <option value="speed">{{ t('ui.fast_mvp_delivery') }}</option>
+            <option value="complexity">{{ t('ui.complex_product_logic') }}</option>
+            <option value="performance">{{ t('ui.performance') }}</option>
           </select>
         </label>
       </div>
 
       <label class="block">
-        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Core requirement</span>
+        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.core_requirement') }}</span>
         <textarea
           v-model="project.requirement"
           rows="4"
-          placeholder="Example: A small team needs collaborative project notes with roles, comments, and export."
+          :placeholder="t('ui.example_a_small_team_needs_collaborative_project_notes_with')"
           class="mt-2 w-full resize-none rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 text-sm leading-6 text-secondary-950 transition-colors placeholder:text-secondary-400 focus:border-secondary-400 dark:border-dark-border dark:bg-dark-bg dark:text-white dark:placeholder:text-secondary-500"
         ></textarea>
       </label>
@@ -61,7 +61,7 @@
         @click="simulate"
       >
         <Loader2 v-if="isLoading" :size="16" class="animate-spin" />
-        <span>{{ isLoading ? "Generating sketch..." : "Generate sketch" }}</span>
+        <span>{{ isLoading ? t('ui.generating_sketch') : t('ui.generate_sketch') }}</span>
       </button>
     </div>
 
@@ -70,7 +70,7 @@
         <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p class="text-xs font-medium uppercase tracking-normal text-secondary-500 dark:text-secondary-400">
-              Generated sketch
+              {{ t('ui.generated_sketch') }}
             </p>
             <p class="mt-1 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
               {{ project.domain }} / {{ constraintLabel }}
@@ -81,7 +81,7 @@
             class="text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             @click="result = null"
           >
-            Reset
+            {{ t('ui.reset') }}
           </button>
         </div>
 
@@ -101,18 +101,19 @@
         </div>
 
         <p v-else class="whitespace-pre-wrap text-sm leading-6 text-secondary-700 dark:text-secondary-300">
-          {{ result }}
+          {{ resultText }}
         </p>
       </div>
 
       <p class="text-xs leading-5 text-secondary-500 dark:text-secondary-500">
-        Treat this as a starting point for discussion, validation, and tradeoff review.
+        {{ t('ui.treat_this_as_a_starting_point_for_discussion_validation') }}
       </p>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+const { t, locale } = useI18n();
 import { computed, reactive, ref } from "vue";
 import { Loader2 } from "lucide-vue-next";
 
@@ -128,22 +129,24 @@ const project = reactive({
   requirement: "",
 });
 
-const constraintLabels: Record<string, string> = {
-  scalability: "Scalability",
-  security: "Security",
-  speed: "Fast MVP delivery",
-  complexity: "Complex product logic",
-  performance: "Performance",
-};
+const constraintLabels = computed<Record<string, string>>(() => ({
+  scalability: t('ui.scalability'),
+  security: t('ui.security'),
+  speed: t('ui.fast_mvp_delivery'),
+  complexity: t('ui.complex_product_logic'),
+  performance: t('ui.performance'),
+}));
 
 const isLoading = ref(false);
 const result = ref<string | null>(null);
+const resultError = ref(false);
+const resultText = computed(() => resultError.value ? t("ui.could_not_generate_sketch_please_try_again") : result.value);
 const groqChat = useGroqChat();
 
-const constraintLabel = computed(() => constraintLabels[project.constraint] ?? project.constraint);
+const constraintLabel = computed(() => constraintLabels.value[project.constraint] ?? project.constraint);
 
 const resultSections = computed(() => {
-  if (!result.value) return [];
+  if (!result.value || resultError.value) return [];
 
   const sections: { title: string; content: string }[] = [];
   const lines = result.value.split("\n");
@@ -181,6 +184,7 @@ const resultSections = computed(() => {
 const simulate = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
+  resultError.value = false;
 
   try {
     const rawPrompt = `Create a concise system design sketch for this product idea.
@@ -189,6 +193,7 @@ Domain: ${project.domain}
 Primary constraint: ${constraintLabel.value}
 Core requirement: ${project.requirement}
 
+Write the entire response, including section titles, in ${locale.value === "de" ? "German" : locale.value === "ru" ? "Russian" : "English"}.
 Return exactly these numbered sections:
 1. Suggested stack
 2. Architecture shape
@@ -208,14 +213,16 @@ Keep each section to 1-3 short sentences. Avoid certainty, inflated claims, and 
     if (response?.reply) {
       result.value = response.reply;
     } else if (response && (response as any).error) {
-      result.value = `Could not generate sketch: ${(response as any).error}`;
+      resultError.value = true;
+      result.value = "error";
     } else {
-      result.value = "Could not generate a sketch from the current response.";
+      resultError.value = true;
+      result.value = "error";
     }
   } catch (error: any) {
     console.error("System design sketch error:", error);
-    const errorMsg = error.data?.statusMessage || error.message || "Unknown error";
-    result.value = `Could not generate sketch: ${errorMsg}`;
+    resultError.value = true;
+      result.value = "error";
   } finally {
     isLoading.value = false;
   }

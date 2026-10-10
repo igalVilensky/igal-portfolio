@@ -1,0 +1,147 @@
+{
+  "skill:frontend": {
+    "en": "Frontend",
+    "de": "Frontend",
+    "ru": "Фронтенд"
+  },
+  "skill:backend": {
+    "en": "Backend",
+    "de": "Backend",
+    "ru": "Бэкенд"
+  },
+  "skill:ai-automation": {
+    "en": "AI / Automation",
+    "de": "KI / Automatisierung",
+    "ru": "ИИ / Автоматизация"
+  },
+  "skill:engineering": {
+    "en": "Engineering",
+    "de": "Softwareentwicklung",
+    "ru": "Разработка ПО"
+  },
+  "skill:transferable": {
+    "en": "Transferable Skills",
+    "de": "Übertragbare Fähigkeiten",
+    "ru": "Переносимые навыки"
+  },
+  "skill:languages": {
+    "en": "Languages",
+    "de": "Sprachen",
+    "ru": "Языки"
+  },
+  "faq:role-fit": {
+    "en": "What roles is Igal a good fit for?",
+    "de": "Für welche Rollen ist Igal geeignet?",
+    "ru": "Для каких ролей подходит Игаль?"
+  },
+  "faq:recruiter-summary": {
+    "en": "Summarize Igal for a recruiter.",
+    "de": "Fasse Igals Profil für die Personalgewinnung zusammen.",
+    "ru": "Кратко опишите Игаля для рекрутера."
+  },
+  "faq:frontend-experience": {
+    "en": "What is his frontend experience?",
+    "de": "Welche Frontend-Erfahrung hat er?",
+    "ru": "Какой у него опыт во фронтенде?"
+  },
+  "faq:saas-experience": {
+    "en": "Does he have SaaS experience?",
+    "de": "Hat er SaaS-Erfahrung?",
+    "ru": "Есть ли у него опыт с SaaS?"
+  },
+  "faq:ai-automation-experience": {
+    "en": "What is his AI/automation experience?",
+    "de": "Welche Erfahrung hat er mit KI und Automatisierung?",
+    "ru": "Какой у него опыт с ИИ и автоматизацией?"
+  },
+  "faq:first-project-to-review": {
+    "en": "Which project should I review first?",
+    "de": "Welches Projekt sollte ich zuerst ansehen?",
+    "ru": "Какой проект стоит посмотреть первым?"
+  },
+  "faq:not-junior": {
+    "en": "What makes him different from a junior developer?",
+    "de": "Was unterscheidet ihn von einem Junior-Entwickler?",
+    "ru": "Чем он отличается от начинающего разработчика?"
+  },
+  "faq:technologies": {
+    "en": "What technologies does he use?",
+    "de": "Welche Technologien nutzt er?",
+    "ru": "Какие технологии он использует?"
+  },
+  "faq:location": {
+    "en": "Where is he based?",
+    "de": "Wo lebt er?",
+    "ru": "Где он живёт?"
+  },
+  "faq:languages": {
+    "en": "What languages does he speak?",
+    "de": "Welche Sprachen spricht er?",
+    "ru": "На каких языках он говорит?"
+  },
+  "faq:wbs-fit": {
+    "en": "How does the WBS AI Agents & Automations course fit into his profile?",
+    "de": "Wie ergänzt die WBS-Weiterbildung AI Agents & Automations sein Profil?",
+    "ru": "Как программа WBS AI Agents & Automations дополняет его опыт?"
+  },
+  "faq:contact": {
+    "en": "How can someone contact Igal?",
+    "de": "Wie kann man Igal kontaktieren?",
+    "ru": "Как связаться с Игалем?"
+  },
+  "role-fit:Full-Stack Software Developer": {
+    "en": "Full-Stack Software Developer",
+    "de": "Full-Stack-Softwareentwickler",
+    "ru": "Full-stack-разработчик"
+  },
+  "role-fit:Frontend Developer": {
+    "en": "Frontend Developer",
+    "de": "Frontend-Entwickler",
+    "ru": "Фронтенд-разработчик"
+  },
+  "role-fit:Vue.js Developer": {
+    "en": "Vue.js Developer",
+    "de": "Vue.js-Entwickler",
+    "ru": "Разработчик Vue.js"
+  },
+  "role-fit:React Developer": {
+    "en": "React Developer",
+    "de": "React-Entwickler",
+    "ru": "Разработчик React"
+  },
+  "role-fit:TypeScript Developer": {
+    "en": "TypeScript Developer",
+    "de": "TypeScript-Entwickler",
+    "ru": "Разработчик TypeScript"
+  },
+  "role-fit:Software Developer": {
+    "en": "Software Developer",
+    "de": "Softwareentwickler",
+    "ru": "Разработчик ПО"
+  },
+  "role-fit:AI Software Developer": {
+    "en": "AI Software Developer",
+    "de": "KI-Softwareentwickler",
+    "ru": "Разработчик ПО с ИИ"
+  },
+  "role-fit:AI Automation Developer": {
+    "en": "AI Automation Developer",
+    "de": "Entwickler für KI-Automatisierung",
+    "ru": "Разработчик автоматизации с ИИ"
+  },
+  "role-fit:AI Workflow Developer": {
+    "en": "AI Workflow Developer",
+    "de": "Entwickler für KI-Workflows",
+    "ru": "Разработчик процессов с ИИ"
+  },
+  "role-fit:SaaS Developer": {
+    "en": "SaaS Developer",
+    "de": "SaaS-Entwickler",
+    "ru": "Разработчик SaaS"
+  },
+  "role-fit:API Integration Developer": {
+    "en": "API Integration Developer",
+    "de": "Entwickler für API-Integration",
+    "ru": "Разработчик интеграций API"
+  }
+}

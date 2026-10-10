@@ -1,5 +1,6 @@
+import sourceLabelsData from "../../content/source-labels.json";
 import profileData from "../../content/profile.json";
-import projectsData from "../../content/projects.json";
+import localizedProjectsData from "../../content/projects.json";
 import experienceData from "../../content/experience.json";
 import skillsData from "../../content/skills.json";
 import roleFitData from "../../content/role-fit.json";
@@ -34,6 +35,18 @@ const MAX_QUESTION_LENGTH = 500;
 const MAX_HISTORY_MESSAGES = 6;
 const MIN_RELEVANCE_SCORE = 2.4;
 const MAX_RETRIEVED_ITEMS = 7;
+
+const sourceLabels: Record<string, Record<LocaleCode, string>> = sourceLabelsData;
+
+const projectsData = {
+  ...localizedProjectsData,
+  projects: localizedProjectsData.projects.map((project) => ({
+    ...project,
+    title: typeof project.title === "string" ? project.title : project.title.en,
+    category: typeof project.category === "string" ? project.category : project.category.en,
+    short_description: typeof project.short_description === "string" ? project.short_description : project.short_description.en,
+  })),
+};
 
 const localeCopy: Record<LocaleCode, {
   languageName: string;
@@ -109,12 +122,12 @@ const localeCopy: Record<LocaleCode, {
       monthlyRangeSenior: "EUR 4,170–5,000",
     },
     questions: {
-      "role-fit": "What roles is Igal a strong fit for?",
+      "role-fit": "What kinds of software does Igal build?",
       "frontend-experience": "What is his frontend experience?",
-      "ai-automation": "What has he built with AI and automation?",
+      "ai-automation": "How does he approach AI and automation?",
       "strongest-project": "Which project should I review first?",
       debugging: "How does he approach debugging?",
-      "recruiter-summary": "Summarize Igal for a hiring manager.",
+      "recruiter-summary": "What projects has he worked on?",
       "personal-journey": "What is Igal’s personal journey?",
       "before-it": "What did Igal do before becoming a developer?",
       "creative-background": "Does Igal have a creative background?",
@@ -160,12 +173,12 @@ const localeCopy: Record<LocaleCode, {
       monthlyRangeSenior: "EUR 4.170–5.000",
     },
     questions: {
-      "role-fit": "Für welche Rollen passt Igal besonders gut?",
+      "role-fit": "Welche Arten von Software entwickelt Igal?",
       "frontend-experience": "Welche Frontend-Erfahrung hat er?",
-      "ai-automation": "Was hat er mit KI und Automatisierung gebaut?",
+      "ai-automation": "Wie geht er an KI und Automatisierung heran?",
       "strongest-project": "Welches Projekt sollte ich zuerst ansehen?",
       debugging: "Wie geht er an Debugging heran?",
-      "recruiter-summary": "Fasse Igal für einen Hiring Manager zusammen.",
+      "recruiter-summary": "An welchen Projekten hat er gearbeitet?",
       "personal-journey": "Wie sieht Igals persönlicher Weg aus?",
       "before-it": "Was hat Igal vor der Entwicklung gemacht?",
       "creative-background": "Hat Igal einen kreativen Hintergrund?",
@@ -211,12 +224,12 @@ const localeCopy: Record<LocaleCode, {
       monthlyRangeSenior: "EUR 4,170–5,000",
     },
     questions: {
-      "role-fit": "Для каких ролей Игаль особенно подходит?",
+      "role-fit": "Какое программное обеспечение создаёт Игаль?",
       "frontend-experience": "Какой у него опыт во frontend?",
-      "ai-automation": "Что он создавал с ИИ и автоматизацией?",
+      "ai-automation": "Как он подходит к ИИ и автоматизации?",
       "strongest-project": "Какой проект стоит посмотреть первым?",
       debugging: "Как он подходит к debugging?",
-      "recruiter-summary": "Кратко опишите Игала для hiring manager.",
+      "recruiter-summary": "Над какими проектами он работал?",
       "personal-journey": "Какой личный путь прошел Игаль?",
       "before-it": "Чем Игаль занимался до разработки?",
       "creative-background": "Есть ли у Игаля творческий опыт?",
@@ -371,7 +384,9 @@ const formatSource = (item: KnowledgeItem, locale: LocaleCode): PortfolioAgentSo
     };
   }
 
-  return { id: item.id, label: item.label, type: item.type, href: item.href };
+  const project = localizedProjectsData.projects.find((entry) => entry.id === item.id);
+  const label = project ? (typeof project.title === "string" ? project.title : project.title[locale]) : sourceLabels[`${item.type}:${item.id}`]?.[locale] ?? item.label;
+  return { id: item.id, label, type: item.type, href: item.href };
 };
 
 const sourceForExperience = (entry: (typeof experienceData.entries)[number]): PortfolioAgentSource => {
@@ -926,12 +941,13 @@ const conversationRecallResponse = (
   };
 
   return {
-    status: "answered",
-    answer: wasAsked ? answers[locale].yes : answers[locale].no,
-    confidence: "high",
-    sources: [],
-    suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 3),
-  };
+  status: "answered",
+  answer: wasAsked ? answers[locale].yes : answers[locale].no,
+  confidence: "high",
+  sources: [],
+  suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 3),
+  actions: []
+};
 };
 
 const ageTerms = [

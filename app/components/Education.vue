@@ -255,6 +255,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
+
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { useColorMode } from "#imports";
 
@@ -289,7 +291,7 @@ const technicalCurriculum = computed(() => [
   { title: "React, React Hooks & Redux", descKey: "reactSkillsDesc" },
   { title: "Node.js, Express.js & REST APIs", descKey: "nodeSkillsDesc" },
   { title: "MongoDB & Mongoose", descKey: "mongoSkillsDesc" },
-  { title: "Git, GitHub & Agile Methodologies", descKey: "gitSkillsDesc" },
+  { title: t('ui.git_github_agile_methodologies'), descKey: "gitSkillsDesc" },
 ]);
 
 // Key achievements (both titles and descriptions are translated)

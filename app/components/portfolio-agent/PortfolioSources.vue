@@ -27,7 +27,7 @@ defineProps<{
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const isInternal = (href: string) => href.startsWith("/");
+const isInternal = (href: string) => href.startsWith("/") && !/\.[a-z0-9]+(?:[?#]|$)/i.test(href);
 const linkComponent = (href: string) => (isInternal(href) ? resolveComponent("NuxtLink") : "a");
 const linkBindings = (href: string) =>
   isInternal(href)

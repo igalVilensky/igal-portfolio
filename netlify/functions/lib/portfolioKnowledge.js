@@ -160,9 +160,17 @@ export const projectsData = {
     {
       "id": "flowforge",
       "title": "FlowForge",
-      "category": "AI Automation Compiler / Multi-Agent Safety Tool",
+      "category": {
+        "en": "AI Automation Compiler / Multi-Agent Safety Tool",
+        "de": "KI-Automatisierungscompiler / Sicherheitswerkzeug für Multi-Agenten-Systeme",
+        "ru": "Компилятор автоматизации с ИИ / Инструмент безопасности мультиагентных систем"
+      },
       "priority": "featured",
-      "short_description": "Multi-agent tool that turns plain-language automation ideas into safe, human-reviewable workflow blueprints and importable n8n JSON drafts.",
+      "short_description": {
+        "en": "Multi-agent tool that turns plain-language automation ideas into safe, human-reviewable workflow blueprints and importable n8n JSON drafts.",
+        "de": "Multi-Agenten-Werkzeug, das natürlichsprachliche Automatisierungsideen in sichere, prüfbare Workflow-Entwürfe und importierbare n8n-JSON-Entwürfe umwandelt.",
+        "ru": "Мультиагентный инструмент, преобразующий идеи автоматизации на обычном языке в безопасные схемы процессов для проверки человеком и импортируемые черновики JSON для n8n."
+      },
       "long_description": "FlowForge is a non-executing safety and observability layer for AI automation prototypes. It guides users through vague requirements, routes requests through a multi-agent compiler, generates structured workflow blueprints, exposes safety decisions and agent traces, and can produce inactive n8n JSON drafts for human review.",
       "role": "Product creator and full-stack developer responsible for the product concept, frontend experience, server-side compiler pipeline, agent orchestration, safety boundaries, and n8n draft generation.",
       "technologies": [
@@ -208,9 +216,17 @@ export const projectsData = {
     {
       "id": "flowplace-role-compass",
       "title": "Flowplace: Role Compass",
-      "category": "SaaS Product Engineering / Professional Case Study",
+      "category": {
+        "en": "SaaS Product Engineering / Professional Case Study",
+        "de": "SaaS-Produktentwicklung / Berufliches Projekt",
+        "ru": "Разработка SaaS-продукта / Профессиональный проект"
+      },
       "priority": "featured",
-      "short_description": "Talent profile feature for a SaaS platform, built with Vue/Nuxt and Directus and adopted by 5,000+ users in the first month.",
+      "short_description": {
+        "en": "Talent profile feature for a SaaS platform, built with Vue/Nuxt and Directus and adopted by 5,000+ users in the first month.",
+        "de": "Talentprofil-Funktion für eine SaaS-Plattform, entwickelt mit Vue/Nuxt und Directus und im ersten Monat von über 5.000 Nutzern angenommen.",
+        "ru": "Функция профиля талантов для SaaS-платформы на Vue/Nuxt и Directus, которой в первый месяц воспользовались более 5 000 пользователей."
+      },
       "long_description": "A professional SaaS case study focused on end-to-end product engineering, responsive UI workflows, API integration, feature delivery, and sustainable frontend architecture in a high-velocity Agile team.",
       "role": "Software developer working on end-to-end product engineering for a core talent profile feature.",
       "technologies": [
@@ -251,9 +267,17 @@ export const projectsData = {
     {
       "id": "openme",
       "title": "OpenMe",
-      "category": "SaaS MVP / AI-Assisted Platform / Full-Stack Product",
+      "category": {
+        "en": "SaaS MVP / AI-Assisted Platform / Full-Stack Product",
+        "de": "SaaS-MVP / KI-gestützte Plattform / Full-Stack-Produkt",
+        "ru": "SaaS MVP / Платформа с ИИ / Full-stack-продукт"
+      },
       "priority": "featured",
-      "short_description": "Actionable bio/profile platform where people define what others can do with them through public endpoints such as collaboration, questions, feedback, and ideas.",
+      "short_description": {
+        "en": "Actionable bio/profile platform where people define what others can do with them through public endpoints such as collaboration, questions, feedback, and ideas.",
+        "de": "Interaktive Profilplattform, auf der Menschen öffentliche Kontaktmöglichkeiten für Zusammenarbeit, Fragen, Feedback und Ideen festlegen.",
+        "ru": "Платформа интерактивных профилей, где пользователи определяют способы взаимодействия через публичные точки входа: сотрудничество, вопросы, отзывы и идеи."
+      },
       "long_description": "OpenMe rethinks the personal link-in-bio page as an interaction menu. Instead of only listing links, a profile exposes clear public endpoints like collaborate, ask me, feedback, and offer help. The MVP includes profile links, custom endpoints, boundaries, inbox flows, and AI-assisted submission summaries.",
       "role": "Builder and full-stack developer for a SaaS MVP with AI-assisted workflow features.",
       "technologies": [
@@ -302,9 +326,17 @@ export const projectsData = {
     {
       "id": "decision-matrix-ai",
       "title": "Decision Matrix AI",
-      "category": "AI Product Tool / Decision Support / Full-Stack App",
+      "category": {
+        "en": "AI Product Tool / Decision Support / Full-Stack App",
+        "de": "KI-Produktwerkzeug / Entscheidungshilfe / Full-Stack-Anwendung",
+        "ru": "Продуктовый инструмент с ИИ / Поддержка решений / Full-stack-приложение"
+      },
       "priority": "featured",
-      "short_description": "AI-assisted decision matrix app for comparing complex choices using weighted criteria, scores, explainable recommendations, and action checklists.",
+      "short_description": {
+        "en": "AI-assisted decision matrix app for comparing complex choices using weighted criteria, scores, explainable recommendations, and action checklists.",
+        "de": "KI-gestützte Entscheidungsmatrix zum Vergleich komplexer Optionen anhand gewichteter Kriterien, Bewertungen, nachvollziehbarer Empfehlungen und Aufgabenlisten.",
+        "ru": "Матрица решений с ИИ для сравнения сложных вариантов по взвешенным критериям, оценкам, объяснимым рекомендациям и спискам действий."
+      },
       "long_description": "Decision Matrix AI helps users turn vague decisions into structured comparisons. It supports weighted criteria, must-have requirements, editable scores, ranked results, category breakdowns, AI-generated suggestions, recommendation summaries, and practical next-step checklists.",
       "role": "Builder and full-stack developer for an AI-assisted decision-support product tool.",
       "technologies": [
@@ -347,10 +379,22 @@ export const projectsData = {
     },
     {
       "id": "ari-motors-ev-portal",
-      "title": "ARI Motors: EV Portal",
-      "category": "Full-Stack Web Platform / Professional Case Study",
+      "title": {
+        "en": "ARI Motors: EV Portal",
+        "de": "ARI Motors: Elektrofahrzeugportal",
+        "ru": "ARI Motors: портал электромобилей"
+      },
+      "category": {
+        "en": "Full-Stack Web Platform / Professional Case Study",
+        "de": "Full-Stack-Webplattform / Berufliches Projekt",
+        "ru": "Full-stack-веб-платформа / Профессиональный проект"
+      },
       "priority": "featured",
-      "short_description": "Electric vehicle comparison portal built from scratch to production in under three months as a solo full-stack developer.",
+      "short_description": {
+        "en": "Electric vehicle comparison portal built from scratch to production in under three months as a solo full-stack developer.",
+        "de": "Vergleichsportal für Elektrofahrzeuge, als alleiniger Full-Stack-Entwickler in weniger als drei Monaten von Grund auf bis zum Produktivstart umgesetzt.",
+        "ru": "Портал сравнения электромобилей, созданный единственным full-stack-разработчиком с нуля до запуска менее чем за три месяца."
+      },
       "long_description": "A professional case study covering frontend interface work, backend systems, database architecture, responsive design, and a fast production launch for an electric commercial vehicle comparison portal.",
       "role": "Solo full-stack developer responsible for frontend, backend, database, data handling, and launch work.",
       "technologies": [
@@ -389,9 +433,17 @@ export const projectsData = {
     {
       "id": "ai-compliance-compass",
       "title": "AI Compliance Compass",
-      "category": "Responsible AI Tool / Practical Compliance UX",
+      "category": {
+        "en": "Responsible AI Tool / Practical Compliance UX",
+        "de": "Werkzeug für verantwortungsvollen KI-Einsatz / Praxisnahe Compliance-Oberfläche",
+        "ru": "Инструмент ответственного ИИ / Практический интерфейс проверки соответствия"
+      },
       "priority": "secondary",
-      "short_description": "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
+      "short_description": {
+        "en": "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
+        "de": "Lernwerkzeug, das Beschreibungen von KI-Anwendungsfällen in praktische Compliance-Fragen und nächste Schritte für Deutschland und die EU übersetzt.",
+        "ru": "Образовательный инструмент, который превращает описания применения ИИ в практические вопросы о требованиях ЕС и Германии и дальнейшие шаги."
+      },
       "long_description": "AI Compliance Compass is a practical portfolio tool for exploring AI compliance, safety, and responsible use patterns in a German/EU context. It avoids legal certainty and focuses on educational classification, clarification questions, and next-step checklists.",
       "role": "Builder of a responsible-AI product workflow inside the portfolio.",
       "technologies": [
@@ -429,10 +481,22 @@ export const projectsData = {
     },
     {
       "id": "user-management-app",
-      "title": "User Management App",
-      "category": "Full-Stack Admin Dashboard",
+      "title": {
+        "en": "User Management App",
+        "de": "Benutzerverwaltung",
+        "ru": "Управление пользователями"
+      },
+      "category": {
+        "en": "Full-Stack Admin Dashboard",
+        "de": "Full-Stack-Verwaltungsoberfläche",
+        "ru": "Full-stack-панель администрирования"
+      },
       "priority": "secondary",
-      "short_description": "Full-stack user administration dashboard with FastAPI, Vue 3, CRUD workflows, search, sorting, pagination, validation, and Docker support.",
+      "short_description": {
+        "en": "Full-stack user administration dashboard with FastAPI, Vue 3, CRUD workflows, search, sorting, pagination, validation, and Docker support.",
+        "de": "Benutzerverwaltung mit FastAPI, Vue 3, CRUD-Abläufen, Suche, Sortierung, Seitennavigation, Validierung und Docker-Unterstützung.",
+        "ru": "Панель управления пользователями на FastAPI и Vue 3 с CRUD, поиском, сортировкой, пагинацией, валидацией и поддержкой Docker."
+      },
       "long_description": "A practical admin dashboard focused on efficient user management workflows. It includes real-time CRUD-style interactions, smart username generation, debounced global search, sorting, pagination, inline validation, reusable Vue components, and a FastAPI backend.",
       "role": "Builder and full-stack developer.",
       "technologies": [
@@ -470,10 +534,22 @@ export const projectsData = {
     },
     {
       "id": "leanera-digital-transition",
-      "title": "LeanERA: Digital Transition",
-      "category": "Web Application Engineering / Professional Case Study",
+      "title": {
+        "en": "LeanERA: Digital Transition",
+        "de": "LeanERA: Digitaler Wandel",
+        "ru": "LeanERA: цифровая трансформация"
+      },
+      "category": {
+        "en": "Web Application Engineering / Professional Case Study",
+        "de": "Webanwendungsentwicklung / Berufliches Projekt",
+        "ru": "Разработка веб-приложений / Профессиональный проект"
+      },
       "priority": "secondary",
-      "short_description": "Modern Vue/Nuxt applications and product-focused architecture work supporting a startup's digital transition.",
+      "short_description": {
+        "en": "Modern Vue/Nuxt applications and product-focused architecture work supporting a startup's digital transition.",
+        "de": "Moderne Vue/Nuxt-Anwendungen und produktorientierte Architektur für den digitalen Wandel eines Startups.",
+        "ru": "Современные приложения Vue/Nuxt и продуктовая архитектура для цифровой трансформации стартапа."
+      },
       "long_description": "A professional case study focused on scalable codebases, cross-functional technology choices, Vue 3/Nuxt 3 delivery, and maintainable product foundations.",
       "role": "Software developer contributing modern frontend architecture and cross-functional technology choices.",
       "technologies": [
@@ -511,9 +587,17 @@ export const projectsData = {
     {
       "id": "mindq-lab",
       "title": "MindQ Lab",
-      "category": "Personal Product / Learning Experience",
+      "category": {
+        "en": "Personal Product / Learning Experience",
+        "de": "Eigenständiges Produkt / Lernerlebnis",
+        "ru": "Самостоятельный продукт / Обучающая платформа"
+      },
       "priority": "lab",
-      "short_description": "A psychology and personal-growth platform blending structured learning, daily progress, and reflective product UX.",
+      "short_description": {
+        "en": "A psychology and personal-growth platform blending structured learning, daily progress, and reflective product UX.",
+        "de": "Plattform für Psychologie und persönliche Entwicklung, die strukturiertes Lernen, täglichen Fortschritt und reflektierende Nutzerführung verbindet.",
+        "ru": "Платформа о психологии и личностном росте, объединяющая структурированное обучение, ежедневный прогресс и вдумчивое взаимодействие."
+      },
       "long_description": "MindQ Lab turns a personal learning concept into a polished Nuxt product experience with Firebase-backed flows, structured content, progress mechanics, and a calm interface for reflection.",
       "role": "Builder of a personal product and learning experience.",
       "technologies": [
@@ -549,9 +633,17 @@ export const projectsData = {
     {
       "id": "security-playground",
       "title": "Security Playground",
-      "category": "Developer Education / Web Security Lab",
+      "category": {
+        "en": "Developer Education / Web Security Lab",
+        "de": "Entwicklerbildung / Web-Sicherheitslabor",
+        "ru": "Обучение разработчиков / Лаборатория веб-безопасности"
+      },
       "priority": "lab",
-      "short_description": "Interactive demos of common web security issues and safer implementation patterns.",
+      "short_description": {
+        "en": "Interactive demos of common web security issues and safer implementation patterns.",
+        "de": "Interaktive Demos häufiger Web-Sicherheitsprobleme und sichererer Umsetzungsmuster.",
+        "ru": "Интерактивные демонстрации типичных проблем веб-безопасности и более безопасных подходов к реализации."
+      },
       "long_description": "A hands-on lab for learning about XSS, LocalStorage misuse, SQL injection simulations, and practical secure interface thinking.",
       "role": "Builder of interactive developer education demos.",
       "technologies": [
@@ -586,9 +678,17 @@ export const projectsData = {
     {
       "id": "page-scope",
       "title": "PageScope",
-      "category": "Browser Extension / Developer Utility",
+      "category": {
+        "en": "Browser Extension / Developer Utility",
+        "de": "Browser-Erweiterung / Entwicklerwerkzeug",
+        "ru": "Расширение браузера / Инструмент разработчика"
+      },
       "priority": "lab",
-      "short_description": "Chrome extension that analyzes websites locally and returns summaries, metadata, and technology hints.",
+      "short_description": {
+        "en": "Chrome extension that analyzes websites locally and returns summaries, metadata, and technology hints.",
+        "de": "Chrome-Erweiterung, die Websites lokal analysiert und Zusammenfassungen, Metadaten und Technologiehinweise liefert.",
+        "ru": "Расширение Chrome, которое локально анализирует сайты и предоставляет сводки, метаданные и сведения о технологиях."
+      },
       "long_description": "PageScope explores local-first browser tooling for quick website insight without sending page content away from the user's browser.",
       "role": "Builder of a local-first browser extension utility.",
       "technologies": [
@@ -623,9 +723,17 @@ export const projectsData = {
     {
       "id": "i18n-lint-cli",
       "title": "i18n Linter CLI",
-      "category": "CLI Tool / Developer Workflow",
+      "category": {
+        "en": "CLI Tool / Developer Workflow",
+        "de": "CLI-Werkzeug / Entwicklungsabläufe",
+        "ru": "CLI-инструмент / Процессы разработки"
+      },
       "priority": "lab",
-      "short_description": "CLI utility for checking translation files for missing keys, extra keys, and placeholder mismatches.",
+      "short_description": {
+        "en": "CLI utility for checking translation files for missing keys, extra keys, and placeholder mismatches.",
+        "de": "CLI-Werkzeug zur Prüfung von Übersetzungsdateien auf fehlende und zusätzliche Schlüssel sowie abweichende Platzhalter.",
+        "ru": "CLI-утилита для проверки файлов переводов на отсутствующие и лишние ключи и несовпадающие плейсхолдеры."
+      },
       "long_description": "A focused developer utility that helps multilingual projects keep locale files aligned and reduce release-time translation mistakes.",
       "role": "Builder of a developer workflow CLI.",
       "technologies": [
@@ -660,9 +768,17 @@ export const projectsData = {
     {
       "id": "family-space",
       "title": "Family Space",
-      "category": "Personal Productivity / Firebase App",
+      "category": {
+        "en": "Personal Productivity / Firebase App",
+        "de": "Persönliche Organisation / Firebase-Anwendung",
+        "ru": "Личная продуктивность / Приложение Firebase"
+      },
       "priority": "lab",
-      "short_description": "Family organization app with shared calendars, task management, messaging, and Firebase-backed collaboration.",
+      "short_description": {
+        "en": "Family organization app with shared calendars, task management, messaging, and Firebase-backed collaboration.",
+        "de": "Familienorganisations-App mit gemeinsamen Kalendern, Aufgabenverwaltung, Nachrichten und Zusammenarbeit über Firebase.",
+        "ru": "Приложение для организации семейных дел с общими календарями, задачами, сообщениями и совместной работой на Firebase."
+      },
       "long_description": "A practical personal productivity app exploring shared household coordination, family workflows, and realtime-feeling collaboration patterns.",
       "role": "Builder of a personal productivity application.",
       "technologies": [
@@ -699,9 +815,17 @@ export const projectsData = {
     {
       "id": "sunlit-tales",
       "title": "Sunlit Tales / Poetry Mood Game",
-      "category": "Content Platform / Creative Web",
+      "category": {
+        "en": "Content Platform / Creative Web",
+        "de": "Inhaltsplattform / Kreatives Web",
+        "ru": "Контентная платформа / Творческий веб-проект"
+      },
       "priority": "lab",
-      "short_description": "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
+      "short_description": {
+        "en": "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
+        "de": "Lyrik- und Inhaltsplattform mit einer KI-Stimmungs- und Spielfunktion, die russischsprachige Literaturquizrunden aus vorhandenen Gedichten erstellt.",
+        "ru": "Платформа поэзии и контента с ИИ-функцией настроения и игры, создающей русскоязычные литературные викторины на основе существующих стихотворений."
+      },
       "long_description": "A creative publishing project exploring content architecture, quiet reading interfaces, and full-stack web delivery.",
       "role": "Builder of a creative content platform.",
       "technologies": [
@@ -743,9 +867,17 @@ export const projectsData = {
     {
       "id": "job-command-center",
       "title": "Job Command Center",
-      "category": "AI automation / job workflow command center",
+      "category": {
+        "en": "AI automation / job workflow command center",
+        "de": "KI-Automatisierung / Zentrale für Bewerbungsabläufe",
+        "ru": "Автоматизация с ИИ / Центр управления поиском работы"
+      },
       "priority": "secondary",
-      "short_description": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+      "short_description": {
+        "en": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
+        "de": "Selbst gehostetes, kostenbewusstes Werkzeug zur Stellensuche: sortiert Angebote, extrahiert Informationen und prüft die Passung zum Profil. KI bleibt beratend, Entscheidungen werden von Menschen freigegeben.",
+        "ru": "Самостоятельно размещаемый центр поиска работы с контролем затрат: сортирует вакансии, извлекает сведения и оценивает соответствие профилю кандидата. ИИ даёт рекомендации, решения подтверждает человек."
+      },
       "long_description": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval.",
       "role": "Builder and full-stack developer.",
       "technologies": [
@@ -1735,4 +1867,152 @@ export const agentData = {
     "Distinguish documented facts from interpretation.",
     "When the knowledge base does not contain enough evidence, say so clearly."
   ]
+};
+
+export const sourceLabels = {
+  "skill:frontend": {
+    "en": "Frontend",
+    "de": "Frontend",
+    "ru": "Фронтенд"
+  },
+  "skill:backend": {
+    "en": "Backend",
+    "de": "Backend",
+    "ru": "Бэкенд"
+  },
+  "skill:ai-automation": {
+    "en": "AI / Automation",
+    "de": "KI / Automatisierung",
+    "ru": "ИИ / Автоматизация"
+  },
+  "skill:engineering": {
+    "en": "Engineering",
+    "de": "Softwareentwicklung",
+    "ru": "Разработка ПО"
+  },
+  "skill:transferable": {
+    "en": "Transferable Skills",
+    "de": "Übertragbare Fähigkeiten",
+    "ru": "Переносимые навыки"
+  },
+  "skill:languages": {
+    "en": "Languages",
+    "de": "Sprachen",
+    "ru": "Языки"
+  },
+  "faq:role-fit": {
+    "en": "What roles is Igal a good fit for?",
+    "de": "Für welche Rollen ist Igal geeignet?",
+    "ru": "Для каких ролей подходит Игаль?"
+  },
+  "faq:recruiter-summary": {
+    "en": "Summarize Igal for a recruiter.",
+    "de": "Fasse Igals Profil für die Personalgewinnung zusammen.",
+    "ru": "Кратко опишите Игаля для рекрутера."
+  },
+  "faq:frontend-experience": {
+    "en": "What is his frontend experience?",
+    "de": "Welche Frontend-Erfahrung hat er?",
+    "ru": "Какой у него опыт во фронтенде?"
+  },
+  "faq:saas-experience": {
+    "en": "Does he have SaaS experience?",
+    "de": "Hat er SaaS-Erfahrung?",
+    "ru": "Есть ли у него опыт с SaaS?"
+  },
+  "faq:ai-automation-experience": {
+    "en": "What is his AI/automation experience?",
+    "de": "Welche Erfahrung hat er mit KI und Automatisierung?",
+    "ru": "Какой у него опыт с ИИ и автоматизацией?"
+  },
+  "faq:first-project-to-review": {
+    "en": "Which project should I review first?",
+    "de": "Welches Projekt sollte ich zuerst ansehen?",
+    "ru": "Какой проект стоит посмотреть первым?"
+  },
+  "faq:not-junior": {
+    "en": "What makes him different from a junior developer?",
+    "de": "Was unterscheidet ihn von einem Junior-Entwickler?",
+    "ru": "Чем он отличается от начинающего разработчика?"
+  },
+  "faq:technologies": {
+    "en": "What technologies does he use?",
+    "de": "Welche Technologien nutzt er?",
+    "ru": "Какие технологии он использует?"
+  },
+  "faq:location": {
+    "en": "Where is he based?",
+    "de": "Wo lebt er?",
+    "ru": "Где он живёт?"
+  },
+  "faq:languages": {
+    "en": "What languages does he speak?",
+    "de": "Welche Sprachen spricht er?",
+    "ru": "На каких языках он говорит?"
+  },
+  "faq:wbs-fit": {
+    "en": "How does the WBS AI Agents & Automations course fit into his profile?",
+    "de": "Wie ergänzt die WBS-Weiterbildung AI Agents & Automations sein Profil?",
+    "ru": "Как программа WBS AI Agents & Automations дополняет его опыт?"
+  },
+  "faq:contact": {
+    "en": "How can someone contact Igal?",
+    "de": "Wie kann man Igal kontaktieren?",
+    "ru": "Как связаться с Игалем?"
+  },
+  "role-fit:Full-Stack Software Developer": {
+    "en": "Full-Stack Software Developer",
+    "de": "Full-Stack-Softwareentwickler",
+    "ru": "Full-stack-разработчик"
+  },
+  "role-fit:Frontend Developer": {
+    "en": "Frontend Developer",
+    "de": "Frontend-Entwickler",
+    "ru": "Фронтенд-разработчик"
+  },
+  "role-fit:Vue.js Developer": {
+    "en": "Vue.js Developer",
+    "de": "Vue.js-Entwickler",
+    "ru": "Разработчик Vue.js"
+  },
+  "role-fit:React Developer": {
+    "en": "React Developer",
+    "de": "React-Entwickler",
+    "ru": "Разработчик React"
+  },
+  "role-fit:TypeScript Developer": {
+    "en": "TypeScript Developer",
+    "de": "TypeScript-Entwickler",
+    "ru": "Разработчик TypeScript"
+  },
+  "role-fit:Software Developer": {
+    "en": "Software Developer",
+    "de": "Softwareentwickler",
+    "ru": "Разработчик ПО"
+  },
+  "role-fit:AI Software Developer": {
+    "en": "AI Software Developer",
+    "de": "KI-Softwareentwickler",
+    "ru": "Разработчик ПО с ИИ"
+  },
+  "role-fit:AI Automation Developer": {
+    "en": "AI Automation Developer",
+    "de": "Entwickler für KI-Automatisierung",
+    "ru": "Разработчик автоматизации с ИИ"
+  },
+  "role-fit:AI Workflow Developer": {
+    "en": "AI Workflow Developer",
+    "de": "Entwickler für KI-Workflows",
+    "ru": "Разработчик процессов с ИИ"
+  },
+  "role-fit:SaaS Developer": {
+    "en": "SaaS Developer",
+    "de": "SaaS-Entwickler",
+    "ru": "Разработчик SaaS"
+  },
+  "role-fit:API Integration Developer": {
+    "en": "API Integration Developer",
+    "de": "Entwickler für API-Integration",
+    "ru": "Разработчик интеграций API"
+  }
 };

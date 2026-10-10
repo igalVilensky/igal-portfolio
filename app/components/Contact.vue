@@ -90,7 +90,7 @@
 const { t } = useI18n();
 const contactCards = computed(() => [
   {
-    title: "Email",
+    title: t('homePage.email'),
     description: t('publicContent.emailDesc'),
     label: "vilenskyigal@gmail.com",
     href: "mailto:vilenskyigal@gmail.com",
@@ -120,7 +120,7 @@ const contactCards = computed(() => [
 
 const collaborationFits = computed(() => [1, 2, 3, 4].map((n) => t(`publicContent.topic${n}`)));
 
-const socialLinks = [
+const socialLinks = computed(() => ([
   {
     name: "LinkedIn",
     icon: "fab fa-linkedin-in",
@@ -134,16 +134,16 @@ const socialLinks = [
     external: true,
   },
   {
-    name: "Email",
+    name: t('homePage.email'),
     icon: "fas fa-envelope",
     url: "mailto:vilenskyigal@gmail.com",
     external: false,
   },
   {
-    name: "Portfolio",
+    name: t("nav.home"),
     icon: "fas fa-globe",
     url: "https://igalvilensky.netlify.app/",
     external: true,
   },
-];
+]));
 </script>

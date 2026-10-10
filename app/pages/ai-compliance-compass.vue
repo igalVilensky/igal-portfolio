@@ -6,7 +6,7 @@
         <div class="page-header-main">
         <div class="page-kicker">
           <span class="h-1.5 w-1.5 rounded-full bg-primary-500"></span>
-          Responsible AI workflow
+          {{ t('ui.responsible_ai_workflow') }}
         </div>
         <h1 class="page-title">
           AI Compliance Compass
@@ -14,11 +14,10 @@
         </div>
         <div class="page-header-side">
         <p class="page-intro">
-          A practical, educational AI use-case checker for Germany and the EU. Describe how AI is used, then get
-          cautious prompts around AI Act risk, data protection, transparency, and next steps.
+          {{ t('ui.a_practical_educational_ai_usecase_checker_for_germany_and') }}
         </p>
         <p class="mt-4 text-xs font-semibold uppercase tracking-widest text-secondary-500 dark:text-secondary-400">
-          Educational advisory tool • Not legal advice
+          {{ t('ui.educational_advisory_tool_not_legal_advice') }}
         </p>
         </div>
       </header>
@@ -30,10 +29,10 @@
           <div class="space-y-6">
             <div>
               <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
-                Describe Your AI Use Case
+                {{ t('ui.describe_your_ai_use_case') }}
               </h2>
               <p class="text-secondary-600 dark:text-secondary-400">
-                Tell us how you use, build, or plan to use AI
+                {{ t('ui.tell_us_how_you_use_build_or_plan_to') }}
               </p>
             </div>
 
@@ -41,11 +40,11 @@
               <textarea
                 v-model="userDescription"
                 rows="4"
-                placeholder="e.g. We use ChatGPT to summarize customer support tickets.&#10;e.g. We are building an AI hiring tool that ranks applicants.&#10;e.g. We generate marketing images with AI.&#10;e.g. We use Groq to analyze user messages in our web app.&#10;e.g. We train a model on scraped website content."
+                :placeholder="t('ui.eg_we_use_chatgpt_to_summarize_customer_support_ticketseg')"
                 class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white resize-none text-base"
               ></textarea>
               <p class="text-sm text-secondary-500 dark:text-secondary-400">
-                Be specific about the AI tool, data involved, users affected, and your role.
+                {{ t('ui.be_specific_about_the_ai_tool_data_involved_users') }}
               </p>
             </div>
 
@@ -56,11 +55,11 @@
             >
               <Loader2 v-if="isLoading" :size="18" class="animate-spin" />
               <Search v-else :size="18" />
-              <span>{{ isLoading ? 'Analyzing...' : 'Analyze My Use Case' }}</span>
+              <span>{{ isLoading ? t('ui.analyzing') : t('ui.analyze_my_use_case') }}</span>
             </button>
 
             <p v-if="errorMessage" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
-              {{ errorMessage }}
+              {{ displayText(errorMessage) }}
             </p>
           </div>
         </div>
@@ -70,33 +69,33 @@
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
             <div class="mb-8">
               <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
-                Extracted Information
+                {{ t('ui.extracted_information') }}
               </h2>
               <p class="text-secondary-600 dark:text-secondary-400">
-                Here's what I understood from your description
+                {{ t('ui.heres_what_i_understood_from_your_description') }}
               </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Role</div>
-                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.role || 'Unclear' }}</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">{{ t('ui.role') }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ displayText(extractedData.role) }}</div>
               </div>
               <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">AI Usage</div>
-                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.usageType || 'Unclear' }}</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">{{ t('ui.ai_usage') }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ displayText(extractedData.usageType) }}</div>
               </div>
               <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Domain</div>
-                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.domain || 'Unclear' }}</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">{{ t('ui.domain') }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ displayText(extractedData.domain) }}</div>
               </div>
               <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Data Types</div>
-                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.dataTypes?.join(', ') || 'Unclear' }}</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">{{ t('ui.data_types') }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.dataTypes?.map(displayText).join(', ') || displayText('unsure') }}</div>
               </div>
               <div class="bg-secondary-50 dark:bg-white/5 rounded-lg p-4 border border-secondary-100 dark:border-white/5">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">Impact</div>
-                <div class="text-secondary-900 dark:text-white font-semibold">{{ extractedData.impactOnPeople || 'Unclear' }}</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-2">{{ t('ui.impact') }}</div>
+                <div class="text-secondary-900 dark:text-white font-semibold">{{ displayText(extractedData.impactOnPeople) }}</div>
               </div>
             </div>
 
@@ -105,13 +104,13 @@
                 @click="proceedToResults"
                 class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg py-3 text-base transition-all"
               >
-                Continue
+                {{ t('ui.continue') }}
               </button>
               <button
                 @click="askClarification"
                 class="flex-1 bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-lg py-3 text-base transition-all"
               >
-                Clarify
+                {{ t('ui.clarify') }}
               </button>
             </div>
           </div>
@@ -121,21 +120,21 @@
         <div v-if="currentState === 'clarification'" class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-8">
           <div class="mb-6">
             <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
-              Need More Details
+              {{ t('ui.need_more_details') }}
             </h2>
             <p class="text-secondary-600 dark:text-secondary-400">
-              Please clarify the missing information
+              {{ t('ui.please_clarify_the_missing_information') }}
             </p>
           </div>
 
           <div class="space-y-4">
             <div v-for="question in clarificationQuestions" :key="question.id" class="space-y-2">
-              <label class="text-sm font-semibold text-secondary-900 dark:text-white">{{ question.text }}</label>
+              <label class="text-sm font-semibold text-secondary-900 dark:text-white">{{ displayText(question.text) }}</label>
               <input
                 v-if="question.type === 'text'"
                 v-model="clarificationAnswers[question.id]"
                 type="text"
-                :placeholder="question.placeholder"
+                :placeholder="displayText(question.placeholder)"
                 class="w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
               />
               <select
@@ -143,8 +142,8 @@
                 v-model="clarificationAnswers[question.id]"
                 class="clarification-select w-full bg-secondary-50 dark:bg-white/5 border border-secondary-200 dark:border-white/10 rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary-500 outline-none transition-all text-secondary-900 dark:text-white"
               >
-                <option disabled value="">Select an option</option>
-                <option v-for="option in question.options" :key="option.value" :value="option.value">{{ option.label }}</option>
+                <option disabled value="">{{ t('ui.select_an_option') }}</option>
+                <option v-for="option in question.options" :key="option.value" :value="option.value">{{ displayText(option.label) }}</option>
               </select>
             </div>
           </div>
@@ -156,7 +155,7 @@
           >
             <Loader2 v-if="isLoading" :size="18" class="animate-spin" />
             <Check v-else :size="18" />
-            <span>{{ isLoading ? 'Processing...' : 'Continue' }}</span>
+            <span>{{ isLoading ? t('ui.processing') : t('ui.continue') }}</span>
           </button>
         </div>
 
@@ -164,105 +163,105 @@
         <div v-if="currentState === 'results'" class="space-y-6">
           <!-- Header -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8 mb-6">
-            <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-4">Compliance Assessment</h2>
-            <p class="text-secondary-600 dark:text-secondary-400">Educational overview based on the AI Act and related EU regulations.</p>
+            <h2 class="text-2xl font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.compliance_assessment') }}</h2>
+            <p class="text-secondary-600 dark:text-secondary-400">{{ t('ui.educational_overview_based_on_the_ai_act_and_related') }}</p>
             <p v-if="errorMessage" class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-200">
-              {{ errorMessage }}
+              {{ displayText(errorMessage) }}
             </p>
           </div>
 
             <!-- Quick Classification -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div class="bg-secondary-50 dark:bg-white/5 rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">Likely Role</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">{{ t('ui.likely_role') }}</div>
                 <div class="flex items-center justify-center gap-2">
                   <i class="fas fa-user-gear text-primary-600"></i>
-                  <span class="text-secondary-900 dark:text-white font-bold text-lg">{{ complianceData.role }}</span>
+                  <span class="text-secondary-900 dark:text-white font-bold text-lg">{{ displayText(complianceData.role) }}</span>
                 </div>
-                <div class="text-sm text-secondary-500 dark:text-secondary-400 mt-2">Role inferred from use case and deployment context.</div>
+                <div class="text-sm text-secondary-500 dark:text-secondary-400 mt-2">{{ t('ui.role_inferred_from_use_case_and_deployment_context') }}</div>
               </div>
               <div class="rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10" :class="riskTheme.bg">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">AI Act Risk Level</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">{{ t('ui.ai_act_risk_level') }}</div>
                 <div class="flex items-center justify-center gap-2">
                   <i :class="riskTheme.icon"></i>
-                  <span class="font-bold text-lg">{{ complianceData.riskLevel }}</span>
+                  <span class="font-bold text-lg">{{ displayText(complianceData.riskLevel) }}</span>
                 </div>
-                <div class="text-sm mt-2 opacity-90">{{ riskTheme.label }}</div>
+                <div class="text-sm mt-2 opacity-90">{{ displayText(riskTheme.label) }}</div>
               </div>
               <div class="rounded-xl p-5 text-center border border-secondary-200 dark:border-white/10" :class="confidenceTheme.bg">
-                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">Confidence</div>
+                <div class="text-xs font-bold uppercase tracking-widest text-secondary-500 dark:text-secondary-400 mb-3">{{ t('portfolioAgent.confidence.label') }}</div>
                 <div class="flex items-center justify-center gap-2">
                   <i :class="confidenceTheme.icon"></i>
-                  <span class="font-bold text-lg">{{ complianceData.confidence }}</span>
+                  <span class="font-bold text-lg">{{ displayText(complianceData.confidence) }}</span>
                 </div>
-                <div class="text-sm mt-2 opacity-90">How sure the snapshot is based on available information.</div>
+                <div class="text-sm mt-2 opacity-90">{{ t('ui.how_sure_the_snapshot_is_based_on_available_information') }}</div>
               </div>
             </div>
 
             <div class="text-sm text-secondary-600 dark:text-secondary-400 mb-6 leading-relaxed">
-              {{ complianceData.reasoning }}
+              {{ displayText(complianceData.reasoning) }}
             </div>
           </div>
 
           <!-- Risk Explanation -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">AI Act Risk Explanation</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.ai_act_risk_explanation') }}</h3>
             <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
-              {{ complianceData.riskExplanation }}
+              {{ displayText(complianceData.riskExplanation) }}
             </div>
           </div>
 
           <!-- Data Protection Check -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Data Protection Check</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.data_protection_check') }}</h3>
             <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
-              {{ complianceData.gdprCheck }}
+              {{ displayText(complianceData.gdprCheck) }}
             </div>
           </div>
 
           <!-- Copyright Check -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Copyright & Content Check</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.copyright_content_check') }}</h3>
             <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
-              {{ complianceData.copyrightCheck }}
+              {{ displayText(complianceData.copyrightCheck) }}
             </div>
           </div>
 
           <!-- Transparency Check -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Transparency & Labeling Check</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.transparency_labeling_check') }}</h3>
             <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
-              {{ complianceData.transparencyCheck }}
+              {{ displayText(complianceData.transparencyCheck) }}
             </div>
           </div>
 
           <!-- AI Literacy -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">AI Literacy & Governance</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.ai_literacy_governance') }}</h3>
             <div class="text-secondary-600 dark:text-secondary-400 leading-relaxed text-sm">
-              Organisations should ensure people involved in AI use understand the capabilities, limitations, risks, and responsible use of AI systems. This includes human oversight, escalation processes, and regular training.
+              {{ t('ui.organisations_should_ensure_people_involved_in_ai_use_understand') }}
             </div>
           </div>
 
           <!-- Next Steps -->
           <div class="rounded-2xl border border-secondary-200 dark:border-white/10 bg-white dark:bg-dark-surface/30 p-8">
-            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">Practical Next Steps</h3>
+            <h3 class="text-lg font-bold text-secondary-900 dark:text-white mb-4">{{ t('ui.practical_next_steps') }}</h3>
             <ul class="space-y-2 text-secondary-600 dark:text-secondary-400 text-sm">
               <li v-for="step in complianceData.nextSteps" :key="step" class="flex items-start gap-3">
                 <i class="fas fa-check text-primary-600 mt-0.5 flex-shrink-0"></i>
-                <span>{{ step }}</span>
+                <span>{{ displayText(step) }}</span>
               </li>
             </ul>
           </div>
 
           <!-- Disclaimer -->
           <div class="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-8">
-            <h3 class="text-lg font-bold text-amber-900 dark:text-amber-100 mb-3">Important Disclaimer</h3>
+            <h3 class="text-lg font-bold text-amber-900 dark:text-amber-100 mb-3">{{ t('ui.important_disclaimer') }}</h3>
             <p class="text-amber-800 dark:text-amber-200 text-sm leading-relaxed mb-3">
-              This tool provides an educational, non-binding overview and does not constitute legal advice. For specific compliance decisions, consult a qualified legal professional or the relevant official authorities. The AI Act is complex and interpretations may vary.
+              {{ t('ui.this_tool_provides_an_educational_nonbinding_overview_and_does') }}
             </p>
             <p class="text-amber-800 dark:text-amber-200 text-sm leading-relaxed">
-              For official guidance, visit the <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">Bundesnetzagentur AI Service Desk</a> or use their <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">AI Compliance Compass</a>.
+              {{ t('ui.for_official_guidance_visit_the') }} <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AI_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">{{ t('ui.bundesnetzagentur_ai_service_desk') }}</a> {{ t('ui.or_use_their') }} <a href="https://www.bundesnetzagentur.de/EN/Areas/Telecommunications/Companies/Telecommunication/AI/AIComplianceCompass/AIComplianceCompass_node.html" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">AI Compliance Compass</a>.
             </p>
           </div>
 
@@ -272,7 +271,7 @@
               @click="reset"
               class="bg-secondary-100 dark:bg-white/5 hover:bg-secondary-200 dark:hover:bg-white/10 text-secondary-700 dark:text-secondary-300 font-bold rounded-lg px-8 py-3 text-base transition-all"
             >
-              Analyze Another Use Case
+              {{ t('ui.analyze_another_use_case') }}
             </button>
           </div>
         </div>
@@ -281,8 +280,64 @@
 </template>
 
 <script setup lang="ts">
+const { t, locale, te } = useI18n();
 import { ref, computed } from 'vue';
 import { Loader2, Search, Check } from "lucide-vue-next";
+
+const responseLanguage = computed(() => locale.value === 'de' ? 'German' : locale.value === 'ru' ? 'Russian' : 'English');
+const enumKeys: Record<string, string> = {
+  "provider": "ui.provider",
+  "deployer": "ui.deployer",
+  "importer": "ui.importer",
+  "distributor": "ui.distributor",
+  "product_manufacturer": "ui.product_manufacturer",
+  "existing_tool": "ui.existing_ai_tool",
+  "building_system": "ui.building_an_ai_system",
+  "integrating_ai": "ui.ai_integration",
+  "training_model": "ui.model_training",
+  "generating_content": "ui.content_generation",
+  "automated_decision_support": "ui.automated_decision_support",
+  "education": "ui.education",
+  "employment": "ui.employmenthr",
+  "healthcare": "ui.healthcare",
+  "finance": "ui.finance_credit_or_insurance",
+  "public_services": "ui.public_services",
+  "law_enforcement": "ui.law_enforcement",
+  "migration": "ui.migration_or_asylum",
+  "marketing": "ui.marketing_or_content_generation",
+  "customer_support": "ui.customer_support",
+  "internal_productivity": "ui.internal_productivity",
+  "software_development": "ui.software_development",
+  "other": "ui.other_not_sure",
+  "unsure": "ui.unclear",
+  "unclear": "ui.unclear",
+  "unknown": "ui.unclear",
+  "personal_data": "ui.personal_data",
+  "sensitive_data": "ui.sensitive_data",
+  "children_data": "ui.childrens_data",
+  "confidential_data": "ui.confidential_data",
+  "copyrighted_material": "ui.copyrighted_material",
+  "scraped_data": "ui.scraped_data",
+  "none": "ui.none",
+  "suggestions_only": "ui.provides_suggestions_only",
+  "suggests_only": "ui.provides_suggestions_only",
+  "influences_decisions": "ui.influences_decisions_about_people",
+  "automates_decisions": "ui.automates_decisions_about_people",
+  "affects_essential_access": "ui.affects_access_to_essential_services_education_jobs_healthcare_etc",
+  "minimal": "ui.minimal_risk",
+  "low": "ui.low",
+  "limited": "ui.limited_risk",
+  "high-risk": "ui.high_risk",
+  "high": "ui.high",
+  "prohibited": "ui.prohibited",
+  "medium": "ui.medium"
+};
+const displayText = (value: unknown): string => {
+  if (typeof value !== 'string' || !value) return t('ui.unclear');
+  if (value.startsWith('ui.') && te(value)) return t(value);
+  const key = enumKeys[value.toLowerCase()];
+  return key ? t(key) : value;
+};
 
 const userDescription = ref('');
 const currentState = ref<'input' | 'understanding' | 'clarification' | 'results'>('input');
@@ -368,54 +423,54 @@ const normalizeExtractedData = (data: any) => ({
 });
 
 const normalizeComplianceData = (data: any) => ({
-  role: data.role || 'Unclear',
-  riskLevel: data.riskLevel || 'Unclear',
-  confidence: data.confidence || 'Low',
-  reasoning: data.reasoning || 'The information available is incomplete, so the risk assessment should be reviewed carefully.',
-  riskExplanation: data.riskExplanation || 'The risk classification is based on the information we have. If the use case is not fully described, the actual risk may differ.',
-  gdprCheck: data.gdprCheck || 'If personal or customer data is involved, GDPR review is recommended. Document the data flow and legal basis.',
-  copyrightCheck: data.copyrightCheck || 'Review whether AI-generated content is based on copyrighted or third-party material and verify provider terms.',
-  transparencyCheck: data.transparencyCheck || 'Keep users informed about AI usage and provide clear disclosures where appropriate.',
+  role: data.role || 'unclear',
+  riskLevel: data.riskLevel || 'unclear',
+  confidence: data.confidence || 'low',
+  reasoning: data.reasoning || "ui.the_information_available_is_incomplete_so_the_risk_assessment",
+  riskExplanation: data.riskExplanation || "ui.the_risk_classification_is_based_on_the_information_we",
+  gdprCheck: data.gdprCheck || "ui.if_personal_or_customer_data_is_involved_gdpr_review",
+  copyrightCheck: data.copyrightCheck || "ui.review_whether_aigenerated_content_is_based_on_copyrighted_or",
+  transparencyCheck: data.transparencyCheck || "ui.keep_users_informed_about_ai_usage_and_provide_clear",
   nextSteps: Array.isArray(data.nextSteps)
     ? data.nextSteps
     : [
-        'Clarify how data is collected and used by the AI.',
-        'Identify whether personal data is processed and check GDPR requirements.',
-        'Review the AI provider terms and data handling policies.',
-        'Document the AI use case, scope and intended audience.',
-        'Consider human oversight for important decisions or customer interactions.',
-        'Label AI-generated content clearly where required.',
-        'Track any potential biases or unintended impacts.',
-        'Seek specialized legal advice for high-risk AI applications.'
+        "ui.clarify_how_data_is_collected_and_used_by_the",
+        "ui.identify_whether_personal_data_is_processed_and_check_gdpr",
+        "ui.review_the_ai_provider_terms_and_data_handling_policies",
+        "ui.document_the_ai_use_case_scope_and_intended_audience",
+        "ui.consider_human_oversight_for_important_decisions_or_customer_interactions",
+        "ui.label_aigenerated_content_clearly_where_required",
+        "ui.track_any_potential_biases_or_unintended_impacts",
+        "ui.seek_specialized_legal_advice_for_highrisk_ai_applications"
       ]
 });
 
 const riskTheme = computed(() => {
   const level = (complianceData.value.riskLevel || '').toString().toLowerCase();
   if (level.includes('high')) {
-    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-triangle', label: 'Assessment: High Risk' };
+    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-triangle', label: "ui.assessment_high_risk" };
   }
   if (level.includes('limited')) {
-    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-exclamation-circle', label: 'Assessment: Limited Risk' };
+    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-exclamation-circle', label: "ui.assessment_limited_risk" };
   }
   if (level.includes('minimal') || level.includes('low')) {
-    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-shield-alt', label: 'Assessment: Lower Risk' };
+    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-shield-alt', label: "ui.assessment_lower_risk" };
   }
-  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Need more info' };
+  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: "ui.need_more_info" };
 });
 
 const confidenceTheme = computed(() => {
   const confidence = (complianceData.value.confidence || '').toString().toLowerCase();
   if (confidence.includes('high')) {
-    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-check-circle', label: 'High confidence' };
+    return { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300', icon: 'fas fa-check-circle', label: "ui.high_confidence" };
   }
   if (confidence.includes('medium')) {
-    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-adjust', label: 'Medium confidence' };
+    return { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300', icon: 'fas fa-adjust', label: "ui.medium_confidence" };
   }
   if (confidence.includes('low')) {
-    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-circle', label: 'Low confidence' };
+    return { bg: 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300', icon: 'fas fa-exclamation-circle', label: "ui.low_confidence" };
   }
-  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: 'Unknown confidence' };
+  return { bg: 'bg-secondary-100 text-secondary-700 dark:bg-white/5 dark:text-secondary-300', icon: 'fas fa-question-circle', label: "ui.unknown_confidence" };
 });
 
 const isFieldMissing = (field: string) => {
@@ -440,14 +495,14 @@ const buildClarificationQuestions = () => {
   if (isFieldMissing('role')) {
     questions.push({
       id: 'role',
-      text: 'What is your role in this AI use case?',
+      text: "ui.what_is_your_role_in_this_ai_use_case",
       type: 'select',
       options: [
-        { value: 'provider', label: 'Provider - I build/provide AI systems' },
-        { value: 'deployer', label: 'Deployer - I use AI systems in my organization' },
-        { value: 'importer', label: 'Importer - I import AI systems into the EU' },
-        { value: 'distributor', label: 'Distributor - I distribute AI systems' },
-        { value: 'product_manufacturer', label: 'Product Manufacturer - I integrate AI into products' }
+        { value: 'provider', label: "ui.provider_i_buildprovide_ai_systems" },
+        { value: 'deployer', label: "ui.deployer_i_use_ai_systems_in_my_organization" },
+        { value: 'importer', label: "ui.importer_i_import_ai_systems_into_the_eu" },
+        { value: 'distributor', label: "ui.distributor_i_distribute_ai_systems" },
+        { value: 'product_manufacturer', label: "ui.product_manufacturer_i_integrate_ai_into_products" }
       ]
     });
   }
@@ -455,15 +510,15 @@ const buildClarificationQuestions = () => {
   if (isFieldMissing('usageType')) {
     questions.push({
       id: 'usageType',
-      text: 'How are you using AI?',
+      text: "ui.how_are_you_using_ai",
       type: 'select',
       options: [
-        { value: 'existing_tool', label: 'Using an existing AI tool (like ChatGPT, Groq)' },
-        { value: 'building_system', label: 'Building/providing my own AI system' },
-        { value: 'integrating_ai', label: 'Integrating AI into a product or service' },
-        { value: 'training_model', label: 'Training or fine-tuning a model' },
-        { value: 'generating_content', label: 'Generating content (text, images, etc.)' },
-        { value: 'automated_decision_support', label: 'Automated decision support' }
+        { value: 'existing_tool', label: "ui.using_an_existing_ai_tool_like_chatgpt_groq" },
+        { value: 'building_system', label: "ui.buildingproviding_my_own_ai_system" },
+        { value: 'integrating_ai', label: "ui.integrating_ai_into_a_product_or_service" },
+        { value: 'training_model', label: "ui.training_or_finetuning_a_model" },
+        { value: 'generating_content', label: "ui.generating_content_text_images_etc" },
+        { value: 'automated_decision_support', label: "ui.automated_decision_support" }
       ]
     });
   }
@@ -471,21 +526,21 @@ const buildClarificationQuestions = () => {
   if (isFieldMissing('domain')) {
     questions.push({
       id: 'domain',
-      text: 'Which domain best describes the AI use case?',
+      text: "ui.which_domain_best_describes_the_ai_use_case",
       type: 'select',
       options: [
-        { value: 'customer_support', label: 'Customer support' },
-        { value: 'marketing', label: 'Marketing or content generation' },
-        { value: 'employment', label: 'Employment/HR' },
-        { value: 'education', label: 'Education' },
-        { value: 'healthcare', label: 'Healthcare' },
-        { value: 'finance', label: 'Finance, credit or insurance' },
-        { value: 'public_services', label: 'Public services' },
-        { value: 'law_enforcement', label: 'Law enforcement' },
-        { value: 'migration', label: 'Migration or asylum' },
-        { value: 'internal_productivity', label: 'Internal productivity' },
-        { value: 'software_development', label: 'Software development' },
-        { value: 'other', label: 'Other / not sure' }
+        { value: 'customer_support', label: "ui.customer_support" },
+        { value: 'marketing', label: "ui.marketing_or_content_generation" },
+        { value: 'employment', label: "ui.employmenthr" },
+        { value: 'education', label: "ui.education" },
+        { value: 'healthcare', label: "ui.healthcare" },
+        { value: 'finance', label: "ui.finance_credit_or_insurance" },
+        { value: 'public_services', label: "ui.public_services" },
+        { value: 'law_enforcement', label: "ui.law_enforcement" },
+        { value: 'migration', label: "ui.migration_or_asylum" },
+        { value: 'internal_productivity', label: "ui.internal_productivity" },
+        { value: 'software_development', label: "ui.software_development" },
+        { value: 'other', label: "ui.other_not_sure" }
       ]
     });
   }
@@ -493,23 +548,23 @@ const buildClarificationQuestions = () => {
   if (isFieldMissing('dataTypes')) {
     questions.push({
       id: 'dataTypes',
-      text: 'What types of data does the AI process?',
+      text: "ui.what_types_of_data_does_the_ai_process",
       type: 'text',
-      placeholder: 'e.g. user messages, emails, CVs, customer data, images, scraped content'
+      placeholder: "ui.eg_user_messages_emails_cvs_customer_data_images_scraped"
     });
   }
 
   if (isFieldMissing('impactOnPeople')) {
     questions.push({
       id: 'impactOnPeople',
-      text: 'How does the AI output affect people?',
+      text: "ui.how_does_the_ai_output_affect_people",
       type: 'select',
       options: [
-        { value: 'none', label: 'No significant impact on people' },
-        { value: 'suggestions_only', label: 'Provides suggestions only' },
-        { value: 'influences_decisions', label: 'Influences decisions about people' },
-        { value: 'automates_decisions', label: 'Automates decisions about people' },
-        { value: 'affects_essential_access', label: 'Affects access to essential services (education, jobs, healthcare, etc.)' }
+        { value: 'none', label: "ui.no_significant_impact_on_people" },
+        { value: 'suggestions_only', label: "ui.provides_suggestions_only" },
+        { value: 'influences_decisions', label: "ui.influences_decisions_about_people" },
+        { value: 'automates_decisions', label: "ui.automates_decisions_about_people" },
+        { value: 'affects_essential_access', label: "ui.affects_access_to_essential_services_education_jobs_healthcare_etc" }
       ]
     });
   }
@@ -563,7 +618,7 @@ Return a JSON object with these exact fields:
   "redFlags": ["array of potential issues"]
 }
 
-Be smart - infer from context. Return only valid JSON.`;
+Be smart - infer from context. Write free-text fields in ${responseLanguage.value}; keep all JSON keys and enum codes exactly as specified. Return only valid JSON.`;
 
     const response = await groqChat({
       prompt,
@@ -604,7 +659,7 @@ Be smart - infer from context. Return only valid JSON.`;
     }
   } catch (error: any) {
     console.error('Analysis error:', error);
-    errorMessage.value = error.data?.statusMessage || error.message || 'The AI analysis service is unavailable.';
+    errorMessage.value = "ui.the_ai_analysis_service_is_unavailable";
   } finally {
     isLoading.value = false;
   }
@@ -662,7 +717,7 @@ Generate a compliance analysis with these sections:
 
 Use plain language, avoid legal certainty, use words like "likely", "may", "should be reviewed". Include disclaimer language.
 
-Return as JSON object with these exact field names.`;
+Write reasoning, explanations, checks, and nextSteps in ${responseLanguage.value}. Keep role, riskLevel, confidence and JSON field names as the exact English codes specified above. Return as JSON object with these exact field names.`;
 
     const response = await groqChat({
       prompt,
@@ -682,42 +737,42 @@ Return as JSON object with these exact field names.`;
           role: extractedData.value.role || 'unsure',
           riskLevel: 'unclear',
           confidence: 'low',
-          reasoning: 'Based on the information provided, the compliance requirements are unclear and should be reviewed by a legal professional.',
-          riskExplanation: 'The risk level cannot be determined with confidence from the available information. This may require specialist legal review.',
-          gdprCheck: 'If personal data is processed, GDPR may apply. Consider data minimization and lawful processing bases.',
-          copyrightCheck: 'If training data includes copyrighted material, copyright considerations may apply.',
-          transparencyCheck: 'If users interact with AI, transparency about AI use may be beneficial.',
+          reasoning: "ui.based_on_the_information_provided_the_compliance_requirements_are",
+          riskExplanation: "ui.the_risk_level_cannot_be_determined_with_confidence_from",
+          gdprCheck: "ui.if_personal_data_is_processed_gdpr_may_apply_consider",
+          copyrightCheck: "ui.if_training_data_includes_copyrighted_material_copyright_considerations_may",
+          transparencyCheck: "ui.if_users_interact_with_ai_transparency_about_ai_use",
           nextSteps: [
-            'Define your AI system purpose clearly',
-            'Identify your role under the AI Act',
-            'Map input data and output usage',
-            'Check for personal data processing',
-            'Review third-party AI provider terms',
-            'Document the use case internally',
-            'Consider human oversight for important decisions',
-            'Seek legal advice for high-risk scenarios'
+            "ui.define_your_ai_system_purpose_clearly",
+            "ui.identify_your_role_under_the_ai_act",
+            "ui.map_input_data_and_output_usage",
+            "ui.check_for_personal_data_processing",
+            "ui.review_thirdparty_ai_provider_terms",
+            "ui.document_the_use_case_internally",
+            "ui.consider_human_oversight_for_important_decisions",
+            "ui.seek_legal_advice_for_highrisk_scenarios"
           ]
         };
       }
     }
   } catch (error: any) {
     console.error('Compliance generation error:', error);
-    errorMessage.value = error.data?.statusMessage || error.message || 'The compliance report service is unavailable.';
+    errorMessage.value = "ui.the_compliance_report_service_is_unavailable";
     complianceData.value = normalizeComplianceData({
-      role: extractedData.value.role || 'Unclear',
-      riskLevel: 'Unclear',
-      confidence: 'Low',
-      reasoning: 'The AI service could not generate a full report. Review the use case manually and treat this as incomplete.',
-      riskExplanation: 'Risk classification is unavailable because the report request failed.',
-      gdprCheck: 'If personal data is processed, GDPR review is recommended. Map the data flow and legal basis.',
-      copyrightCheck: 'Review whether copyrighted or third-party material is involved.',
-      transparencyCheck: 'Inform users where AI is used and keep human oversight for important decisions.',
+      role: extractedData.value.role || 'unclear',
+      riskLevel: 'unclear',
+      confidence: 'low',
+      reasoning: "ui.the_ai_service_could_not_generate_a_full_report",
+      riskExplanation: "ui.risk_classification_is_unavailable_because_the_report_request_failed",
+      gdprCheck: "ui.if_personal_data_is_processed_gdpr_review_is_recommended",
+      copyrightCheck: "ui.review_whether_copyrighted_or_thirdparty_material_is_involved",
+      transparencyCheck: "ui.inform_users_where_ai_is_used_and_keep_human",
       nextSteps: [
-        'Document the AI use case and intended users.',
-        'Map input data, output data, and third-party providers.',
-        'Check whether personal or sensitive data is processed.',
-        'Review provider terms and retention policies.',
-        'Add human oversight for important outcomes.',
+        "ui.document_the_ai_use_case_and_intended_users",
+        "ui.map_input_data_output_data_and_thirdparty_providers",
+        "ui.check_whether_personal_or_sensitive_data_is_processed",
+        "ui.review_provider_terms_and_retention_policies",
+        "ui.add_human_oversight_for_important_outcomes",
       ],
     });
   } finally {
@@ -738,12 +793,12 @@ const reset = () => {
   errorMessage.value = '';
 };
 
-useHead({
+useHead(() => ({
   title: "AI Compliance Compass | Igal Vilensky",
   meta: [
-    { name: 'description', content: 'Educational AI compliance and responsible AI tool for practical EU/Germany use-case review.' }
+    { name: 'description', content: t("ui.educational_ai_compliance_and_responsible_ai_tool_for_practical") }
   ]
-});
+}));
 </script>
 
 <style scoped>

@@ -1,3 +1,5 @@
+import projectContent from "../../content/projects.json";
+import { getLocalizedValue } from "~/utils/localizedContent";
 // composables/useProjects.ts
 export type ProjectType = "work" | "experiment";
 
@@ -504,17 +506,22 @@ export const portfolioProjects: PortfolioProject[] = [
 ];
 
 export const useProjects = () => {
-  const workProjects = portfolioProjects.filter((project) => project.projectType === "work");
-  const experimentProjects = portfolioProjects.filter((project) => project.projectType === "experiment");
-  const homeFeaturedProjects = portfolioProjects.filter((project) => project.featuredHome);
-  const featuredWorkProjects = portfolioProjects.filter((project) => project.featuredWork);
-
+  const { locale } = useI18n();
+  const projects = computed(() => portfolioProjects.map((project) => {
+    const content = projectContent.projects.find((item) => item.id === project.id);
+    return content ? {
+      ...project,
+      title: getLocalizedValue(content.title, locale.value),
+      category: getLocalizedValue(content.category, locale.value),
+      shortDescription: getLocalizedValue(content.short_description, locale.value),
+    } : project;
+  }));
   return {
-    projects: portfolioProjects,
-    workProjects,
-    experimentProjects,
-    homeFeaturedProjects,
-    featuredWorkProjects,
+    projects,
+    workProjects: computed(() => projects.value.filter((p) => p.projectType === "work")),
+    experimentProjects: computed(() => projects.value.filter((p) => p.projectType === "experiment")),
+    homeFeaturedProjects: computed(() => projects.value.filter((p) => p.featuredHome)),
+    featuredWorkProjects: computed(() => projects.value.filter((p) => p.featuredWork)),
     currentFocus,
     skillGroups,
   };

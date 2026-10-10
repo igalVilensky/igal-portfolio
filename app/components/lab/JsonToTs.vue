@@ -2,17 +2,17 @@
   <section class="rounded-md border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
     <div class="mb-5">
       <h3 class="text-lg font-semibold text-secondary-950 dark:text-white">
-        JSON to TypeScript
+        {{ t('ui.json_to_typescript') }}
       </h3>
       <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-        Paste JSON and generate a simple TypeScript interface locally in the browser.
+        {{ t('ui.paste_json_and_generate_a_simple_typescript_interface_locally') }}
       </p>
     </div>
 
     <div class="space-y-4">
       <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <label class="block">
-          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Interface name</span>
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.interface_name') }}</span>
           <input
             v-model="interfaceName"
             type="text"
@@ -35,7 +35,7 @@
       </div>
 
       <label class="block">
-        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">JSON input</span>
+        <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.json_input') }}</span>
         <textarea
           v-model="inputJson"
           rows="10"
@@ -53,7 +53,7 @@
         class="flex items-center justify-center rounded-md border border-dashed border-secondary-200 bg-secondary-50/50 py-8 dark:border-dark-border dark:bg-dark-bg/50"
       >
         <p class="text-sm text-secondary-500 dark:text-secondary-400">
-          Generated interface will appear here.
+          {{ t('ui.generated_interface_will_appear_here') }}
         </p>
       </div>
 
@@ -63,14 +63,14 @@
       >
         <div class="flex items-center justify-between border-b border-secondary-200 px-3 py-2 dark:border-dark-border">
           <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">
-            Generated interface
+            {{ t('ui.generated_interface') }}
           </span>
           <button
             type="button"
             class="text-xs font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
             @click="copyToClipboard"
           >
-            {{ copied ? "Copied" : "Copy" }}
+            {{ copied ? t('ui.copied') : t('ui.copy') }}
           </button>
         </div>
 
@@ -81,6 +81,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { computed, ref } from "vue";
 
 type JsonExample = {
@@ -95,9 +96,9 @@ const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
 
 void props;
 
-const examples: JsonExample[] = [
+const examples = computed<JsonExample[]>(() => ([
   {
-    label: "Profile",
+    label: t('ui.profile'),
     interfaceName: "Profile",
     value: JSON.stringify(
       {
@@ -111,7 +112,7 @@ const examples: JsonExample[] = [
     ),
   },
   {
-    label: "Project",
+    label: t('ui.project'),
     interfaceName: "Project",
     value: JSON.stringify(
       {
@@ -142,11 +143,10 @@ const examples: JsonExample[] = [
       2
     ),
   },
-];
+]));
 
 const inputJson = ref("");
 const interfaceName = ref("RootObject");
-const error = ref("");
 const copied = ref(false);
 
 const normalizedInterfaceName = computed(() => {
@@ -159,18 +159,17 @@ const normalizedInterfaceName = computed(() => {
   return cleaned || fallback;
 });
 
-const tsInterface = computed(() => {
-  if (!inputJson.value.trim()) return "";
-  error.value = "";
-
+const conversion = computed(() => {
+  if (!inputJson.value.trim()) return { output: "", errorKey: "" };
   try {
     const parsed = JSON.parse(inputJson.value);
-    return generateInterface(parsed, normalizedInterfaceName.value);
+    return { output: generateInterface(parsed, normalizedInterfaceName.value), errorKey: "" };
   } catch {
-    error.value = "Invalid JSON input.";
-    return "";
+    return { output: "", errorKey: "ui.invalid_json_input" };
   }
 });
+const tsInterface = computed(() => conversion.value.output);
+const error = computed(() => conversion.value.errorKey ? t(conversion.value.errorKey) : "");
 
 const loadExample = (example: JsonExample) => {
   interfaceName.value = example.interfaceName;

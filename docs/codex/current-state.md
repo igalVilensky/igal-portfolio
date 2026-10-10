@@ -8,6 +8,29 @@ Igal is an **AI Software Engineer at Agorando Technologies GmbH since August 202
 
 Agorando may be described only at this confirmed high level. Do not publish or invent private project details, code, internal architecture, operational metrics, employee/customer data, credentials, or confidential business figures. More detail requires confirmation of accuracy and public disclosure suitability.
 
+## Milestone 3.1 completed — public localization audit and fixes
+
+Completed 2026-10-10. This section supersedes the remaining public-localization backlog in Milestone 3. The detailed inventory is in `docs/codex/milestone-3-1-i18n-audit.md`.
+
+* Audited every public route, the shared shell, tool components, script-generated states, structured project content, SEO, and assistant output labels. Found hardcoded English beyond the old key-consistency check: Work/case-study prose, experiment interfaces and results, AI-page explanations, compliance clarification/fallback content, footer labels, and assistant evidence labels.
+* Added EN/DE/RU translations in both locale directories. Public project summaries/categories and descriptive titles use the existing localized-content pattern; Home, Work, Experiments and AI resolve the shared canonical values reactively. Historical project facts and technical identifiers remain intact.
+* Translated setup-time lists and metadata now use reactive computations. Local error/fallback state stores keys where needed. The JSON tool now computes output and error together without render-time mutation, so invalid-input messages render reliably and react to locale changes.
+* Compliance API enums keep their existing values and receive localized display labels. System Design Sketcher and compliance prompts explicitly request the selected language for generated prose. No provider, model architecture, schema enum, or integration was replaced.
+* Assistant runtime suggestions match the neutral translated UI suggestions. New `content/source-labels.json` localizes skill, FAQ and role-fit evidence labels. Both runtimes resolve localized project fields safely for retrieval and return localized source labels; Netlify's catch preserves the request locale. Generated knowledge exports match canonical content. File links such as the CV no longer receive locale route prefixes.
+* Added `npm run lint:i18n:public` to catch literal template text, missing referenced keys, divergent locale mirrors, incomplete public structured translations, and stale generated project/source-label data. It complements the existing placeholder/key check and browser tests.
+
+### Milestone 3.1 verification
+
+* Content/locale JSON parsing, `npm run lint:i18n`, `npm run lint:i18n:public`, production `npm run build`, and whitespace checks pass. The source audit covers all 38 Vue components.
+* All 39 public route/language combinations return HTTP 200 in development and production. Rendered EN/DE/RU comparisons found only technical terms, code and names intentionally shared across languages.
+* Chrome checks passed for EN/DE/RU JSON invalid-input/empty/copy states, sketch generation/loading and selected-language prompts, compliance clarification and unavailable-provider fallback, XSS/SQL demo states, and assistant loading/fallback responses. Provider calls were mocked; separate offline tests exercised the actual Netlify fallback and validation paths in all three languages.
+* EN → DE → RU → EN switching passed at 1440px and 390px, including localized experiment UI, document language and preservation of the same browser document (no full reload).
+* The 390px sweep rendered all 39 localized pages without raw keys or horizontal overflow, but intermittent chunk-load errors prevented a clean JavaScript-error sweep. A diagnostic rerun confirmed Chrome `ERR_INSUFFICIENT_RESOURCES` and ended in a page crash; further browser runs were stopped. Full error-free browser coverage of every page remains unverified. Early development-server module-loading interruptions were superseded by successful targeted production-build checks.
+
+### Remaining limitations and next task
+
+No live AI-provider output quality, browser speech-recognition service, or translated downloadable PDF content was verified. Generated prose and user-entered content retain their original language; subsequent AI requests carry the selected language. The assistant's broader knowledge/compensation policy and legacy candidate-evaluation answers still require separately authorized Milestone 4 review. No redesign, dependencies, confidential employer content, commit or push was introduced.
+
 ## Milestone 3 completed — public content and homepage repositioning
 
 Completed 2026-10-10. The user-authorized scope expanded the former copy-only proposal to include homepage composition and neutral assistant introductory/default-question copy. This section supersedes the Milestone 2 follow-up inventory below.

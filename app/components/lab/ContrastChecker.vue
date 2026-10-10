@@ -2,17 +2,17 @@
   <section class="rounded-md border border-secondary-200 bg-white p-5 dark:border-dark-border dark:bg-dark-surface">
     <div class="mb-5">
       <h3 class="text-lg font-semibold text-secondary-950 dark:text-white">
-        A11y Contrast Checker
+        {{ t('ui.a11y_contrast_checker') }}
       </h3>
       <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-        Check foreground and background contrast against common WCAG text thresholds.
+        {{ t('ui.check_foreground_and_background_contrast_against_common_wcag_text') }}
       </p>
     </div>
 
     <div class="space-y-4">
       <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:items-end">
         <label class="block">
-          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Text color</span>
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.text_color') }}</span>
           <span class="mt-2 flex items-center gap-2 rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 dark:border-dark-border dark:bg-dark-bg">
             <input v-model="fg" type="color" class="h-7 w-7 cursor-pointer border-0 bg-transparent p-0" />
             <input
@@ -28,11 +28,11 @@
           class="rounded-md border border-secondary-200 px-3 py-2 text-xs font-medium text-secondary-600 transition-colors hover:border-secondary-400 hover:text-secondary-950 dark:border-dark-border dark:text-secondary-400 dark:hover:text-white"
           @click="swapColors"
         >
-          Swap
+          {{ t('ui.swap') }}
         </button>
 
         <label class="block">
-          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">Background</span>
+          <span class="text-xs font-medium text-secondary-600 dark:text-secondary-400">{{ t('ui.background_color') }}</span>
           <span class="mt-2 flex items-center gap-2 rounded-md border border-secondary-200 bg-secondary-50 px-3 py-2 dark:border-dark-border dark:bg-dark-bg">
             <input v-model="bg" type="color" class="h-7 w-7 cursor-pointer border-0 bg-transparent p-0" />
             <input
@@ -48,18 +48,18 @@
         class="rounded-md border p-4 transition-colors"
         :style="{ backgroundColor: safeBg, color: safeFg, borderColor: previewBorder }"
       >
-        <p class="text-base font-semibold">Visual preview</p>
+        <p class="text-base font-semibold">{{ t('ui.visual_preview') }}</p>
         <p class="mt-2 text-sm leading-6">
-          This sample approximates normal interface text on the selected background.
+          {{ t('ui.this_sample_approximates_normal_interface_text_on_the_selected') }}
         </p>
         <p class="mt-3 text-lg font-semibold">
-          Large text preview
+          {{ t('ui.large_text_preview') }}
         </p>
       </div>
 
       <div class="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)]">
         <div>
-          <p class="text-xs font-medium text-secondary-500 dark:text-secondary-500">Contrast ratio</p>
+          <p class="text-xs font-medium text-secondary-500 dark:text-secondary-500">{{ t('ui.contrast_ratio') }}</p>
           <p
             class="mt-1 text-3xl font-semibold"
             :class="passesAaNormal ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
@@ -79,7 +79,7 @@
               class="text-xs font-medium"
               :class="item.passes ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'"
             >
-              {{ item.passes ? "Pass" : "Fail" }}
+              {{ item.passes ? t('ui.pass') : t('ui.fail') }}
             </span>
           </div>
         </div>
@@ -93,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { computed, ref } from "vue";
 
 const props = withDefaults(defineProps<{ isFeatured?: boolean }>(), {
@@ -143,26 +144,26 @@ const passesAaaNormal = computed(() => ratioNumber.value >= 7);
 const passesAaaLarge = computed(() => ratioNumber.value >= 4.5);
 
 const contrastStates = computed(() => [
-  { label: "Normal text AA", passes: passesAaNormal.value },
-  { label: "Large text AA", passes: passesAaLarge.value },
-  { label: "Normal text AAA", passes: passesAaaNormal.value },
-  { label: "Large text AAA", passes: passesAaaLarge.value },
+  { label: t('ui.normal_text_aa'), passes: passesAaNormal.value },
+  { label: t('ui.large_text_aa'), passes: passesAaLarge.value },
+  { label: t('ui.normal_text_aaa'), passes: passesAaaNormal.value },
+  { label: t('ui.large_text_aaa'), passes: passesAaaLarge.value },
 ]);
 
 const guidance = computed(() => {
   if (passesAaaNormal.value) {
-    return "Strong contrast for normal and large text.";
+    return t('ui.strong_contrast_for_normal_and_large_text');
   }
 
   if (passesAaNormal.value) {
-    return "Good for normal AA text and large AAA text; increase contrast for stricter normal-text AAA.";
+    return t('ui.good_for_normal_aa_text_and_large_aaa_text');
   }
 
   if (passesAaLarge.value) {
-    return "Usable for large AA text only; normal interface text needs more contrast.";
+    return t('ui.usable_for_large_aa_text_only_normal_interface_text');
   }
 
-  return "Increase contrast before using this pairing for readable interface text.";
+  return t('ui.increase_contrast_before_using_this_pairing_for_readable_interface');
 });
 
 const swapColors = () => {

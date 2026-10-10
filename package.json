@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint:i18n": "npx i18n-lint ./i18n/locales --base en"
+    "lint:i18n": "npx i18n-lint ./i18n/locales --base en",
+    "lint:i18n:public": "node scripts/check-public-i18n.mjs"
   },
   "dependencies": {
     "@nuxtjs/color-mode": "^3.5.2",

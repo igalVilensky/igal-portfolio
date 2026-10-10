@@ -79,7 +79,8 @@ type ConversationItem = {
 const portfolioAgent = usePortfolioAgent();
 const conversationItems = ref<ConversationItem[]>([]);
 const isLoading = ref(false);
-const errorMessage = ref("");
+const errorKey = ref("");
+const errorMessage = computed(() => errorKey.value ? t(errorKey.value) : "");
 const selectedMode = ref<PortfolioAgentMode>("professional");
 
 const defaultSuggestions = computed(() =>
@@ -149,11 +150,11 @@ const askQuestion = async (rawQuestion: string) => {
   if (!question || isLoading.value) return;
 
   if (question.length > 500) {
-    errorMessage.value = t("portfolioAgent.errorTooLong");
+    errorKey.value = "portfolioAgent.errorTooLong";
     return;
   }
 
-  errorMessage.value = "";
+  errorKey.value = "";
   isLoading.value = true;
 
   const item: ConversationItem = {
@@ -176,7 +177,7 @@ const askQuestion = async (rawQuestion: string) => {
     isLoading.value = false;
     await scrollToElement(`portfolio-answer-${item.id}`);
   } catch {
-    errorMessage.value = t("portfolioAgent.errorUnavailable");
+    errorKey.value = "portfolioAgent.errorUnavailable";
     conversationItems.value = conversationItems.value.filter((entry) => entry.id !== item.id);
   } finally {
     isLoading.value = false;

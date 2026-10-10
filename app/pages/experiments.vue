@@ -3,9 +3,9 @@
     <div class="page-container">
       <header class="page-header">
         <div class="page-header-main">
-          <h1 class="page-title">Experiments</h1>
+          <h1 class="page-title">{{ t('nav.experiments') }}</h1>
           <p class="page-intro mt-4">
-            Small interactive tools and lab projects. Some are usable mini-tools; others are smaller proof points.
+            {{ t('ui.small_interactive_tools_and_lab_projects_some_are_usable') }}
           </p>
         </div>
       </header>
@@ -13,10 +13,10 @@
       <section aria-labelledby="interactive-tools-title" class="mb-14">
         <div class="mb-6 flex items-center gap-2">
           <Terminal :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="interactive-tools-title" class="section-title m-0">Interactive tools</h2>
+          <h2 id="interactive-tools-title" class="section-title m-0">{{ t('ui.interactive_tools') }}</h2>
         </div>
         <p class="mt-2 mb-6 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-          Lightweight utilities for sketching, transforming, and checking interface details directly in the browser.
+          {{ t('ui.lightweight_utilities_for_sketching_transforming_and_checking_interface_details') }}
         </p>
 
         <div class="space-y-5">
@@ -32,10 +32,10 @@
       <section aria-labelledby="lab-shelf-title">
         <div class="mb-6 flex items-center gap-2">
           <FlaskConical :size="24" class="text-secondary-900 dark:text-white" />
-          <h2 id="lab-shelf-title" class="section-title m-0">Lab shelf</h2>
+          <h2 id="lab-shelf-title" class="section-title m-0">{{ t('ui.lab_shelf') }}</h2>
         </div>
         <p class="mt-2 mb-6 max-w-3xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-          Smaller utilities, learning projects, and exploratory builds kept intentionally quieter than the main Work page.
+          {{ t('ui.smaller_utilities_learning_projects_and_exploratory_builds_kept_intentionally') }}
         </p>
 
         <div class="border-y border-secondary-200 dark:border-dark-border">
@@ -68,7 +68,7 @@
               >
                   <NuxtLink
                   v-if="link.internal"
-                  :to="link.url"
+                  :to="localePath(link.url)"
                   class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
@@ -93,6 +93,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 import { computed } from "vue";
 import { Terminal, FlaskConical, ExternalLink } from "lucide-vue-next";
 import ArchitectSimulator from "~/components/ArchitectSimulator.vue";
@@ -113,6 +114,7 @@ type LabRow = PortfolioProject & {
 };
 
 const { projects } = useProjects();
+const localePath = useLocalePath();
 
 const labProjectIds = [
   "security-playground",
@@ -126,9 +128,9 @@ const labProjectIds = [
 const isInternalUrl = (url: string) => url.startsWith("/");
 
 const getLiveLabel = (url: string) => {
-  if (url.startsWith("/")) return "Open tool";
+  if (url.startsWith("/")) return t('ui.open_tool');
   if (url.includes("npmjs.com/package/")) return "npm";
-  return "Live";
+  return t('ui.live');
 };
 
 const getLabLinks = (project: PortfolioProject): LabLink[] => {
@@ -152,7 +154,7 @@ const getLabLinks = (project: PortfolioProject): LabLink[] => {
 
   if (project.caseStudyUrl) {
     links.push({
-      label: "Case study",
+      label: t('ui.case_study'),
       url: project.caseStudyUrl,
       internal: true,
     });
@@ -170,19 +172,19 @@ const toLabRow = (project: PortfolioProject): LabRow => ({
 
 const labRows = computed(() =>
   labProjectIds
-    .map((id) => projects.find((project) => project.id === id))
+    .map((id) => projects.value.find((project) => project.id === id))
     .filter((project): project is PortfolioProject => Boolean(project))
     .map(toLabRow)
 );
 
-useHead({
-  title: "Experiments | Igal Vilensky",
+useHead(() => ({
+  title: t('ui.experiments_igal_vilensky'),
   meta: [
     {
       name: "description",
       content:
-        "Interactive tools, lab projects, and smaller technical experiments by Igal Vilensky.",
+        t('ui.interactive_tools_lab_projects_and_smaller_technical_experiments_by'),
     },
   ],
-});
+}));
 </script>
