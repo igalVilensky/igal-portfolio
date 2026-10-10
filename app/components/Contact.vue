@@ -4,16 +4,15 @@
       <header class="page-header">
         <div class="page-header-main">
         <span class="page-kicker">
-          Contact
+          {{ t('homePage.contactTitle') }}
         </span>
         <h1 class="page-title">
-          Let's talk about developer roles, SaaS products, or practical AI automations.
+          {{ t('publicContent.contactTitle') }}
         </h1>
         </div>
         <div class="page-header-side">
         <p class="page-intro">
-          I am open to full-stack developer roles, AI automation projects, SaaS/product engineering work, and focused
-          collaborations where shipping useful software matters.
+          {{ t('publicContent.contact') }}
         </p>
         </div>
       </header>
@@ -44,10 +43,10 @@
       <section class="mb-12 rounded-3xl border border-secondary-100 bg-white/75 p-8 shadow-xl shadow-secondary-900/5 backdrop-blur dark:border-white/10 dark:bg-dark-surface/45">
         <div class="mb-8">
           <p class="text-sm font-bold uppercase tracking-[0.24em] text-primary-600 dark:text-primary-300">
-            Best fits
+            {{ t('publicContent.topics') }}
           </p>
           <h2 class="mt-3 font-display text-3xl font-bold text-secondary-900 dark:text-white">
-            What I would be happy to discuss.
+            {{ t('publicContent.discuss') }}
           </h2>
         </div>
         <div class="grid gap-3 md:grid-cols-2">
@@ -65,7 +64,7 @@
         <div class="mb-8 text-center">
           <div class="mx-auto mb-4 h-1 w-12 bg-primary-500"></div>
           <h2 class="font-display text-3xl text-secondary-900 dark:text-white">
-            Find me online
+            {{ t('publicContent.online') }}
           </h2>
         </div>
 
@@ -88,10 +87,11 @@
 </template>
 
 <script setup lang="ts">
-const contactCards = [
+const { t } = useI18n();
+const contactCards = computed(() => [
   {
     title: "Email",
-    description: "Best for roles, project discussions, collaborations, and anything that needs context.",
+    description: t('publicContent.emailDesc'),
     label: "vilenskyigal@gmail.com",
     href: "mailto:vilenskyigal@gmail.com",
     icon: "fas fa-envelope",
@@ -100,8 +100,8 @@ const contactCards = [
   },
   {
     title: "LinkedIn",
-    description: "Good for professional contact, recruiting conversations, and quick introductions.",
-    label: "Connect on LinkedIn",
+    description: t('publicContent.linkedinDesc'),
+    label: t('publicContent.linkedinLink'),
     href: "https://www.linkedin.com/in/igalvilensky/",
     icon: "fab fa-linkedin-in",
     bg: "bg-[#0A66C2]",
@@ -109,21 +109,16 @@ const contactCards = [
   },
   {
     title: "GitHub",
-    description: "Review recent projects, source code, experiments, and the way I structure applications.",
-    label: "View repositories",
+    description: t('publicContent.githubDesc'),
+    label: t('publicContent.githubLink'),
     href: "https://github.com/igalVilensky",
     icon: "fab fa-github",
     bg: "bg-secondary-800",
     external: true,
   },
-];
+]);
 
-const collaborationFits = [
-  "Full-stack developer roles with TypeScript, Vue/Nuxt, React/Next, Node.js, or Python/FastAPI",
-  "AI automation workflows using APIs, webhooks, n8n, Make, LLM APIs, and product interfaces",
-  "SaaS MVPs, dashboards, admin tools, and workflow-heavy product screens",
-  "Practical AI-assisted tools with clear UX, explainable outputs, and human editing in the loop",
-];
+const collaborationFits = computed(() => [1, 2, 3, 4].map((n) => t(`publicContent.topic${n}`)));
 
 const socialLinks = [
   {

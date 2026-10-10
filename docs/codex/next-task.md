@@ -1,52 +1,31 @@
 # Next Task
 
-## Milestone 3 — Public factual copy consistency
+## Milestone 4 — Assistant purpose and public knowledge review
 
-Status: proposed next task after completed Milestone 2, 2026-10-10. Do not start automatically. This is a copy-only follow-up within existing pages, not a UI redesign or information architecture change.
+Status: proposed after completed Milestone 3, 2026-10-10. Do not start automatically.
 
 ## Objective
 
-Bring hardcoded public copy into agreement with the modernized canonical facts. Prioritize Home, About, AI & Automation, Contact, and Education. Preserve layouts, interactions, routes, navigation, and the existing assistant implementation.
+Align the existing assistant’s answers and public knowledge with project and engineering exploration. Milestone 3 updated the homepage composition, public facts, relevant EN/DE/RU copy and metadata, and assistant introductory/default-question text. This next task addresses the remaining behavior behind that interface.
 
 ## Read first
 
-Read `docs/strategy/positioning.md`, `docs/codex/implementation-rules.md`, `docs/codex/current-state.md`, and `docs/i18n-content.md`. The current profile and experience JSON are the factual baseline; earlier recruitment and ongoing-course instructions are superseded.
+Read `docs/strategy/positioning.md`, `docs/codex/implementation-rules.md`, `docs/codex/current-state.md`, and `docs/i18n-content.md`. Review the assistant UI, `content/portfolio-agent.json`, FAQ/role-fit content, both runtime implementations, and generated knowledge exports. Inspect personal knowledge carefully without reproducing sensitive values in documentation or tool output.
 
-Confirmed facts:
+## Proposed scope
 
-* AI Software Engineer at Agorando Technologies GmbH since August 2026.
-* Flowplace GmbH was previous employment, 2023–2025.
-* AI Agents & Automations at WBS CODING SCHOOL completed July 2026.
-* Based in Leipzig, Germany.
-* Current scope: software development, enterprise integrations, internal applications, AI and process automation. No internal employer details or unverified outcomes may be added.
-* Technology background spans professional work, independent projects, and education; do not imply equal depth or assign a stack to Agorando.
+1. Review candidate-evaluation answers, runtime follow-up questions, internal role/availability labels, and CV response actions together. Preserve compatibility IDs until all consumers migrate.
+2. Establish an approved public knowledge boundary for personal and compensation topics. Do not assume server-side storage makes information private. Do not invent new facts or publish additional employer details.
+3. Keep answers grounded in documented projects and engineering experience, with sources and explicit unknowns. Confirm neutral default prompts behave usefully in EN/DE/RU.
+4. Synchronize canonical content and `netlify/functions/lib/portfolioKnowledge.js`; preserve the existing provider architecture and fallback behavior. Replace positional historical-experience lookup with stable IDs only within a coordinated change.
+5. Decide assistant naming/navigation prominence if needed; do not infer permission for a broader navigation redesign.
 
-## Bounded scope
+## Verification
 
-1. Trace the locale configuration before editing `i18n/locales/{en,de,ru}.json` or `app/i18n/locales/{en,de,ru}.json`. Update only relevant public factual strings; keep supported translations equivalent without introducing a localization refactor.
-2. Inspect HomeHero, HomeContactCTA, and `app/pages/index.vue`. Correct factual identity/contact/SEO text using canonical content where practical. The canonical contact sentence is already neutral; preserve it.
-3. In `app/pages/about.vue`, replace the hardcoded ongoing-WBS paragraph and “Current” education snapshot with current employment and accurately labeled completed education, within the existing layout. Qualify the broad “day-to-day stack” claim using the verified experience contexts.
-4. In `app/pages/ai-automation.vue`, replace “Current learning” and ongoing-course metadata with completed education wording. Keep the tool/project grouping and links. Do not present coursework or independent projects as internal employer work.
-5. In `app/components/Contact.vue` and `app/pages/contact.vue`, replace asserted open-role/freelance availability and recruiting copy with simple contact wording. Preserve the existing interface and links.
-6. Inspect `app/pages/education.vue`, `app/components/Education.vue`, and associated locale strings for conflicting completion facts. Correct only stale facts; do not invent course dates or credentials.
-7. Update current state and next task with changed surfaces, verification, and remaining assistant-copy work. Review CV/certificate and README currency as a backlog item; do not fabricate replacement documents.
+Validate changed JSON and translated keys. Run `npm run lint:i18n`, `npm run build`, and `git diff --check`. Check development and Netlify behavior, including unavailable-provider fallback and unsupported questions. Record what was and was not tested. Update current state and next task.
 
-## Preserve compatibility
+## Deferred and preserved
 
-`profile.current_course` is a legacy key containing completed education; `target_roles` is an empty compatibility array, and `current_focus` contains professional areas. Do not remove these keys in a copy pass. The assistant’s generated `netlify/functions/lib/portfolioKnowledge.js` snapshot was synchronized in Milestone 2. Avoid unnecessary canonical content edits; if a verified correction is needed, keep its generated export synchronized without changing provider logic.
+Preserve Nuxt, Vue, TypeScript, Tailwind, Netlify, supported locales, routes, project links, experiments, and historical employment facts. No new dependencies, providers, Notes section, confidential Agorando details, automatic commit, or push.
 
-Experience order preserves Flowplace at index zero because existing assistant code references it as historical evidence. Do not reorder entries in this task. Use stable IDs to find the current Agorando role.
-
-## Deferred
-
-No new pages, navigation changes, layout redesign, project reordering, dependency additions, provider changes, or automatic commits/pushes. No Notes launch or case-study additions.
-
-Assistant naming, recruiter/role-fit question wording, compensation behavior, personal knowledge visibility, CV actions, and internal “Target roles” labels require a coordinated Milestone 4 review across app, locales, canonical content, and both runtimes. Leave that behavior intact and document it; do not partially rename IDs or alter personal data in this copy pass.
-
-## Acceptance and verification
-
-* Reviewed pages accurately state current employment and completed education; no ongoing-WBS, active-job-search, or unverified freelance-availability claims remain on those surfaces.
-* Existing routes, links, layouts, and interactive tools work; no employer details beyond the confirmed public scope are introduced.
-* Changed locale JSON parses and translated facts agree. Check for missing keys and use existing locale validation where applicable without adding dependencies.
-* Run `npm run build`, review the diff, and inspect the affected rendered pages in supported locales when tooling permits. Report limits rather than claiming unperformed checks.
-* Explicitly list remaining assistant recruitment copy and any outdated downloadable documents. Stop after this milestone.
+Downloadable CV/certificate and README currency still require review; do not fabricate replacements. Broader localization of existing English project descriptions/AI technical labels and evidence-led case studies remain later work. Stop after the separately authorized milestone.

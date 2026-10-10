@@ -8,33 +8,12 @@
         {{ t("homePage.heroSubtitle") }}
       </p>
       <p class="mt-3 text-sm leading-6 text-secondary-500 dark:text-secondary-400">
-        {{ basedIn }} · TypeScript · Vue/Nuxt · React/Next · Node.js
+        {{ basedIn }}
       </p>
-
-      <div class="mt-8">
-        <NuxtLink
-          :to="localePath('/ask-igal')"
-          class="btn-primary inline-flex min-h-12 items-center justify-center gap-2 px-5 py-3 text-sm"
-        >
-          <Sparkles :size="17" />
-          {{ t("homePage.askCta") }}
-        </NuxtLink>
-        <p class="mt-3 max-w-xl text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-          {{ t("homePage.askSupport") }}
-        </p>
-      </div>
 
       <nav class="mt-7 flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium" :aria-label="t('homePage.heroLinksLabel')">
         <a href="#selected-work" class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">
           {{ t("homePage.work") }}
-        </a>
-        <a
-          :href="cvHref"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
-        >
-          {{ t("homePage.cv") }}
         </a>
         <a
           :href="github"
@@ -61,17 +40,13 @@
 </template>
 
 <script setup lang="ts">
-import { Sparkles } from "lucide-vue-next";
-
 defineProps<{
   profileName: string;
   basedIn: string;
-  cvHref: string;
   github: string;
   linkedin: string;
   email: string;
 }>();
 
 const { t } = useI18n();
-const localePath = useLocalePath();
 </script>

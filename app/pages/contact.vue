@@ -16,16 +16,11 @@ definePageMeta({
   layout: "default",
 });
 
-useHead({
-  title: "Contact | Igal Vilensky - Full-Stack Developer",
-  meta: [
-    {
-      name: "description",
-      content:
-        "Contact Igal Vilensky for full-stack developer roles, SaaS/product engineering, AI automation projects, and collaborations.",
-    },
-  ],
-});
+const { t } = useI18n();
+useHead(() => ({
+  title: `${t('homePage.contactTitle')} | Igal Vilensky`,
+  meta: [{ name: 'description', content: t('publicContent.contact') }],
+}));
 
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;

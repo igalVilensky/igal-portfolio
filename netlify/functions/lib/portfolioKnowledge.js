@@ -1666,7 +1666,7 @@ export const faqData = {
 export const agentData = {
   "assistant": {
     "name": "Igal, Explained",
-    "description": "A recruiter-focused guide to Igal Vilensky's portfolio."
+    "description": "A guide to Igal Vilensky's projects, software engineering experience, and experiments."
   },
   "suggested_questions": {
     "professional": [

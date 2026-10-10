@@ -3,11 +3,9 @@
     <div class="page-container">
       <header class="page-header">
         <div class="page-header-main">
-          <h1 class="page-title">AI &amp; Automation</h1>
+          <h1 class="page-title">{{ t('publicContent.aiTitle') }}</h1>
           <p class="page-intro mt-4">
-            AI-assisted tools, LLM integrations, and automation-oriented product work.
-            Practical proof across product UX, serverless model calls, workflow handoffs,
-            and responsible boundaries.
+            {{ t('publicContent.aiIntro') }}
           </p>
         </div>
       </header>
@@ -47,7 +45,7 @@
               >
                 <NuxtLink
                   v-if="link.internal"
-                  :to="link.url"
+                  :to="localePath(link.url)"
                   class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
@@ -103,7 +101,7 @@
               >
                 <NuxtLink
                   v-if="link.internal"
-                  :to="link.url"
+                  :to="localePath(link.url)"
                   class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
@@ -162,7 +160,7 @@
               >
                 <NuxtLink
                   v-if="link.internal"
-                  :to="link.url"
+                  :to="localePath(link.url)"
                   class="inline-flex items-center gap-1.5 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                 >
                   {{ link.label }}
@@ -201,20 +199,19 @@
         </ul>
       </section>
 
-      <section aria-labelledby="current-learning-title" class="max-w-3xl">
+      <section aria-labelledby="completed-education-title" class="max-w-3xl">
         <div class="mb-5">
-          <h2 id="current-learning-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
-            Current learning
+          <h2 id="completed-education-title" class="text-xl font-semibold text-secondary-950 dark:text-white">
+            {{ t('publicContent.educationTitle') }}
           </h2>
           <p class="mt-2 text-sm leading-6 text-secondary-600 dark:text-secondary-400">
-            {{ currentCourse.program }}, {{ currentCourse.institution }}.
-            This is current specialization work, not a claim of senior AI specialization.
+            {{ t('publicContent.education') }}
           </p>
         </div>
 
         <ul class="border-y border-secondary-200 dark:border-dark-border">
           <li
-            v-for="item in currentLearning"
+            v-for="item in courseTopics"
             :key="item"
             class="border-b border-secondary-200 py-3 text-sm leading-6 text-secondary-700 last:border-b-0 dark:border-dark-border dark:text-secondary-300"
           >
@@ -229,8 +226,6 @@
 <script setup lang="ts">
 import { Bot, Workflow, Sparkles, ExternalLink } from "lucide-vue-next";
 import projectsData from "../../content/projects.json";
-import experienceData from "../../content/experience.json";
-import profileData from "../../content/profile.json";
 
 definePageMeta({
   layout: "default",
@@ -253,6 +248,9 @@ type AiWorkItem = {
   badges?: string[];
   links: WorkLink[];
 };
+
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 const aiProductsIds = ["decision-matrix-ai", "ai-compliance-compass", "sunlit-tales"];
 const aiWorkflowsIds = ["flowforge", "job-command-center", "openme"];
@@ -337,11 +335,11 @@ const getFeaturedItems = (ids: string[]) => ids
 const aiProducts = getFeaturedItems(aiProductsIds);
 const aiWorkflows = getFeaturedItems(aiWorkflowsIds);
 
-const portfolioAssistantItem: AiWorkItem = {
+const portfolioAssistantItem = computed<AiWorkItem>(() => ({
   id: "ask-my-portfolio",
   title: "Igal, Explained",
   summary:
-    "Dedicated portfolio guide that answers recruiter questions from server-side structured knowledge with visible sources and safe unknown handling.",
+    t('publicContent.assistant'),
   demonstrates:
     "Grounded LLM assistant pattern with retrieval, structured responses, prompt boundaries, no external actions, and source-backed answers.",
   techLine: "Nuxt / Vue 3 / TypeScript / Netlify Functions / Groq API",
@@ -353,7 +351,7 @@ const portfolioAssistantItem: AiWorkItem = {
       internal: true,
     },
   ],
-};
+}));
 
 const patterns = [
   "LLM API integration",
@@ -365,23 +363,10 @@ const patterns = [
   "Responsible AI boundaries",
 ];
 
-const wbsCourse = experienceData.entries.find((entry) => entry.id === "wbs-ai-agents-automations");
+const courseTopics = ["AI agents", "n8n", "Make", "Python automations", "APIs/webhooks", "AI safety"];
 
-const currentCourse = {
-  program: wbsCourse?.title ?? profileData.current_course.program,
-  institution: wbsCourse?.organization ?? profileData.current_course.institution,
-};
-
-const currentLearning = ["AI agents", "n8n", "Make", "Python automations", "APIs/webhooks", "AI safety"];
-
-useHead({
-  title: "AI & Automation | Igal Vilensky",
-  meta: [
-    {
-      name: "description",
-      content:
-        "AI-assisted tools, LLM integrations, automation-oriented workflows, and current AI Agents & Automations learning by Igal Vilensky.",
-    },
-  ],
-});
+useHead(() => ({
+  title: `${t('publicContent.aiTitle')} | Igal Vilensky`,
+  meta: [{ name: 'description', content: `${t('publicContent.aiIntro')} ${t('publicContent.education')}` }],
+}));
 </script>

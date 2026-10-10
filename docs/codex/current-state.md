@@ -8,6 +8,30 @@ Igal is an **AI Software Engineer at Agorando Technologies GmbH since August 202
 
 Agorando may be described only at this confirmed high level. Do not publish or invent private project details, code, internal architecture, operational metrics, employee/customer data, credentials, or confidential business figures. More detail requires confirmation of accuracy and public disclosure suitability.
 
+## Milestone 3 completed — public content and homepage repositioning
+
+Completed 2026-10-10. The user-authorized scope expanded the former copy-only proposal to include homepage composition and neutral assistant introductory/default-question copy. This section supersedes the Milestone 2 follow-up inventory below.
+
+* Home now reads Introduction → Current Focus → Selected Work → Experiments & Ideas → Contact. Agorando and August 2026 are visible with only approved high-level responsibilities. Removed the hero CV link, dominant assistant CTA, and broad stack line. Existing project order, links, layout primitives, and navigation remain intact.
+* About reflects current employment, previous Flowplace/LeanERA/ARI Motors work, completed July 2026 WBS education, and the distinction between professional technology experience and independent projects/coursework. The CV remains a secondary reference on About.
+* AI & Automation has neutral introductory/assistant copy and completed WBS education. Contact no longer asserts employment or freelance availability. Education lists WBS separately from the existing DCI certificate; no new credential was fabricated.
+* Updated relevant SEO and public copy in EN/DE/RU. Nuxt resolves `i18n/i18n.config.ts`, which imports `i18n/locales/`; corresponding changed namespaces were mirrored in `app/i18n/locales/` without a configuration refactor. Existing English project-detail copy and structured-content English fallback remain.
+* Assistant introduction, placeholder, empty state, sidebar prompts, and recruitment-oriented default questions now invite project/engineering exploration. Legacy question IDs and translation keys remain compatible. Only the canonical assistant description and matching generated Netlify description changed; provider logic, response schemas, answer generation, and fallbacks are untouched.
+* No Notes section, dependencies, deployment changes, commits, or pushes.
+
+### Remaining issues and next milestone
+
+Milestone 4 should coordinate assistant purpose and public knowledge: role-fit/FAQ content, runtime follow-up questions, candidate-evaluation answers, compensation/personal-data policy, and CV response actions remain legacy behavior. Neutral initial prompts do not imply that this deeper migration is complete. Review both server and Netlify paths together, preserving grounded answers and unavailable-provider behavior.
+
+README and downloadable CV/certificate currency remain unverified; the DCI certificate is not evidence of WBS completion. Existing English-only project descriptions and AI-page technical labels remain a later localization task. No new employer case study or unverified outcome was introduced.
+
+### Milestone 3 verification
+
+* All top-level content JSON and both locale directories parse; changed locale namespaces match across directories; canonical assistant data matches its generated Netlify export.
+* `npm run lint:i18n` passes; locale key consistency and `git diff --check` pass.
+* `npm run build` passed with no reported warnings. Local HTTP/SSR checks passed for Home, About, AI & Automation, Contact, Education, and Ask Igal in EN/DE/RU (18 routes), including translated revised content, homepage section order, and localized Experiments links.
+* No deployed provider integration, separate TypeScript typecheck, or browser-based visual/interaction test was performed. Existing responsive classes and experiment logic were preserved.
+
 ## Milestone 1 completed — documentation only
 
 Updated positioning, visual direction, project brief, implementation rules, site map, build order, current state, and next task. The active strategy supersedes conflicting historical recruiter-first, target-role, CV-led, and ongoing-WBS instructions. Application code, structured JSON, dependencies, routes, experiments, and deployment settings are unchanged. No commit or push was made.
@@ -42,14 +66,14 @@ The production assistant does not import canonical JSON directly: `netlify/funct
 * `npm run build` passed (Nuxt client and server production build). This was not a deployed-provider integration test or a separate TypeScript typecheck.
 * Content/documentation diff and whitespace review passed. No Vue, navigation, page, provider integration, dependency, or deployment changes; no commit or push.
 
-Next proposed task: **Milestone 3 — public factual copy consistency**, bounded in `docs/codex/next-task.md`. Stop after Milestone 2; the next task is not automatically authorized.
+At completion of Milestone 2, Milestone 3 was proposed; it is now completed above.
 
 ## Current implementation observed in the repository
 
 This snapshot supersedes older implementation descriptions below where code has since evolved. It is based on source inspection, not a fresh runtime or deployment test.
 
 * Nuxt/Vue/TypeScript, Tailwind, i18n, color mode, and Netlify remain the foundation.
-* Home currently renders HomeHero, SelectedWork, and HomeContactCTA. It reads profile/project JSON; the assistant is no longer a homepage component.
+* Home renders HomeHero, Current Focus, SelectedWork, Experiments & Ideas, and HomeContactCTA. It reads profile/project JSON and localized copy; the assistant remains available through navigation.
 * The navbar currently links Home, Work, Experiments, Ask Igal, AI, and About. `/contact`, `/education`, and `/ai-compliance-compass` also exist.
 * `/ask-igal` uses `usePortfolioAgent`, the portfolio-agent components, `/api/portfolioAgent` in development, and `/.netlify/functions/portfolioAgent` in production. Server and Netlify knowledge implementations use structured content. The historical compact homepage guide is not the current implementation.
 * The assistant includes role-fit/recruiter questions and personal/compensation knowledge that need a coordinated purpose and visibility review. Do not copy sensitive knowledge into planning docs or assume that server-side storage prevents public disclosure.
@@ -57,9 +81,9 @@ This snapshot supersedes older implementation descriptions below where code has 
 * Experiments and the Security Playground remain interactive. Preserve all useful projects, including job-related tools as historical engineering work.
 * Localization exists in both `i18n/locales/` and `app/i18n/locales/`. Trace the active configuration and any duplication before later copy changes; preserve the fallback contract in `docs/i18n-content.md`.
 
-## Outdated public-facing content backlog
+## Milestone 2 public-facing content backlog — historical inventory
 
-Source-inspected inventory, updated after Milestone 2. Completed factual work is distinguished from remaining public-copy and assistant migrations.
+Source-inspected inventory at completion of Milestone 2. Milestone 3 public-copy entries are now completed as described above; assistant behavior and asset reviews remain deferred.
 
 | Surface / source | Follow-up |
 | --- | --- |

@@ -4,14 +4,27 @@
     <HomeHero
       :profile-name="profile.identity.name"
       :based-in="profile.identity.based_in"
-      :cv-href="profile.links.cv"
       :github="profile.links.github"
       :linkedin="profile.links.linkedin"
       :email="profile.links.email"
     />
+    <section aria-labelledby="current-focus" class="section-compact bg-secondary-50 dark:bg-dark-bg">
+      <div class="mx-auto max-w-4xl px-5 sm:px-6">
+        <h2 id="current-focus" class="text-2xl font-semibold text-secondary-950 dark:text-white">{{ t('publicContent.focusTitle') }}</h2>
+        <p class="mt-3 max-w-3xl text-sm leading-7 text-secondary-700 dark:text-secondary-300">{{ t('publicContent.role') }}</p>
+        <p class="mt-3 max-w-3xl text-sm leading-7 text-secondary-700 dark:text-secondary-300">{{ t('publicContent.focus') }}</p>
+      </div>
+    </section>
     <SelectedWork :projects="featuredProjects" />
+    <section aria-labelledby="experiments-ideas" class="section-compact bg-secondary-50 dark:bg-dark-bg">
+      <div class="mx-auto max-w-4xl px-5 sm:px-6">
+        <h2 id="experiments-ideas" class="text-2xl font-semibold text-secondary-950 dark:text-white">{{ t('publicContent.experimentsTitle') }}</h2>
+        <p class="mt-3 max-w-3xl text-sm leading-7 text-secondary-700 dark:text-secondary-300">{{ t('publicContent.experiments') }}</p>
+        <NuxtLink :to="localePath('/experiments')" class="mt-5 inline-flex text-sm font-medium text-primary-700 hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200">{{ t('publicContent.explore') }}</NuxtLink>
+      </div>
+    </section>
     <HomeContactCTA
-      :summary="profile.availability.summary"
+      :summary="t('publicContent.contact')"
       :email="profile.links.email"
       :linkedin="profile.links.linkedin"
       :github="profile.links.github"
@@ -49,6 +62,7 @@ type FeaturedProject = {
 };
 
 const profile = profileData;
+const localePath = useLocalePath();
 const { locale, t } = useI18n();
 
 const getProjectLink = (project: Project): ProjectLink | null => {
