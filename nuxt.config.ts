@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       // Outside pages/components scanning: neither the route nor its assets enter production.
       if (!nuxt.options.dev) return;
       nuxt.hook('pages:extend', (pages) => {
+        pages.push({ name: 'spatial-home', path: '/spatial-home', file: fileURLToPath(new URL('./app/spatial-home/SpatialHome.vue', import.meta.url)) });
         pages.push({ name: 'design-lab', path: '/design-lab', file: fileURLToPath(new URL('./app/design-lab/Lab.vue', import.meta.url)) });
       });
     },

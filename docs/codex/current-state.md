@@ -1,16 +1,49 @@
 # Current State
 
-## Active snapshot — 2026-10-10
+## Active snapshot — 2026-10-11
 
-Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. The active visual target is Precision Stack + Systems Canvas + Neural Workbench, specified in Milestone 4A below. Milestone 4B.1 implements the shared visual foundation, navigation and homepage Hero; remaining homepage sections retain their existing composition. Milestone 4C adds a development-only visual identity lab with three prototypes awaiting user evaluation.
+Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. The active visual target is Precision Stack + Systems Canvas + Neural Workbench, specified in Milestone 4A below. Milestone 4B.1 implements the shared visual foundation, navigation and homepage Hero; remaining homepage sections retain their existing composition. Milestone 4C added three development-only visual prototypes. The user selected System Layers as the primary candidate; Milestone 4D preserves an integrated Hero experiment. Milestone 4E adds a standalone spatial navigation experience at `/spatial-home` for visual and interaction review; no production integration is authorized.
 
 Igal is an **AI Software Engineer at Agorando Technologies GmbH since August 2026**. Work areas include software engineering, internal business tools, enterprise system integrations, automation, AI-related workflows, requirements analysis, and operational process improvements. **AI Agents & Automations at WBS CODING SCHOOL was completed in July 2026.** These user-confirmed facts supersede the older education and job-search framing below.
 
 Agorando may be described only at this confirmed high level. Do not publish or invent private project details, code, internal architecture, operational metrics, employee/customer data, credentials, or confidential business figures. More detail requires confirmation of accuracy and public disclosure suitability.
 
+## Milestone 4E — Standalone spatial navigation
+
+Implemented 2026-10-11. **Review only; production integration, commit and push are not authorized.** Open `http://localhost:3002/spatial-home` while the development server is running. Localized variants are `/de/spatial-home` and `/ru/spatial-home`.
+
+- `app/spatial-home/SpatialHome.vue` uses `layout: false`. `app/app.vue` now lets Nuxt resolve page layout metadata rather than forcing `default`; existing public pages still resolve to the same default shell. The production homepage source and all A/B/C/D prototype sources remain unchanged by this milestone.
+- Five semantic links form the object itself: Work → `/case-studies`, Experiments → `/experiments`, Ask Igal → `/ask-igal`, AI & Automation → `/ai-automation`, About → `/about`. There is no second menu or Home layer. Native hrefs use `useLocalePath`; language links use `useSwitchLocalePath`, and theme control reuses `ThemeToggle` and color mode.
+- Reusable `SpatialStack.vue` separates interaction/geometry from prototype-local EN/DE/RU copy in `content.ts`. SVG faces, edge thickness, inset rails and restrained cyan light sit in one viewport composition. No projects, metrics, promotional heading or content cards. Mobile uses flatter planes, greater proportional separation and two-tap activation; it is not merely a uniformly scaled desktop stack.
+- Idle drift has a pause control. Hover/focus lifts a plane; activation highlights it, fades surrounding planes, then navigates after 420ms. Reduced motion removes drift and navigation delay. Tab/Enter, arrows, Home/End and Escape work; a dashed inset makes keyboard focus visible. Native hrefs preserve modifier clicks and navigation without JavaScript. Returning to the prototype remounts the complete stack; existing public Home links continue to point to the production homepage as required by the integration boundary.
+- Height-aware sizing fits ordinary desktop viewports. Small/short screens retain natural scrolling rather than clipping controls. EN/DE/RU and theme targets are at least 44px. Context gives a short description and open indication without an intermediate panel.
+- The route is registered only behind `nuxt.options.dev`, outside `app/pages` and auto-scanned components. No public route, sitemap or deployment entry is added. All prototype copy/styles are imported only by the dev route, with `noindex, nofollow`. `scripts/check-spatial-home-isolation.mjs` scans built artifacts (including XML/text) and optionally checks eight localized/trailing-slash HTTP paths.
+
+Verification and review artifacts are recorded in [the 4E handoff](milestone-4e-handoff.md). Earlier staged work was preserved. Stop here for visual and interaction review.
+
+## Milestone 4D — Integrated Hero experiment
+
+Implemented 2026-10-11. **Awaiting visual review; no production Hero integration authorized.** Open `/design-lab` in development, where **D — Integrated Hero** is now the default. Original A/B/C implementations are preserved. Review server: `http://127.0.0.1:3103/design-lab`.
+
+### Design and content
+
+- “From complexity to clarity” pairs a large sans-serif introduction with an open isometric stack, shared blue lighting, cyan corner details and negative space. No bordered visualization card, fake dashboard or architecture claim.
+- Five conceptual practice areas: Applications, APIs & Integrations, Data, AI & Automation, Outcomes. Native labeled controls and pointer-selectable SVG planes illuminate and lift on hover/focus. Selection pulls a plane forward, separates the lower planes and reveals project evidence. Select again to return to the overview.
+- `app/design-lab/engineering-stack.ts` holds the small typed editorial mapping. Titles, descriptions and destinations resolve directly from canonical `content/projects.json`, in English to match the lab. Applications → Family Space; APIs & Integrations → User Management App; Data → ARI Motors: EV Portal; AI & Automation → FlowForge; Outcomes → i18n Linter CLI. Associations are documented in the model and contextual copy, not assertions of shared architecture. Agorando appears only as the confirmed current employer.
+- Mobile uses a shorter 255px stack and a two-column touch selector with a full-width final control. Headline becomes two lines where space permits. Selected evidence follows the Hero without nested cards.
+- Independent light/dark plane gradients use existing theme colors. CSS transform transitions and a gentle eight-second idle drift are sufficient; no GSAP runtime, new dependencies or image assets needed. Existing lab pause/resume, visibility suspension and reset remain in effect. Reduced motion removes animation and transitions while preserving immediate selection.
+
+### Verification and artifacts
+
+- Final `npm run build` passed. Extended the existing production isolation checker with the new Hero markers; 98 artifacts scanned without lab code. Production `/design-lab`, `/design-lab/`, `/de/design-lab` and `/ru/design-lab` returned 404.
+- `vue-tsc --noEmit -p .nuxt/tsconfig.app.json` was run; the repository-wide check remains blocked by existing errors outside `app/design-lab` (app i18n head options, existing tools, assistant and server code). No diagnostics name the new experiment. This is not a clean global type-check pass. Logs: `/tmp/m4d-types.log` and `/tmp/m4d-build.log`.
+- Final Chrome sweep passed all five project selections, Space/Enter selection and deselection, and no horizontal overflow at 320/390/768/1440px in both themes (eight combinations), with no page exceptions. Touch emulation, reduced motion, pause/resume and reset passed. Results: `/tmp/m4d-results.json`. Desktop/mobile screenshots: `/tmp/m4d-{1440,390}-{light,dark}.png`; selected state: `/tmp/m4d-selected-dark.png`. Short sampled interaction recording: `/tmp/m4d-interaction.mp4` (six frames per second, useful for demonstrating states, not a smoothness benchmark). Harnesses: `/tmp/igal-portfolio-browser/m4d.mjs` and `m4d-record.mjs`.
+- Temporary captures are local review artifacts, not shipped assets. Existing development shell/devtools may appear. No physical-device, Safari/Firefox or screen-reader audit; external project destinations were not availability-tested. The lab remains English-only. Isometric geometry is a 2D projection, not a true 3D renderer.
+- Production homepage, canonical data, dependencies and original prototypes were not changed in 4D. Existing staged work was preserved. No commit or push. **Stop for visual review.**
+
 ## Milestone 4C — Interactive Visual Identity Lab
 
-Implemented 2026-10-10. **Three experimental directions are ready for user evaluation; no winner selected or homepage integration authorized.** The existing production Hero and System Explorer remain unchanged by 4C. Earlier staged work was preserved.
+Implemented 2026-10-10. **Historical 4C review state: three directions were presented. System Layers was subsequently selected for 4D; homepage integration remains unauthorized.** The existing production Hero and System Explorer remain unchanged by 4C. Earlier staged work was preserved.
 
 ### Access and production separation
 

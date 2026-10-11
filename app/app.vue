@@ -1,6 +1,6 @@
 <!-- app/app.vue -->
 <template>
-  <NuxtLayout name="default">
+  <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>

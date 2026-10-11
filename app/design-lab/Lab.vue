@@ -2,6 +2,7 @@
 import LivingNetwork from './LivingNetwork.vue';
 import SystemLayers from './SystemLayers.vue';
 import DataFlowEngine from './DataFlowEngine.vue';
+import IntegratedHero from './IntegratedHero.vue';
 import ThemeToggle from '../components/ThemeToggle.vue';
 import './lab.css';
 
@@ -11,8 +12,9 @@ const directions = [
   { name: 'Living Network', subtitle: 'Relationships, made tangible.', component: LivingNetwork },
   { name: 'System Layers', subtitle: 'Complexity, given dimension.', component: SystemLayers },
   { name: 'Data Flow Engine', subtitle: 'Intent, carried into action.', component: DataFlowEngine },
+  { name: 'Integrated Hero', subtitle: 'From complexity to clarity.', component: IntegratedHero },
 ];
-const active = ref(0);
+const active = ref(3);
 const revision = ref(0);
 const paused = ref(false);
 const visible = ref(false);
@@ -33,7 +35,7 @@ const stopped = computed(() => paused.value || !visible.value || hidden.value);
 <template>
   <section class="identity-lab" lang="en" aria-labelledby="lab-title">
     <header class="lab-heading">
-      <div><p class="lab-eyebrow">Igal Vilensky / Visual research / 4C</p><h1 id="lab-title">Engineering, <em>in motion.</em></h1></div>
+      <div><p class="lab-eyebrow">Igal Vilensky / Visual research / 4D</p><h1 id="lab-title">Engineering, <em>in motion.</em></h1></div>
       <div class="lab-theme"><span>Development only</span><ThemeToggle /></div>
     </header>
     <div class="lab-navigation" role="group" aria-label="Prototype">

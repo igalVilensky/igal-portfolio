@@ -35,9 +35,9 @@ The assistant now has `/ask-igal`; do not restart it as a new static MVP. Review
 
 ## Current milestone
 
-Milestone 4A is complete: design documentation only, with no UI rollout. Read `docs/design/design-system.md` and `docs/design/page-blueprints.md` alongside the visual direction. Milestones 1–3.1 remain completed history in current state.
+Milestones 4A, 4B.1 and 4C are implemented; details remain in current state. Milestone 4D preserves the integrated Hero experiment. Milestone 4E adds a standalone development-only spatial navigation experience at `/spatial-home`, outside the Design Lab shell. The five-plane interface awaits visual and interaction review; A/B/C/D remain unchanged. Production homepage integration is not authorized; do not commit or push automatically.
 
-Milestone 4B is the next separately authorized task: homepage and global visual system implementation, bounded by `next-task.md`. Work/case-study composition, assistant redesign and the deeper assistant knowledge review remain deferred. No roadmap item authorizes automatic implementation, commit or push.
+Work/case-study composition, assistant redesign and the deeper assistant knowledge review remain deferred. Read `next-task.md` for the active review boundary.
 
 ## Completion standard
 

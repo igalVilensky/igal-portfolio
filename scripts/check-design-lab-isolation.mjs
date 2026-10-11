@@ -15,7 +15,7 @@ async function inspect(directory) {
       if (entry.name !== 'node_modules') await inspect(path);
     } else if (/\.(?:m?js|css|html|json)$/.test(entry.name)) {
       const text = await readFile(path, 'utf8');
-      assert(!/design-lab|network-space|layer-drawing|flow-engine|Engineering, in motion\./.test(text), `Lab code shipped: ${path}`);
+      assert(!/design-lab|integrated-hero|engineering-canvas|integrated-plane|network-space|layer-drawing|flow-engine|Engineering, in motion\./.test(text), `Lab code shipped: ${path}`);
       checked++;
     }
   }

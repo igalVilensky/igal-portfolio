@@ -1,14 +1,12 @@
 # Next Task
 
-## Next step — evaluate the three Milestone 4C prototypes
+## Next step — visual and interaction review of Milestone 4E
 
-The isolated **Interactive Visual Identity Lab** is implemented at `/design-lab` in development only. Run `npm run dev` and open that route; the current review server is `http://127.0.0.1:3103/design-lab`. It is not registered or bundled in production, and production/localized lab URLs were verified to return 404.
+Review the standalone spatial navigation at `http://localhost:3002/spatial-home` (`npm run dev -- --port 3002`). Also inspect `/de/spatial-home` and `/ru/spatial-home`. Five planes are the sole primary navigation; the complete stack is the initial Home state. A/B/C/D remain available unchanged at `/design-lab` for comparison.
 
-Review **Living Network**, **System Layers**, and **Data Flow Engine** live at desktop and mobile widths, in both themes. Explore hover, selection, keyboard/touch, pause/reset, and reduced-motion states. Screenshots are supporting artifacts; motion must be judged live. Implementation details, test evidence and limitations are in [Current state](current-state.md#milestone-4c--interactive-visual-identity-lab).
+Review the composition, plane depth and separation, desktop/mobile labels, both themes, keyboard focus, two-tap touch behavior and transition into the existing public destinations. See [4E handoff](milestone-4e-handoff.md) for evidence and limitations.
 
-**Stop after the three prototypes. Do not choose a winner, merge a prototype into the homepage, or continue the homepage rollout automatically.** The user will choose a direction or request refinements. Production Hero/System Explorer remain as they were before 4C.
-
-For any separately requested lab changes, keep sources in `app/design-lab/`, preserve the dev-only route gate, and rerun `npm run build`, `node scripts/check-design-lab-isolation.mjs` (optionally with a production origin), route/browser checks, and `git diff --check`. Do not add the route to navigation or sitemap. Temporary screenshots and browser results are listed in current state; no browser dependency was added.
+**Stop for review. Do not integrate into the production homepage, commit, push or start another rollout automatically.** Further changes require the user's direction. Keep the standalone prototype outside production scanning and rerun the isolation checker after authorized changes.
 
 ## Milestone 4B.2 — remaining homepage visual rollout (deferred proposal)
 
