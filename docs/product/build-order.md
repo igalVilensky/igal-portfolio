@@ -6,13 +6,23 @@ Active roadmap, 2026-10-10, for the **Hybrid Personal Engineering Website**. Mil
 
 Each milestone is a separate bounded task. Future milestones are proposals, not authorization to implement them during documentation work.
 
+## Current milestone sequence — updated after 4A
+
+Milestones 1, 2, 3 and the additional 3.1 localization audit are completed; see `../codex/current-state.md` for delivered scope and verification. The sections below preserve the original roadmap intent rather than current next-task instructions.
+
+**4A — Design system and visual direction specification: completed, documentation only.** The active visual specification is in `../design/visual-direction.md`, `../design/design-system.md` and `../design/page-blueprints.md`.
+
+**4B — Homepage and global visual system implementation: next, separately authorized.** Apply semantic theme tokens, typography, shared shell/component foundations and homepage composition. Exact scope and acceptance are in `../codex/next-task.md`. Work, case-study and assistant page composition remain deferred.
+
+The former Milestone 4 assistant-purpose/public-knowledge review below remains a separate deferred task. It is neither completed by the design specification nor included in 4B. Subsequent milestone numbering can be assigned when those tasks are authorized.
+
 ## 1. Strategic repositioning — documentation only
 
 Update the eight strategy/design/product/Codex documents. Establish the current Agorando role, July 2026 WBS completion, confidentiality rules, proposed architecture, content backlog, and next task. Preserve implementation history and distinguish current code from intended direction.
 
 Exit: consistent documentation; no application, JSON, dependency, route, or deployment changes.
 
-## 2. Factual content modernization — next
+## 2. Factual content modernization — completed
 
 Correct the structured profile and experience, professional narrative, and directly dependent factual FAQ/role-fit statements. Add the confirmed current role and completed education, and replace asserted job availability with neutral contact language. Keep existing schemas and consumers working; inventory incompatible legacy fields rather than performing a broad migration.
 
@@ -26,7 +36,7 @@ Update Home, About, Contact, Education, and AI page copy, locale strings, SEO de
 
 Exit: no outdated current-course or job-seeking claims on reviewed public surfaces in supported locales; ordinary links still work. Trace duplicate locale directories before editing and keep translations factually equivalent.
 
-## 4. Assistant purpose and knowledge review
+## Former 4. Assistant purpose and knowledge review — deferred
 
 Reposition the existing `/ask-igal` experience as project/knowledge exploration. Coordinate suggested prompts, FAQ/role-fit compatibility, public knowledge, server and Netlify paths, localized copy, and fallback behavior. Review compensation answers, personal-data visibility, and CV emphasis against the new purpose. Decide name and placement here; preserve the implementation and existing provider.
 

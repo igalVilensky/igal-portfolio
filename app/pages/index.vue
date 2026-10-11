@@ -1,6 +1,6 @@
 <!-- app/pages/index.vue -->
 <template>
-  <main class="min-h-screen bg-secondary-50 text-secondary-900 dark:bg-dark-bg dark:text-secondary-100">
+  <div>
     <HomeHero
       :profile-name="profile.identity.name"
       :based-in="t('ui.leipzig_germany')"
@@ -29,7 +29,7 @@
       :linkedin="profile.links.linkedin"
       :github="profile.links.github"
     />
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">

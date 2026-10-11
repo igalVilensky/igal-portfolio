@@ -19,7 +19,7 @@ Publish Agorando work only at this high level. Do not invent or disclose interna
 ## Read before working
 
 * `docs/strategy/positioning.md` — identity, evidence, confidentiality.
-* `docs/design/visual-direction.md` — restrained editorial and engineering direction.
+* `docs/design/visual-direction.md` — Precision Stack + Systems Canvas + Neural Workbench visual direction.
 * `docs/codex/implementation-rules.md` — scope and implementation guardrails.
 * `docs/product/site-map.md` — proposed architecture versus existing routes.
 * `docs/product/build-order.md` — prioritized milestones.
@@ -35,9 +35,9 @@ The assistant now has `/ask-igal`; do not restart it as a new static MVP. Review
 
 ## Current milestone
 
-Milestone 1 is documentation only: update the eight requested strategy/design/product/Codex documents. Do not modify Vue components, application behavior, structured JSON content, dependencies, framework, routes, or deployment settings. Do not commit or push automatically.
+Milestone 4A is complete: design documentation only, with no UI rollout. Read `docs/design/design-system.md` and `docs/design/page-blueprints.md` alongside the visual direction. Milestones 1–3.1 remain completed history in current state.
 
-Milestone 2 is factual content modernization, defined in `next-task.md`. Later milestones handle broader public copy, assistant repositioning, and navigation. Do not treat the roadmap as authorization to implement future work now.
+Milestone 4B is the next separately authorized task: homepage and global visual system implementation, bounded by `next-task.md`. Work/case-study composition, assistant redesign and the deeper assistant knowledge review remain deferred. No roadmap item authorizes automatic implementation, commit or push.
 
 ## Completion standard
 

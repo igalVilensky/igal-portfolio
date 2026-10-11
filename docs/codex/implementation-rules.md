@@ -6,7 +6,7 @@ Active rules, 2026-10-10. Build a **Hybrid Personal Engineering Website** accord
 
 Read the strategy, visual direction, project brief, site map, build order, current state, and next task before relevant changes. Work in small milestones with explicit scope. Preserve useful history; label superseded instructions rather than treating them as current tasks.
 
-## Milestone 1 boundaries
+## Milestone 1 boundaries — historical
 
 Modify only the eight requested documentation files. Do not change Vue components, application behavior, structured JSON, dependencies, framework, routes, experiments, or deployment. Do not commit or push automatically. A future roadmap item is not authorization to implement it in this milestone.
 
@@ -32,7 +32,7 @@ More detailed employer material requires confirmation of factual accuracy and pu
 
 Show work and engineering thinking through context, problems, contribution, approach, trade-offs, outcomes, and limitations. Keep AI important without making it the entire identity. Use a restrained personal voice and simple contact links. Do not prescribe recruiter snapshots, candidate evaluation, target-role promotion, hiring CTAs, or active-job-search messaging.
 
-Preserve the document-like design and shared primitives. Avoid generic SaaS landing pages, decorative AI imagery, large badge collections, flashy motion, and promotional panels. Notes are optional until meaningful content exists.
+Follow the Milestone 4A design specification in `docs/design/visual-direction.md` and `docs/design/design-system.md`; it supersedes the earlier document-like/editorial visual prescription. Evolve shared primitives incrementally within the authorized milestone. Avoid generic SaaS landing pages, decorative AI imagery, large badge collections, flashy motion, and promotional panels. Notes are optional until meaningful content exists.
 
 ## Existing code and routes
 

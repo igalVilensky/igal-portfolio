@@ -1,0 +1,42 @@
+/* Scoped by the lab root; this stylesheet is imported only by the development route. */
+.identity-lab { max-width: 1440px; margin: auto; padding: 40px 40px 56px; --lab-line: var(--color-border-control); }
+.identity-lab button { touch-action: manipulation; }
+.lab-heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 36px; }
+.lab-eyebrow { font: 12px/1.6 var(--font-mono); letter-spacing: .08em; color: var(--color-text-muted); }
+.lab-heading h1 { font-size: clamp(30px, 3.4vw, 49px); line-height: 1.2; letter-spacing: -.045em; font-weight: 600; margin-top: 10px; }
+.lab-heading em { font-style: normal; color: var(--color-accent); }
+.lab-theme { display: flex; gap: 16px; align-items: center; color: var(--color-text-muted); font-size: 12px; }
+.lab-navigation { display: flex; border-bottom: 1px solid var(--color-border); gap: 36px; }
+.lab-navigation button { display: flex; align-items: center; gap: 12px; min-height: 58px; border-bottom: 3px solid transparent; font-size: 15px; }
+.lab-navigation button[aria-pressed=true] { border-color: var(--color-accent); color: var(--color-accent); }
+.lab-letter { font: 12px var(--font-mono); }
+.lab-choice { margin-left: 12px; }
+.lab-stage { position: relative; margin-top: 28px; background: var(--color-surface); border-radius: 4px; overflow: clip; }
+.lab-stage-heading { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 32px 0; }
+.lab-stage-heading h2 { font-size: clamp(21px, 2.1vw, 29px); font-weight: 500; letter-spacing: -.025em; margin-top: 5px; }
+.lab-tools { display: flex; gap: 8px; }
+.lab-tools button { min-height: 44px; padding: 8px 12px; font-size: 13px; border: 1px solid var(--color-border-control); border-radius: 6px; background: var(--color-surface); }
+.lab-tools button:hover { background: var(--color-surface-raised); }
+.lab-caption { display: flex; justify-content: space-between; gap: 32px; font-size: 12px; color: var(--color-text-muted); margin-top: 18px; }
+.lab-caption p { max-width: 60ch; }
+.lab-readout { position: relative; display: grid; grid-template-columns: 1fr 2fr; gap: 32px; padding: 24px 32px 30px; border-top: 1px solid var(--color-border); background: var(--color-surface); }
+.lab-readout h3 { font-size: 23px; font-weight: 500; letter-spacing: -.025em; }
+.lab-readout p { color: var(--color-text-muted); font-size: 15px; line-height: 1.7; max-width: 65ch; }
+.lab-readout .lab-eyebrow { font-size: 11px; color: var(--color-system); margin-bottom: 4px; }
+.identity-lab .motion-stopped *, .identity-lab .motion-stopped *::before, .identity-lab .motion-stopped *::after { animation-play-state: paused !important; }
+@media (max-width: 700px) {
+  .identity-lab { padding: 24px 16px 32px; }
+  .lab-heading { align-items: flex-start; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+  .lab-theme { justify-content: space-between; width: 100%; }
+  .lab-navigation { gap: 8px; justify-content: space-between; }
+  .lab-navigation button { flex: 1; flex-direction: column; gap: 3px; padding: 8px 2px; font-size: 12px; line-height: 1.4; }
+  .lab-choice { display: none; }
+  .lab-stage { margin-top: 16px; }
+  .lab-stage-heading { padding: 20px 16px 0; align-items: flex-start; flex-direction: column; gap: 12px; }
+  .lab-tools button { font-size: 12px; }
+  .lab-readout { padding: 20px 16px; grid-template-columns: 1fr; gap: 10px; }
+  .lab-caption { flex-direction: column; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .identity-lab *, .identity-lab *::before, .identity-lab *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

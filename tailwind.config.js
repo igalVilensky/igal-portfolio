@@ -10,10 +10,18 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
         display: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
+        canvas: "var(--color-canvas)",
+        surface: "var(--color-surface)",
+        ink: "var(--color-text)",
+        muted: "var(--color-text-muted)",
+        line: "var(--color-border)",
+        action: "var(--color-accent)",
+        system: "var(--color-system)",
         primary: {
           50: "#EEF2FF",
           100: "#E0E7FF",

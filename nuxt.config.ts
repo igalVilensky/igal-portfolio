@@ -1,8 +1,18 @@
+import { fileURLToPath } from 'node:url';
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "@nuxtjs/i18n", '@vueuse/motion/nuxt'],
+  modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "@nuxtjs/i18n", '@vueuse/motion/nuxt',
+    function designLab(_options, nuxt) {
+      // Outside pages/components scanning: neither the route nor its assets enter production.
+      if (!nuxt.options.dev) return;
+      nuxt.hook('pages:extend', (pages) => {
+        pages.push({ name: 'design-lab', path: '/design-lab', file: fileURLToPath(new URL('./app/design-lab/Lab.vue', import.meta.url)) });
+      });
+    },
+  ],
   i18n: {
     strategy: "prefix_except_default",
     baseUrl: "https://igalvilensky.netlify.app",

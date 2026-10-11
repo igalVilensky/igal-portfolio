@@ -2,11 +2,109 @@
 
 ## Active snapshot — 2026-10-10
 
-Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. Preserve the restrained, document-like design.
+Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. The active visual target is Precision Stack + Systems Canvas + Neural Workbench, specified in Milestone 4A below. Milestone 4B.1 implements the shared visual foundation, navigation and homepage Hero; remaining homepage sections retain their existing composition. Milestone 4C adds a development-only visual identity lab with three prototypes awaiting user evaluation.
 
 Igal is an **AI Software Engineer at Agorando Technologies GmbH since August 2026**. Work areas include software engineering, internal business tools, enterprise system integrations, automation, AI-related workflows, requirements analysis, and operational process improvements. **AI Agents & Automations at WBS CODING SCHOOL was completed in July 2026.** These user-confirmed facts supersede the older education and job-search framing below.
 
 Agorando may be described only at this confirmed high level. Do not publish or invent private project details, code, internal architecture, operational metrics, employee/customer data, credentials, or confidential business figures. More detail requires confirmation of accuracy and public disclosure suitability.
+
+## Milestone 4C — Interactive Visual Identity Lab
+
+Implemented 2026-10-10. **Three experimental directions are ready for user evaluation; no winner selected or homepage integration authorized.** The existing production Hero and System Explorer remain unchanged by 4C. Earlier staged work was preserved.
+
+### Access and production separation
+
+- Run `npm run dev` and open `/design-lab` (the review server used `http://127.0.0.1:3103/design-lab`). No navigation or sitemap entry was added.
+- `nuxt.config.ts` registers the page only when `nuxt.options.dev` is true. All page, component and CSS sources live in `app/design-lab/`, outside automatic page/component scanning, and are explicitly imported by the dev page. Production build and static generation therefore do not register the route or bundle its components. The lab also declares `noindex, nofollow` and disables localized lab routes.
+- Verified the production build contains no lab code/assets, and `/design-lab`, `/design-lab/`, `/de/design-lab` and `/ru/design-lab` return HTTP 404. Added dependency-free `scripts/check-design-lab-isolation.mjs`; run after a build, optionally passing the production server origin for HTTP checks. Static generation was not separately run; it uses the same dev-only registration gate.
+
+### Prototypes and animation approach
+
+- **A — Living Network:** curved SVG relationships around an `iv` core, orbit contours, traveling path impulses, hover/focus emphasis, selected satellite expansion and core reticle rotation. Mouse position produces a small perspective response; selection remains available to keyboard and touch.
+- **B — System Layers:** five isometric SVG planes with edge thickness, fine grids and distinct glyphs. Native adjacent buttons focus a plane, pull it forward and separate the layers with eased transform transitions. A collapse/separate control changes the stack spacing. This prototype has no idle animation.
+- **C — Data Flow Engine:** a continuous folded track, traveling SVG dashes and five distinct CSS mechanisms (intake bars, rotating processor, joining rings, nested resolver, output strokes). Selection changes the mechanism boundary/scale as well as its explanation. Mobile uses a vertical connected track with full-size controls.
+- Vue Composition API and TypeScript; semantic theme tokens and the existing `ThemeToggle`. CSS keyframes, cubic-bezier transform transitions and SVG only. Neither GSAP nor a new dependency was necessary; no per-frame JavaScript rendering loop, canvas, WebGL, or external visual assets.
+- One mounted prototype at a time. Reset remounts the current prototype, restoring its selection and animation phase; pause/resume controls continuous motion. IntersectionObserver and document visibility pause CSS animation offscreen/in background tabs, with observer/listener cleanup on unmount. Pointer movement is ignored while stopped or under reduced motion. Reduced-motion CSS disables keyframes and transitions throughout the lab while retaining immediate selection feedback.
+
+### Verification and artifacts
+
+- `npm run build` and `git diff --check` passed. Production artifact scan covered 98 JS/CSS/HTML/JSON files with no lab markers. Production HTTP checks passed for the four paths above; development `/design-lab` returns 200.
+- Automated Chrome sweep: all three prototypes × light/dark × 320/390/768/1440px (24 combinations). No page horizontal overflow or page JavaScript exceptions. Verified last-item click selection and first-item Space selection in each combination, plus touch-emulated selection for every prototype, reduced-motion animation removal and pause behavior.
+- Additional checks verified Tab/Enter selection, mouse-driven network perspective, theme toggle and persistence after reload, offscreen suspension, moving path dash offsets and rotating mechanism transforms. Layer transforms were sampled before, during and after selection to confirm real interpolation rather than a static screenshot.
+- Short desktop samples of 90 animation frames per prototype had a median interval of approximately 16.7ms, no intervals over 50ms, and a worst observed interval of 33.3ms. These are local headless-browser observations, not a device-independent performance benchmark or invented product metrics.
+- Captured and visually reviewed 12 screenshots: `/tmp/design-lab-{0,1,2}-{1440,390}-{dark,light}.png` (0=A, 1=B, 2=C). Temporary test scripts are `/tmp/igal-portfolio-browser/design-lab.mjs` and `design-lab-motion.mjs`; results are `/tmp/design-lab-results.json` and `/tmp/design-lab-motion-results.json`. These artifacts are local, not shipped public assets. Some captures include existing fixed skip-link/devtools overlays from the development shell.
+- Chrome initially crashed because the host disk was almost full. Using approved memory-backed temporary storage resolved it; no user files were deleted and no browser package was added to the repository.
+
+### Accessibility and known compromises
+
+- Native buttons with pressed states, visible focus, non-color selection indicators and polite atomic detail announcements. Main controls have at least 44px targets. Existing semantic text/control colors supply independent light and dark treatments. Decorative geometry is hidden from assistive technology; the layer image has a descriptive label and adjacent native controls.
+- This development-only lab uses English copy (`lang="en"`); EN/DE/RU product catalogs and all project facts remain unchanged. It retains the existing site shell and theme system. Motion and depth intentionally explore beyond the older production motion limits, as requested for this isolated milestone.
+- Layers use 2D isometric projection, not a true 3D camera; plane selection uses the adjacent labeled controls. Flow motion is illustrative and does not simulate real workload or measured throughput. Mobile flow trades the folded track for a clear vertical sequence. Reset also resets selection; switching prototypes starts them fresh.
+- No physical-device, Safari/Firefox, screen-reader, actual browser-zoom, comprehensive contrast audit, or long-duration profiling was performed. Background-tab pausing is implemented via visibility events; the automated suspension test exercised offscreen observation. Subjective motion quality still requires the user's live review.
+- No production homepage, assistant, navigation, project data or dependencies changed. No commit or push. Stop here and wait for the user's choice or refinement request.
+
+## Milestone 4B.1 — expressive Hero and System Explorer
+
+Implemented 2026-10-10 as a refinement of the foundation below. Awaiting visual approval; stop before other homepage sections.
+
+* Reworked `HomeHero.vue` with a wider two-column composition, a prominent three-part engineering headline, blue emphasis and atmospheric semantic-token backgrounds. Preserved identity, employer, contact, work anchor and social links.
+* Added `SystemExplorer.vue` and `system-explorer/domains.ts`: five conceptual domains, a central Integrations node, SVG connections, selectable semantic buttons, hover/focus highlights, contextual information and evidence-backed project links resolved through `useProjects`. No employer architecture or invented project claims.
+* Mobile uses a compact hub and full-size domain buttons; desktop uses a spatial diagram. Both themes use existing semantic tokens. Selected nodes have a checkmark and thicker border; keyboard focus is explicit. Reduced motion disables flow and detail animation. No animation library or new dependency.
+* Added equivalent EN/DE/RU copy in both locale catalogs. Updated the visual direction to record the explicitly authorized expressive treatment. Existing staged foundation work is preserved; the prior `HomeWorkflow.vue` remains unused. Other homepage sections, routes, project facts, providers and dependencies are unchanged.
+
+### Verification of expressive refinement
+
+* Final production `npm run build`, `npm run lint:i18n`, `npm run lint:i18n:public` and `git diff --check` passed.
+* Headless Chrome covered EN/DE/RU × 320/390/768/1024/1440px × light/dark. All 30 combinations passed page-width and theme assertions and five-node selection checks (29 in the main final-build sweep, the last in a follow-up after a browser crash).
+* Verified mouse connection highlighting, Enter/Space selection, single pressed state, visible keyboard outline, static reduced-motion connection styles, theme switching, EN → DE language switching and German case-study navigation. Both linked internal case-study destinations returned HTTP 200 in all three locales. External project URLs resolve from existing data; external availability was not tested.
+* Browser automation initially caught a reduced-motion selector specificity issue; fixed and rechecked on the final build. A test initially retained the Russian locale cookie when expecting English controls; corrected the harness. Chrome resource exhaustion interrupted longer runs, so remaining checks and screenshots were split into smaller runs. No browser dependency was added to the repository.
+* Final small-run checks passed the Explore Work anchor, 390px layout with 200% root text size, and normal-motion flow. Captured and visually reviewed final Hero screenshots at `/tmp/expressive-hero-{1440,390}-{light,dark}.png`. Browser scripts and results are temporary artifacts under `/tmp/igal-portfolio-browser/expressive*.mjs` and `/tmp/expressive-results.json`; the results JSON covers the final small run, not the whole combined audit.
+* Earlier foundation checks remain historical evidence only. No live providers, real-device touch, manual screen-reader, full cross-route regression or actual browser zoom audit was performed in this refinement. No commit or push.
+
+## Earlier Milestone 4B.1 — visual foundation and static Hero
+
+Completed 2026-10-10 within the user’s narrowed 4B.1 scope. Stop here; the rest of 4B is not implemented or automatically authorized.
+
+* Added the approved opaque light/dark semantic colors, sans/mono typography, spacing, corners, wide/reading containers, button states, focus, selection, scrollbar and reduced-motion rules. Existing numeric palette utilities and legacy page width remain compatible for unmigrated components.
+* Updated Navbar, Footer, theme and locale controls and the default layout. Preserved all six navigation destinations, system color preference, explicit theme persistence and locale routing. Active links have an underline and `aria-current`; controls have 44px minimum targets. Navigation stays in document flow, wraps when needed and expands below the mobile header instead of obscuring page content. Added a skip link and removed the homepage’s nested main landmark.
+* Replaced only the Hero composition: name, AI Software Engineer role, current Agorando employer, grounded engineering headline/description, Explore Work anchor, email Contact action, location and existing social links.
+* Added `HomeWorkflow.vue`: a static, responsive, semantic ordered sequence of inputs/data → integration/processing → automation/AI → useful outputs. Existing Lucide SVG icons and CSS only; no dependency or continuous motion. Localized visible caption explains the flow and explicitly disclaims a deployed system or Agorando architecture. Ordered text remains available to assistive technology; arrows/icons are decorative. This conceptual sequence follows the explicit 4B.1 request, superseding the earlier optional grouping-only focus-map suggestion.
+* Added equivalent EN/DE/RU `foundation` copy in both locale directories. No project data, selected-work composition, assistant implementation, AI integration, route, experiment logic or deployment changes. Existing homepage sections inherit shared typography/spacing but retain their prior palette utilities until a later authorized rollout.
+
+### Modified files in this milestone
+
+* Foundation: `app/assets/css/main.css`, `tailwind.config.js`.
+* Shell: `app/layouts/default.vue`, `app/components/Navbar.vue`, `Footer.vue`, `ThemeToggle.vue`, `LanguageSwitcher.vue`.
+* Hero: `app/components/home/HomeHero.vue`, new `HomeWorkflow.vue`; `app/pages/index.vue` only removes the nested main wrapper.
+* Localization: `i18n/locales/{en,de,ru}.json` and `app/i18n/locales/{en,de,ru}.json`.
+* Handoff: `docs/codex/current-state.md`, `docs/codex/next-task.md`. Pre-existing design/planning edits in the working tree were preserved.
+
+### Milestone 4B.1 verification
+
+* Production `npm run build`, `npm run lint:i18n`, `npm run lint:i18n:public`, and `git diff --check` passed.
+* Headless Chrome on the local production build: 24 homepage combinations (EN/DE/RU × 320/390/768/1440px × light/dark) passed no-horizontal-overflow, single-main and expected-theme assertions, with no page JavaScript errors. Captured and visually inspected desktop light/dark and mobile light/dark screenshots at 1440px and 390px (`/tmp/m4b1-{1440,390}-{light,dark}.png`).
+* Verified mobile menu open/close and Escape focus return, theme switching and persistence after reload, EN → DE locale navigation and translated Hero, skip-link keyboard focus transfer, Explore Work anchor, and reduced-motion smooth-scroll removal. English homepage at 390px with root text size doubled had no page overflow. The 320px tests cover the effective reflow width of a 1280px viewport at 400%; actual browser zoom was not separately automated.
+* Regression sweep: all 13 existing routes × EN/DE/RU × both themes (78 loads) returned HTTP 200 at 390px with no page horizontal overflow, detected raw public translation keys or page JavaScript exceptions. This was a page-load/layout check, not a repeat of interactive tool or assistant loading/fallback tests; those states and a full desktop cross-route visual audit remain unverified for this milestone.
+* Calculated all 58 relevant semantic color pairings: text/status/action roles on canvas/surface/raised, primary foreground on default/hover fill, and essential control boundaries. All meet 4.5:1 text and 3:1 boundary targets; minimum boundary ratios are 3.30:1 light and 3.81:1 dark. This does not certify every legacy component’s colors.
+* Browser artifacts and ad hoc scripts are in `/tmp`; no browser dependency was added to the project. No live provider or speech service was tested. No commit or push.
+
+Next proposal: separately authorize Milestone 4B.2 for remaining homepage composition. The assistant purpose/knowledge review remains deferred.
+
+## Milestone 4A completed — design system and visual specification
+
+Completed 2026-10-10. Documentation only; the target is a structured personal engineering workspace combining Precision Stack (hierarchy), Systems Canvas (evidence-based relationships), and Neural Workbench (subtle depth and optional sourced exploration). This supersedes older editorial/document-like visual prescriptions; the Hybrid Personal Engineering Website strategy remains active.
+
+* Replaced `docs/design/visual-direction.md` with the selected concept, independent light/dark direction, typography guidance, assistant positioning and explicit anti-patterns.
+* Created `docs/design/design-system.md`: proposed semantic theme tokens, sans/mono typography, spacing and container scales, component/state rules, accessibility and motion acceptance, and an incremental CSS/Tailwind migration boundary.
+* Created `docs/design/page-blueprints.md`: Home, Work, case-study and assistant compositions, responsive behavior, evidence requirements, preserved route mappings and implementation touchpoints.
+* Updated the planning entry points and `next-task.md` to identify **Milestone 4B: homepage and global visual system implementation**. Work/case-study/assistant composition rollouts remain later tasks. The former Milestone 4 assistant knowledge review is deferred, not completed or discarded.
+* No application code, content JSON, dependencies, assets, routes, assistant behavior or deployment configuration changed. No commit or push.
+
+### Milestone 4A verification and limits
+
+Reviewed documentation scope, consistency, referenced repository paths and Markdown links; `git diff --check` passed. Only intended Markdown documentation changed. No build, runtime/browser test or rendered contrast audit was run for this documentation-only milestone. Proposed tokens require validation in actual component states during 4B; prior milestone checks below remain historical evidence.
+
+Historical next task at 4A completion: implement 4B only when separately requested. 4B.1 is now completed above; remaining 4B work is still deferred. Preserve the existing assistant behavior/knowledge backlog and the incomplete full-browser-console verification from Milestone 3.1.
 
 ## Milestone 3.1 completed — public localization audit and fixes
 
@@ -555,9 +653,9 @@ Verification:
 
 * `npm run build` passed after the UI/UX improvement pass.
 
-## Last Updated
+## Historical snapshot date
 
-2026-06-16 after the UI/UX consistency pass.
+2026-06-16 after the UI/UX consistency pass. The active snapshot and newer milestone entries above supersede this historical record.
 
 Historical next-task proposal: OpenMe and Decision Matrix AI case-study pages were recommended but not implemented in this record. That proposal is deferred by the active roadmap; Milestone 2 now modernizes factual content first. Existing legacy route mappings remain preserved.
 
@@ -644,7 +742,7 @@ Verification:
 
 * `npm run build` passed after the UI/UX improvement pass.
 
-## Last Updated
+## Historical snapshot date
 
-2026-06-16 after the UI/UX consistency pass.
+2026-06-16 after the UI/UX consistency pass. The active snapshot and newer milestone entries above supersede this historical record.
 

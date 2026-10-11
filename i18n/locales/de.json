@@ -820,5 +820,58 @@
     "educational_ai_usecase_checker_that_turns_plainlanguage_descriptions_into": "Lernwerkzeug, das Beschreibungen von KI-Anwendungsfällen in praktische Compliance-Fragen und nächste Schritte für Deutschland und die EU übersetzt.",
     "poetrycontent_platform_with_an_ai_moodgame_feature_that_creates": "Lyrik- und Inhaltsplattform mit einer KI-Stimmungs- und Spielfunktion, die russischsprachige Literaturquizrunden aus vorhandenen Gedichten erstellt.",
     "selfhosted_budgetaware_job_search_command_center_that_triages_job": "Selbst gehostetes, kostenbewusstes Werkzeug zur Stellensuche: sortiert Angebote, extrahiert Informationen und prüft die Passung zum Profil. KI bleibt beratend, Entscheidungen werden von Menschen freigegeben."
+  },
+  "foundation": {
+    "skipContent": "Zum Inhalt springen",
+    "navigation": "Hauptnavigation",
+    "identity": "Igal Vilensky",
+    "role": "AI Software Engineer",
+    "employer": "Aktuell bei Agorando Technologies GmbH",
+    "headline": "Software entwickeln. Systeme verbinden. Komplexe Abläufe automatisieren.",
+    "description": "Ich entwickle Software, die Systeme verbindet und Abläufe unterstützt – von Geschäftsanwendungen und APIs bis zu Automatisierung und KI-gestützten Workflows.",
+    "exploreWork": "Arbeit entdecken",
+    "contact": "Kontakt",
+    "workflowTitle": "Konzeptioneller Workflow",
+    "inputs": "Eingaben / Daten",
+    "inputsDescription": "Anforderungen, Datensätze und Ereignisse",
+    "processing": "Integration / Verarbeitung",
+    "processingDescription": "Schnittstellen verbinden und Daten aufbereiten",
+    "automation": "Automatisierung / KI",
+    "automationDescription": "Regeln und KI-gestützte Schritte anwenden",
+    "outputs": "Nutzbare Ergebnisse",
+    "outputsDescription": "Werkzeuge, Aktionen und Informationen",
+    "workflowCaption": "Ein beispielhafter Ablauf: Daten werden integriert und verarbeitet, Automatisierung oder KI unterstützt die nächsten Schritte, und daraus entstehen nutzbare Ergebnisse. Die Pfeile zeigen diesen konzeptionellen Ablauf – kein produktives System und keine Agorando-Architektur.",
+    "headlineBuild": "Software entwickeln.",
+    "headlineConnect": "Systeme verbinden.",
+    "headlineAutomate": "Komplexe Abläufe automatisieren."
+  },
+  "explorer": {
+    "title": "System-Explorer",
+    "hint": "Bereich auswählen. Zusammenhänge entdecken.",
+    "domainsLabel": "Entwicklungsbereiche",
+    "focus": "Im Fokus",
+    "related": "Passendes Projekt",
+    "newTab": "(öffnet in einem neuen Tab)",
+    "caption": "Eine konzeptionelle Übersicht der Entwicklungsbereiche – kein produktives System und keine Architektur von Agorando.",
+    "data": {
+      "title": "Daten & APIs",
+      "description": "Strukturierte Daten und externe Dienste liefern Informationen für Anwendungen. APIs machen sie über Systemgrenzen hinweg zugänglich."
+    },
+    "applications": {
+      "title": "Anwendungen",
+      "description": "Webanwendungen und interne Werkzeuge übersetzen Anforderungen in nutzbare Oberflächen und verbinden Daten mit alltäglichen Aufgaben."
+    },
+    "integrations": {
+      "title": "Integrationen",
+      "description": "Verbindungen zwischen Systemen übertragen und transformieren Informationen. Klare Schnittstellen ermöglichen das Zusammenspiel einzelner Werkzeuge."
+    },
+    "automation": {
+      "title": "KI & Automatisierung",
+      "description": "Workflows verbinden wiederkehrende Schritte. KI-gestützte Verarbeitung kann sie gezielt unterstützen – mit klaren Grenzen und menschlicher Prüfung."
+    },
+    "outcomes": {
+      "title": "Praktischer Nutzen",
+      "description": "Das Ziel: nutzbare Werkzeuge, zugängliche Informationen und Abläufe, die Menschen bei ihren Aufgaben unterstützen."
+    }
   }
 }

@@ -820,5 +820,58 @@
     "educational_ai_usecase_checker_that_turns_plainlanguage_descriptions_into": "Educational AI use-case checker that turns plain-language descriptions into practical EU/Germany compliance prompts and next steps.",
     "poetrycontent_platform_with_an_ai_moodgame_feature_that_creates": "Poetry/content platform with an AI mood/game feature that creates Russian-language literary quiz rounds from existing poem text.",
     "selfhosted_budgetaware_job_search_command_center_that_triages_job": "Self-hosted, budget-aware job search command center that triages job opportunities, extracts useful information, reviews fit against a candidate profile, and keeps AI advisory with human approval."
+  },
+  "foundation": {
+    "skipContent": "Skip to content",
+    "navigation": "Main navigation",
+    "identity": "Igal Vilensky",
+    "role": "AI Software Engineer",
+    "employer": "Currently at Agorando Technologies GmbH",
+    "headline": "Building software. Connecting systems. Automating complexity.",
+    "description": "I build software that connects systems and makes processes useful—from business tools and APIs to automation and AI-assisted workflows.",
+    "exploreWork": "Explore Work",
+    "contact": "Contact",
+    "workflowTitle": "Conceptual workflow",
+    "inputs": "Inputs / Data",
+    "inputsDescription": "Requirements, records and events",
+    "processing": "Integration / Processing",
+    "processingDescription": "Connect interfaces and shape data",
+    "automation": "Automation / AI",
+    "automationDescription": "Apply rules and AI-assisted steps",
+    "outputs": "Useful Outputs",
+    "outputsDescription": "Tools, actions and information",
+    "workflowCaption": "An illustrative sequence: data is integrated and processed, automation or AI supports the next steps, and results become useful outputs. Arrows show this conceptual flow—not a deployed system or Agorando architecture.",
+    "headlineBuild": "Building software.",
+    "headlineConnect": "Connecting systems.",
+    "headlineAutomate": "Automating complexity."
+  },
+  "explorer": {
+    "title": "System Explorer",
+    "hint": "Select a domain. Explore the connections.",
+    "domainsLabel": "Engineering domains",
+    "focus": "In focus",
+    "related": "Related work",
+    "newTab": "(opens in a new tab)",
+    "caption": "A conceptual map of engineering domains—not a deployed system or Agorando architecture.",
+    "data": {
+      "title": "Data & APIs",
+      "description": "Structured data and external services provide the information that applications work with. APIs make it accessible across system boundaries."
+    },
+    "applications": {
+      "title": "Applications",
+      "description": "Web applications and internal tools turn requirements into interfaces people can use, connecting data with everyday tasks."
+    },
+    "integrations": {
+      "title": "Integrations",
+      "description": "Connections between systems move and transform information. Clear interfaces make separate tools work together."
+    },
+    "automation": {
+      "title": "AI & Automation",
+      "description": "Workflows connect repeatable steps. AI-assisted processing can support those steps where it is useful, with clear boundaries and human review."
+    },
+    "outcomes": {
+      "title": "Useful Outcomes",
+      "description": "The practical purpose: usable tools, accessible information and workflows that help people get things done."
+    }
   }
 }

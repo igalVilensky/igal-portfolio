@@ -1,35 +1,38 @@
 # Next Task
 
-## Milestone 4 — Assistant purpose and public knowledge review
+## Next step — evaluate the three Milestone 4C prototypes
 
-Status: proposed after completed Milestones 3 and 3.1, 2026-10-10. Do not start automatically.
+The isolated **Interactive Visual Identity Lab** is implemented at `/design-lab` in development only. Run `npm run dev` and open that route; the current review server is `http://127.0.0.1:3103/design-lab`. It is not registered or bundled in production, and production/localized lab URLs were verified to return 404.
 
-## Objective
+Review **Living Network**, **System Layers**, and **Data Flow Engine** live at desktop and mobile widths, in both themes. Explore hover, selection, keyboard/touch, pause/reset, and reduced-motion states. Screenshots are supporting artifacts; motion must be judged live. Implementation details, test evidence and limitations are in [Current state](current-state.md#milestone-4c--interactive-visual-identity-lab).
 
-Align the existing assistant’s answers and public knowledge with project and engineering exploration. Milestone 3 updated the homepage composition, public facts, relevant EN/DE/RU copy and metadata, and assistant introductory/default-question text. Milestone 3.1 completed public localization, including reactive UI states, structured project summaries/categories, assistant evidence labels, and runtime suggestions. This next task addresses the remaining behavior behind that interface.
+**Stop after the three prototypes. Do not choose a winner, merge a prototype into the homepage, or continue the homepage rollout automatically.** The user will choose a direction or request refinements. Production Hero/System Explorer remain as they were before 4C.
+
+For any separately requested lab changes, keep sources in `app/design-lab/`, preserve the dev-only route gate, and rerun `npm run build`, `node scripts/check-design-lab-isolation.mjs` (optionally with a production origin), route/browser checks, and `git diff --check`. Do not add the route to navigation or sitemap. Temporary screenshots and browser results are listed in current state; no browser dependency was added.
+
+## Milestone 4B.2 — remaining homepage visual rollout (deferred proposal)
+
+Milestone 4B.1 is complete as of 2026-10-10: semantic visual foundation, shared shell/navigation, Hero and an interactive conceptual System Explorer. **Stop after 4B.1. Do not start this proposal automatically.** The original broad 4B plan was narrowed by the user; this document is not authorization to redesign Selected Work or any other section now.
+
+## Proposed scope, subject to the next user request
+
+1. Review the implemented Hero and foundation against the approved design direction.
+2. Bring the existing Current Focus, Selected Work, Experiments & Ideas and Contact sections into the new semantic surface/type/container system in a separately bounded task. Preserve section sequence, factual content, reactive translations, featured project order and actual links. Keep the Hero implementation unless changes are requested.
+3. Preserve all routes and experiments. Do not change project data, AI integrations, assistant composition or knowledge. Do not add Notes, unsupported metrics, employer architecture, promotional CTAs, dependencies or deployment changes.
+4. Review global-style inheritance on existing routes without redesigning their composition. The legacy numeric palette and page width remain compatible; migrate components deliberately rather than globally remapping every color utility.
 
 ## Read first
 
-Read `docs/strategy/positioning.md`, `docs/codex/implementation-rules.md`, `docs/codex/current-state.md`, and `docs/i18n-content.md`. Review the assistant UI, `content/portfolio-agent.json`, FAQ/role-fit content, both runtime implementations, and generated knowledge exports. Inspect personal knowledge carefully without reproducing sensitive values in documentation or tool output.
+- [Current state](current-state.md), especially 4B.1 verification and limitations.
+- [Visual direction](../design/visual-direction.md), [design system](../design/design-system.md), [page blueprints](../design/page-blueprints.md).
+- [Implementation rules](implementation-rules.md), [positioning](../strategy/positioning.md), [site map](../product/site-map.md), [localization contract](../i18n-content.md).
 
-## Proposed scope
+## Verification for the next authorized implementation
 
-1. Review candidate-evaluation answers, internal role/availability labels, and CV response actions together. Runtime follow-up questions now match the neutral localized default suggestions. Preserve compatibility IDs until all consumers migrate.
-2. Establish an approved public knowledge boundary for personal and compensation topics. Do not assume server-side storage makes information private. Do not invent new facts or publish additional employer details.
-3. Keep answers grounded in documented projects and engineering experience, with sources and explicit unknowns. Confirm neutral default prompts behave usefully in EN/DE/RU.
-4. Synchronize canonical content and `netlify/functions/lib/portfolioKnowledge.js`; preserve the existing provider architecture and fallback behavior. Replace positional historical-experience lookup with stable IDs only within a coordinated change.
-5. Decide assistant naming/navigation prominence if needed; do not infer permission for a broader navigation redesign.
+Run `npm run build`, both i18n checks and `git diff --check`. Inspect desktop/mobile light/dark, EN/DE/RU, long labels, keyboard controls, focus, reduced motion, zoom/reflow, navigation and section links. Check inherited styles on other routes and report actual coverage separately from live-provider or full accessibility validation. Keep both locale directories synchronized. Update current state and next task; do not commit or push automatically.
 
-## Verification
+## Deferred work
 
-Validate changed JSON and translated keys. Run `npm run lint:i18n`, `npm run lint:i18n:public`, `npm run build`, and `git diff --check`. Check development and Netlify behavior, including unavailable-provider fallback and unsupported questions. Record what was and was not tested. Update current state and next task.
+Work and case-study composition, new case studies, assistant redesign, command/search features, navigation restructuring, Notes and downloadable CV/certificate/README currency remain separate tasks.
 
-## Localization verification follow-up
-
-Milestone 3.1 passed the build, source/content checks, all 39 HTTP/SSR routes, and targeted EN/DE/RU interactions plus desktop/mobile switching. Repeat the full browser-console sweep when sufficient browser resources are available: its layout-chunk failures were traced to Chrome `ERR_INSUFFICIENT_RESOURCES`. No horizontal overflow or untranslated keys were observed in that sweep. Live provider output and speech services were not exercised.
-
-## Deferred and preserved
-
-Preserve Nuxt, Vue, TypeScript, Tailwind, Netlify, supported locales, routes, project links, experiments, and historical employment facts. No new dependencies, providers, Notes section, confidential Agorando details, automatic commit, or push.
-
-Downloadable CV/certificate and README currency still require review; do not fabricate replacements. Public project descriptions and AI labels are now localized. Evidence-led case studies remain later work. Stop after the separately authorized milestone.
+The deeper assistant purpose/public-knowledge review is preserved: legacy candidate-evaluation answers, FAQ/role-fit content, compensation/personal visibility, CV actions and positional historical-experience lookups need coordinated review across server, Netlify and generated knowledge. Visual changes do not complete that work. Do not reproduce sensitive values in planning documents.

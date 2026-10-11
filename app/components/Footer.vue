@@ -1,13 +1,13 @@
 <!-- app/components/Footer.vue -->
 <template>
-  <footer class="border-t border-secondary-200 bg-secondary-50 py-8 dark:border-dark-border dark:bg-dark-bg">
-    <div class="mx-auto flex max-w-4xl flex-col items-center gap-4 px-5 text-center text-sm text-secondary-500 dark:text-secondary-400 sm:px-6">
+  <footer class="site-footer">
+    <div class="container-wide footer-content metadata">
       <p>© {{ currentYear }} Igal Vilensky</p>
 
       <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2" :aria-label="t('ui.footer_links')">
         <a
           href="mailto:vilenskyigal@gmail.com"
-          class="transition-colors hover:text-secondary-950 dark:hover:text-white"
+          class="nav-link"
         >
           {{ t('homePage.email') }}
         </a>
@@ -15,7 +15,7 @@
           href="https://github.com/igalVilensky"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition-colors hover:text-secondary-950 dark:hover:text-white"
+          class="nav-link"
         >
           GitHub
         </a>
@@ -23,7 +23,7 @@
           href="https://www.linkedin.com/in/igalvilensky/"
           target="_blank"
           rel="noopener noreferrer"
-          class="transition-colors hover:text-secondary-950 dark:hover:text-white"
+          class="nav-link"
         >
           LinkedIn
         </a>

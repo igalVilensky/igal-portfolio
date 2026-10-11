@@ -1,11 +1,10 @@
 <template>
-  <div ref="root" class="relative" :aria-label="t('language.label')">
+  <div ref="root" class="relative" @keydown.esc.stop="closeAndFocus" :aria-label="t('language.label')">
     <button
       type="button"
-      class="inline-flex h-9 items-center gap-1.5 rounded-full border border-secondary-200 bg-white px-3 text-xs font-semibold uppercase text-secondary-700 shadow-sm transition-colors hover:border-secondary-300 hover:text-secondary-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-50 dark:border-dark-border dark:bg-dark-surface dark:text-secondary-300 dark:hover:border-secondary-600 dark:hover:text-white dark:focus-visible:ring-offset-dark-bg"
+      ref="toggle" class="shell-control"
       :aria-label="t('language.label')"
       :aria-expanded="isOpen"
-      aria-haspopup="menu"
       @click="isOpen = !isOpen"
     >
       <Languages :size="14" aria-hidden="true" />
@@ -28,24 +27,19 @@
     >
       <div
         v-if="isOpen"
-        class="absolute right-0 z-50 mt-2 min-w-36 overflow-hidden rounded-md border border-secondary-200 bg-white py-1 shadow-lg shadow-secondary-900/10 dark:border-dark-border dark:bg-dark-surface dark:shadow-black/30"
-        role="menu"
+        class="language-options"
       >
         <NuxtLink
           v-for="option in languageOptions"
           :key="option.code"
           :to="switchLocalePath(option.code)"
-          class="flex items-center justify-between gap-3 px-3 py-2 text-sm font-medium transition-colors"
-          :class="option.code === locale
-            ? 'bg-secondary-100 text-secondary-950 dark:bg-white/10 dark:text-white'
-            : 'text-secondary-600 hover:bg-secondary-50 hover:text-secondary-950 dark:text-secondary-300 dark:hover:bg-white/5 dark:hover:text-white'"
+          class="language-option"
           :aria-label="t('language.switchTo', { language: option.name })"
           :aria-current="option.code === locale ? 'true' : undefined"
-          role="menuitem"
           @click="selectLanguage"
         >
           <span>{{ option.name }}</span>
-          <span class="text-xs uppercase text-secondary-400 dark:text-secondary-500">
+          <span class="metadata">
             {{ option.short }}
           </span>
         </NuxtLink>
@@ -62,6 +56,8 @@ const switchLocalePath = useSwitchLocalePath();
 const route = useRoute();
 const root = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
+const toggle = ref<HTMLButtonElement | null>(null);
+const closeAndFocus = () => { isOpen.value = false; toggle.value?.focus(); };
 
 const emit = defineEmits<{
   selected: [];
