@@ -2,18 +2,40 @@
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
 const props = defineProps<{ copy: SpatialCopy; paused: boolean; navigation: ReturnType<typeof useSpatialNavigation> }>();
-const emit = defineEmits<{ origin: [point: { x: number; y: number; bottom: number }] }>();
+const emit = defineEmits<{ 'ask-origin': [point: { x: number; y: number; bottom: number; exitX: number; exitY: number }]; origin: [point: { x: number; y: number; bottom: number }] }>();
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
 const localePath = useLocalePath();
 const id = useId();
 const stage = ref<HTMLElement>();
 let observer: ResizeObserver | undefined;
+let askFrame = 0;
+function measureAsk() {
+  if (!stage.value) return;
+  const rect = stage.value.getBoundingClientRect();
+  const svg = stage.value.querySelectorAll('a')[2]?.querySelector('svg');
+  const home = stage.value.closest('main')?.getBoundingClientRect();
+  const matrix = svg?.getScreenCTM();
+  if (svg && matrix && home) {
+    const entry = new DOMPoint(40, 100).matrixTransform(matrix);
+    const exit = new DOMPoint(680, 126).matrixTransform(matrix);
+    emit('ask-origin', { bottom: rect.bottom - home.top, x: entry.x - home.left, y: entry.y - home.top, exitX: exit.x - home.left, exitY: exit.y - home.top });
+  }
+}
 function measure() {
   if (!stage.value) return;
   const rect = stage.value.getBoundingClientRect();
+  measureAsk();
   const compact = window.matchMedia('(max-width: 600px)').matches;
   emit('origin', { bottom: rect.bottom + window.scrollY, x: rect.left + rect.width * (compact ? .944 : .926), y: rect.top + window.scrollY + (compact ? rect.width * .1365 - 7 : rect.width * .16) });
 }
+watch(active, (value, previous) => {
+  if (value !== 2 && previous !== 2) return;
+  cancelAnimationFrame(askFrame);
+  // Follow only the existing layer transition; no permanent animation loop.
+  const until = performance.now() + 600;
+  const follow = () => { measureAsk(); if (performance.now() < until) askFrame = requestAnimationFrame(follow); };
+  askFrame = requestAnimationFrame(follow);
+});
 onMounted(() => {
   observer = new ResizeObserver(measure);
   observer.observe(document.documentElement);
@@ -21,7 +43,7 @@ onMounted(() => {
   window.addEventListener('resize', measure);
   measure();
 });
-onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resize', measure); });
+onBeforeUnmount(() => { cancelAnimationFrame(askFrame); observer?.disconnect(); window.removeEventListener('resize', measure); });
 </script>
 
 <template>
@@ -48,6 +70,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
           <path class="plane-inset" d="M76 101 398 29 645 125 321 205Z M107 101 397 43 613 124" />
           <path class="plane-trace" :d="i % 2 ? 'M145 94 245 72 300 94 390 75 494 116 460 125' : 'M190 126 269 107 322 129 436 102 535 140'" />
           <path v-if="i === 0" class="work-source" d="M310 98 370 83 414 102 355 118Z M40 100 400 12 680 126" />
+          <path v-if="i === 2" class="ask-circuit" pathLength="1" d="M40 100 320 224 680 126" />
+          <path v-if="i === 2" class="ask-core-light" d="M280 206 320 216 360 206 320 224Z" />
           <path class="plane-core" d="M310 98 370 83 414 102 355 118Z M310 104 355 125 414 109" />
           <path class="plane-rim" d="M40 100 320 224 680 126 M320 224V246" />
           <path class="plane-corner" d="M40 115V100L78 91 M644 136 680 126V141" />
@@ -72,6 +96,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .spatial-plane { clip-path: polygon(5.5% 38%, 55.5% 4%, 94.5% 48%, 94.5% 58%, 44.5% 96%, 5.5% 48%); }
 .work-source { fill: none; stroke: var(--sp-cyan); stroke-width: 3; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 7px var(--sp-cyan)); }
 .work-active .work-source { opacity: 1; }
+.ask-circuit { fill: none; stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.ask-core-light { fill: var(--sp-cyan); opacity: 0; }
 .plane-face { stroke: var(--sp-line); stroke-width: 1.2; }
 .surface-start { stop-color: var(--sp-top); }.surface-end { stop-color: var(--sp-bottom); }
 .plane-edge { fill: var(--sp-edge); stroke: var(--sp-line); }

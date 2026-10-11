@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SpatialStack from './SpatialStack.vue';
 import WorkReveal from './WorkReveal.vue';
+import AskIgalReveal from './AskIgalReveal.vue';
 import { useSpatialNavigation } from './useSpatialNavigation';
 import { copy } from './content';
 import ThemeToggle from '~/components/ThemeToggle.vue';
@@ -10,6 +11,7 @@ const switchLocalePath = useSwitchLocalePath();
 const text = computed(() => copy[locale.value as keyof typeof copy] ?? copy.en);
 const paused = ref(false);
 const navigation = useSpatialNavigation();
+const askOrigin = ref({ x: 0, y: 0, bottom: 0, exitX: 0, exitY: 0 });
 const origin = ref({ x: 0, y: 0, bottom: 0 });
 useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', content: 'noindex, nofollow' }] });
 </script>
@@ -17,6 +19,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
 <template>
   <main class="spatial-home" @pointerdown="navigation.dismissTouch">
     <WorkReveal :visible="navigation.active.value === 0" :origin="origin" :paused="paused" />
+    <AskIgalReveal :visible="navigation.active.value === 2" :origin="askOrigin" :paused="paused" :copy="text" />
     <header class="spatial-periphery">
       <div class="spatial-signature"><p>Igal Vilensky</p><span>{{ text.role }}</span></div>
       <div class="spatial-settings">
@@ -26,7 +29,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
         <ThemeToggle />
       </div>
     </header>
-    <SpatialStack :copy="text" :paused="paused" :navigation="navigation" @origin="origin = $event" />
+    <SpatialStack :copy="text" :paused="paused" :navigation="navigation" @origin="origin = $event" @ask-origin="askOrigin = $event" />
     <div class="spatial-motion"><button type="button" :aria-pressed="paused" @click="paused = !paused"><span aria-hidden="true">{{ paused ? '▷' : 'Ⅱ' }}</span> {{ paused ? text.resume : text.pause }}</button></div>
   </main>
 </template>
