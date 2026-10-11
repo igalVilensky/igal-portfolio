@@ -6,11 +6,11 @@ let checked = 0;
 async function inspect(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
-    assert(!/spatial-home|SpatialStack|SpatialHome|SpatialEnvironment|useSpatialNavigation/.test(entry.name), `Prototype path shipped: ${path}`);
+    assert(!/spatial-home|SpatialStack|SpatialHome|SpatialEnvironment|WorkReveal|useSpatialNavigation/.test(entry.name), `Prototype path shipped: ${path}`);
     if (entry.isDirectory()) {
       if (entry.name !== 'node_modules') await inspect(path);
     } else if (/\.(?:m?js|css|html|json|xml|txt)$/.test(entry.name)) {
-      assert(!/spatial-home|spatial-plane|spatial-environment|world-structure|stack-breathe|Five directions\. One place\./.test(await readFile(path, 'utf8')), `Prototype code shipped: ${path}`);
+      assert(!/spatial-home|spatial-plane|spatial-environment|world-structure|work-peek|peek-opening|stack-breathe|Five directions\. One place\./.test(await readFile(path, 'utf8')), `Prototype code shipped: ${path}`);
       checked++;
     }
   }

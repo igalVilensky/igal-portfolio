@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SpatialStack from './SpatialStack.vue';
-import SpatialEnvironment from './SpatialEnvironment.vue';
+import WorkReveal from './WorkReveal.vue';
 import { useSpatialNavigation } from './useSpatialNavigation';
 import { copy } from './content';
 import ThemeToggle from '~/components/ThemeToggle.vue';
@@ -10,13 +10,13 @@ const switchLocalePath = useSwitchLocalePath();
 const text = computed(() => copy[locale.value as keyof typeof copy] ?? copy.en);
 const paused = ref(false);
 const navigation = useSpatialNavigation();
-const origin = ref({ x: 0, y: 0 });
+const origin = ref({ x: 0, y: 0, bottom: 0 });
 useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', content: 'noindex, nofollow' }] });
 </script>
 
 <template>
   <main class="spatial-home" @pointerdown="navigation.dismissTouch">
-    <SpatialEnvironment :active-layer="navigation.active.value" :origin="origin" :paused="paused" />
+    <WorkReveal :visible="navigation.active.value === 0" :origin="origin" :paused="paused" />
     <header class="spatial-periphery">
       <div class="spatial-signature"><p>Igal Vilensky</p><span>{{ text.role }}</span></div>
       <div class="spatial-settings">

@@ -21,7 +21,7 @@ export function useSpatialNavigation() {
     const target = localePath(destinations[i]!);
     timer = setTimeout(async () => {
       try { await navigateTo(target); } finally { opening.value = null; }
-    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420);
+    }, i === 0 || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420);
   }
   function pointerDown(event: PointerEvent) {
     if (event.pointerType !== 'mouse') {

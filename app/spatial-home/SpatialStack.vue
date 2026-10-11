@@ -2,7 +2,7 @@
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
 const props = defineProps<{ copy: SpatialCopy; paused: boolean; navigation: ReturnType<typeof useSpatialNavigation> }>();
-const emit = defineEmits<{ origin: [point: { x: number; y: number }] }>();
+const emit = defineEmits<{ origin: [point: { x: number; y: number; bottom: number }] }>();
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
 const localePath = useLocalePath();
 const id = useId();
@@ -12,7 +12,7 @@ function measure() {
   if (!stage.value) return;
   const rect = stage.value.getBoundingClientRect();
   const compact = window.matchMedia('(max-width: 600px)').matches;
-  emit('origin', { x: rect.left + rect.width * .48, y: rect.top + window.scrollY + (compact ? rect.width * .11 - 7 : rect.width * .13) });
+  emit('origin', { bottom: rect.bottom + window.scrollY, x: rect.left + rect.width * (compact ? .944 : .926), y: rect.top + window.scrollY + (compact ? rect.width * .1365 - 7 : rect.width * .16) });
 }
 onMounted(() => {
   observer = new ResizeObserver(measure);
