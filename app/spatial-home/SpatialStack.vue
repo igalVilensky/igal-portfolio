@@ -72,6 +72,7 @@ onBeforeUnmount(() => { cancelAnimationFrame(askFrame); observer?.disconnect(); 
           <path v-if="i === 0" class="work-source" d="M310 98 370 83 414 102 355 118Z M40 100 400 12 680 126" />
           <path v-if="i === 2" class="ask-circuit" pathLength="1" d="M40 100 320 224 680 126" />
           <path v-if="i === 2" class="ask-core-light" d="M280 206 320 216 360 206 320 224Z" />
+          <path v-if="i === 1" class="experiments-circuit" pathLength="1" d="M40 100 180 162 230 150 340 198 410 179 455 187 680 126" />
           <path class="plane-core" d="M310 98 370 83 414 102 355 118Z M310 104 355 125 414 109" />
           <path class="plane-rim" d="M40 100 320 224 680 126 M320 224V246" />
           <path class="plane-corner" d="M40 115V100L78 91 M644 136 680 126V141" />
@@ -97,6 +98,8 @@ onBeforeUnmount(() => { cancelAnimationFrame(askFrame); observer?.disconnect(); 
 .work-source { fill: none; stroke: var(--sp-cyan); stroke-width: 3; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 7px var(--sp-cyan)); }
 .work-active .work-source { opacity: 1; }
 .ask-circuit { fill: none; stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
+.ask-suppressed .ask-circuit, .ask-suppressed .ask-core-light { visibility: hidden; }
+.experiments-circuit { fill: none; stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
 .ask-core-light { fill: var(--sp-cyan); opacity: 0; }
 .plane-face { stroke: var(--sp-line); stroke-width: 1.2; }
 .surface-start { stop-color: var(--sp-top); }.surface-end { stop-color: var(--sp-bottom); }
