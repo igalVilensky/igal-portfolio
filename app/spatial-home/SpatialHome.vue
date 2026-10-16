@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SpatialStack from './SpatialStack.vue';
+import AboutReveal from './AboutReveal.vue';
 import WorkReveal from './WorkReveal.vue';
 import AskIgalReveal from './AskIgalReveal.vue';
 import ExperimentsReveal from './ExperimentsReveal.vue';
@@ -24,7 +25,8 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
 </script>
 
 <template>
-  <main class="spatial-home" @pointerdown="navigation.dismissTouch">
+  <main class="spatial-home" :class="{ 'about-active': navigation.active.value === 4 }" @pointerdown="navigation.dismissTouch">
+    <AboutReveal :visible="navigation.active.value === 4" :paused="paused" />
     <WorkReveal :visible="navigation.active.value === 0" :origin="origin" :paused="paused" />
     <ExperimentsReveal :visible="navigation.active.value === 1" :suppressed="navigation.active.value !== null && navigation.active.value !== 1" :paused="paused" />
     <AskIgalReveal :class="{ 'environment-suppressed': askSuppressed }" :visible="navigation.active.value === 2" :origin="askOrigin" :paused="paused" :copy="text" />
@@ -43,9 +45,11 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
 </template>
 
 <style scoped>
+/* About-only illumination uses the existing layer light; geometry stays untouched. */
+.about-active :deep(.spatial-plane:nth-of-type(5)) { --sp-cyan: var(--about-layer-light); }
 .environment-suppressed { visibility: hidden; }
-.spatial-home { position: relative; isolation: isolate; overflow: clip; --sp-top: #f8fcff; --sp-bottom: #d9e6f3; --sp-edge: #b7cce0; --sp-line: #7896b4; --sp-cyan: #087e98; --sp-shadow: #25496b22; min-height: 100svh; display: flex; flex-direction: column; padding: clamp(18px, 3vw, 42px); background: radial-gradient(ellipse at 50% 48%, #dceaf780, transparent 64%), var(--color-canvas); }
-:global(.dark .spatial-home) { --sp-top: #263e56; --sp-bottom: #102032; --sp-edge: #0b1724; --sp-line: #50718e; --sp-cyan: #6dddec; --sp-shadow: #0008; background: radial-gradient(ellipse at 50% 45%, #19395466, transparent 65%), #0a111b; }
+.spatial-home { position: relative; isolation: isolate; overflow: clip; --about-layer-light: #a66536; --sp-top: #f8fcff; --sp-bottom: #d9e6f3; --sp-edge: #b7cce0; --sp-line: #7896b4; --sp-cyan: #087e98; --sp-shadow: #25496b22; min-height: 100svh; display: flex; flex-direction: column; padding: clamp(18px, 3vw, 42px); background: radial-gradient(ellipse at 50% 48%, #dceaf780, transparent 64%), var(--color-canvas); }
+:global(.dark .spatial-home) { --about-layer-light: #e2b58d; --sp-top: #263e56; --sp-bottom: #102032; --sp-edge: #0b1724; --sp-line: #50718e; --sp-cyan: #6dddec; --sp-shadow: #0008; background: radial-gradient(ellipse at 50% 45%, #19395466, transparent 65%), #0a111b; }
 .spatial-periphery { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; position: relative; z-index: 10; }
 .spatial-signature p { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }.spatial-signature span { display: block; font-size: 11px; color: var(--color-text-muted); }
 .spatial-settings { display: flex; gap: 14px; align-items: center; }.spatial-languages { display: flex; }.spatial-languages a { display: grid; place-items: center; width: 44px; min-height: 44px; font: 11px var(--font-mono); color: var(--color-text-muted); }.spatial-languages a[aria-current] { color: var(--color-accent); text-decoration: underline; text-underline-offset: 7px; }

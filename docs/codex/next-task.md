@@ -1,6 +1,12 @@
 # Next Task
 
-## Next step — visual and interaction review of Milestone 4E
+## Next step — review all five provisional worlds after Milestone 4K
+
+About completes the fifth first-pass reveal. Review Work, Experiments, Ask Igal, AI & Automation and About together, in both themes and on desktop/mobile. None has final visual approval; the central Spatial Stack is provisionally accepted. See [4K handoff](milestone-4k-handoff.md).
+
+**Stop for review. Do not automatically begin the coordinated redesign.** The next phase may combine real-time interaction with prepared visual assets and lightweight animation, subject to new direction. No production integration, commit or push.
+
+## Historical review instructions — Milestone 4E
 
 Review the standalone spatial navigation at `http://localhost:3002/spatial-home` (`npm run dev -- --port 3002`). Also inspect `/de/spatial-home` and `/ru/spatial-home`. Five planes are the sole primary navigation; the complete stack is the initial Home state. A/B/C/D remain available unchanged at `/design-lab` for comparison.
 

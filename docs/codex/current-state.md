@@ -1,5 +1,9 @@
 # Current State
 
+## Milestone 4K — fifth provisional reveal, 2026-10-16
+
+About now has a Human Constellation reveal: warm plane illumination, one curved journey and up to five points, with a compact four-point composition on narrower screens. The central stack and other reveal implementations are unchanged. All five worlds remain first-pass prototypes pending joint visual review; the central stack is provisionally accepted. See [4K handoff](milestone-4k-handoff.md) for changed files, verification, captures and limitations. Build and isolation pass; existing global type and public-literal checks remain blocked as documented. **Stop for review; no automatic next iteration, production integration, commit or push.**
+
 ## Active snapshot — 2026-10-11
 
 Repository: `igalVilensky/igal-portfolio`. The active direction is a **Hybrid Personal Engineering Website**, combining professional work, independent applications, AI/automation and integrations, interactive experiments, and personal engineering ideas. The active visual target is Precision Stack + Systems Canvas + Neural Workbench, specified in Milestone 4A below. Milestone 4B.1 implements the shared visual foundation, navigation and homepage Hero; remaining homepage sections retain their existing composition. Milestone 4C added three development-only visual prototypes. The user selected System Layers as the primary candidate; Milestone 4D preserves an integrated Hero experiment. Milestone 4E adds a standalone spatial navigation experience at `/spatial-home` for visual and interaction review; no production integration is authorized.
