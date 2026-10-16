@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import AiFlowReveal from './AiFlowReveal.vue';
+import { useActiveCore } from './useActiveCore';
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
 const props = defineProps<{ copy: SpatialCopy; paused: boolean; navigation: ReturnType<typeof useSpatialNavigation> }>();
 const emit = defineEmits<{ 'ask-origin': [point: { x: number; y: number; bottom: number; exitX: number; exitY: number }]; origin: [point: { x: number; y: number; bottom: number }] }>();
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
+const aiProgress = useActiveCore(() => active.value === 3, () => props.paused);
+const aiReflection = computed(() => Math.max(0, Math.min(1, (aiProgress.value - .3) / .4)));
 const localePath = useLocalePath();
 const id = useId();
 const stage = ref<HTMLElement>();
@@ -75,6 +79,8 @@ onBeforeUnmount(() => { cancelAnimationFrame(askFrame); observer?.disconnect(); 
           <path class="plane-face" :fill="`url(#${id}-surface-${i})`" d="M40 100 400 12 680 126 320 224Z" />
           <path :fill="`url(#${id}-grid-${i})`" d="M40 100 400 12 680 126 320 224Z" />
           <path class="plane-light" :fill="`url(#${id}-light-${i})`" d="M40 100 400 12 680 126 320 224Z" />
+          <path v-if="i === 2 || i === 4" class="ai-reflection" :opacity="aiReflection * (i === 2 ? .55 : .35)" :fill="`url(#${id}-light-${i})`" d="M40 100 400 12 680 126 320 224Z" />
+          <AiFlowReveal v-if="i === 3" :progress="aiProgress" />
           <path class="plane-side-shade" d="M40 100 320 224V246L40 122Z" />
           <path class="plane-inset" d="M76 101 398 29 645 125 321 205Z M107 101 397 43 613 124" />
           <path class="plane-trace" :d="i % 2 ? 'M145 94 245 72 300 94 390 75 494 116 460 125' : 'M190 126 269 107 322 129 436 102 535 140'" />
