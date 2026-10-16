@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SpatialStack from './SpatialStack.vue';
+import AskIgalReveal from './AskIgalReveal.vue';
 import AboutReveal from './AboutReveal.vue';
 import WorkReveal from './WorkReveal.vue';
 import ExperimentsReveal from './ExperimentsReveal.vue';
@@ -18,6 +19,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
 
 <template>
   <main class="spatial-home" :class="{ 'about-active': navigation.active.value === 4 }" @pointerdown="navigation.dismissTouch">
+    <AskIgalReveal :visible="navigation.active.value === 2" :paused="paused" />
     <AboutReveal :visible="navigation.active.value === 4" :paused="paused" />
     <WorkReveal :visible="navigation.active.value === 0" :origin="origin" :paused="paused" />
     <ExperimentsReveal :visible="navigation.active.value === 1" :suppressed="navigation.active.value !== null && navigation.active.value !== 1" :paused="paused" />

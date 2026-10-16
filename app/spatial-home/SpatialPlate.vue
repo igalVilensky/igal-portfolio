@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <g class="spatial-plate" :class="{ illuminated, paused }" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
+  <g class="spatial-plate" :class="{ illuminated, paused, 'ask-lit': index === 2 && progress > 0 }" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
     <!-- Every layer uses these same faces, corners and thickness. Only pose varies. -->
     <path class="plane-face" :fill="`url(#${prefix}-surface-${index})`" :d="geometry.top" />
     <path class="plane-light" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
@@ -92,7 +92,8 @@ onBeforeUnmount(() => {
 .plane-label { fill: var(--color-text); font-size: 19px; font-weight: 500; }
 .plane-number { font: 12px var(--font-mono); fill: var(--color-text-muted); }
 .plane-arrow, .ai-initial { fill: var(--sp-cyan); }
-.ai-initial { font-weight: 750; }
+.ai-initial { font-weight: 750; transition: filter .35s; }
+.ask-lit .ai-initial { filter: drop-shadow(0 0 3px var(--sp-cyan)); }
 .plane-spill { fill: none; stroke: var(--sp-cyan); stroke-width: 7; opacity: 0; transition: opacity .4s; }
 .work-source { fill: none; stroke: var(--sp-cyan); stroke-width: 3; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 7px var(--sp-cyan)); }
 .experiments-circuit { fill: none; stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
@@ -103,5 +104,5 @@ onBeforeUnmount(() => {
 .illuminated .plane-spill { opacity: .16; }
 .illuminated .plane-title { font-weight: 650; }
 @media (max-width: 600px) { .plane-label { font-size: 22px; } .plane-number { display: none; } }
-@media (prefers-reduced-motion: reduce) { .plane-corner { animation: none; } .plane-light, .plane-spill, .work-source { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .plane-corner { animation: none; } .plane-light, .plane-spill, .work-source, .ai-initial { transition: none; } }
 </style>
