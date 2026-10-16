@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
+import { restingPlate } from './plateGeometry';
 const props = defineProps<{ visible: boolean; suppressed: boolean; paused: boolean }>();
 const root = ref<HTMLElement>();
 const field = ref<SVGSVGElement>();
@@ -21,8 +22,8 @@ function measure() {
   const plane = root.value.closest('main')?.querySelectorAll('.spatial-plane')[1]?.querySelector('svg');
   const matrix = plane?.getScreenCTM();
   if (!matrix) return;
-  const a = new DOMPoint(40, 100).matrixTransform(matrix);
-  const b = new DOMPoint(680, 126).matrixTransform(matrix);
+  const a = new DOMPoint(...restingPlate.vertices[0]!).matrixTransform(matrix);
+  const b = new DOMPoint(...restingPlate.vertices[2]!).matrixTransform(matrix);
   const compact = bounds.width <= 1100 || bounds.width / bounds.height <= 1.2;
   const isMobile = bounds.width <= 600;
   mobile.value = isMobile;

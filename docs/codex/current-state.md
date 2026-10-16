@@ -1,5 +1,9 @@
 # Current State
 
+## Milestone 4L.1 — rigid-body validation and stable labels, 2026-10-16
+
+All five navigation layers now instantiate one `SpatialPlate.vue` and one `plateGeometry.ts` model. Faces, thickness, corners, perspective, hit silhouette and resting geometry are shared. Ask changes only the model's orientation progress and returns to the same resting definition. Existing reveal attachment points follow the shared surface. The rigid model now has a 101-pose invariant check and optional `/spatial-home?geometry=1` corner/axis/pivot diagnostics. Idle title jitter was traced to a ResizeObserver/getBBox fitting feedback loop and removed using untransformed text measurement; idle motion remains enabled. Dark/light DPR 1/2 recordings and the slow diagnostic clip are in `/tmp/m4l1-validation/`. See [4L.1 handoff](milestone-4l1-handoff.md) for desktop/mobile, light/dark captures and exact geometry comparisons. **Stop for review. No new effects, assets, production integration, commit or push.**
+
 ## Milestone 4K — fifth provisional reveal, 2026-10-16
 
 About now has a Human Constellation reveal: warm plane illumination, one curved journey and up to five points, with a compact four-point composition on narrower screens. The central stack and other reveal implementations are unchanged. All five worlds remain first-pass prototypes pending joint visual review; the central stack is provisionally accepted. See [4K handoff](milestone-4k-handoff.md) for changed files, verification, captures and limitations. Build and isolation pass; existing global type and public-literal checks remain blocked as documented. **Stop for review; no automatic next iteration, production integration, commit or push.**

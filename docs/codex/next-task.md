@@ -1,6 +1,10 @@
 # Next Task
 
-## Next step — review all five provisional worlds after Milestone 4K
+## Immediate next step — review rigid rotation and stable labels
+
+Review the [4L.1 validation correction](milestone-4l1-handoff.md), `/spatial-home?geometry=1`, and `/tmp/m4l1-validation/slow.mp4`. Confirm centered rigid rotation and identical resting/returned geometry. Review `dark-1x.mp4`, `light-1x.mp4`, `dark-2x.mp4`, and `light-2x.mp4` for stable labels through idle, hover and return. **Stop here. No further effects, assets, production integration, commit or push.**
+
+## Deferred — review all five provisional worlds after Milestone 4K
 
 About completes the fifth first-pass reveal. Review Work, Experiments, Ask Igal, AI & Automation and About together, in both themes and on desktop/mobile. None has final visual approval; the central Spatial Stack is provisionally accepted. See [4K handoff](milestone-4k-handoff.md).
 
