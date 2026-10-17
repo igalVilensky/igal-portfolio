@@ -64,8 +64,8 @@ onBeforeUnmount(() => { context?.revert(); media?.removeEventListener('change', 
 .automation-routes path { stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
 .automation-inlet { stroke: #168ca8; }
 .automation-outlet { stroke: #8c65ca; }
-:global(.dark) .automation-inlet { stroke: #61d9e7; }
-:global(.dark) .automation-outlet { stroke: #b29bea; }
+:global(.dark .automation-world .automation-inlet) { stroke: #61d9e7; }
+:global(.dark .automation-world .automation-outlet) { stroke: #b29bea; }
 @media (min-width: 601px) and (max-width: 1100px) {
   .automation-input-position { transform: translate(150px, 180px) scale(.68); }
   .automation-output-position { transform: translate(90px, 100px) scale(.68); }

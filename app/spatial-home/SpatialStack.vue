@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import SpatialPlate from './SpatialPlate.vue';
+import WorkSurfaceArtwork from './WorkSurfaceArtwork.vue';
 import { plateHitPath, projectPlate, plateSide, plateThickness } from './plateGeometry';
 import AutomationReveal from './AutomationReveal.vue';
 import { useActiveCore } from './useActiveCore';
@@ -64,7 +65,9 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
           </defs>
           <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : i === 1 ? experimentsPose : i === 3 ? aiPose : 0" :name="copy.names[i]!" :prefix="id"
             :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || aiProgress > 0"
-            :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)" />
+            :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)">
+            <template v-if="i === 0" #surface="{ geometry }"><WorkSurfaceArtwork :geometry="geometry" :progress="workPose" /></template>
+          </SpatialPlate>
         </svg>
         <!-- Stationary geometry owns input; illuminated artwork never changes hit testing. -->
         <svg class="plane-hit" viewBox="0 0 720 260" aria-hidden="true"><path :d="plateHitPath" /></svg>
@@ -121,7 +124,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .spatial-plane { pointer-events: none; }
 .plane-art { transition: transform 550ms cubic-bezier(.2,.8,.2,1); animation: layer-breathe 7s ease-in-out infinite; animation-delay: calc(var(--i) * -.65s); }
 .spatial-plane .plane-hit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.plane-hit path { fill: transparent; pointer-events: auto; }
+/* Input-only resting geometry must never inherit a visible SVG stroke. */
+.plane-hit path { fill: transparent; stroke: none; pointer-events: auto; }
 .side-start { stop-color: var(--sp-edge); }.side-end { stop-color: var(--sp-bottom); }
 .surface-start { stop-color: var(--sp-top); }.surface-end { stop-color: var(--sp-bottom); }
 .spatial-plane.active .plane-art { transform: translate(calc(var(--direction) * 1.7%), -3%); }
@@ -148,6 +152,10 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 
 .experiments-plane { --sp-cyan: #9871df; }
 .experiments-plane.active .plane-art, .departing .experiments-plane.chosen .plane-art { transform: none; }
+/* Selection state covers pointer, keyboard, touch and navigation departure. */
+.work-active:not(.departing) .spatial-plane:not(.work-plane) { opacity: .42; }
+.work-active .work-plane :deep(.plane-spill) { opacity: .24; }
+.work-active .work-plane :deep(.plane-rim) { stroke-width: 3; }
 .work-plane { --sp-cyan: #368aff; }
 .work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
 .automation-plane { --sp-cyan: #dc963f; }

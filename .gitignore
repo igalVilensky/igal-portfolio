@@ -25,3 +25,6 @@ logs
 
 # Local Netlify folder
 .netlify
+
+# Temporary milestone review captures, recordings, and verification results
+/artifacts/milestone-*/

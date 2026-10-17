@@ -52,6 +52,7 @@ onBeforeUnmount(() => {
     <path class="plane-face" :fill="`url(#${prefix}-surface-${index})`" :d="geometry.top" />
     <path class="plane-light" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
     <path class="ai-reflection" :opacity="reflection" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
+    <slot name="surface" :geometry="geometry" />
     <path class="plane-grid" :d="geometry.grid" />
     <path class="plane-inset" :d="geometry.inset" />
     <path class="plane-trace" :d="geometry.trace" />
