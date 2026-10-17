@@ -68,7 +68,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 </script>
 
 <template>
-  <div class="spatial-object" @pointerleave="leaveRegion" @focusout="flowBlur" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
+  <div class="spatial-object" :style="{ '--work-focus': workPose }" @pointerleave="leaveRegion" @focusout="flowBlur" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
     <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
       <div class="stack-axis" aria-hidden="true" />
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
@@ -186,6 +186,24 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .layer-active .active :deep(.plane-spill) { opacity: .24; }
 .layer-active .active :deep(.plane-rim) { stroke-width: 3; }
 .work-plane { --sp-cyan: #368aff; }
+/* Work keeps neighboring faces solid; line contrast and glow recede instead
+   of making the entire physical stack transparent. Restore with the pose clock. */
+.spatial-object:not(.departing) .spatial-plane:not(.work-plane):not(.active) {
+  opacity: calc(1 - var(--work-focus) * .24);
+}
+.layer-active:not(:has(.work-plane.active)):not(.departing) .spatial-plane:not(.active) { opacity: .42; }
+.spatial-plane:not(.work-plane) .plane-art {
+  --sp-line-base: #7896b4;
+  --sp-line: color-mix(in srgb, var(--sp-line-base), var(--sp-edge) calc(var(--work-focus) * 55%));
+
+}
+.spatial-plane:not(.work-plane) :deep(.plane-light),
+.spatial-plane:not(.work-plane) :deep(.plane-spill),
+.spatial-plane:not(.work-plane) :deep(.plane-corner) { filter: opacity(calc(1 - var(--work-focus) * .75)); }
+.work-plane .surface-start { stop-color: color-mix(in srgb, var(--sp-top), #accaf2 calc(var(--work-focus) * 35%)); }
+.work-plane .surface-end { stop-color: color-mix(in srgb, var(--sp-bottom), #6589b7 calc(var(--work-focus) * 25%)); }
+.layer-active .work-plane.active :deep(.plane-spill) { opacity: .08; }
+.work-plane:focus-visible :deep(.plane-rim) { stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 6 4; }
 .work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
 .automation-plane { --sp-cyan: #dc963f; }
 .automation-plane.active .plane-art, .departing .automation-plane.chosen .plane-art { transform: none; }
@@ -196,4 +214,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 
 <style scoped>
 @media(max-width:1250px) { .spatial-object:has(.automation-world.visible) { margin-bottom: 255px; } }
+</style>
+
+<style scoped>
+:global(.dark) .spatial-plane:not(.work-plane) .plane-art { --sp-line-base: #50718e; }
 </style>

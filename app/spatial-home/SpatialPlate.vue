@@ -2,6 +2,9 @@
 import { projectPlate, restingPlate } from './plateGeometry';
 const props = defineProps<{ progress: number; reflection: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
 const geometry = computed(() => props.progress === 0 ? restingPlate : projectPlate(props.progress));
+// Fade technical markings before the artwork starts to reveal. Both directions
+// follow the reversible pose clock, including interrupted hover and reduced motion.
+const workDecoration = computed(() => props.index === 0 ? 1 - Math.min(1, props.progress / .45) : 1);
 const title = ref<SVGTextElement>();
 const titlePlacement = ref('translate(0 17)');
 let compact: MediaQueryList | undefined;
@@ -47,7 +50,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <g class="spatial-plate" :class="{ illuminated, paused, 'ask-lit': index === 2 && progress > 0 }" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
+  <g class="spatial-plate" :class="{ illuminated, paused, 'ask-lit': index === 2 && progress > 0 }" :style="index === 0 ? { '--work-decoration': workDecoration, '--work-pose': progress } : undefined" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
     <!-- Every layer uses these same faces, corners and thickness. Only pose varies. -->
     <path class="plane-face" :fill="`url(#${prefix}-surface-${index})`" :d="geometry.top" />
     <path class="plane-light" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
@@ -76,6 +79,15 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.spatial-plate[data-layer="0"] .plane-grid,
+.spatial-plate[data-layer="0"] .plane-inset,
+.spatial-plate[data-layer="0"] .plane-trace,
+.spatial-plate[data-layer="0"] .plane-core,
+.spatial-plate[data-layer="0"] .plane-corner { opacity: var(--work-decoration); animation: none; }
+.spatial-plate[data-layer="0"] .plane-grid { opacity: calc(var(--work-decoration) * .18); }
+.spatial-plate[data-layer="0"] .plane-trace { opacity: calc(var(--work-decoration) * .45); }
+.spatial-plate[data-layer="0"] .plane-corner { opacity: calc(var(--work-decoration) * .7); }
+.spatial-plate[data-layer="0"] .plane-light { opacity: calc(.12 + var(--work-pose) * .28); transition: none; }
 .plane-face { stroke: var(--sp-line); stroke-width: 1.2; }
 .plane-edge { stroke: var(--sp-line); }
 .plane-side-shade { fill: #061728; opacity: .23; }

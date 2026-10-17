@@ -23,12 +23,12 @@ const exposure = computed(() => {
 </template>
 
 <style scoped>
-/* Fragments, rather than miniature pages: each crop dissolves into the glass.
-   The physical face clip and its original markings stay above this texture. */
-.work-inner-art { position: absolute; inset: 16px 18px 25px; overflow: hidden; opacity: .64; mask-image: radial-gradient(ellipse at 50% 48%, #000 27%, transparent 73%); }
+/* Keep the existing crops, with a solid image field and only a narrow edge fade.
+   The shared projected face clip keeps every pixel inside the rotating plate. */
+.work-inner-art { position: absolute; inset: 16px 18px 25px; overflow: hidden; background: #14243a; opacity: 1; mask-image: linear-gradient(transparent, #000 7%, #000 93%, transparent); }
 .work-inner-art img { position: absolute; max-width: none; height: auto; pointer-events: none; }
 .inner-mindq { width: 235px; left: -64px; top: -32px; transform: rotate(-13deg); mask-image: linear-gradient(90deg, #000 40%, transparent 96%); }
 .inner-sunlit { width: 355px; right: -112px; top: -8px; transform: rotate(9deg); mask-image: linear-gradient(110deg, transparent 7%, #000 48%); }
-.inner-linter { width: 176px; left: 94px; bottom: -107px; transform: rotate(-8deg); opacity: .64; mask-image: linear-gradient(0deg, transparent 12%, #000 76%); }
-:global(.dark) .work-inner-art { opacity: .74; }
+.inner-linter { width: 176px; left: 94px; bottom: -107px; transform: rotate(-8deg); opacity: 1; mask-image: linear-gradient(0deg, transparent 12%, #000 76%); }
+
 </style>
