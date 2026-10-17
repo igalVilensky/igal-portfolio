@@ -46,7 +46,7 @@ export function useSpatialNavigation() {
   function focus(i: number) { focused.value = i; }
   function blur() { focused.value = null; }
   function dismissTouch(event: PointerEvent) {
-    if (!(event.target as Element).closest('.spatial-plane')) { touched.value = null; focused.value = null; links.value.forEach(link => link.blur()); }
+    if (!(event.target as Element).closest('.spatial-plane, .automation-world')) { touched.value = null; focused.value = null; links.value.forEach(link => link.blur()); }
   }
   return { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur, dismissTouch };
 }

@@ -31,6 +31,25 @@ const localePath = useLocalePath();
 const id = useId();
 const stage = ref<HTMLElement>();
 const directions = [-1, 1, -1, 1, -1] as const;
+function plateKey(event: KeyboardEvent, i: number) {
+  if (i === 3 && event.key === 'Tab' && !event.shiftKey) {
+    event.preventDefault();
+    (stage.value?.parentElement?.querySelector('.flow-station') as HTMLButtonElement)?.focus();
+    return;
+  }
+  keyboard(event, i);
+}
+function leaveRegion(event: PointerEvent) {
+  leave();
+  if (event.pointerType === 'mouse' && active.value === 3) {
+    const root = event.currentTarget as HTMLElement;
+    if (root.contains(document.activeElement)) (document.activeElement as HTMLElement)?.blur();
+    blur();
+  }
+}
+function flowBlur(event: FocusEvent) {
+  if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) blur();
+}
 let observer: ResizeObserver | undefined;
 function measure() {
   if (!stage.value) return;
@@ -49,7 +68,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 </script>
 
 <template>
-  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
+  <div class="spatial-object" @pointerleave="leaveRegion" @focusout="flowBlur" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
     <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
       <div class="stack-axis" aria-hidden="true" />
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
@@ -57,11 +76,11 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
         :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3, 'about-plane': i === 4 }"
         :style="{ '--i': i, '--direction': directions[i], zIndex: 5 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
-        @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
-        @pointerleave="leave"
-        @focus="focus(i)" @blur="blur"
-        @keydown="keyboard($event, i)" @click="activate($event, i)">
-        <AutomationReveal v-if="i === 3" :visible="active === 3" :suppressed="active !== null && active !== 3" :paused="paused" />
+        @pointerdown="pointerDown($event)" @pointerenter="active !== 3 && enter($event, i)"
+        @pointerleave="active !== 3 && leave()"
+        @focus="focus(i)" @blur="active !== 3 && blur()"
+        @keydown="plateKey($event, i)" @click="activate($event, i)">
+
         <svg class="plane-art" viewBox="0 0 720 260" aria-hidden="true">
           <defs>
             <linearGradient :id="`${id}-surface-${i}`" x1="0" y1="0" x2="1" y2="1"><stop class="surface-start"/><stop offset="1" class="surface-end"/></linearGradient>
@@ -98,6 +117,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
         </svg>
       </div>
     </nav>
+    <AutomationReveal :visible="active === 3" :paused="paused" />
+
     <aside v-if="diagnostics" class="geometry-panel" aria-label="Development geometry diagnostics">
       <strong>Rigid-body diagnostics</strong>
       <p>Local square: {{ plateSide.toFixed(3) }} × {{ plateSide.toFixed(3) }}<br>Thickness: {{ plateThickness.toFixed(3) }}</p>
@@ -124,7 +145,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .geometry-panel button { border: 1px solid currentColor; padding: 4px; margin-top: 8px; }
 @media(max-width: 600px) { .geometry-panel { position: relative; top: auto; right: auto; width: 100%; } }
 .spatial-object { position: relative; z-index: 2; width: min(900px, 84vw, calc((100svh - 300px) * 1.1)); margin: auto; }
-.stack-stage { position: relative; aspect-ratio: 720 / 650; animation: stack-breathe 7s ease-in-out infinite; }
+.stack-stage { pointer-events: none; position: relative; aspect-ratio: 720 / 650; animation: stack-breathe 7s ease-in-out infinite; }
 .stack-axis { position: absolute; inset: 12% 48% 5%; border-left: 1px dashed var(--sp-line); transform: rotate(16deg); opacity: .5; }
 .stack-stage::after { content: ''; position: absolute; width: 65%; height: 10%; background: var(--sp-shadow); filter: blur(18px); bottom: 0; left: 20%; border-radius: 50%; }
 .spatial-plane { position: absolute; width: 100%; top: calc(var(--i) * 14%); display: block; color: var(--color-text); transition: transform 550ms cubic-bezier(.2,.8,.2,1), opacity 350ms, translate 550ms; -webkit-tap-highlight-color: transparent; }
@@ -171,4 +192,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .automation-plane .plane-art { position: relative; }
 .about-plane.active { --sp-cyan: var(--about-layer-light); }
 .about-plane.active .plane-art, .departing .about-plane.chosen .plane-art { transform: none; }
+</style>
+
+<style scoped>
+@media(max-width:1250px) { .spatial-object:has(.automation-world.visible) { margin-bottom: 255px; } }
 </style>
