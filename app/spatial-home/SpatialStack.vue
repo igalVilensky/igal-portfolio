@@ -10,6 +10,8 @@ const emit = defineEmits<{ origin: [point: { x: number; y: number; bottom: numbe
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
 const workProgress = useActiveCore(() => active.value === 0, () => props.paused);
 const workPose = computed(() => workProgress.value ** 2 * (3 - 2 * workProgress.value));
+const experimentsProgress = useActiveCore(() => active.value === 1, () => props.paused);
+const experimentsPose = computed(() => experimentsProgress.value ** 2 * (3 - 2 * experimentsProgress.value));
 const askProgress = useActiveCore(() => active.value === 2, () => props.paused);
 const route = useRoute();
 const diagnostics = computed(() => import.meta.dev && route.query.geometry === '1');
@@ -40,12 +42,12 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 </script>
 
 <template>
-  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'work-active': active === 0, interacting: active !== null || askProgress > 0 || workProgress > 0 || diagnosticPose !== null }">
+  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'work-active': active === 0, interacting: active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || diagnosticPose !== null }">
     <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
       <div class="stack-axis" aria-hidden="true" />
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
-        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0 }"
+        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1 }"
         :style="{ '--i': i, '--direction': directions[i], zIndex: 5 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
         @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
@@ -58,8 +60,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
             <linearGradient :id="`${id}-side-${i}`" x1="0" y1="0" x2="0" y2="1"><stop class="side-start"/><stop offset="1" class="side-end"/></linearGradient>
             <radialGradient :id="`${id}-light-${i}`"><stop stop-color="var(--sp-cyan)" stop-opacity=".32"/><stop offset="1" stop-color="var(--sp-cyan)" stop-opacity="0"/></radialGradient>
           </defs>
-          <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : 0" :name="copy.names[i]!" :prefix="id"
-            :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0"
+          <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : i === 1 ? experimentsPose : 0" :name="copy.names[i]!" :prefix="id"
+            :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0"
             :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)">
             <AiFlowReveal v-if="i === 3" :progress="aiProgress" />
           </SpatialPlate>
@@ -144,6 +146,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 }
 @media (prefers-reduced-motion: reduce) { .stack-stage, .plane-art, .plane-corner { animation: none; }.spatial-plane, .plane-art, .plane-light, .plane-spill, .plane-contact, .work-source { transition: none; } }
 
+.experiments-plane { --sp-cyan: #9871df; }
+.experiments-plane.active .plane-art, .departing .experiments-plane.chosen .plane-art { transform: none; }
 .work-plane { --sp-cyan: #368aff; }
 .work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
 </style>

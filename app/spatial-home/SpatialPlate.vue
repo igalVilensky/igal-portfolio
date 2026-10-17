@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { projectPlate, restingPlate, projectSurfacePath } from './plateGeometry';
+import { projectPlate, restingPlate } from './plateGeometry';
 const props = defineProps<{ progress: number; reflection: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
 const geometry = computed(() => props.progress === 0 ? restingPlate : projectPlate(props.progress));
-const experimentsCircuit = projectSurfacePath('M40 100 180 162 230 150 340 198 410 179 455 187 680 126');
 const title = ref<SVGTextElement>();
 const titlePlacement = ref('translate(0 17)');
 let compact: MediaQueryList | undefined;
@@ -58,7 +57,6 @@ onBeforeUnmount(() => {
     <path class="plane-trace" :d="geometry.trace" />
     <path class="plane-core" :d="geometry.core" />
     <path class="plane-corner" :d="geometry.corner" />
-    <path v-if="index === 1" class="experiments-circuit" pathLength="1" :d="experimentsCircuit" />
     <slot />
     <template v-if="geometry.sideVisible">
       <path class="plane-edge plate-side" :fill="`url(#${prefix}-side-${index})`" :d="geometry.side" />
@@ -95,7 +93,6 @@ onBeforeUnmount(() => {
 .ask-lit .ai-initial { filter: drop-shadow(0 0 3px var(--sp-cyan)); }
 .plane-spill { fill: none; stroke: var(--sp-cyan); stroke-width: 7; opacity: 0; transition: opacity .4s; }
 .work-source { fill: none; stroke: var(--sp-cyan); stroke-width: 3; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 7px var(--sp-cyan)); }
-.experiments-circuit { fill: none; stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; }
 .illuminated .plane-face { stroke: var(--sp-cyan); stroke-width: 2; }
 .illuminated .plane-core, .illuminated .plane-rim { stroke: var(--sp-cyan); stroke-width: 2.5; }
 .illuminated .plane-corner { opacity: 1; animation: none; }
