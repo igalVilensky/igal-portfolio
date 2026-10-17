@@ -36,7 +36,7 @@ const stopped = computed(() => paused.value || !visible.value || hidden.value);
   <section class="identity-lab" lang="en" aria-labelledby="lab-title">
     <header class="lab-heading">
       <div><p class="lab-eyebrow">Igal Vilensky / Visual research / 4D</p><h1 id="lab-title">Engineering, <em>in motion.</em></h1></div>
-      <div class="lab-theme"><span>Development only</span><ThemeToggle /></div>
+      <div class="lab-theme"><span>Experimental</span><ThemeToggle /></div>
     </header>
     <div class="lab-navigation" role="group" aria-label="Prototype">
       <button v-for="(direction, index) in directions" :key="direction.name" :aria-pressed="active === index" aria-controls="lab-stage" @click="active = index; revision = 0">

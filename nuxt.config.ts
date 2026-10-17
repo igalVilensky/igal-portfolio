@@ -6,14 +6,16 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
   modules: ["@nuxtjs/tailwindcss", "@nuxtjs/color-mode", "@nuxtjs/i18n", '@vueuse/motion/nuxt',
     function designLab(_options, nuxt) {
-      // Outside pages/components scanning: neither the route nor its assets enter production.
-      if (!nuxt.options.dev) return;
+      // Register both standalone routes for development and production.
       nuxt.hook('pages:extend', (pages) => {
         pages.push({ name: 'spatial-home', path: '/spatial-home', file: fileURLToPath(new URL('./app/spatial-home/SpatialHome.vue', import.meta.url)) });
         pages.push({ name: 'design-lab', path: '/design-lab', file: fileURLToPath(new URL('./app/design-lab/Lab.vue', import.meta.url)) });
       });
     },
   ],
+  nitro: {
+    prerender: { routes: ['/spatial-home', '/de/spatial-home', '/ru/spatial-home', '/design-lab'] },
+  },
   i18n: {
     strategy: "prefix_except_default",
     baseUrl: "https://igalvilensky.netlify.app",

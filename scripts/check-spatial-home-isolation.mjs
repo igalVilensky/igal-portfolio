@@ -1,27 +1,46 @@
-// Run after build/generate; pass a running production origin for HTTP assertions.
+// Run after npm run generate. Spatial Home is public, but stays separate from
+// the main homepage. Optionally pass a static production origin for HTTP checks.
 import assert from 'node:assert/strict';
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, access } from 'node:fs/promises';
 import { join } from 'node:path';
-let checked = 0;
-async function inspect(directory) {
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
+
+const output = 'dist';
+const routes = ['/spatial-home', '/de/spatial-home', '/ru/spatial-home'];
+for (const route of routes) {
+  const html = await readFile(join(output, route, 'index.html'), 'utf8');
+  assert(html.includes('class="spatial-home"'), `${route}: missing spatial interface`);
+  assert.equal((html.match(/class="spatial-plate(?: |")/g) ?? []).length, 5, `${route}: missing plates`);
+  for (const [, asset] of html.matchAll(/(?:src|href)="(\/_nuxt\/[^"?#]+)/g)) {
+    await access(join(output, asset));
+  }
+  assert(!html.includes('class="geometry-panel"'), `${route}: development diagnostics shipped`);
+}
+for (const locale of ['', 'de', 'ru']) {
+  const html = await readFile(join(output, locale, 'index.html'), 'utf8');
+  assert(!html.includes('class="spatial-home"'), `${locale || 'en'}: homepage replaced`);
+}
+
+async function files(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  return (await Promise.all(entries.map(entry => {
     const path = join(directory, entry.name);
-    assert(!/automation-(?:inputs|processing|output|route)|PlateSurfaceContent|WorkSurfaceArtwork|AutomationReveal|work-(?:mindq-lab|sunlit-tales|i18n-linter)|ask-igal-(?:code|systems|experience|answer)|spatial-home|SpatialStack|SpatialHome|SpatialEnvironment|AboutReveal|WorkReveal|AskIgalReveal|ExperimentsReveal|useSpatialNavigation/.test(entry.name), `Prototype path shipped: ${path}`);
-    if (entry.isDirectory()) {
-      if (entry.name !== 'node_modules') await inspect(path);
-    } else if (/\.(?:m?js|css|html|json|xml|txt)$/.test(entry.name)) {
-      assert(!/plate-surface-content|work-inner-art|automation-world|about-constellation|about-thread|spatial-home|spatial-plane|spatial-environment|world-structure|work-collection|work-art|work-peek|experiments-world|experiments-circuit|ask-knowledge|knowledge-art|ask-identity|ask-lettering|peek-opening|stack-breathe|Five directions\. One place\./.test(await readFile(path, 'utf8')), `Prototype code shipped: ${path}`);
-      checked++;
-    }
-  }
+    return entry.isDirectory() ? files(path) : [path];
+  }))).flat();
 }
-await inspect('.output');
+// Compare actual PNG contents, independent of Vite's hashed output filenames.
+const shipped = await files(join(output, '_nuxt'));
+const pngs = shipped.filter(path => path.endsWith('.png'));
+const buffers = await Promise.all(pngs.map(path => readFile(path)));
+const artwork = (await files('app/spatial-home/assets')).filter(path => path.endsWith('.png'));
+for (const source of artwork) {
+  const original = await readFile(source);
+  assert(buffers.some(buffer => buffer.equals(original)), `Missing spatial artwork: ${source}`);
+}
 if (process.argv[2]) {
-  for (const prefix of ['', '/en', '/de', '/ru']) for (const suffix of ['', '/']) {
-    const path = `${prefix}/spatial-home${suffix}`;
-    const response = await fetch(new URL(path, process.argv[2]));
-    assert.equal(response.status, 404, `${path} must return 404`);
-    assert(!(await response.text()).includes('spatial-plane'), `${path} leaked markup`);
+  for (const route of routes) for (const suffix of ['', '/']) {
+    const response = await fetch(new URL(route + suffix, process.argv[2]));
+    assert.equal(response.status, 200, `${route + suffix}: must be public`);
+    assert((await response.text()).includes('class="spatial-home"'), `${route}: missing markup`);
   }
 }
-console.log(`Spatial home excluded from ${checked} production artifacts${process.argv[2] ? '; all eight production URLs return 404' : ''}.`);
+console.log(`Spatial Home generated in all three locales; ${artwork.length} PNG assets verified; main homepages remain separate${process.argv[2] ? '; all six public URLs return 200' : ''}.`);
