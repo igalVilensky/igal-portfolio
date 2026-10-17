@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SpatialPlate from './SpatialPlate.vue';
 import { plateHitPath, projectPlate, plateSide, plateThickness } from './plateGeometry';
-import AiFlowReveal from './AiFlowReveal.vue';
+import AutomationReveal from './AutomationReveal.vue';
 import { useActiveCore } from './useActiveCore';
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
@@ -19,6 +19,7 @@ const diagnosticPose = ref<number | null>(null);
 const askPose = computed(() => diagnostics.value && diagnosticPose.value !== null ? diagnosticPose.value : askProgress.value ** 2 * (3 - 2 * askProgress.value));
 const diagnosticGeometry = computed(() => projectPlate(askPose.value));
 const aiProgress = useActiveCore(() => active.value === 3, () => props.paused);
+const aiPose = computed(() => aiProgress.value ** 2 * (3 - 2 * aiProgress.value));
 const aiReflection = computed(() => Math.max(0, Math.min(1, (aiProgress.value - .3) / .4)));
 const localePath = useLocalePath();
 const id = useId();
@@ -42,29 +43,28 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 </script>
 
 <template>
-  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'work-active': active === 0, interacting: active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || diagnosticPose !== null }">
+  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'work-active': active === 0, interacting: active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || aiProgress > 0 || diagnosticPose !== null }">
     <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
       <div class="stack-axis" aria-hidden="true" />
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
-        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1 }"
+        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3 }"
         :style="{ '--i': i, '--direction': directions[i], zIndex: 5 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
         @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
         @pointerleave="leave"
         @focus="focus(i)" @blur="blur"
         @keydown="keyboard($event, i)" @click="activate($event, i)">
+        <AutomationReveal v-if="i === 3" :visible="active === 3" :suppressed="active !== null && active !== 3" :paused="paused" />
         <svg class="plane-art" viewBox="0 0 720 260" aria-hidden="true">
           <defs>
             <linearGradient :id="`${id}-surface-${i}`" x1="0" y1="0" x2="1" y2="1"><stop class="surface-start"/><stop offset="1" class="surface-end"/></linearGradient>
             <linearGradient :id="`${id}-side-${i}`" x1="0" y1="0" x2="0" y2="1"><stop class="side-start"/><stop offset="1" class="side-end"/></linearGradient>
             <radialGradient :id="`${id}-light-${i}`"><stop stop-color="var(--sp-cyan)" stop-opacity=".32"/><stop offset="1" stop-color="var(--sp-cyan)" stop-opacity="0"/></radialGradient>
           </defs>
-          <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : i === 1 ? experimentsPose : 0" :name="copy.names[i]!" :prefix="id"
-            :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0"
-            :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)">
-            <AiFlowReveal v-if="i === 3" :progress="aiProgress" />
-          </SpatialPlate>
+          <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : i === 1 ? experimentsPose : i === 3 ? aiPose : 0" :name="copy.names[i]!" :prefix="id"
+            :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || aiProgress > 0"
+            :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)" />
         </svg>
         <!-- Stationary geometry owns input; illuminated artwork never changes hit testing. -->
         <svg class="plane-hit" viewBox="0 0 720 260" aria-hidden="true"><path :d="plateHitPath" /></svg>
@@ -150,4 +150,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .experiments-plane.active .plane-art, .departing .experiments-plane.chosen .plane-art { transform: none; }
 .work-plane { --sp-cyan: #368aff; }
 .work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
+.automation-plane { --sp-cyan: #dc963f; }
+.automation-plane.active .plane-art, .departing .automation-plane.chosen .plane-art { transform: translateY(-3%); }
+.automation-plane .plane-art { position: relative; }
 </style>
