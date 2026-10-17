@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import SpatialPlate from './SpatialPlate.vue';
 import WorkSurfaceArtwork from './WorkSurfaceArtwork.vue';
+import LayerSurfaceArtwork from './LayerSurfaceArtwork.vue';
 import { plateHitPath, projectPlate, plateSide, plateThickness } from './plateGeometry';
 import AutomationReveal from './AutomationReveal.vue';
 import { useActiveCore } from './useActiveCore';
@@ -22,6 +23,10 @@ const diagnosticGeometry = computed(() => projectPlate(askPose.value));
 const aiProgress = useActiveCore(() => active.value === 3, () => props.paused);
 const aiPose = computed(() => aiProgress.value ** 2 * (3 - 2 * aiProgress.value));
 const aiReflection = computed(() => Math.max(0, Math.min(1, (aiProgress.value - .3) / .4)));
+const aboutProgress = useActiveCore(() => active.value === 4, () => props.paused);
+const aboutPose = computed(() => aboutProgress.value ** 2 * (3 - 2 * aboutProgress.value));
+const poses = computed(() => [workPose.value, experimentsPose.value, askPose.value, aiPose.value, aboutPose.value]);
+const moving = computed(() => [workProgress, experimentsProgress, askProgress, aiProgress, aboutProgress].some(progress => progress.value > 0));
 const localePath = useLocalePath();
 const id = useId();
 const stage = ref<HTMLElement>();
@@ -44,12 +49,12 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 </script>
 
 <template>
-  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'work-active': active === 0, interacting: active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || aiProgress > 0 || diagnosticPose !== null }">
+  <div class="spatial-object" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
     <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
       <div class="stack-axis" aria-hidden="true" />
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
-        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3 }"
+        :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3, 'about-plane': i === 4 }"
         :style="{ '--i': i, '--direction': directions[i], zIndex: 5 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
         @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
@@ -63,10 +68,13 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
             <linearGradient :id="`${id}-side-${i}`" x1="0" y1="0" x2="0" y2="1"><stop class="side-start"/><stop offset="1" class="side-end"/></linearGradient>
             <radialGradient :id="`${id}-light-${i}`"><stop stop-color="var(--sp-cyan)" stop-opacity=".32"/><stop offset="1" stop-color="var(--sp-cyan)" stop-opacity="0"/></radialGradient>
           </defs>
-          <SpatialPlate :index="i" :progress="i === 2 ? askPose : i === 0 ? workPose : i === 1 ? experimentsPose : i === 3 ? aiPose : 0" :name="copy.names[i]!" :prefix="id"
-            :illuminated="active === i && i !== 2" :paused="paused || active !== null || askProgress > 0 || workProgress > 0 || experimentsProgress > 0 || aiProgress > 0"
+          <SpatialPlate :index="i" :progress="poses[i]!" :name="copy.names[i]!" :prefix="id"
+            :illuminated="active === i" :paused="paused || active !== null || moving"
             :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)">
-            <template v-if="i === 0" #surface="{ geometry }"><WorkSurfaceArtwork :geometry="geometry" :progress="workPose" /></template>
+            <template #surface="{ geometry }">
+              <WorkSurfaceArtwork v-if="i === 0" :geometry="geometry" :progress="workPose" />
+              <LayerSurfaceArtwork v-else :layer="i" :geometry="geometry" :progress="poses[i]!" />
+            </template>
           </SpatialPlate>
         </svg>
         <!-- Stationary geometry owns input; illuminated artwork never changes hit testing. -->
@@ -153,12 +161,14 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .experiments-plane { --sp-cyan: #9871df; }
 .experiments-plane.active .plane-art, .departing .experiments-plane.chosen .plane-art { transform: none; }
 /* Selection state covers pointer, keyboard, touch and navigation departure. */
-.work-active:not(.departing) .spatial-plane:not(.work-plane) { opacity: .42; }
-.work-active .work-plane :deep(.plane-spill) { opacity: .24; }
-.work-active .work-plane :deep(.plane-rim) { stroke-width: 3; }
+.layer-active:not(.departing) .spatial-plane:not(.active) { opacity: .42; }
+.layer-active .active :deep(.plane-spill) { opacity: .24; }
+.layer-active .active :deep(.plane-rim) { stroke-width: 3; }
 .work-plane { --sp-cyan: #368aff; }
 .work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
 .automation-plane { --sp-cyan: #dc963f; }
-.automation-plane.active .plane-art, .departing .automation-plane.chosen .plane-art { transform: translateY(-3%); }
+.automation-plane.active .plane-art, .departing .automation-plane.chosen .plane-art { transform: none; }
 .automation-plane .plane-art { position: relative; }
+.about-plane.active { --sp-cyan: var(--about-layer-light); }
+.about-plane.active .plane-art, .departing .about-plane.chosen .plane-art { transform: none; }
 </style>
