@@ -21,7 +21,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
   <main class="spatial-home" :class="{ 'about-active': navigation.active.value === 4 }" @pointerdown="navigation.dismissTouch">
     <AskIgalReveal :visible="navigation.active.value === 2" :paused="paused" />
     <AboutReveal :visible="navigation.active.value === 4" :paused="paused" />
-    <WorkReveal :visible="navigation.active.value === 0" :origin="origin" :paused="paused" />
+    <WorkReveal :visible="navigation.active.value === 0" :paused="paused" />
     <ExperimentsReveal :visible="navigation.active.value === 1" :suppressed="navigation.active.value !== null && navigation.active.value !== 1" :paused="paused" />
     <header class="spatial-periphery">
       <div class="spatial-signature"><p>Igal Vilensky</p><span>{{ text.role }}</span></div>

@@ -6,11 +6,11 @@ let checked = 0;
 async function inspect(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
-    assert(!/ask-igal-(?:code|systems|experience|answer)|spatial-home|SpatialStack|SpatialHome|SpatialEnvironment|AboutReveal|WorkReveal|AskIgalReveal|ExperimentsReveal|useSpatialNavigation/.test(entry.name), `Prototype path shipped: ${path}`);
+    assert(!/work-(?:mindq-lab|sunlit-tales|i18n-linter)|ask-igal-(?:code|systems|experience|answer)|spatial-home|SpatialStack|SpatialHome|SpatialEnvironment|AboutReveal|WorkReveal|AskIgalReveal|ExperimentsReveal|useSpatialNavigation/.test(entry.name), `Prototype path shipped: ${path}`);
     if (entry.isDirectory()) {
       if (entry.name !== 'node_modules') await inspect(path);
     } else if (/\.(?:m?js|css|html|json|xml|txt)$/.test(entry.name)) {
-      assert(!/about-constellation|about-thread|spatial-home|spatial-plane|spatial-environment|world-structure|work-peek|experiments-world|experiments-circuit|ask-knowledge|knowledge-art|ask-identity|ask-lettering|peek-opening|stack-breathe|Five directions\. One place\./.test(await readFile(path, 'utf8')), `Prototype code shipped: ${path}`);
+      assert(!/about-constellation|about-thread|spatial-home|spatial-plane|spatial-environment|world-structure|work-collection|work-art|work-peek|experiments-world|experiments-circuit|ask-knowledge|knowledge-art|ask-identity|ask-lettering|peek-opening|stack-breathe|Five directions\. One place\./.test(await readFile(path, 'utf8')), `Prototype code shipped: ${path}`);
       checked++;
     }
   }

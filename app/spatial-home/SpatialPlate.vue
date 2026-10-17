@@ -58,7 +58,6 @@ onBeforeUnmount(() => {
     <path class="plane-trace" :d="geometry.trace" />
     <path class="plane-core" :d="geometry.core" />
     <path class="plane-corner" :d="geometry.corner" />
-    <path v-if="index === 0" class="work-source" :d="geometry.core + geometry.rim" />
     <path v-if="index === 1" class="experiments-circuit" pathLength="1" :d="experimentsCircuit" />
     <slot />
     <template v-if="geometry.sideVisible">
