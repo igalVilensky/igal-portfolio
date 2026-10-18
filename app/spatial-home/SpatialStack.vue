@@ -26,7 +26,6 @@ const poses = computed(() => [workPose.value, experimentsPose.value, askPose.val
 const moving = computed(() => [workProgress, experimentsProgress, askProgress, aiProgress, aboutProgress].some(progress => progress.value > 0));
 const localePath = useLocalePath();
 const id = useId();
-const directions = [-1, 1, -1, 1, -1] as const;
 </script>
 
 <template>
@@ -35,13 +34,16 @@ const directions = [-1, 1, -1, 1, -1] as const;
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
         :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3, 'about-plane': i === 4 }"
-        :style="{ '--i': i, '--direction': directions[i], '--visual-order': active === i ? 10 : 5 - i, '--hit-order': 25 - i }"
+        :style="{ '--i': i, '--visual-order': destinations.length - i, '--hit-order': 25 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
         @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
         @pointerleave="leave()"
         @focus="focus(i)" @blur="blur()"
         @keydown="keyboard($event, i)" @click="activate($event, i)">
 
+        <!-- Fixed elevation order: each SVG composites the complete prism, artwork,
+             lighting and shadow before the plate above it. Selection never changes
+             this order. Separate stationary hit paths keep neighboring input stable. -->
         <svg class="plane-art" viewBox="0 0 720 260" aria-hidden="true">
           <defs>
             <linearGradient :id="`${id}-surface-${i}`" x1="0" y1="0" x2="1" y2="1"><stop class="surface-start"/><stop offset="1" class="surface-end"/></linearGradient>
@@ -115,10 +117,7 @@ const directions = [-1, 1, -1, 1, -1] as const;
 .plane-hit path { fill: transparent; stroke: none; pointer-events: auto; }
 .side-start { stop-color: var(--sp-edge); }.side-end { stop-color: var(--sp-bottom); }
 .surface-start { stop-color: var(--sp-top); }.surface-end { stop-color: var(--sp-bottom); }
-.spatial-plane.active .plane-art { transform: translate(calc(var(--direction) * 1.7%), -3%); }
 .spatial-plane:focus-visible { outline: none; }
-.spatial-plane:focus-visible :deep(.plane-inset) { stroke: var(--sp-cyan); stroke-width: 2; stroke-dasharray: 6 4; }
-.departing .chosen .plane-art { transform: translate(calc(var(--direction) * 2%), -7%); }
 .spatial-context { text-align: center; min-height: 72px; padding: 8px 0; font-size: 13px; color: var(--color-text-muted); }
 .spatial-context p { color: var(--color-text); font-size: 15px; margin-bottom: 5px; }.spatial-context p > span { margin-left: 12px; }.context-action { color: var(--color-accent); font-size: 12px; }
 .touch-hint { display: none; }.paused .stack-stage, .interacting .stack-stage, .departing .stack-stage, .paused .plane-art, .interacting .plane-art, .departing .plane-art { animation-play-state: paused; }
@@ -146,15 +145,5 @@ const directions = [-1, 1, -1, 1, -1] as const;
 .about-plane { --sp-cyan: var(--about-layer-light); }
 :global(.dark) .ask-plane { --sp-cyan: #6dddec; }
 .spatial-plane.active .plane-art, .departing .chosen .plane-art { transform: none; }
-.layer-active .spatial-plane:not(.active) .plane-art {
-  --sp-line: color-mix(in srgb, var(--sp-line-base), var(--sp-edge) 22%);
-}
-.spatial-object { --sp-line-base: #7896b4; }
-:global(.dark) .spatial-object { --sp-line-base: #50718e; }
-.layer-active .spatial-plane:not(.active) :deep(.plane-light),
-.layer-active .spatial-plane:not(.active) :deep(.plane-corner) { opacity: .12; }
-.layer-active .spatial-plane:not(.active) :deep(.plane-trace) { opacity: .18; }
-.layer-active .spatial-plane:not(.active) :deep(.plane-core) { opacity: .4; }
-.layer-active .spatial-plane:not(.active) :deep(.plane-label) { opacity: .85; }
 .spatial-plane:focus-visible :deep(.plane-rim) { stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 6 4; }
 </style>
