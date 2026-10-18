@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     },
   ],
   nitro: {
-    prerender: { routes: ['/spatial-home', '/de/spatial-home', '/ru/spatial-home', '/design-lab'] },
+    prerender: { routes: ['/spatial-work', '/de/spatial-work', '/ru/spatial-work', '/spatial-home', '/de/spatial-home', '/ru/spatial-home', '/design-lab'] },
   },
   i18n: {
     strategy: "prefix_except_default",
