@@ -29,7 +29,7 @@ const corners: Vector[] = [plateThickness / 2, -plateThickness / 2].flatMap(y =>
   [-plateSide / 2, y, -plateSide / 2] as Vector,
 ]);
 
-export function projectPlate(progress: number, work = false) {
+export function projectPlate(progress: number, work = false, previewRail = 0) {
   const smooth = (t: number) => t * t * (3 - 2 * t);
   // A 300ms linear travel followed by a 600ms opening. Each phase has
   // zero endpoint velocity; reversing the clock retraces this exact path.
@@ -64,7 +64,7 @@ export function projectPlate(progress: number, work = false) {
     const p = cameraProject(vertex);
     return (restingPlate.vertices.reduce((min, point) => Math.min(min, point[1]), Infinity) - p.point[1]) / p.scale;
   })) : 0;
-  const cradle = ([x, y, z]: Vector): Vector => [x, y - clearance * elevationCos, z - clearance * plateElevation];
+  const cradle = ([x, y, z]: Vector): Vector => [x, y - (clearance - previewRail * opening) * elevationCos, z - (clearance - previewRail * opening) * plateElevation];
   const world = rawWorld.map(cradle);
   const projected = world.map(cameraProject);
   const vertices = projected.map(vertex => vertex.point);
@@ -123,5 +123,6 @@ export function projectSurfacePath(path: string): string {
     (_pair, x: string, y: string) => coordinates(projectSurfacePoint([Number(x), Number(y)])));
 }
 
-// Work has its own hinge pose; all other layers retain the original yaw pose.
-export const projectWorkPlate = (progress: number) => projectPlate(progress, true);
+// Shared extract-and-hinge pose. The optional camera-plane rail keeps lower
+// previews within the viewport after extraction; Work retains its original rail.
+export const projectWorkPlate = (progress: number, previewRail = 0) => projectPlate(progress, true, previewRail);

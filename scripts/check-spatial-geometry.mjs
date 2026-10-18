@@ -50,3 +50,18 @@ for(let step=0;step<=100;step++) {
  near(p.world.slice(0,4).reduce((s,v)=>s+v[0],0)/4,0);
 }
 console.log('PASS: 101 Work poses preserve rigidity, extraction-only orientation, attached texture corners, hinge X, upper clearance and exact camera-facing square.');
+
+// Viewport rails must move one rigid body and preserve the extraction phase.
+for (const rail of [0, plateSide * .2, plateSide * .6]) {
+ for (let step = 0; step <= 100; step++) {
+  const t = step / 100, p = projectWorkPlate(t, rail), baseline = projectWorkPlate(t);
+  for (let a = 0; a < 8; a++) for (let b = a + 1; b < 8; b++) {
+   near(Math.hypot(...sub(p.world[a], p.world[b])), Math.hypot(...sub(restingPlate.world[a], restingPlate.world[b])));
+  }
+  if (t <= 1 / 3) assert.deepEqual(p.vertices, baseline.vertices, 'viewport rails cannot change the extraction origin or orientation');
+ }
+ const q = projectWorkPlate(1, rail).vertices;
+ near(q[0][1], q[1][1]); near(q[0][0], q[3][0]);
+ near(q[1][0] - q[0][0], q[3][1] - q[0][1]);
+}
+console.log('PASS: viewport rails preserve all prism distances, exact extraction origins and camera-facing squares.');

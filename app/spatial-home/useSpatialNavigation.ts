@@ -1,54 +1,49 @@
 import { destinations } from './content';
 
-// Input sources resolve to one active layer; presentation never owns selection.
+// One owner survives the journey from the stationary hit face to its preview.
+// A new plate, leaving the object, outside input, or Escape transfers ownership.
 export function useSpatialNavigation() {
   const localePath = useLocalePath();
-  const active = computed(() => opening.value ?? hovered.value ?? focused.value ?? (touched.value !== null && touched.value >= 0 ? touched.value : null));
-  const hovered = ref<number | null>(null);
-  const focused = ref<number | null>(null);
+  const active = ref<number | null>(null);
   const opening = ref<number | null>(null);
-  const touched = ref<number | null>(null);
   const links = ref<HTMLAnchorElement[]>([]);
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  function activate(event: MouseEvent, i: number, previewReady = true) {
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
-    if (touched.value !== null && touched.value !== i) {
-      event.preventDefault(); touched.value = i; return;
-    }
+  let touch = false;
+  function activate(event: MouseEvent | KeyboardEvent, i: number, previewReady = true) {
     event.preventDefault();
-    if (!previewReady) { focused.value = i; return; }
+    if (active.value !== i || !previewReady) { active.value = i; return; }
     if (opening.value !== null) return;
     opening.value = i;
-    const target = localePath(destinations[i]!);
-    timer = setTimeout(async () => {
-      try { await navigateTo(target); } finally { opening.value = null; }
-    }, 0);
+    navigateTo(localePath(destinations[i]!)).finally(() => { opening.value = null; });
   }
-  function pointerDown(event: PointerEvent) {
-    if (event.pointerType !== 'mouse') {
-      // Focus events must not turn a first tap into immediate navigation.
-      if (touched.value === null) touched.value = -1;
-    } else touched.value = null;
-  }
+  function pointerDown(event: PointerEvent) { touch = event.pointerType !== 'mouse'; }
   function keyboard(event: KeyboardEvent, i: number) {
-    touched.value = null;
-    hovered.value = null;
+    touch = false;
     let next = i;
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (i + 1) % 5;
     else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (i + 4) % 5;
     else if (event.key === 'Home') next = 0;
     else if (event.key === 'End') next = 4;
-    else if (event.key === 'Escape') { hovered.value = null; touched.value = null; links.value[i]?.blur(); return; }
+    else if (event.key === 'Escape') { event.preventDefault(); active.value = null; links.value[i]?.blur(); return; }
     else return;
     event.preventDefault(); links.value[next]?.focus();
   }
-  onBeforeUnmount(() => clearTimeout(timer));
-  function enter(event: PointerEvent, i: number) { if (event.pointerType === 'mouse') { focused.value = null; touched.value = null; hovered.value = i; } }
-  function leave() { hovered.value = null; }
-  function focus(i: number) { hovered.value = null; focused.value = i; }
-  function blur() { focused.value = null; }
+  function enter(event: PointerEvent, i: number) { if (event.pointerType === 'mouse') { touch = false; active.value = i; } }
+  function leave() { if (!touch) active.value = null; }
+  function focus(i: number) { if (!touch) active.value = i; }
+  function blur() { queueMicrotask(() => { if (!touch && !links.value.includes(document.activeElement as HTMLAnchorElement)) active.value = null; }); }
   function dismissTouch(event: PointerEvent) {
-    if (!(event.target as Element).closest('.spatial-plane')) { touched.value = null; focused.value = null; links.value.forEach(link => link.blur()); }
+    if (!(event.target as Element).closest('.spatial-plane')) {
+      active.value = null;
+      links.value.forEach(link => link.blur());
+    }
   }
+  function escape(event: KeyboardEvent) {
+    touch = false;
+    if (event.key !== 'Escape') return;
+    active.value = null;
+    links.value.forEach(link => link.blur());
+  }
+  onMounted(() => window.addEventListener('keydown', escape));
+  onBeforeUnmount(() => window.removeEventListener('keydown', escape));
   return { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur, dismissTouch };
 }

@@ -12,7 +12,7 @@ import inputs from './assets/automation/automation-inputs.png';
 import processing from './assets/automation/automation-processing.png';
 import output from './assets/automation/automation-output.png';
 import route from './assets/automation/automation-route.png';
-const props = defineProps<{ layer: number; geometry: ReturnType<typeof projectPlate>; progress: number }>();
+const props = defineProps<{ layer: number; geometry: ReturnType<typeof projectPlate>; progress: number; cta: string }>();
 // Image fragments live in local surface coordinates; the shared camera and clip
 // attach the whole composition to the plate, including intermediate poses.
 const artwork: Record<number, { name: string; images: string[] }> = {
@@ -35,11 +35,14 @@ const exposure = computed(() => {
     <div class="layer-inner-art" :class="composition.name">
       <img v-for="(src, i) in composition.images" :key="src" :src="src" :class="`fragment-${i}`" alt="" draggable="false" decoding="async">
     </div>
+    <div class="preview-footer" :style="{ opacity: Math.max(0, (progress - .78) / .22) }"><strong>{{ cta }} ↗</strong></div>
   </PlateSurfaceContent>
 </template>
 
 <style scoped>
-.layer-inner-art { position: absolute; inset: 16px 18px 25px; overflow: hidden; opacity: 1; background: #14243a; mask-image: linear-gradient(transparent, #000 7%, #000 93%, transparent); }
+.preview-footer { position: absolute; left: 12px; right: 12px; bottom: 12px; min-height: 38px; display: flex; align-items: center; justify-content: flex-end; padding: 0 12px; border-top: 1px solid var(--sp-cyan); background: var(--sp-bottom); color: var(--color-text); font-size: 14px; }
+@media (max-width: 600px) { .preview-footer { font-size: 24px; } }
+.layer-inner-art { position: absolute; inset: 16px 18px 56px; overflow: hidden; opacity: 1; background: #14243a; mask-image: linear-gradient(transparent, #000 7%, #000 93%, transparent); }
 .layer-inner-art img { position: absolute; max-width: none; height: auto; pointer-events: none; }
 .fragment-0 { width: 220px; left: -45px; top: -26px; transform: rotate(-12deg); }
 .fragment-1 { width: 220px; right: -58px; top: 8px; transform: rotate(8deg); }

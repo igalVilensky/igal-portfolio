@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { projectPlate, projectWorkPlate, restingPlate } from './plateGeometry';
-const props = defineProps<{ progress: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
-const geometry = computed(() => props.progress === 0 ? restingPlate : props.index === 0 ? projectWorkPlate(props.progress) : projectPlate(props.progress));
+import { projectPlate } from './plateGeometry';
+const props = defineProps<{ progress: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean; geometry: ReturnType<typeof projectPlate> }>();
+
 // Fade technical markings before the artwork starts to reveal. Both directions
 // follow the reversible pose clock, including interrupted hover and reduced motion.
 const decoration = computed(() => 1 - Math.min(1, props.progress / .45));
