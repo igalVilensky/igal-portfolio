@@ -1,7 +1,7 @@
 type Point = readonly [number, number];
 type Vector = readonly [number, number, number];
 
-// One square prism, one camera, and one fixed projected world-origin pivot.
+// One square prism and one shared camera; each pose transforms the full body.
 export const plateCenter: Point = [359.38056523422375, 127.30816879597367];
 export const plateElevation = Math.sqrt((93 * 119) / (360 * 280));
 const elevationCos = Math.sqrt(1 - plateElevation ** 2);
@@ -29,18 +29,56 @@ const corners: Vector[] = [plateThickness / 2, -plateThickness / 2].flatMap(y =>
   [-plateSide / 2, y, -plateSide / 2] as Vector,
 ]);
 
-export function projectPlate(progress: number) {
-  const angle = -plateYaw * (1 - progress);
+export function projectPlate(progress: number, work = false) {
+  const smooth = (t: number) => t * t * (3 - 2 * t);
+  // A 300ms linear travel followed by a 600ms opening. Each phase has
+  // zero endpoint velocity; reversing the clock retraces this exact path.
+  const extract = work ? smooth(Math.min(1, progress * 3)) : 0;
+  const opening = work ? smooth(Math.max(0, (progress - 1 / 3) * 1.5)) : 0;
+  const angle = -plateYaw * (work ? 1 - opening : 1 - progress);
   const cos = Math.cos(angle), sin = Math.sin(angle);
-  const rotate = ([x, y, z]: Vector): Vector => [x * cos - z * sin, y, x * sin + z * cos];
-  const world = corners.map(rotate);
+  // At the endpoint the normal is (0, elevationSin, -elevationCos),
+  // exactly opposite camera depth. The leveling carrier removes the initial
+  // azimuth while the central trunnion hinge raises the back of the rigid slab.
+  const hinge = opening * Math.acos(plateElevation);
+  // A horizontal trunnion through the top-face center, parallel to its front
+  // edge, avoids swinging the entire plate sideways as the carrier levels.
+  const hingeX = 0, hingeZ = 0;
+  // Extract along the horizontal projection of camera-forward. Distance is
+  // measured from the existing square footprint, not screen-space offsets.
+  const travel = plateSide * .32 * extract;
+  const rotate = ([x, y, z]: Vector): Vector => {
+    if (!work || progress === 0) return [x * cos - z * sin, y, x * sin + z * cos];
+    const dy = y - plateThickness / 2, dz = z;
+    const raisedY = dy * Math.cos(hinge) + dz * Math.sin(hinge);
+    const hingedZ = -dy * Math.sin(hinge) + dz * Math.cos(hinge);
+    return [hingeX + x * cos - hingedZ * sin,
+      plateThickness / 2 + raisedY,
+      hingeZ - travel + x * sin + hingedZ * cos];
+  };
+  const rawWorld = corners.map(rotate);
+  // The carrier travels down a camera-plane rail only as needed to retain
+  // the original upper envelope. This is a uniform body translation, never
+  // independently corrected corners or an interpolation to a card layout.
+  const clearance = work ? Math.max(0, ...rawWorld.slice(0, 4).map(vertex => {
+    const p = cameraProject(vertex);
+    return (restingPlate.vertices.reduce((min, point) => Math.min(min, point[1]), Infinity) - p.point[1]) / p.scale;
+  })) : 0;
+  const cradle = ([x, y, z]: Vector): Vector => [x, y - clearance * elevationCos, z - clearance * plateElevation];
+  const world = rawWorld.map(cradle);
   const projected = world.map(cameraProject);
   const vertices = projected.map(vertex => vertex.point);
   const face = (indices: number[]) => polygon(indices.map(index => vertices[index]!));
-  const topPoint = ([u, v]: Point) => cameraProject(rotate([(u / 360 - .5) * plateSide, plateThickness / 2, (.5 - v / 280) * plateSide])).point;
+  const topPoint = ([u, v]: Point) => cameraProject(cradle(rotate([(u / 360 - .5) * plateSide, plateThickness / 2, (.5 - v / 280) * plateSide]))).point;
   const detail = (points: Point[], closed = false) => `M${points.map(point => coordinates(topPoint(point))).join('L')}${closed ? 'Z' : ''}`;
   // Face-normal visibility includes the finite camera position, not only yaw.
-  const sideVisible = cameraDistance * elevationCos * sin - plateSide / 2 > 1e-8;
+  const sideNormal: Vector = [-cos, 0, -sin];
+  const sideCenter = world[0]!.map((_, j) => (world[0]![j]! + world[3]![j]! + world[7]![j]! + world[4]![j]!) / 4);
+  const camera: Vector = [0, cameraDistance * plateElevation, -cameraDistance * elevationCos];
+  const sideVisible = sideNormal.reduce((sum, n, j) => sum + n * (camera[j]! - sideCenter[j]!), 0) > 1e-8;
+  const frontNormal: Vector = [sin * Math.cos(hinge), -Math.sin(hinge), -cos * Math.cos(hinge)];
+  const frontCenter = world[3]!.map((_, j) => (world[3]![j]! + world[2]![j]! + world[6]![j]! + world[7]![j]!) / 4);
+  const frontVisible = !work || frontNormal.reduce((sum, n, j) => sum + n * (camera[j]! - frontCenter[j]!), 0) > 1e-8;
   const frontMidpoint = midpoint(vertices[3]!, vertices[2]!);
   const bottomMidpoint = midpoint(vertices[7]!, vertices[6]!);
   const edge = [vertices[2]![0] - vertices[3]![0], vertices[2]![1] - vertices[3]![1]];
@@ -51,9 +89,9 @@ export function projectPlate(progress: number) {
   return {
     angle, rotationAngle: plateYaw * progress,
     axes: ([['X', [plateSide * .32, 0, 0]], ['Y', [0, plateSide * .32, 0]], ['Z', [0, 0, plateSide * .32]]] as const)
-      .map(([name, vector]) => ({ name, point: cameraProject(rotate(vector)).point })),
+      .map(([name, vector]) => ({ name, point: cameraProject(cradle(rotate(vector))).point })),
     surfacePoint: topPoint,
-    center: cameraProject([0, 0, 0]).point, world, vertices, projected, label, frontMidpoint, sideVisible,
+    center: cameraProject(cradle(rotate([0, 0, 0]))).point, world, vertices, projected, label, frontMidpoint, sideVisible, frontVisible,
     top: face([0, 1, 2, 3]), side: face([0, 3, 7, 4]), front: face([3, 2, 6, 7]),
     rim: `M${coordinates(vertices[0]!)}L${coordinates(vertices[3]!)}L${coordinates(vertices[2]!)}`,
     // Surface markings are projected point-by-point by the SAME camera. An
@@ -84,3 +122,6 @@ export function projectSurfacePath(path: string): string {
   return path.replace(/(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/g,
     (_pair, x: string, y: string) => coordinates(projectSurfacePoint([Number(x), Number(y)])));
 }
+
+// Work has its own hinge pose; all other layers retain the original yaw pose.
+export const projectWorkPlate = (progress: number) => projectPlate(progress, true);

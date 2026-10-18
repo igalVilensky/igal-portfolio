@@ -3,20 +3,22 @@ import { gsap } from 'gsap';
 import SpatialPlate from './SpatialPlate.vue';
 import WorkSurfaceArtwork from './WorkSurfaceArtwork.vue';
 import LayerSurfaceArtwork from './LayerSurfaceArtwork.vue';
-import { plateHitPath, projectPlate, plateSide, plateThickness } from './plateGeometry';
+import { plateHitPath, projectPlate, projectWorkPlate, plateSide, plateThickness } from './plateGeometry';
 import { useActiveCore } from './useActiveCore';
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
 const props = defineProps<{ copy: SpatialCopy; paused: boolean; navigation: ReturnType<typeof useSpatialNavigation> }>();
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
-const workProgress = useActiveCore(() => active.value === 0, () => props.paused);
-const workPose = computed(() => workProgress.value ** 2 * (3 - 2 * workProgress.value));
+const workProgress = useActiveCore(() => active.value === 0, () => props.paused, 900);
+const workPose = computed(() => diagnostics.value && diagnosticWorkPose.value !== null ? diagnosticWorkPose.value : workProgress.value);
+const workGeometry = computed(() => projectWorkPlate(workPose.value));
 const experimentsProgress = useActiveCore(() => active.value === 1, () => props.paused);
 const experimentsPose = computed(() => experimentsProgress.value ** 2 * (3 - 2 * experimentsProgress.value));
 const askProgress = useActiveCore(() => active.value === 2, () => props.paused);
 const route = useRoute();
 const diagnostics = computed(() => import.meta.dev && route.query.geometry === '1');
 const diagnosticPose = ref<number | null>(null);
+const diagnosticWorkPose = computed(() => route.query.workPose !== undefined ? Math.max(0, Math.min(1, Number(route.query.workPose) || 0)) : null);
 const askPose = computed(() => diagnostics.value && diagnosticPose.value !== null ? diagnosticPose.value : askProgress.value ** 2 * (3 - 2 * askProgress.value));
 const diagnosticGeometry = computed(() => projectPlate(askPose.value));
 const aiProgress = useActiveCore(() => active.value === 3, () => props.paused);
@@ -89,7 +91,7 @@ onBeforeUnmount(() => {
         @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
         @pointerleave="leave()"
         @focus="focus(i)" @blur="blur()"
-        @keydown="keyboard($event, i)" @click="activate($event, i)">
+        @keydown="keyboard($event, i)" @click="activate($event, i, i !== 0 || workPose >= .98)">
 
         <!-- Fixed elevation order: each SVG composites the complete prism, artwork,
              lighting and shadow before the plate above it. Selection never changes
@@ -104,14 +106,14 @@ onBeforeUnmount(() => {
           <SpatialPlate :index="i" :progress="poses[i]!" :name="copy.names[i]!" :prefix="id"
             :illuminated="active === i" :paused="paused || active !== null || moving">
             <template #surface="{ geometry }">
-              <WorkSurfaceArtwork v-if="i === 0" :geometry="geometry" :progress="workPose" />
+              <WorkSurfaceArtwork v-if="i === 0" :geometry="geometry" :progress="workPose" :cta="`${copy.open} ${copy.names[0]}`" />
               <LayerSurfaceArtwork v-else :layer="i" :geometry="geometry" :progress="poses[i]!" />
             </template>
           </SpatialPlate>
           </g>
         </svg>
-        <!-- Stationary geometry owns input; illuminated artwork never changes hit testing. -->
-        <svg class="plane-hit" viewBox="0 0 720 260" aria-hidden="true"><path :d="plateHitPath" /></svg>
+        <!-- Resting hits keep selection stable; Work also accepts input on its opened surface. -->
+        <svg class="plane-hit" viewBox="0 0 720 260" aria-hidden="true"><path :d="plateHitPath" /><path v-if="i === 0 && workPose > .02" :d="workGeometry.top" /></svg>
       </a>
       <div v-if="diagnostics" class="geometry-overlay spatial-plane" style="--i: 2; z-index: 6">
         <svg class="plane-art" viewBox="0 0 720 260" aria-hidden="true">

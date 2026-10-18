@@ -10,12 +10,13 @@ export function useSpatialNavigation() {
   const touched = ref<number | null>(null);
   const links = ref<HTMLAnchorElement[]>([]);
   let timer: ReturnType<typeof setTimeout> | undefined;
-  function activate(event: MouseEvent, i: number) {
+  function activate(event: MouseEvent, i: number, previewReady = true) {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
     if (touched.value !== null && touched.value !== i) {
       event.preventDefault(); touched.value = i; return;
     }
     event.preventDefault();
+    if (!previewReady) { focused.value = i; return; }
     if (opening.value !== null) return;
     opening.value = i;
     const target = localePath(destinations[i]!);

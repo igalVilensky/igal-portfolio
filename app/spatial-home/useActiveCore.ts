@@ -1,5 +1,5 @@
 // A finite, reversible clock shared by the surface and its signal environment.
-export function useActiveCore(active: () => boolean, paused: () => boolean) {
+export function useActiveCore(active: () => boolean, paused: () => boolean, duration = 900) {
   const progress = ref(0);
   let frame = 0;
   let media: MediaQueryList | undefined;
@@ -9,7 +9,7 @@ export function useActiveCore(active: () => boolean, paused: () => boolean) {
     if (media?.matches || paused()) { progress.value = target; return; }
     let previous = performance.now();
     const tick = (now: number) => {
-      const step = (now - previous) / 900;
+      const step = (now - previous) / duration;
       previous = now;
       progress.value = target ? Math.min(1, progress.value + step) : Math.max(0, progress.value - step * 1.65);
       if (progress.value !== target) frame = requestAnimationFrame(tick);

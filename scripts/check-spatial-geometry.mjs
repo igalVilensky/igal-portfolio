@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {plateSide,plateThickness,plateCenter,cameraProject,projectPlate,restingPlate} from '../app/spatial-home/plateGeometry.ts';
+import {plateSide,plateThickness,plateCenter,cameraProject,projectPlate,projectWorkPlate,restingPlate} from '../app/spatial-home/plateGeometry.ts';
 const sub=(a,b)=>a.map((n,i)=>n-b[i]);const dot=(a,b)=>a.reduce((s,n,i)=>s+n*b[i],0);const near=(a,b)=>assert(Math.abs(a-b)<1e-8,`${a} != ${b}`);
 assert.deepEqual(projectPlate(0).vertices, restingPlate.vertices, 'shared resting geometry');
 for(let step=0;step<=100;step++){
@@ -27,3 +27,26 @@ const end=projectPlate(1);const far=end.vertices[1][0]-end.vertices[0][0],close=
 assert(cameraProject([100,0,300]).scale<cameraProject([100,0,-300]).scale);
 console.log({poses:101,side:plateSide,thickness:plateThickness,farEdge:far,nearEdge:close,farNearRatio:far/close,center:plateCenter});
 console.log('PASS: square proportions, rigidity, correct depth denominator, fixed pivot, shared camera, centered edge anchor and horizontal final label.');
+
+for (let step=0;step<=100;step++) {
+ const p=projectWorkPlate(step/100), v=p.world;
+ for(let a=0;a<8;a++)for(let b=a+1;b<8;b++)near(Math.hypot(...sub(v[a],v[b])),Math.hypot(...sub(restingPlate.world[a],restingPlate.world[b])));
+ if(step / 100 <= 1 / 3) {
+  near(p.angle,restingPlate.angle);
+  for(let i=1;i<8;i++)for(let j=0;j<3;j++)near(v[i][j]-v[0][j],restingPlate.world[i][j]-restingPlate.world[0][j]);
+ }
+ assert(Math.min(...p.vertices.slice(0,4).map(point=>point[1])) >= Math.min(...restingPlate.vertices.map(point=>point[1])) - 1e-8, 'Work stays within upper clearance');
+ for(const [i,uv] of [[0,[0,0]],[1,[360,0]],[2,[360,280]],[3,[0,280]]])for(let j=0;j<2;j++)near(p.surfacePoint(uv)[j],p.vertices[i][j]);
+}
+assert.deepEqual(projectWorkPlate(0).vertices,restingPlate.vertices);
+const screen=projectWorkPlate(1), q=screen.vertices;
+near(q[0][1],q[1][1]);near(q[2][1],q[3][1]);near(q[0][0],q[3][0]);near(q[1][0],q[2][0]);
+near(q[1][0]-q[0][0],q[3][1]-q[0][1]);
+for(let i=1;i<4;i++)near(screen.projected[i].depth,screen.projected[0].depth);
+assert.equal(screen.frontVisible,false,'front label is occluded by the front-facing top');
+// The center trunnion stays on the extraction / clearance rails.
+for(let step=0;step<=100;step++) {
+ const p=projectWorkPlate(step/100);
+ near(p.world.slice(0,4).reduce((s,v)=>s+v[0],0)/4,0);
+}
+console.log('PASS: 101 Work poses preserve rigidity, extraction-only orientation, attached texture corners, hinge X, upper clearance and exact camera-facing square.');

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { projectPlate, restingPlate } from './plateGeometry';
+import { projectPlate, projectWorkPlate, restingPlate } from './plateGeometry';
 const props = defineProps<{ progress: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
-const geometry = computed(() => props.progress === 0 ? restingPlate : projectPlate(props.progress));
+const geometry = computed(() => props.progress === 0 ? restingPlate : props.index === 0 ? projectWorkPlate(props.progress) : projectPlate(props.progress));
 // Fade technical markings before the artwork starts to reveal. Both directions
 // follow the reversible pose clock, including interrupted hover and reduced motion.
 const decoration = computed(() => 1 - Math.min(1, props.progress / .45));
@@ -65,11 +65,11 @@ onBeforeUnmount(() => {
       <path class="plane-edge plate-side" :fill="`url(#${prefix}-side-${index})`" :d="geometry.side" />
       <path class="plane-side-shade" :d="geometry.side" />
     </template>
-    <path class="plane-edge plate-front" :fill="`url(#${prefix}-side-${index})`" :d="geometry.front" />
+    <path v-if="geometry.frontVisible" class="plane-edge plate-front" :fill="`url(#${prefix}-side-${index})`" :d="geometry.front" />
     <path class="plane-rim" :d="geometry.rim" />
     <path class="plane-spill" :d="geometry.rim" />
     <!-- Centered on the projected front edge, with its slope and face thickness. -->
-    <g :transform="geometry.label" class="plane-label">
+    <g v-if="geometry.frontVisible" :transform="geometry.label" class="plane-label">
       <text x="-164" y="17" class="plane-number">0{{ index + 1 }}</text>
       <g :transform="titlePlacement"><text ref="title" x="0" y="0" text-anchor="middle" class="plane-title"><tspan v-for="(letter, letterIndex) in name" :key="letterIndex" :class="{ 'ai-initial': index === 2 && (letterIndex === 0 || letterIndex === 4) }" xml:space="preserve">{{ letter }}</tspan></text></g>
       <text x="144" y="18" class="plane-arrow">↗</text>
