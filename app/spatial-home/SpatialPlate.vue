@@ -104,6 +104,9 @@ onBeforeUnmount(() => {
 .ai-initial { font-weight: 750; transition: filter .35s; }
 .ask-lit .ai-initial { filter: drop-shadow(0 0 3px var(--sp-cyan)); }
 .plane-spill { fill: none; stroke: var(--sp-cyan); stroke-width: 5; opacity: 0; transition: opacity .4s; }
+/* Activation uses the existing physical edge paths, with no overlay or filter. */
+.plane-rim { stroke: color-mix(in srgb, var(--sp-line), var(--sp-cyan) calc(var(--initialization, 0) * 100%)); stroke-width: calc(1 + var(--initialization, 0) * 1.5); }
+.plane-spill { opacity: calc(var(--initialization, 0) * .24); transition: none; }
 .illuminated .plane-edge { stroke: var(--sp-cyan); stroke-width: 1.5; }
 .illuminated .plane-face { stroke: var(--sp-cyan); stroke-width: 2; }
 .illuminated .plane-rim { stroke: var(--sp-cyan); stroke-width: 2.5; }

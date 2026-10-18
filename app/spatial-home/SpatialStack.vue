@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { gsap } from 'gsap';
 import SpatialPlate from './SpatialPlate.vue';
 import WorkSurfaceArtwork from './WorkSurfaceArtwork.vue';
 import LayerSurfaceArtwork from './LayerSurfaceArtwork.vue';
@@ -26,10 +27,59 @@ const poses = computed(() => [workPose.value, experimentsPose.value, askPose.val
 const moving = computed(() => [workProgress, experimentsProgress, askProgress, aiProgress, aboutProgress].some(progress => progress.value > 0));
 const localePath = useLocalePath();
 const id = useId();
+// Entrance owns only an inner SVG group; hover owns projected geometry and
+// idle owns CSS translate on the outer SVG. No transform has two writers.
+const root = ref<HTMLElement>();
+const assembling = ref(true);
+let entrance: gsap.core.Timeline | undefined;
+let context: gsap.Context | undefined;
+let reduced: MediaQueryList | undefined;
+function settleEntrance() {
+  entrance?.progress(1);
+  assembling.value = false;
+}
+function motionPreference() { if (reduced?.matches) settleEntrance(); }
+watch(() => props.paused, value => { if (value) settleEntrance(); });
+onMounted(() => {
+  reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  reduced.addEventListener('change', motionPreference);
+  if (reduced.matches || props.paused || active.value !== null || !assembling.value) {
+    assembling.value = false;
+    return;
+  }
+  const mobile = matchMedia('(max-width: 600px)').matches;
+  const amount = mobile ? .55 : 1;
+  context = gsap.context(() => {
+    const groups = Array.from(root.value!.querySelectorAll<SVGGElement>('.assembly-component'));
+    const offsets = [ [-22, -52, -1.3], [18, -31, .9], [-14, -8, -.7], [16, 25, 1], [-12, 44, -.8] ];
+    entrance = gsap.timeline({ onComplete: () => { assembling.value = false; } });
+    groups.forEach((group, i) => {
+      const [x, y, angle] = offsets[i]!;
+      const start = i * (mobile ? .035 : .045);
+      entrance!.fromTo(group, {
+        attr: { transform: `translate(${x! * amount} ${y! * amount}) rotate(${angle! * amount} 359.38 127.31)` }, opacity: 0,
+      }, { opacity: 1, duration: .18, ease: 'power1.out' }, start)
+        .to(group, { attr: { transform: `translate(0 ${i < 2 ? 1 : -1}) rotate(0 359.38 127.31)` }, duration: mobile ? .56 : .7, ease: 'power3.inOut' }, start)
+        .to(group, { attr: { transform: 'translate(0 0) rotate(0 359.38 127.31)' }, duration: .14, ease: 'power2.out' }, start + (mobile ? .56 : .7));
+    });
+    const pulseStart = mobile ? .86 : 1.03;
+    groups.forEach((group, i) => {
+      entrance!.to(group, { '--initialization': 1, duration: .07, ease: 'power1.out' }, pulseStart + i * .055)
+        .to(group, { '--initialization': 0, duration: .15, ease: 'power2.out' }, pulseStart + i * .055 + .07);
+    });
+    // Remove every temporary attribute so the canonical rendering is exact.
+    entrance.set(groups, { clearProps: 'opacity,--initialization' });
+    entrance.call(() => groups.forEach(group => group.removeAttribute('transform')));
+  }, root.value);
+});
+onBeforeUnmount(() => {
+  reduced?.removeEventListener('change', motionPreference);
+  context?.revert();
+});
 </script>
 
 <template>
-  <div class="spatial-object" @pointerleave="leave" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
+  <div ref="root" class="spatial-object" @pointerover.capture="settleEntrance" @pointerdown.capture="settleEntrance" @focusin.capture="settleEntrance" @keydown.capture="settleEntrance" @click.capture="settleEntrance" @pointerleave="leave" :class="{ assembling, paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
     <nav class="stack-stage" :aria-label="copy.navigation">
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
@@ -50,6 +100,7 @@ const id = useId();
             <linearGradient :id="`${id}-side-${i}`" x1="0" y1="0" x2="0" y2="1"><stop class="side-start"/><stop offset="1" class="side-end"/></linearGradient>
             <radialGradient :id="`${id}-light-${i}`"><stop stop-color="var(--sp-cyan)" stop-opacity=".32"/><stop offset="1" stop-color="var(--sp-cyan)" stop-opacity="0"/></radialGradient>
           </defs>
+          <g class="assembly-component">
           <SpatialPlate :index="i" :progress="poses[i]!" :name="copy.names[i]!" :prefix="id"
             :illuminated="active === i" :paused="paused || active !== null || moving">
             <template #surface="{ geometry }">
@@ -57,6 +108,7 @@ const id = useId();
               <LayerSurfaceArtwork v-else :layer="i" :geometry="geometry" :progress="poses[i]!" />
             </template>
           </SpatialPlate>
+          </g>
         </svg>
         <!-- Stationary geometry owns input; illuminated artwork never changes hit testing. -->
         <svg class="plane-hit" viewBox="0 0 720 260" aria-hidden="true"><path :d="plateHitPath" /></svg>
@@ -96,6 +148,11 @@ const id = useId();
 </template>
 
 <style scoped>
+/* SSR and hydration share the hidden first frame; reduced motion is visible
+   immediately, including before hydration. Hit paths remain available. */
+.assembling .assembly-component { opacity: 0; }
+.assembling .stack-stage, .assembling .plane-art { animation: none; }
+@media (prefers-reduced-motion: reduce) { .assembling .assembly-component { opacity: 1; } }
 .geometry-overlay { pointer-events: none; }
 .spatial-plane.geometry-overlay .plane-art { filter: none; }
 .diagnostic-lines { fill: none; stroke: var(--color-text); stroke-width: 1.5; }
@@ -141,7 +198,7 @@ const id = useId();
 .work-plane { --sp-cyan: #368aff; }
 .experiments-plane { --sp-cyan: #9871df; }
 .ask-plane { --sp-cyan: #20b8bd; }
-.automation-plane { --sp-cyan: #dc963f; }
+.automation-plane { --sp-cyan: #ed922b; }
 .about-plane { --sp-cyan: var(--about-layer-light); }
 :global(.dark) .ask-plane { --sp-cyan: #6dddec; }
 .spatial-plane.active .plane-art, .departing .chosen .plane-art { transform: none; }

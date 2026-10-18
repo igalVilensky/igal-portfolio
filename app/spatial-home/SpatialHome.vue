@@ -3,7 +3,8 @@ import SpatialStack from './SpatialStack.vue';
 import { useSpatialNavigation } from './useSpatialNavigation';
 import { copy } from './content';
 import ThemeToggle from '~/components/ThemeToggle.vue';
-definePageMeta({ layout: false });
+// Locale changes reuse this page; leaving and returning mounts a fresh stack.
+definePageMeta({ layout: false, key: 'spatial-home' });
 const { locale, t } = useI18n();
 const switchLocalePath = useSwitchLocalePath();
 const text = computed(() => copy[locale.value as keyof typeof copy] ?? copy.en);
