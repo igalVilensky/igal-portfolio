@@ -3,12 +3,10 @@ import SpatialPlate from './SpatialPlate.vue';
 import WorkSurfaceArtwork from './WorkSurfaceArtwork.vue';
 import LayerSurfaceArtwork from './LayerSurfaceArtwork.vue';
 import { plateHitPath, projectPlate, plateSide, plateThickness } from './plateGeometry';
-import AutomationReveal from './AutomationReveal.vue';
 import { useActiveCore } from './useActiveCore';
 import { destinations, type SpatialCopy } from './content';
 import type { useSpatialNavigation } from './useSpatialNavigation';
 const props = defineProps<{ copy: SpatialCopy; paused: boolean; navigation: ReturnType<typeof useSpatialNavigation> }>();
-const emit = defineEmits<{ origin: [point: { x: number; y: number; bottom: number }] }>();
 const { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur } = props.navigation;
 const workProgress = useActiveCore(() => active.value === 0, () => props.paused);
 const workPose = computed(() => workProgress.value ** 2 * (3 - 2 * workProgress.value));
@@ -22,64 +20,27 @@ const askPose = computed(() => diagnostics.value && diagnosticPose.value !== nul
 const diagnosticGeometry = computed(() => projectPlate(askPose.value));
 const aiProgress = useActiveCore(() => active.value === 3, () => props.paused);
 const aiPose = computed(() => aiProgress.value ** 2 * (3 - 2 * aiProgress.value));
-const aiReflection = computed(() => Math.max(0, Math.min(1, (aiProgress.value - .3) / .4)));
 const aboutProgress = useActiveCore(() => active.value === 4, () => props.paused);
 const aboutPose = computed(() => aboutProgress.value ** 2 * (3 - 2 * aboutProgress.value));
 const poses = computed(() => [workPose.value, experimentsPose.value, askPose.value, aiPose.value, aboutPose.value]);
 const moving = computed(() => [workProgress, experimentsProgress, askProgress, aiProgress, aboutProgress].some(progress => progress.value > 0));
 const localePath = useLocalePath();
 const id = useId();
-const stage = ref<HTMLElement>();
 const directions = [-1, 1, -1, 1, -1] as const;
-function plateKey(event: KeyboardEvent, i: number) {
-  if (i === 3 && event.key === 'Tab' && !event.shiftKey) {
-    event.preventDefault();
-    (stage.value?.parentElement?.querySelector('.flow-station') as HTMLButtonElement)?.focus();
-    return;
-  }
-  keyboard(event, i);
-}
-function leaveRegion(event: PointerEvent) {
-  leave();
-  if (event.pointerType === 'mouse' && active.value === 3) {
-    const root = event.currentTarget as HTMLElement;
-    if (root.contains(document.activeElement)) (document.activeElement as HTMLElement)?.blur();
-    blur();
-  }
-}
-function flowBlur(event: FocusEvent) {
-  if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) blur();
-}
-let observer: ResizeObserver | undefined;
-function measure() {
-  if (!stage.value) return;
-  const rect = stage.value.getBoundingClientRect();
-  const compact = window.matchMedia('(max-width: 600px)').matches;
-  emit('origin', { bottom: rect.bottom + window.scrollY, x: rect.left + rect.width * (compact ? .944 : .926), y: rect.top + window.scrollY + (compact ? rect.width * .1365 - 7 : rect.width * .16) });
-}
-onMounted(() => {
-  observer = new ResizeObserver(measure);
-  observer.observe(document.documentElement);
-  observer.observe(stage.value!);
-  window.addEventListener('resize', measure);
-  measure();
-});
-onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resize', measure); });
 </script>
 
 <template>
-  <div class="spatial-object" :style="{ '--work-focus': workPose }" @pointerleave="leaveRegion" @focusout="flowBlur" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
-    <nav ref="stage" class="stack-stage" :aria-label="copy.navigation">
-      <div class="stack-axis" aria-hidden="true" />
+  <div class="spatial-object" @pointerleave="leave" :class="{ paused, departing: opening !== null, 'layer-active': active !== null, interacting: active !== null || moving || diagnosticPose !== null }">
+    <nav class="stack-stage" :aria-label="copy.navigation">
       <a v-for="(destination, i) in destinations" :key="destination" ref="links"
         :href="localePath(destination)" class="spatial-plane"
         :class="{ active: active === i, chosen: opening === i, 'ask-plane': i === 2, 'work-plane': i === 0, 'experiments-plane': i === 1, 'automation-plane': i === 3, 'about-plane': i === 4 }"
-        :style="{ '--i': i, '--direction': directions[i], zIndex: 5 - i }"
+        :style="{ '--i': i, '--direction': directions[i], '--visual-order': active === i ? 10 : 5 - i, '--hit-order': 25 - i }"
         :aria-label="`${copy.names[i]} — ${copy.open}`" :aria-describedby="active === i ? `${id}-context` : undefined"
-        @pointerdown="pointerDown($event)" @pointerenter="active !== 3 && enter($event, i)"
-        @pointerleave="active !== 3 && leave()"
-        @focus="focus(i)" @blur="active !== 3 && blur()"
-        @keydown="plateKey($event, i)" @click="activate($event, i)">
+        @pointerdown="pointerDown($event)" @pointerenter="enter($event, i)"
+        @pointerleave="leave()"
+        @focus="focus(i)" @blur="blur()"
+        @keydown="keyboard($event, i)" @click="activate($event, i)">
 
         <svg class="plane-art" viewBox="0 0 720 260" aria-hidden="true">
           <defs>
@@ -88,8 +49,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
             <radialGradient :id="`${id}-light-${i}`"><stop stop-color="var(--sp-cyan)" stop-opacity=".32"/><stop offset="1" stop-color="var(--sp-cyan)" stop-opacity="0"/></radialGradient>
           </defs>
           <SpatialPlate :index="i" :progress="poses[i]!" :name="copy.names[i]!" :prefix="id"
-            :illuminated="active === i" :paused="paused || active !== null || moving"
-            :reflection="aiReflection * (i === 2 ? .55 : i === 4 ? .35 : 0)">
+            :illuminated="active === i" :paused="paused || active !== null || moving">
             <template #surface="{ geometry }">
               <WorkSurfaceArtwork v-if="i === 0" :geometry="geometry" :progress="workPose" />
               <LayerSurfaceArtwork v-else :layer="i" :geometry="geometry" :progress="poses[i]!" />
@@ -117,7 +77,6 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
         </svg>
       </div>
     </nav>
-    <AutomationReveal :visible="active === 3" :paused="paused" />
 
     <aside v-if="diagnostics" class="geometry-panel" aria-label="Development geometry diagnostics">
       <strong>Rigid-body diagnostics</strong>
@@ -146,13 +105,12 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 @media(max-width: 600px) { .geometry-panel { position: relative; top: auto; right: auto; width: 100%; } }
 .spatial-object { position: relative; z-index: 2; width: min(900px, 84vw, calc((100svh - 300px) * 1.1)); margin: auto; }
 .stack-stage { pointer-events: none; position: relative; aspect-ratio: 720 / 650; animation: stack-breathe 7s ease-in-out infinite; }
-.stack-axis { position: absolute; inset: 12% 48% 5%; border-left: 1px dashed var(--sp-line); transform: rotate(16deg); opacity: .5; }
 .stack-stage::after { content: ''; position: absolute; width: 65%; height: 10%; background: var(--sp-shadow); filter: blur(18px); bottom: 0; left: 20%; border-radius: 50%; }
 .spatial-plane { position: absolute; width: 100%; top: calc(var(--i) * 14%); display: block; color: var(--color-text); transition: transform 550ms cubic-bezier(.2,.8,.2,1), opacity 350ms, translate 550ms; -webkit-tap-highlight-color: transparent; }
-.spatial-plane .plane-art { display: block; width: 100%; overflow: visible; pointer-events: none; filter: drop-shadow(0 16px 10px var(--sp-shadow)); }
+.spatial-plane .plane-art { position: relative; z-index: var(--visual-order); display: block; width: 100%; overflow: visible; pointer-events: none; filter: drop-shadow(0 16px 10px var(--sp-shadow)); }
 .spatial-plane { pointer-events: none; }
 .plane-art { transition: transform 550ms cubic-bezier(.2,.8,.2,1); animation: layer-breathe 7s ease-in-out infinite; animation-delay: calc(var(--i) * -.65s); }
-.spatial-plane .plane-hit { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.spatial-plane .plane-hit { z-index: var(--hit-order); position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 /* Input-only resting geometry must never inherit a visible SVG stroke. */
 .plane-hit path { fill: transparent; stroke: none; pointer-events: auto; }
 .side-start { stop-color: var(--sp-edge); }.side-end { stop-color: var(--sp-bottom); }
@@ -160,7 +118,7 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 .spatial-plane.active .plane-art { transform: translate(calc(var(--direction) * 1.7%), -3%); }
 .spatial-plane:focus-visible { outline: none; }
 .spatial-plane:focus-visible :deep(.plane-inset) { stroke: var(--sp-cyan); stroke-width: 2; stroke-dasharray: 6 4; }
-.departing .spatial-plane:not(.chosen) { opacity: .25; }.departing .chosen .plane-art { transform: translate(calc(var(--direction) * 2%), -7%); }
+.departing .chosen .plane-art { transform: translate(calc(var(--direction) * 2%), -7%); }
 .spatial-context { text-align: center; min-height: 72px; padding: 8px 0; font-size: 13px; color: var(--color-text-muted); }
 .spatial-context p { color: var(--color-text); font-size: 15px; margin-bottom: 5px; }.spatial-context p > span { margin-left: 12px; }.context-action { color: var(--color-accent); font-size: 12px; }
 .touch-hint { display: none; }.paused .stack-stage, .interacting .stack-stage, .departing .stack-stage, .paused .plane-art, .interacting .plane-art, .departing .plane-art { animation-play-state: paused; }
@@ -169,7 +127,8 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 @media (max-width: 600px) {
   .spatial-object { width: min(100%, 440px); }
   .stack-stage { aspect-ratio: 400 / 470; }
-  .spatial-plane { top: calc(var(--i) * 18%); transform: scaleY(.78); transform-origin: top center; }
+  .spatial-plane { top: calc(var(--i) * 18%); }
+  .spatial-object .spatial-plane.active .plane-art, .spatial-object.departing .chosen .plane-art, .spatial-plane .plane-art, .spatial-plane .plane-hit { transform: scaleY(.78); transform-origin: top center; }
   .spatial-context { min-height: 94px; padding: 14px 8px 0; }
   .desktop-hint { display: none; }.touch-hint { display: inline; }
   .stack-stage { animation-duration: 8s; }.plane-art { animation: none; }
@@ -179,43 +138,23 @@ onBeforeUnmount(() => { observer?.disconnect(); window.removeEventListener('resi
 }
 @media (prefers-reduced-motion: reduce) { .stack-stage, .plane-art, .plane-corner { animation: none; }.spatial-plane, .plane-art, .plane-light, .plane-spill, .plane-contact, .work-source { transition: none; } }
 
-.experiments-plane { --sp-cyan: #9871df; }
-.experiments-plane.active .plane-art, .departing .experiments-plane.chosen .plane-art { transform: none; }
-/* Selection state covers pointer, keyboard, touch and navigation departure. */
-.layer-active:not(.departing) .spatial-plane:not(.active) { opacity: .42; }
-.layer-active .active :deep(.plane-spill) { opacity: .24; }
-.layer-active .active :deep(.plane-rim) { stroke-width: 3; }
+/* All accents and material states belong to the same rotating geometry. */
 .work-plane { --sp-cyan: #368aff; }
-/* Work keeps neighboring faces solid; line contrast and glow recede instead
-   of making the entire physical stack transparent. Restore with the pose clock. */
-.spatial-object:not(.departing) .spatial-plane:not(.work-plane):not(.active) {
-  opacity: calc(1 - var(--work-focus) * .24);
-}
-.layer-active:not(:has(.work-plane.active)):not(.departing) .spatial-plane:not(.active) { opacity: .42; }
-.spatial-plane:not(.work-plane) .plane-art {
-  --sp-line-base: #7896b4;
-  --sp-line: color-mix(in srgb, var(--sp-line-base), var(--sp-edge) calc(var(--work-focus) * 55%));
-
-}
-.spatial-plane:not(.work-plane) :deep(.plane-light),
-.spatial-plane:not(.work-plane) :deep(.plane-spill),
-.spatial-plane:not(.work-plane) :deep(.plane-corner) { filter: opacity(calc(1 - var(--work-focus) * .75)); }
-.work-plane .surface-start { stop-color: color-mix(in srgb, var(--sp-top), #accaf2 calc(var(--work-focus) * 35%)); }
-.work-plane .surface-end { stop-color: color-mix(in srgb, var(--sp-bottom), #6589b7 calc(var(--work-focus) * 25%)); }
-.layer-active .work-plane.active :deep(.plane-spill) { opacity: .08; }
-.work-plane:focus-visible :deep(.plane-rim) { stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 6 4; }
-.work-plane.active .plane-art, .departing .work-plane.chosen .plane-art, .ask-plane.active .plane-art, .departing .ask-plane.chosen .plane-art { transform: none; }
+.experiments-plane { --sp-cyan: #9871df; }
+.ask-plane { --sp-cyan: #20b8bd; }
 .automation-plane { --sp-cyan: #dc963f; }
-.automation-plane.active .plane-art, .departing .automation-plane.chosen .plane-art { transform: none; }
-.automation-plane .plane-art { position: relative; }
-.about-plane.active { --sp-cyan: var(--about-layer-light); }
-.about-plane.active .plane-art, .departing .about-plane.chosen .plane-art { transform: none; }
-</style>
-
-<style scoped>
-@media(max-width:1250px) { .spatial-object:has(.automation-world.visible) { margin-bottom: 255px; } }
-</style>
-
-<style scoped>
-:global(.dark) .spatial-plane:not(.work-plane) .plane-art { --sp-line-base: #50718e; }
+.about-plane { --sp-cyan: var(--about-layer-light); }
+:global(.dark) .ask-plane { --sp-cyan: #6dddec; }
+.spatial-plane.active .plane-art, .departing .chosen .plane-art { transform: none; }
+.layer-active .spatial-plane:not(.active) .plane-art {
+  --sp-line: color-mix(in srgb, var(--sp-line-base), var(--sp-edge) 22%);
+}
+.spatial-object { --sp-line-base: #7896b4; }
+:global(.dark) .spatial-object { --sp-line-base: #50718e; }
+.layer-active .spatial-plane:not(.active) :deep(.plane-light),
+.layer-active .spatial-plane:not(.active) :deep(.plane-corner) { opacity: .12; }
+.layer-active .spatial-plane:not(.active) :deep(.plane-trace) { opacity: .18; }
+.layer-active .spatial-plane:not(.active) :deep(.plane-core) { opacity: .4; }
+.layer-active .spatial-plane:not(.active) :deep(.plane-label) { opacity: .85; }
+.spatial-plane:focus-visible :deep(.plane-rim) { stroke: var(--sp-cyan); stroke-width: 3; stroke-dasharray: 6 4; }
 </style>

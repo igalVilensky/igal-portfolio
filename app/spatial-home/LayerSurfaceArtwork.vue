@@ -39,7 +39,7 @@ const exposure = computed(() => {
 </template>
 
 <style scoped>
-.layer-inner-art { position: absolute; inset: 16px 18px 25px; overflow: hidden; opacity: .64; mask-image: radial-gradient(ellipse at 50% 48%, #000 27%, transparent 73%); }
+.layer-inner-art { position: absolute; inset: 16px 18px 25px; overflow: hidden; opacity: 1; background: #14243a; mask-image: linear-gradient(transparent, #000 7%, #000 93%, transparent); }
 .layer-inner-art img { position: absolute; max-width: none; height: auto; pointer-events: none; }
 .fragment-0 { width: 220px; left: -45px; top: -26px; transform: rotate(-12deg); }
 .fragment-1 { width: 220px; right: -58px; top: 8px; transform: rotate(8deg); }
@@ -54,8 +54,6 @@ const exposure = computed(() => {
 .automation .fragment-3 { width: 280px; left: 22px; bottom: -92px; opacity: .55; }
 .about .fragment-0 { width: 260px; left: -22px; top: -22px; }
 .about .fragment-1 { width: 195px; right: -38px; top: 80px; opacity: .6; }
-:global(.dark) .layer-inner-art { opacity: .74; }
-@media (max-width: 600px) {
-  .ask .fragment-2, .automation .fragment-3 { display: none; }
-}
+
+
 </style>

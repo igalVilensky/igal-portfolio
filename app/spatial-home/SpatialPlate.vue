@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { projectPlate, restingPlate } from './plateGeometry';
-const props = defineProps<{ progress: number; reflection: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
+const props = defineProps<{ progress: number; name: string; prefix: string; index: number; illuminated: boolean; paused: boolean }>();
 const geometry = computed(() => props.progress === 0 ? restingPlate : projectPlate(props.progress));
 // Fade technical markings before the artwork starts to reveal. Both directions
 // follow the reversible pose clock, including interrupted hover and reduced motion.
-const workDecoration = computed(() => props.index === 0 ? 1 - Math.min(1, props.progress / .45) : 1);
+const decoration = computed(() => 1 - Math.min(1, props.progress / .45));
 const title = ref<SVGTextElement>();
 const titlePlacement = ref('translate(0 17)');
 let compact: MediaQueryList | undefined;
@@ -50,11 +50,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <g class="spatial-plate" :class="{ illuminated, paused, 'ask-lit': index === 2 && progress > 0 }" :style="index === 0 ? { '--work-decoration': workDecoration, '--work-pose': progress } : undefined" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
+  <g class="spatial-plate" :class="{ illuminated, paused, 'ask-lit': index === 2 && progress > 0 }" :style="{ '--surface-decoration': decoration, '--surface-pose': progress }" :data-layer="index" :data-progress="progress" :data-center="geometry.center.join(',')">
     <!-- Every layer uses these same faces, corners and thickness. Only pose varies. -->
     <path class="plane-face" :fill="`url(#${prefix}-surface-${index})`" :d="geometry.top" />
     <path class="plane-light" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
-    <path class="ai-reflection" :opacity="reflection" :fill="`url(#${prefix}-light-${index})`" :d="geometry.top" />
     <slot name="surface" :geometry="geometry" />
     <path class="plane-grid" :d="geometry.grid" />
     <path class="plane-inset" :d="geometry.inset" />
@@ -79,15 +78,15 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.spatial-plate[data-layer="0"] .plane-grid,
-.spatial-plate[data-layer="0"] .plane-inset,
-.spatial-plate[data-layer="0"] .plane-trace,
-.spatial-plate[data-layer="0"] .plane-core,
-.spatial-plate[data-layer="0"] .plane-corner { opacity: var(--work-decoration); animation: none; }
-.spatial-plate[data-layer="0"] .plane-grid { opacity: calc(var(--work-decoration) * .18); }
-.spatial-plate[data-layer="0"] .plane-trace { opacity: calc(var(--work-decoration) * .45); }
-.spatial-plate[data-layer="0"] .plane-corner { opacity: calc(var(--work-decoration) * .7); }
-.spatial-plate[data-layer="0"] .plane-light { opacity: calc(.12 + var(--work-pose) * .28); transition: none; }
+.spatial-plate .plane-grid,
+.spatial-plate .plane-inset,
+.spatial-plate .plane-trace,
+.spatial-plate .plane-core,
+.spatial-plate .plane-corner { opacity: var(--surface-decoration); animation: none; }
+.spatial-plate .plane-grid { opacity: calc(var(--surface-decoration) * .18); }
+.spatial-plate .plane-trace { opacity: calc(var(--surface-decoration) * .45); }
+.spatial-plate .plane-corner { opacity: calc(var(--surface-decoration) * .7); }
+.spatial-plate .plane-light { opacity: calc(.12 + var(--surface-pose) * .28); transition: none; }
 .plane-face { stroke: var(--sp-line); stroke-width: 1.2; }
 .plane-edge { stroke: var(--sp-line); }
 .plane-side-shade { fill: #061728; opacity: .23; }
@@ -104,14 +103,12 @@ onBeforeUnmount(() => {
 .plane-arrow, .ai-initial { fill: var(--sp-cyan); }
 .ai-initial { font-weight: 750; transition: filter .35s; }
 .ask-lit .ai-initial { filter: drop-shadow(0 0 3px var(--sp-cyan)); }
-.plane-spill { fill: none; stroke: var(--sp-cyan); stroke-width: 7; opacity: 0; transition: opacity .4s; }
-.work-source { fill: none; stroke: var(--sp-cyan); stroke-width: 3; opacity: 0; transition: opacity .3s; filter: drop-shadow(0 0 7px var(--sp-cyan)); }
+.plane-spill { fill: none; stroke: var(--sp-cyan); stroke-width: 5; opacity: 0; transition: opacity .4s; }
+.illuminated .plane-edge { stroke: var(--sp-cyan); stroke-width: 1.5; }
 .illuminated .plane-face { stroke: var(--sp-cyan); stroke-width: 2; }
-.illuminated .plane-core, .illuminated .plane-rim { stroke: var(--sp-cyan); stroke-width: 2.5; }
-.illuminated .plane-corner { opacity: 1; animation: none; }
-.illuminated .plane-light, .illuminated .work-source { opacity: 1; }
+.illuminated .plane-rim { stroke: var(--sp-cyan); stroke-width: 2.5; }
 .illuminated .plane-spill { opacity: .16; }
 .illuminated .plane-title { font-weight: 650; }
 @media (max-width: 600px) { .plane-label { font-size: 22px; } .plane-number { display: none; } }
-@media (prefers-reduced-motion: reduce) { .plane-corner { animation: none; } .plane-light, .plane-spill, .work-source, .ai-initial { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .plane-corner { animation: none; } .plane-light, .plane-spill, .ai-initial { transition: none; } }
 </style>

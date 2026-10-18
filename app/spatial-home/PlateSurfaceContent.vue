@@ -34,5 +34,5 @@ const mapping = computed(() => {
 
 <style scoped>
 .plate-surface-content { pointer-events: none; }
-.surface-texture { position: relative; width: 360px; height: 280px; overflow: hidden; transform-origin: 0 0; pointer-events: none; }
+.surface-texture { position: relative; width: 360px; height: 280px; overflow: hidden; transform-origin: 0 0; pointer-events: none; filter: contrast(1.1) saturate(1.08); }
 </style>

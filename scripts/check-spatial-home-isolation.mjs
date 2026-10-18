@@ -13,6 +13,7 @@ for (const route of routes) {
   for (const [, asset] of html.matchAll(/(?:src|href)="(\/_nuxt\/[^"?#]+)/g)) {
     await access(join(output, asset));
   }
+  assert(!/class="[^"]*(?:automation-world|flow-station|work-collection|ask-knowledge|about-constellation|experiments-world)/.test(html), `${route}: external composition mounted`);
   assert(!html.includes('class="geometry-panel"'), `${route}: development diagnostics shipped`);
 }
 for (const locale of ['', 'de', 'ru']) {
@@ -31,7 +32,9 @@ async function files(directory) {
 const shipped = await files(join(output, '_nuxt'));
 const pngs = shipped.filter(path => path.endsWith('.png'));
 const buffers = await Promise.all(pngs.map(path => readFile(path)));
-const artwork = (await files('app/spatial-home/assets')).filter(path => path.endsWith('.png'));
+// Only internal plate dependencies must ship; disconnected prototypes may tree-shake.
+const internal = await Promise.all(['WorkSurfaceArtwork.vue', 'LayerSurfaceArtwork.vue'].map(file => readFile(join('app/spatial-home', file), 'utf8')));
+const artwork = [...new Set(internal.flatMap(source => [...source.matchAll(/from '\.\/(assets\/[^']+\.png)'/g)].map(match => join('app/spatial-home', match[1]))))];
 for (const source of artwork) {
   const original = await readFile(source);
   assert(buffers.some(buffer => buffer.equals(original)), `Missing spatial artwork: ${source}`);

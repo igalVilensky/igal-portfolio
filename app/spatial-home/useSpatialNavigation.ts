@@ -3,7 +3,7 @@ import { destinations } from './content';
 // Input sources resolve to one active layer; presentation never owns selection.
 export function useSpatialNavigation() {
   const localePath = useLocalePath();
-  const active = computed(() => opening.value ?? focused.value ?? hovered.value ?? (touched.value !== null && touched.value >= 0 ? touched.value : null));
+  const active = computed(() => opening.value ?? hovered.value ?? focused.value ?? (touched.value !== null && touched.value >= 0 ? touched.value : null));
   const hovered = ref<number | null>(null);
   const focused = ref<number | null>(null);
   const opening = ref<number | null>(null);
@@ -21,7 +21,7 @@ export function useSpatialNavigation() {
     const target = localePath(destinations[i]!);
     timer = setTimeout(async () => {
       try { await navigateTo(target); } finally { opening.value = null; }
-    }, i === 0 || i === 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420);
+    }, 0);
   }
   function pointerDown(event: PointerEvent) {
     if (event.pointerType !== 'mouse') {
@@ -31,6 +31,7 @@ export function useSpatialNavigation() {
   }
   function keyboard(event: KeyboardEvent, i: number) {
     touched.value = null;
+    hovered.value = null;
     let next = i;
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (i + 1) % 5;
     else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (i + 4) % 5;
@@ -41,12 +42,12 @@ export function useSpatialNavigation() {
     event.preventDefault(); links.value[next]?.focus();
   }
   onBeforeUnmount(() => clearTimeout(timer));
-  function enter(event: PointerEvent, i: number) { if (event.pointerType === 'mouse') hovered.value = i; }
+  function enter(event: PointerEvent, i: number) { if (event.pointerType === 'mouse') { focused.value = null; touched.value = null; hovered.value = i; } }
   function leave() { hovered.value = null; }
-  function focus(i: number) { focused.value = i; }
+  function focus(i: number) { hovered.value = null; focused.value = i; }
   function blur() { focused.value = null; }
   function dismissTouch(event: PointerEvent) {
-    if (!(event.target as Element).closest('.spatial-plane, .automation-world')) { touched.value = null; focused.value = null; links.value.forEach(link => link.blur()); }
+    if (!(event.target as Element).closest('.spatial-plane')) { touched.value = null; focused.value = null; links.value.forEach(link => link.blur()); }
   }
   return { active, opening, links, activate, pointerDown, keyboard, enter, leave, focus, blur, dismissTouch };
 }
