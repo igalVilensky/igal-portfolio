@@ -7,16 +7,23 @@ export function useSpatialNavigation() {
   const active = ref<number | null>(null);
   const opening = ref<number | null>(null);
   const links = ref<HTMLAnchorElement[]>([]);
+  const nuxtApp = useNuxtApp();
   let touch = false;
   function activate(event: MouseEvent | KeyboardEvent, i: number, previewReady = true) {
     event.preventDefault();
-    if (active.value !== i || !previewReady) { active.value = i; return; }
     if (opening.value !== null) return;
+    if (active.value !== i || !previewReady) { active.value = i; return; }
     opening.value = i;
-    navigateTo(localePath(destinations[i]!)).finally(() => { opening.value = null; });
+    const source = links.value[i]?.querySelector<SVGSVGElement>('.plane-art');
+    if (i === 0 && source && nuxtApp.$workEntry) {
+      nuxtApp.$workEntry.enter(source, localePath(destinations[i]!), event.detail === 0)
+        .catch(() => false).finally(() => { opening.value = null; });
+    } else {
+      Promise.resolve(navigateTo(localePath(destinations[i]!))).finally(() => { opening.value = null; });
+    }
   }
-  function pointerDown(event: PointerEvent) { touch = event.pointerType !== 'mouse'; }
-  function keyboard(event: KeyboardEvent, i: number) {
+  function pointerDown(event: PointerEvent) { if (opening.value === 0) return; touch = event.pointerType !== 'mouse'; }
+  function keyboard(event: KeyboardEvent, i: number) { if (opening.value === 0) return;
     touch = false;
     let next = i;
     if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (i + 1) % 5;
@@ -27,17 +34,17 @@ export function useSpatialNavigation() {
     else return;
     event.preventDefault(); links.value[next]?.focus();
   }
-  function enter(event: PointerEvent, i: number) { if (event.pointerType === 'mouse') { touch = false; active.value = i; } }
-  function leave() { if (!touch) active.value = null; }
-  function focus(i: number) { if (!touch) active.value = i; }
-  function blur() { queueMicrotask(() => { if (!touch && !links.value.includes(document.activeElement as HTMLAnchorElement)) active.value = null; }); }
-  function dismissTouch(event: PointerEvent) {
+  function enter(event: PointerEvent, i: number) { if (opening.value === 0) return; if (event.pointerType === 'mouse') { touch = false; active.value = i; } }
+  function leave() { if (opening.value === 0) return; if (!touch) active.value = null; }
+  function focus(i: number) { if (opening.value === 0) return; if (!touch) active.value = i; }
+  function blur() { if (opening.value === 0) return; queueMicrotask(() => { if (opening.value === 0) return; if (!touch && !links.value.includes(document.activeElement as HTMLAnchorElement)) active.value = null; }); }
+  function dismissTouch(event: PointerEvent) { if (opening.value === 0) return;
     if (!(event.target as Element).closest('.spatial-plane')) {
       active.value = null;
       links.value.forEach(link => link.blur());
     }
   }
-  function escape(event: KeyboardEvent) {
+  function escape(event: KeyboardEvent) { if (opening.value === 0) return;
     touch = false;
     if (event.key !== 'Escape') return;
     active.value = null;

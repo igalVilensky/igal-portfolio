@@ -254,8 +254,8 @@ onBeforeUnmount(() => {
         @focus="focus(i)"
         @blur="blur()"
         @keydown="keyboard($event, i)"
-        @keydown.space.prevent="activate($event, i, poses[i]! >= 0.98)"
-        @click="activate($event, i, poses[i]! >= 0.98)"
+        @keydown.space.prevent="activate($event, i, poses[i]! >= (i === 0 ? 1 : 0.98))"
+        @click="activate($event, i, poses[i]! >= (i === 0 ? 1 : 0.98))"
       >
         <!-- Stack order is fixed until extraction clears the stack. The complete
              prism, artwork and lighting then composite together in front of it.
