@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import ModuleBody from '~/spatial-work/ModuleBody.vue';
+import TopologyDetail from '~/spatial-work/TopologyDetail.vue';
+import { portfolioProjects } from '~/composables/useProjects';
 import ThemeToggle from '~/components/ThemeToggle.vue';
-import { buildTopology, layoutTopology } from '~/spatial-work/topology';
+import { buildTopology, layoutTopology, moduleSize, moduleAnchor } from '~/spatial-work/topology';
 import { copy } from '~/spatial-work/copy';
 definePageMeta({ layout: false });
 const { locale, t } = useI18n();
@@ -8,32 +11,108 @@ const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
 const text = computed(() => copy[locale.value as keyof typeof copy] ?? copy.en);
 const graph = computed(() => buildTopology(locale.value));
-const positions = computed(() => layoutTopology(graph.value));
+// Geometry depends on topology, never translated labels or interaction state.
+const positions = layoutTopology(buildTopology());
 const selected = ref<string | null>(null);
 const hovered = ref<string | null>(null);
 const focused = ref<string | null>(null);
 const mobileView = ref<'projects' | 'technologies'>('projects');
-const active = computed(() => hovered.value ?? focused.value ?? selected.value);
+const active = computed(() => selected.value ?? hovered.value ?? focused.value);
 const project = computed(() => graph.value.projects.find(node => node.id === selected.value));
 const technology = computed(() => graph.value.technologies.find(node => node.id === selected.value));
 const connected = computed(() => new Set([active.value, ...graph.value.edges.filter(edge => edge.project === active.value || edge.technology === active.value).flatMap(edge => [edge.project, edge.technology])]));
 const details = ref<HTMLElement>();
+const scene = ref<HTMLElement>();
+const entering = ref(false);
+const closing = ref(false);
+const origin = ref({ x: 0, y: 0, width: 160, height: 54 });
 let trigger: HTMLElement | null = null;
-function select(id: string, event?: Event) {
- selected.value = id;
- if (event?.currentTarget instanceof HTMLElement) trigger = event.currentTarget;
- if (import.meta.client && window.matchMedia('(max-width: 1100px)').matches) {
-  nextTick(() => details.value?.scrollIntoView({ block: 'start', behavior: 'instant' }));
- }
+let reveal: Animation | undefined;
+let entrance: Animation | undefined;
+let disposed = false;
+let revision = 0;
+const mark = (name: string) => { if (import.meta.client) performance.mark(`spatial-work:${name}`); };
+const unhookHydration = useNuxtApp().hook('app:mounted', () => mark('hydration-complete'));
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function finishEntrance() {
+ entrance?.finish();
+ entrance = undefined;
+ entering.value = false;
 }
-function clear() { selected.value = null; hovered.value = null; focused.value = null; trigger?.focus({ preventScroll: true }); }
-function escape(event: KeyboardEvent) { if (event.key === 'Escape') clear(); }
-onMounted(() => window.addEventListener('keydown', escape));
-onBeforeUnmount(() => window.removeEventListener('keydown', escape));
-const style = (id: string) => ({ left: `${positions.value[id]!.x / 12}%`, top: `${positions.value[id]!.y / 8}%` });
-const edgePath = (edge: { project: string; technology: string }) => { const a = positions.value[edge.project]!, b = positions.value[edge.technology]!; return `M${a.x} ${a.y} C${(a.x + b.x) / 2} ${a.y},${(a.x + b.x) / 2} ${b.y},${b.x} ${b.y}`; };
+function readOrigin(node: HTMLElement) {
+ const bounds = node.getBoundingClientRect();
+ origin.value = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2, width: bounds.width, height: bounds.height };
+}
+function originFrame(lift = 0) {
+ const panel = details.value!.getBoundingClientRect();
+ return { transform: `translate(${origin.value.x - panel.x - panel.width / 2}px, ${origin.value.y - panel.y - panel.height / 2 - lift}px) scale(${origin.value.width / panel.width}, ${origin.value.height / panel.height})`, opacity: .25 };
+}
+async function select(id: string) {
+ const token = ++revision;
+ reveal?.cancel();
+ closing.value = false;
+ // Finish only decorative assembly. Mounted controls are always available.
+ finishEntrance();
+ trigger = document.querySelector<HTMLElement>(`[data-node="${CSS.escape(id)}"]`);
+ scene.value?.classList.add('has-selection');
+ if (trigger) readOrigin(trigger);
+ selected.value = id;
+ if (window.matchMedia('(max-width: 1100px)').matches) mobileView.value = id.startsWith('project:') ? 'projects' : 'technologies';
+ hovered.value = null;
+ focused.value = null;
+ mark(id.startsWith('project:') ? 'project-activation' : 'technology-activation');
+ await nextTick();
+ if (disposed || token !== revision || !details.value) return;
+ const panel = details.value;
+ if (!reduced() && window.matchMedia('(min-width: 1101px)').matches) {
+  reveal = panel.animate([originFrame(), { ...originFrame(18), opacity: .85, offset: .25 }, { transform: 'none', opacity: 1 }], { duration: project.value ? 480 : 300, easing: 'cubic-bezier(.2,.8,.2,1)' });
+ }
+ panel.focus({ preventScroll: true });
+}
+async function clear() {
+ if (!selected.value || closing.value) return;
+ const token = ++revision;
+ const current = details.value ? { transform: getComputedStyle(details.value).transform, opacity: getComputedStyle(details.value).opacity } : { transform: 'none', opacity: '1' };
+ reveal?.cancel();
+ closing.value = true;
+ if (trigger?.isConnected) readOrigin(trigger);
+ if (details.value && !reduced() && window.matchMedia('(min-width: 1101px)').matches) {
+  reveal = details.value.animate([current, originFrame()], { duration: 280, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
+  try { await reveal.finished; } catch { return; }
+ }
+ if (disposed || token !== revision) return;
+ selected.value = null;
+ closing.value = false;
+ hovered.value = null;
+ focused.value = null;
+ reveal?.cancel();
+ trigger?.focus({ preventScroll: true });
+ focused.value = null;
+}
+function escape(event: KeyboardEvent) { if (event.key === 'Escape' && selected.value) { event.preventDefault(); clear(); } }
+onMounted(() => {
+ mark('mounted');
+ window.addEventListener('keydown', escape);
+ if (reduced() || !window.matchMedia('(min-width: 1101px)').matches) { mark('entrance-complete'); return; }
+ entering.value = true;
+ nextTick(() => {
+  if (disposed || !entering.value || !scene.value) return;
+  entrance = scene.value.animate([{ transform: 'translateY(8px) scale(.992)' }, { transform: 'none' }], { duration: 1000, easing: 'cubic-bezier(.2,.7,.2,1)' });
+  entrance.onfinish = () => { entering.value = false; mark('entrance-complete'); };
+ });
+});
+onBeforeUnmount(() => { disposed = true; revision++; unhookHydration(); entrance?.cancel(); reveal?.cancel(); window.removeEventListener('keydown', escape); });
+const style = (id: string) => ({ left: `${positions[id]!.x / 12}%`, top: `${positions[id]!.y / 6.4}%`, '--body-width': `${moduleSize(id).width / 12}%`, '--body-height': `${moduleSize(id).height / 6.4}%` });
+const edgePath = (edge: { project: string; technology: string }) => {
+ const a = positions[edge.project]!, b = positions[edge.technology]!;
+ const start = moduleAnchor(edge.project, a, b), end = moduleAnchor(edge.technology, b, a);
+ const control = (point: typeof a, center: typeof a) => ({ x: point.x + Math.sign(point.x - center.x) * 28, y: point.y + Math.sign(point.y - center.y) * 28 });
+ const c = control(start, a), d = control(end, b);
+ return `M${start.x} ${start.y} C${c.x} ${c.y},${d.x} ${d.y},${end.x} ${end.y}`;
+};
+const projectImage = computed(() => portfolioProjects.find(node => node.id === project.value?.sourceId)?.image);
 const link = (url: string) => url.startsWith('/') ? localePath(url) : url;
-useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 'robots', content: 'noindex, nofollow' }] }));
+useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 'description', content: text.value.intro }, { name: 'robots', content: 'noindex, nofollow' }] }));
 </script>
 
 <template>
@@ -42,25 +121,23 @@ useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 
    <NuxtLink :to="localePath('/spatial-home')" class="signature">Igal Vilensky <span>↖ {{ text.back }}</span></NuxtLink>
    <div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div>
   </header>
-  <div class="heading"><p class="eyebrow">{{ text.projects }} / {{ text.technologies }}</p><h1>{{ text.title }}</h1><p>{{ text.intro }}</p></div>
+  <h1 class="sr-only">{{ text.title }}</h1>
   <div class="mobile-tabs" role="group"><button :aria-pressed="mobileView === 'projects'" @click="mobileView = 'projects'">{{ text.projects }} · {{ graph.projects.length }}</button><button :aria-pressed="mobileView === 'technologies'" @click="mobileView = 'technologies'">{{ text.technologies }} · {{ graph.technologies.length }}</button></div>
-  <section class="topology-scene" :aria-label="text.title" :class="{ 'has-active': active }">
-   <div class="construction" aria-hidden="true"><span>01 / {{ graph.projects.length }}</span><span>{{ graph.technologies.length }} / {{ text.technologies }}</span></div>
-   <svg class="connections" viewBox="0 0 1200 800" aria-hidden="true"><path v-for="edge in graph.edges" :key="edge.id" :d="edgePath(edge)" :class="{ lit: edge.project === active || edge.technology === active }" /></svg>
+  <section ref="scene" class="topology-scene" :aria-label="text.title" :class="{ 'has-active': active, entering, 'has-selection': selected }">
+   <div class="sculpture">
+   <svg class="connections" viewBox="0 0 1200 640" aria-hidden="true"><path v-for="edge in graph.edges" :key="edge.id" :d="edgePath(edge)" pathLength="1" :class="{ lit: edge.project === active || edge.technology === active }" /></svg>
    <div class="project-modules" :class="{ 'mobile-hidden': mobileView !== 'projects' }">
-    <button v-for="(node, i) in graph.projects" :key="node.id" class="module project-module" :class="[node.priority, { related: connected.has(node.id), selected: selected === node.id }]" :style="{ ...style(node.id), '--order': i }" :data-node="node.id" :aria-pressed="selected === node.id" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id, $event)">
-     <span class="module-index">{{ String(i + 1).padStart(2, '0') }} <span>{{ text[node.priority as 'featured' | 'secondary' | 'lab'] }}</span></span><strong>{{ node.label }}</strong><span class="module-corner" aria-hidden="true">↗</span>
+    <button v-for="(node, i) in graph.projects" :key="node.id" class="module project-module" :class="[node.priority, { related: connected.has(node.id), selected: selected === node.id }]" :style="{ ...style(node.id), '--order': i }" :data-node="node.id" :aria-pressed="selected === node.id" :aria-describedby="`relationships-${node.id}`" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id)">
+     <span :id="`relationships-${node.id}`" class="sr-only">{{ node.technologies.join(', ') }}</span><ModuleBody kind="project" /><strong>{{ node.label }}</strong><span class="sr-only">{{ node.description }}</span>
     </button>
    </div>
    <div class="technology-modules" :class="{ 'mobile-hidden': mobileView !== 'technologies' }">
-    <button v-for="(node, i) in graph.technologies" :key="node.id" class="module technology-module" :class="{ related: connected.has(node.id), selected: selected === node.id, hub: node.projectIds.length > 3 }" :style="{ ...style(node.id), '--order': i + 5 }" :data-node="node.id" :aria-pressed="selected === node.id" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id, $event)"><span aria-hidden="true" class="tech-pin" />{{ node.label }}</button>
+    <button v-for="(node, i) in graph.technologies" :key="node.id" class="module technology-module" :class="{ related: connected.has(node.id), selected: selected === node.id, hub: node.projectIds.length > 3 }" :style="{ ...style(node.id), '--order': i + 5 }" :data-node="node.id" :aria-pressed="selected === node.id" :aria-describedby="`relationships-${node.id}`" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id)"><span :id="`relationships-${node.id}`" class="sr-only">{{ graph.projects.filter(project => node.projectIds.includes(project.id)).map(project => project.label).join(', ') }}</span><ModuleBody kind="technology" :height="moduleSize(node.id).height" /><span class="technology-label">{{ node.label }}</span></button>
+   </div>
    </div>
   </section>
-  <p class="scene-hint">{{ text.hint }}</p>
-  <section id="topology-details" ref="details" class="detail" :class="{ 'detail-open': selected }" :aria-label="text.detail" aria-live="polite">
-   <template v-if="project"><div class="detail-heading"><p class="eyebrow">{{ text[project.priority as 'featured' | 'secondary' | 'lab'] }}</p><h2>{{ project.label }}</h2><p>{{ project.description }}</p><div class="project-links"><template v-for="(url, kind) in project.links" :key="kind"><a v-if="url && !(kind === 'live' && url === project.links.github)" :href="link(url)" :target="url.startsWith('/') ? undefined : '_blank'" :rel="url.startsWith('/') ? undefined : 'noopener noreferrer'">{{ kind === 'github' ? 'GitHub' : kind === 'live' ? text.live : text.study }} ↗</a></template></div></div><div class="stack"><h3>{{ text.stack }}</h3><span v-for="label in project.technologies" :key="label">{{ label }}</span></div></template>
-   <template v-else-if="technology"><div class="detail-heading"><p class="eyebrow">{{ text.technologies }}</p><h2>{{ technology.label }}</h2><p>{{ text.source }}</p></div><div class="related-projects"><h3>{{ text.related }}</h3><button v-for="node in graph.projects.filter(node => technology!.projectIds.includes(node.id))" :key="node.id" @click="select(node.id)">{{ node.label }} ↗</button></div></template>
-   <p v-else class="empty-detail">{{ text.empty }}</p>
+  <section id="topology-details" ref="details" class="detail" :class="{ 'detail-open': selected, 'technology-detail': technology, closing }" :key="selected ?? 'empty'" tabindex="-1" :aria-label="text.detail" aria-live="polite">
+   <TopologyDetail :project="project" :technology="technology" :projects="graph.projects" :text="text" :project-image="projectImage" :link="link" @select="select" />
    <button v-if="selected" class="close-detail" @click="clear">× <span>{{ text.close }}</span></button>
   </section>
  </main>

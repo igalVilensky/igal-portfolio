@@ -29,27 +29,63 @@ export function buildTopology(locale = 'en') {
 }
 export type Topology = ReturnType<typeof buildTopology>;
 
-// Stable similarity order, seeded by source priority. No physics or randomness.
+export const moduleSize = (id: string) => id.startsWith('project:')
+  ? { width: 160, height: 54, depth: 12 }
+  : { width: 92, height: id.slice(11).length > 20 ? 44 : 32, depth: 7 };
+
+// Fixed project scaffold follows the recorded stacks: Vue/Nuxt to the west,
+// shared services through the center, React/Python to the east. Technologies
+// occupy their neighbors' barycenters, with deterministic collision clearance.
+// No force simulation, per-frame layout, or load-time randomness.
 export function layoutTopology(graph: Topology) {
-  const remaining = [...graph.projects];
-  const ordered: typeof remaining = [];
-  while (remaining.length) {
-    const previous = ordered.at(-1);
-    let best = 0;
-    if (previous) {
-      let score = -1;
-      remaining.forEach((project, i) => {
-        const shared = project.technologyIds.filter(id => previous.technologyIds.includes(id)).length;
-        if (shared > score) { score = shared; best = i; }
-      });
-    }
-    ordered.push(remaining.splice(best, 1)[0]!);
-  }
+  const anchors: Record<string, [number, number]> = {
+    'flowforge': [365, 95], 'flowplace-role-compass': [180, 210],
+    'openme': [895, 185], 'decision-matrix-ai': [950, 365],
+    'ari-motors-ev-portal': [130, 370], 'ai-compliance-compass': [710, 295],
+    'user-management-app': [570, 140], 'leanera-digital-transition': [315, 335],
+    'mindq-lab': [400, 535], 'security-playground': [160, 510],
+    'page-scope': [1000, 535], 'i18n-lint-cli': [720, 70],
+    'family-space': [600, 465], 'sunlit-tales': [780, 565],
+  };
   const positions: Record<string, { x: number; y: number }> = {};
-  ordered.forEach((project, i) => { positions[project.id] = { x: i < 7 ? 155 : 1045, y: 92 + (i % 7) * 104 }; });
-  // Hubs have generous slots at the top; less shared tools form a quiet service lattice.
-  graph.technologies.forEach((technology, i) => {
-    positions[technology.id] = { x: 390 + (i % 4) * 140, y: 70 + Math.floor(i / 4) * 76 };
+  graph.projects.forEach(project => {
+    const [x, y] = anchors[project.sourceId] ?? [600, 320];
+    positions[project.id] = { x, y };
+  });
+  graph.technologies.forEach(technology => {
+    const neighbors = technology.projectIds.map(id => positions[id]!);
+    const center = {
+      x: neighbors.reduce((sum, p) => sum + p.x, 0) / neighbors.length,
+      y: neighbors.reduce((sum, p) => sum + p.y, 0) / neighbors.length,
+    };
+    // Single-project tools grow inward from their module, rather than covering it.
+    if (neighbors.length === 1) {
+      const length = Math.hypot(600 - center.x, 320 - center.y) || 1;
+      center.x += (600 - center.x) / length * 95;
+      center.y += (320 - center.y) / length * 95;
+    }
+    for (let i = 0; i < 4000; i++) {
+      const radius = Math.sqrt(i) * 9;
+      const angle = i * 2.399963229728653;
+      const point = { x: center.x + Math.cos(angle) * radius, y: center.y + Math.sin(angle) * radius * .75 };
+      if (point.x < 90 || point.x > 1100 || point.y < 65 || point.y > 575) continue;
+      const size = moduleSize(technology.id);
+      const collision = Object.entries(positions).some(([id, other]) => {
+        const body = moduleSize(id);
+        return Math.abs(point.x - other.x) < (size.width + body.width) / 2 + 12
+          && Math.abs(point.y - other.y) < (size.height + body.height) / 2 + 13;
+      });
+      if (!collision) { positions[technology.id] = point; break; }
+    }
   });
   return positions;
+}
+
+// Attach wires to front-face edge midpoints. All bodies share the same
+// orthographic depth vector (+X, -Y); labels remain square to the viewer.
+export function moduleAnchor(id: string, from: { x: number; y: number }, toward: { x: number; y: number }) {
+  const size = moduleSize(id), dx = toward.x - from.x, dy = toward.y - from.y;
+  return Math.abs(dx) / size.width > Math.abs(dy) / size.height
+    ? { x: from.x + Math.sign(dx) * size.width / 2, y: from.y }
+    : { x: from.x, y: from.y + Math.sign(dy) * size.height / 2 };
 }
