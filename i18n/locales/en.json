@@ -875,6 +875,8 @@
     }
   },
   "spatialLab": {
+    "escape": "Esc",
+    "deploy": "Deploy tool",
     "title": "Spatial Experiments",
     "description": "A modular laboratory for interactive tools.",
     "back": "Spatial Home",

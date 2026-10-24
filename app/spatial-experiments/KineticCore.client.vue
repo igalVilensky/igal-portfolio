@@ -4,8 +4,15 @@ import { experiments, type Experiment } from './registry';
 import { coreAppearances, coreDesktopZoom, type CoreAppearance } from './appearance';
 import { KineticMotion, ringIds, type RingId, type HoverTarget } from './kineticMotion';
 const props = defineProps<{ selected: string | null; paused: boolean }>();
-const emit = defineEmits<{ select: [id: string]; unavailable: [] }>();
+const emit = defineEmits<{ select: [id: string]; unavailable: []; extracting: [] }>();
 const host = ref<HTMLElement>();
+export type FaceBounds = { x:number; y:number; width:number; height:number };
+let deploy = async ():Promise<FaceBounds | null> => null;
+let retract = async () => {};
+let showModule = () => {};
+let hideModule = () => {};
+let currentBounds = ():FaceBounds|null => null;
+defineExpose({ deploy: () => deploy(), retract: () => retract(), showModule: () => showModule(), hideModule: () => hideModule(), bounds: () => currentBounds() });
 let dispose = () => {};
 onMounted(() => {
  const element = host.value!;
@@ -96,6 +103,51 @@ onMounted(() => {
  const quaternion = new THREE.Quaternion(), intersections: THREE.Intersection[] = [];
  let frame=0, last=0, bank=0, entrance=media.matches?1:0, dead=false, inside=false, hoverClock=0;
  let lastX=0, lastY=0;
+ type Cartridge = typeof cartridges[number];
+ let deployed: Cartridge | undefined, locked=false;
+ let travel: { elapsed:number; duration:number; update:(t:number)=>void; done:()=>void } | null=null;
+ const extraction = new THREE.Group(); scene.add(extraction);
+ const homePosition=new THREE.Vector3(), homeQuaternion=new THREE.Quaternion();
+ const releasedPosition=new THREE.Vector3(), releasedQuaternion=new THREE.Quaternion();
+ let alignmentDone: (()=>void) | null=null;
+ function animate(duration:number, update:(t:number)=>void) {
+  if(dead)return Promise.resolve();
+  return new Promise<void>(done=>{travel={elapsed:0,duration:media.matches?0:duration,update,done};wake();});
+ }
+ function faceBounds(item:Cartridge):FaceBounds {
+  scene.updateMatrixWorld(true);
+  const rect=canvas.getBoundingClientRect();
+  const points=[[-.47,-.32],[.47,-.32],[-.47,.32],[.47,.32]].map(([x,y])=>item.cap.localToWorld(new THREE.Vector3(x,y,.137)).project(camera));
+  const xs=points.map(p=>rect.left+(p.x+1)*rect.width/2), ys=points.map(p=>rect.top+(1-p.y)*rect.height/2);
+  return {x:Math.min(...xs),y:Math.min(...ys),width:Math.max(...xs)-Math.min(...xs),height:Math.max(...ys)-Math.min(...ys)};
+ }
+ currentBounds=()=>deployed?faceBounds(deployed):null;
+ deploy=async()=>{
+  if(locked) return null;
+  locked=true;cancelPress();
+  if(motion.phase!=='selected') await new Promise<void>(resolve=>{alignmentDone=resolve;wake();});
+  if(dead) return null;
+  deployed=cartridges.find(item=>item.id===props.selected);
+  if(!deployed) {locked=false;return null;}
+  const item=deployed;emit('extracting');
+  item.cap.getWorldPosition(homePosition);item.cap.getWorldQuaternion(homeQuaternion);
+  extraction.attach(item.cap); // attach preserves the full world transform.
+  const direction=new THREE.Vector3(0,0,1).applyQuaternion(homeQuaternion);
+  releasedPosition.copy(homePosition).addScaledVector(direction,.95);
+  await animate(.46,t=>{item.cap.position.lerpVectors(homePosition,releasedPosition,t);});
+  releasedQuaternion.copy(camera.quaternion);
+  await animate(.32,t=>{item.cap.quaternion.slerpQuaternions(homeQuaternion,releasedQuaternion,t);});
+  return dead?null:faceBounds(item);
+ };
+ hideModule=()=>{if(deployed){deployed.cap.visible=false;wake();}};
+ showModule=()=>{if(deployed){deployed.cap.visible=true;wake();}};
+ retract=async()=>{
+  const item=deployed;if(!item) {locked=false;return;}
+  showModule();
+  await animate(.32,t=>item.cap.quaternion.slerpQuaternions(releasedQuaternion,homeQuaternion,t));
+  await animate(.46,t=>item.cap.position.lerpVectors(releasedPosition,homePosition,t));
+  item.mount.attach(item.cap);deployed=undefined;locked=false;wake();
+ };
  type Press = { id:number; x:number; y:number; previousX:number; previousY:number; target:HoverTarget; point:THREE.Vector3; moved:boolean };
  let press: Press | null = null;
  let lastActivation = { id:'', time:-Infinity };
@@ -121,7 +173,7 @@ onMounted(() => {
   return { target:null, point:null };
  }
  function updateHover(x:number,y:number) {
-  motion.hover=!press && (motion.canGrab || motion.phase==='selected') ? pick(x,y).target : null;
+  motion.hover=!locked && !press && (motion.canGrab || motion.phase==='selected') ? pick(x,y).target : null;
   if(motion.hover?.kind==='ring' && !motion.canGrab) motion.hover=null;
   const target=motion.hover;
   element.dataset.hover=target ? `${target.kind}:${target.id}` : '';
@@ -137,7 +189,7 @@ onMounted(() => {
  }
  function down(event:PointerEvent) {
   if(!event.isPrimary) { if(press) cancelPress(); return; }
-  if(event.button!==0 || press || !(motion.canGrab || motion.phase==='selected')) return;
+  if(locked || event.button!==0 || press || !(motion.canGrab || motion.phase==='selected')) return;
   scene.updateMatrixWorld(true);
   const hit=pick(event.clientX,event.clientY);
   if(!hit.target || !hit.point || hit.target.kind==='ring' && !motion.canGrab) return;
@@ -228,6 +280,13 @@ onMounted(() => {
   if(stamp-last<interval) { frame=requestAnimationFrame(draw); return; }
   const dt=Math.min((stamp-last)/1000,.1); last=stamp;
   motion.tick(dt);
+  if(alignmentDone && motion.phase==='selected') {const resolve=alignmentDone;alignmentDone=null;resolve();}
+  if(travel) {
+   const current=travel;current.elapsed+=dt;
+   const t=current.duration?Math.min(1,current.elapsed/current.duration):1;
+   current.update(t*t*(3-2*t));
+   if(t===1){travel=null;current.done();}
+  }
   entrance=media.matches?1:Math.min(1,entrance+dt/1.15);
   const ease=1-Math.pow(1-entrance,3), blend=media.matches?1:1-Math.exp(-dt*10), pose=motion.pose;
   assembly.position.y=pose.float+(1-ease)*.22;
@@ -240,8 +299,8 @@ onMounted(() => {
   for(const item of cartridges) {
    item.mount.visible=item.bank===bank;
    const target=.23+motion.moduleLift(item.id)+(1-ease)*.2;
-   item.cap.position.z+=(target-item.cap.position.z)*blend;
-   if(Math.abs(target-item.cap.position.z)>.0001) settling=true;
+   if(item!==deployed) item.cap.position.z+=(target-item.cap.position.z)*blend;
+   if(item!==deployed && Math.abs(target-item.cap.position.z)>.0001) settling=true;
    const emphasis=motion.moduleLift(item.id)>0 ? 1 : 0;
    item.surface.emissiveIntensity+=(emphasis*.09-item.surface.emissiveIntensity)*blend;
    item.accent.emissiveIntensity+=(emphasis*.22-item.accent.emissiveIntensity)*blend;
@@ -257,11 +316,11 @@ onMounted(() => {
   if(inside && !press && motion.canGrab && (hoverClock+=dt)>.1) {hoverClock=0;updateHover(lastX,lastY);}
   renderer.render(scene,camera);
   element.dataset.ready='true'; element.dataset.assembly=entrance===1?'complete':'entering'; element.dataset.selected=props.selected??'';
-  element.dataset.state=motion.state; element.dataset.lift=String(cartridges.find(item=>item.id===props.selected)?.cap.position.z??.23);
+  element.dataset.state=motion.state; element.dataset.deployment=travel?'extracting':locked?'deployed':'idle'; element.dataset.lift=String(cartridges.find(item=>item.id===props.selected)?.cap.position.z??.23);
   element.dataset.hoverLift=String(cartridges.find(item=>motion.hover?.kind==='module' && item.id===motion.hover.id)?.cap.position.z??.23);
   element.dataset.angles=`${pose.outer},${pose.inner},${pose.carrier},${pose.index}`;
   element.dataset.velocity=`${motion.velocity.outer},${motion.velocity.inner},${motion.velocity.carrier}`;
-  if(motion.moving || entrance<1 || settling) frame=requestAnimationFrame(draw);
+  if(motion.moving || entrance<1 || settling || travel || alignmentDone) frame=requestAnimationFrame(draw);
  }
  function wake() { if(!frame && !document.hidden && !dead){last=performance.now();frame=requestAnimationFrame(draw);} }
  const observer=new ResizeObserver(()=>{const w=element.clientWidth,h=element.clientHeight; renderer.setSize(w,h); camera.aspect=w/h; camera.zoom=window.innerWidth>600?coreDesktopZoom:1; camera.updateProjectionMatrix(); wake();}); observer.observe(element);
@@ -306,7 +365,7 @@ onMounted(() => {
  const lost=(event:Event)=>{event.preventDefault();cancelPress();emit('unavailable');}; canvas.addEventListener('webglcontextlost',lost);
  syncPreferences(); syncSelection(); applyTheme();
  dispose=()=>{
-  dead=true;cancelPress();cancelAnimationFrame(frame);unselect();unpause();observer.disconnect();theme.disconnect();
+  dead=true;alignmentDone?.();alignmentDone=null;if(travel){travel.done();travel=null;}cancelPress();cancelAnimationFrame(frame);unselect();unpause();observer.disconnect();theme.disconnect();
   document.removeEventListener('visibilitychange',visibility);media.removeEventListener('change',syncPreferences);window.removeEventListener('blur',cancelPress);window.removeEventListener('keydown',escape);
   canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);
   canvas.removeEventListener('pointercancel',cancel);canvas.removeEventListener('lostpointercapture',cancel);canvas.removeEventListener('pointerleave',leave);canvas.removeEventListener('webglcontextlost',lost);
