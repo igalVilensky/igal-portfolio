@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { experiments, type Experiment } from './registry';
 import { coreAppearances, coreDesktopZoom, type CoreAppearance } from './appearance';
 import { KineticMotion, ringIds, type RingId, type HoverTarget } from './kineticMotion';
-const props = defineProps<{ selected: string | null; paused: boolean }>();
-const emit = defineEmits<{ select: [id: string]; unavailable: []; extracting: [] }>();
+const props = defineProps<{ selected: string | null; paused: boolean; spinning: boolean }>();
+const emit = defineEmits<{ select: [id: string]; unavailable: []; extracting: []; spin: [enabled: boolean] }>();
 const host = ref<HTMLElement>();
 export type FaceBounds = { x:number; y:number; width:number; height:number };
 let deploy = async ():Promise<FaceBounds | null> => null;
@@ -71,7 +71,7 @@ onMounted(() => {
  mesh(rotor,new THREE.CylinderGeometry(.48,.48,.46,6).rotateX(Math.PI/2),body);
  mesh(rotor,new THREE.CylinderGeometry(.31,.31,.06,48).rotateX(Math.PI/2),dark,0,0,.26);
  mesh(rotor,new THREE.CylinderGeometry(.12,.12,.09,6).rotateX(Math.PI/2),metal,0,0,.31);
- const cartridges: { mount: THREE.Group; cap: THREE.Group; hit: THREE.Mesh; angle: number; bank: number; id: string; surface: THREE.MeshStandardMaterial; accent: THREE.MeshStandardMaterial; labelCanvas: HTMLCanvasElement; texture: THREE.CanvasTexture; experiment: Experiment }[] = [];
+ const cartridges: { mount: THREE.Group; cap: THREE.Group; hit: THREE.Mesh; angle: number; bank: number; id: string; surface: THREE.MeshStandardMaterial; side: THREE.MeshStandardMaterial; accent: THREE.MeshStandardMaterial; labelCanvas: HTMLCanvasElement; texture: THREE.CanvasTexture; experiment: Experiment }[] = [];
  // Six fixed positions per bank. Extra banks replace the cartridge set, never scale the rings.
  experiments.forEach((experiment,index) => {
   const bank = Math.floor(index / 6), bankSize = Math.min(6, experiments.length - bank * 6);
@@ -83,13 +83,14 @@ onMounted(() => {
   for(const x of [-.32,.32]) rod(cap,new THREE.Vector3(x,0,-.42),new THREE.Vector3(x,0,-.04),.035,screw);
   const accent = new THREE.MeshStandardMaterial({color:initialAppearance.accent.color,metalness:initialAppearance.accent.metalness,roughness:initialAppearance.accent.roughness});
   const surface = body.clone(); surface.emissiveIntensity=0; accent.emissiveIntensity=0;
-  const hit = mesh(cap,new THREE.BoxGeometry(.94,.64,.25),surface); hit.userData.id=experiment.id;
+  const side = dark.clone();
+  const hit = mesh(cap,new THREE.BoxGeometry(.94,.64,.25),[side,side,side,side,surface,side]); hit.userData.id=experiment.id;
   mesh(cap,new THREE.BoxGeometry(.045,.52,.018),accent,-.4,0,.137);
   const canvas=document.createElement('canvas'); canvas.width=384; canvas.height=192;
   const texture=new THREE.CanvasTexture(canvas); texture.colorSpace=THREE.SRGBColorSpace; textures.push(texture);
   const label = new THREE.MeshBasicMaterial({map:texture});
   mesh(cap,new THREE.PlaneGeometry(.76,.48),label,.025,0,.131);
-  cartridges.push({mount,cap,hit,angle,bank,id:experiment.id,surface,accent,labelCanvas:canvas,texture,experiment});
+  cartridges.push({mount,cap,hit,angle,bank,id:experiment.id,surface,side,accent,labelCanvas:canvas,texture,experiment});
  });
  const canvas = renderer.domElement;
  const media = matchMedia('(prefers-reduced-motion: reduce)');
@@ -124,7 +125,7 @@ onMounted(() => {
  currentBounds=()=>deployed?faceBounds(deployed):null;
  deploy=async()=>{
   if(locked) return null;
-  locked=true;cancelPress();
+  locked=true;cancelPress();syncSelection();
   if(motion.phase!=='selected') await new Promise<void>(resolve=>{alignmentDone=resolve;wake();});
   if(dead) return null;
   deployed=cartridges.find(item=>item.id===props.selected);
@@ -198,7 +199,7 @@ onMounted(() => {
   press={id:event.pointerId,x:event.clientX,y:event.clientY,previousX:event.clientX,previousY:event.clientY,target:hit.target,point,moved:false};
   motion.hover=null;
   canvas.setPointerCapture(event.pointerId);
-  if(hit.target.kind==='ring') motion.beginDrag(hit.target.id,event.timeStamp);
+  if(hit.target.kind==='ring') { motion.beginDrag(hit.target.id,event.timeStamp); emit('spin',false); }
   event.preventDefault(); wake();
  }
  function dragAngle(id:RingId,event:PointerEvent,p:Press) {
@@ -269,6 +270,7 @@ onMounted(() => {
   motion.select(selected?.id ?? null,selected?.angle);
   wake();
  }
+ function syncSpin() { motion.setSpin(props.spinning); if(props.spinning!==motion.spinning)emit('spin',motion.spinning); wake(); }
  function syncPreferences() { motion.configure(props.paused,media.matches); wake(); }
  function visibility() {
   cancelPress();
@@ -276,7 +278,7 @@ onMounted(() => {
  }
  function draw(stamp:number) {
   frame=0; if(dead || document.hidden) return;
-  const interval=motion.dragging || motion.state==='inertia' ? 1000/60 : 1000/30;
+  const interval=motion.dragging || ['inertia','spinning','stopping'].includes(motion.state) ? 1000/60 : 1000/30;
   if(stamp-last<interval) { frame=requestAnimationFrame(draw); return; }
   const dt=Math.min((stamp-last)/1000,.1); last=stamp;
   motion.tick(dt);
@@ -327,6 +329,7 @@ onMounted(() => {
  function updateSurface(material:THREE.MeshStandardMaterial, preset:CoreAppearance['surfaces']['body']) {
   material.color.set(preset.color); material.metalness=preset.metalness; material.roughness=preset.roughness;
  }
+ const unspin=watch(()=>props.spinning,syncSpin);
  let appliedTheme: 'dark' | 'light' | undefined;
  function applyTheme() {
   const themeName=document.documentElement.classList.contains('dark')?'dark':'light';
@@ -340,14 +343,16 @@ onMounted(() => {
    ringSurfaces[id].emissive.set(preset.hover);
   }
   for(const item of cartridges) {
-   updateSurface(item.surface,preset.surfaces.body); updateSurface(item.accent,preset.accent);
+   updateSurface(item.surface,preset.surfaces.body); updateSurface(item.side,preset.surfaces.recess); updateSurface(item.accent,preset.accent);
+   const lightAccents: Record<string,string> = {architect:'#956641',json:'#396b96',contrast:'#347b68'};
+   if(themeName==='light') { item.surface.color.set('#cfdfec'); item.accent.color.set(lightAccents[item.id] ?? preset.accent.color); }
    if(preset.accent.registryColor) item.accent.color.set(item.experiment.accent);
    item.surface.emissive.copy(item.accent.color); item.accent.emissive.copy(item.accent.color);
    const context=item.labelCanvas.getContext('2d')!;
-   context.fillStyle=preset.label.background; context.fillRect(0,0,384,192);
-   context.textAlign='center'; context.fillStyle=preset.accent.registryColor?item.experiment.accent:preset.accent.color;
-   context.font='90px monospace'; context.fillText(item.experiment.glyph,192,102);
-   context.fillStyle=preset.label.ink; context.font='30px monospace';
+   context.fillStyle=themeName==='light'?({architect:'#e5e0d8',json:'#cfdfec',contrast:'#d4e4df'} as Record<string,string>)[item.id] ?? preset.label.background:preset.label.background; context.fillRect(0,0,384,192);
+   context.textAlign='center'; context.fillStyle=item.accent.color.getStyle();
+   context.font='110px monospace'; context.fillText(item.experiment.glyph,192,102);
+   context.fillStyle=preset.label.ink; context.font='38px monospace';
    context.fillText(({architect:'SYS',json:'TS',contrast:'AA'} as Record<string,string>)[item.id] ?? item.id.toUpperCase().slice(0,6),192,155);
    item.texture.needsUpdate=true;
   }
@@ -363,9 +368,9 @@ onMounted(() => {
  const unpause=watch(()=>props.paused,syncPreferences);
  document.addEventListener('visibilitychange',visibility); media.addEventListener('change',syncPreferences);
  const lost=(event:Event)=>{event.preventDefault();cancelPress();emit('unavailable');}; canvas.addEventListener('webglcontextlost',lost);
- syncPreferences(); syncSelection(); applyTheme();
+ syncPreferences(); syncSelection(); syncSpin(); applyTheme();
  dispose=()=>{
-  dead=true;alignmentDone?.();alignmentDone=null;if(travel){travel.done();travel=null;}cancelPress();cancelAnimationFrame(frame);unselect();unpause();observer.disconnect();theme.disconnect();
+  dead=true;alignmentDone?.();alignmentDone=null;if(travel){travel.done();travel=null;}cancelPress();cancelAnimationFrame(frame);unselect();unpause();unspin();observer.disconnect();theme.disconnect();
   document.removeEventListener('visibilitychange',visibility);media.removeEventListener('change',syncPreferences);window.removeEventListener('blur',cancelPress);window.removeEventListener('keydown',escape);
   canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);
   canvas.removeEventListener('pointercancel',cancel);canvas.removeEventListener('lostpointercapture',cancel);canvas.removeEventListener('pointerleave',leave);canvas.removeEventListener('webglcontextlost',lost);

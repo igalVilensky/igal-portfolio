@@ -25,3 +25,15 @@ assert.equal(model.beginDrag('outer',0),false,'Alignment owns transforms');
 advance(model,4);assert.equal(model.phase,'selected');assert(Math.abs(angularDifference(2*Math.PI/3,model.pose.index))<.002,'Use the short presentation path');
 model.select(null);advance(model,.3);assert.equal(model.phase,'returning','Dock before returning the mechanism');advance(model,3);assert.equal(model.phase,'free');assert(Math.abs(angularDifference(resting.inner,model.pose.inner))<.12,'Return near the manipulated pose');
 console.log('Angular dynamics: frame-rate invariance, bounded damping, reversal, cancellation, held release, reduced motion, phased selection and return pass.');
+// Coordinated spin shares the angular integrator with drag, coast and alignment.
+function spin(rate) { const m=new KineticMotion();m.configure(true,false);m.setSpin(true);advance(m,3,rate);return m; }
+const spin30=spin(30),spin144=spin(144);
+for(const id of ['outer','inner','carrier'])assert(Math.abs(spin30.pose[id]-spin144.pose[id])<1e-10,'Spin must be frame-rate invariant');
+assert(spin30.velocity.outer>0 && spin30.velocity.inner<0 && spin30.velocity.carrier>0);
+spin30.setSpin(false);const stopPose={...spin30.pose};advance(spin30,4);
+assert.equal(spin30.state,'idle');assert(spin30.pose.outer>stopPose.outer,'Stop coasts forward');assert(spin30.pose.outer-stopPose.outer<.11,'Stop is controlled');
+const stopped={...spin30.pose};advance(spin30,1);assert.deepEqual(spin30.pose,stopped,'Stopped pose is preserved with ambient paused');
+const grab=spin(60);assert(grab.beginDrag('inner',0));assert(!grab.spinning);assert.deepEqual(grab.velocity,{outer:0,inner:0,carrier:0});grab.drag(.2,40);grab.endDrag(40,true);advance(grab,1);assert.equal(grab.velocity.inner,0);
+const opening=spin(60);opening.select('json');assert(!opening.spinning);opening.setSpin(true);assert(!opening.spinning,'Alignment rejects spin');advance(opening,4);assert.equal(opening.phase,'selected');opening.select(null);advance(opening,3);assert(!opening.spinning);
+const preference=spin(60);preference.configure(false,true);preference.setSpin(true);assert(!preference.spinning);assert.equal(preference.velocity.outer,0);
+console.log('Coordinated spin: frame-rate invariance, stop continuity, drag takeover, alignment precedence and reduced motion pass.');

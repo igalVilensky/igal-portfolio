@@ -881,11 +881,14 @@
     "description": "A modular laboratory for interactive tools.",
     "back": "Spatial Home",
     "close": "Return module",
-    "hint": "Drag a ring · Inspect a module · Select to release",
+    "hint": "Drag a ring · Click a module to open its tool",
     "preview": "This tool is available in Classic. Its Spatial work surface will follow in a later milestone.",
     "classic": "Open in Classic",
-    "pause": "Pause motion",
-    "resume": "Resume motion",
-    "instrument": "Modular lab"
+    "pause": "Pause ambient motion",
+    "resume": "Resume ambient motion",
+    "instrument": "Modular lab",
+    "spin": "Spin",
+    "stop": "Stop",
+    "toolError": "This tool could not be displayed. Return the module and try again."
   }
 }

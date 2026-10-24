@@ -18,3 +18,5 @@
 @media(prefers-reduced-motion:reduce){.tool-deployed .lab-stage :deep(canvas){transition:none}}
 
 .retract-control{position:sticky;top:0;z-index:1;background:#edf3f8}:global(.dark .retract-control){background:#15212b}
+
+.motion-controls{display:flex;align-items:center;gap:24px}.motion-control:disabled{opacity:.45;cursor:default}.spin-control{min-width:48px;color:var(--ink)}.spin-control[aria-pressed=true]{color:var(--nav-accent)}

@@ -881,11 +881,14 @@
     "description": "Ein modulares Labor für interaktive Werkzeuge.",
     "back": "Spatial Home",
     "close": "Modul zurücksetzen",
-    "hint": "Ring ziehen · Modul erkunden · Zum Lösen auswählen",
+    "hint": "Ring ziehen · Modul anklicken, um das Werkzeug zu öffnen",
     "preview": "Dieses Werkzeug ist in Classic verfügbar. Seine Spatial-Arbeitsfläche folgt in einem späteren Meilenstein.",
     "classic": "In Classic öffnen",
-    "pause": "Bewegung pausieren",
-    "resume": "Bewegung fortsetzen",
-    "instrument": "Modulares Labor"
+    "pause": "Umgebungsbewegung pausieren",
+    "resume": "Umgebungsbewegung fortsetzen",
+    "instrument": "Modulares Labor",
+    "spin": "Drehen",
+    "stop": "Stoppen",
+    "toolError": "Dieses Werkzeug konnte nicht angezeigt werden. Modul zurückführen und erneut versuchen."
   }
 }
