@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MobileProjectExplorer from '~/spatial-work/MobileProjectExplorer.vue';
 import ModuleBody from '~/spatial-work/ModuleBody.vue';
 import TopologyDetail from '~/spatial-work/TopologyDetail.vue';
 import { portfolioProjects } from '~/composables/useProjects';
@@ -16,7 +17,12 @@ const positions = layoutTopology(buildTopology());
 const selected = ref<string | null>(null);
 const hovered = ref<string | null>(null);
 const focused = ref<string | null>(null);
-const mobileView = ref<'projects' | 'technologies'>('projects');
+// Match the approved desktop CSS boundary; mount only the needed scene.
+const isMobile = ref<boolean | null>(null);
+const mobileProject = ref(graph.value.projects[0]!.id);
+let breakpoint: MediaQueryList | undefined;
+function updateBreakpoint() { isMobile.value = breakpoint!.matches; }
+watch(selected, id => { if (id?.startsWith('project:')) mobileProject.value = id; });
 const active = computed(() => selected.value ?? hovered.value ?? focused.value);
 const project = computed(() => graph.value.projects.find(node => node.id === selected.value));
 const technology = computed(() => graph.value.technologies.find(node => node.id === selected.value));
@@ -57,7 +63,6 @@ async function select(id: string) {
  scene.value?.classList.add('has-selection');
  if (trigger) readOrigin(trigger);
  selected.value = id;
- if (window.matchMedia('(max-width: 1100px)').matches) mobileView.value = id.startsWith('project:') ? 'projects' : 'technologies';
  hovered.value = null;
  focused.value = null;
  mark(id.startsWith('project:') ? 'project-activation' : 'technology-activation');
@@ -89,8 +94,11 @@ async function clear() {
  trigger?.focus({ preventScroll: true });
  focused.value = null;
 }
-function escape(event: KeyboardEvent) { if (event.key === 'Escape' && selected.value) { event.preventDefault(); clear(); } }
+function escape(event: KeyboardEvent) { if (isMobile.value === false && event.key === 'Escape' && selected.value) { event.preventDefault(); clear(); } }
 onMounted(() => {
+ breakpoint = window.matchMedia('(max-width: 1100px)');
+ updateBreakpoint();
+ breakpoint.addEventListener('change', updateBreakpoint);
  mark('mounted');
  window.addEventListener('keydown', escape);
  if (reduced() || !window.matchMedia('(min-width: 1101px)').matches) { mark('entrance-complete'); return; }
@@ -101,7 +109,7 @@ onMounted(() => {
   entrance.onfinish = () => { entering.value = false; mark('entrance-complete'); };
  });
 });
-onBeforeUnmount(() => { disposed = true; revision++; unhookHydration(); entrance?.cancel(); reveal?.cancel(); window.removeEventListener('keydown', escape); });
+onBeforeUnmount(() => { disposed = true; breakpoint?.removeEventListener('change', updateBreakpoint); revision++; unhookHydration(); entrance?.cancel(); reveal?.cancel(); window.removeEventListener('keydown', escape); });
 const style = (id: string) => ({ left: `${positions[id]!.x / 12}%`, top: `${positions[id]!.y / 6.4}%`, '--body-width': `${moduleSize(id).width / 12}%`, '--body-height': `${moduleSize(id).height / 6.4}%` });
 const edgePath = (edge: { project: string; technology: string }) => {
  const a = positions[edge.project]!, b = positions[edge.technology]!;
@@ -122,16 +130,17 @@ useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 
    <div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div>
   </header>
   <h1 class="sr-only">{{ text.title }}</h1>
-  <div class="mobile-tabs" role="group"><button :aria-pressed="mobileView === 'projects'" @click="mobileView = 'projects'">{{ text.projects }} · {{ graph.projects.length }}</button><button :aria-pressed="mobileView === 'technologies'" @click="mobileView = 'technologies'">{{ text.technologies }} · {{ graph.technologies.length }}</button></div>
+  <MobileProjectExplorer v-if="isMobile === true" :graph="graph" :locale="locale" :active-id="mobileProject" :selection="selected" :link="link" @navigate="mobileProject = $event" @select="selected = $event" />
+  <template v-if="isMobile === false">
   <section ref="scene" class="topology-scene" :aria-label="text.title" :class="{ 'has-active': active, entering, 'has-selection': selected }">
    <div class="sculpture">
    <svg class="connections" viewBox="0 0 1200 640" aria-hidden="true"><path v-for="edge in graph.edges" :key="edge.id" :d="edgePath(edge)" pathLength="1" :class="{ lit: edge.project === active || edge.technology === active }" /></svg>
-   <div class="project-modules" :class="{ 'mobile-hidden': mobileView !== 'projects' }">
+   <div class="project-modules">
     <button v-for="(node, i) in graph.projects" :key="node.id" class="module project-module" :class="[node.priority, { related: connected.has(node.id), selected: selected === node.id }]" :style="{ ...style(node.id), '--order': i }" :data-node="node.id" :aria-pressed="selected === node.id" :aria-describedby="`relationships-${node.id}`" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id)">
      <span :id="`relationships-${node.id}`" class="sr-only">{{ node.technologies.join(', ') }}</span><ModuleBody kind="project" /><strong>{{ node.label }}</strong><span class="sr-only">{{ node.description }}</span>
     </button>
    </div>
-   <div class="technology-modules" :class="{ 'mobile-hidden': mobileView !== 'technologies' }">
+   <div class="technology-modules">
     <button v-for="(node, i) in graph.technologies" :key="node.id" class="module technology-module" :class="{ related: connected.has(node.id), selected: selected === node.id, hub: node.projectIds.length > 3 }" :style="{ ...style(node.id), '--order': i + 5 }" :data-node="node.id" :aria-pressed="selected === node.id" :aria-describedby="`relationships-${node.id}`" aria-controls="topology-details" @pointerenter="event => { if(event.pointerType === 'mouse') hovered = node.id }" @pointerleave="hovered = null" @focus="focused = node.id" @blur="focused = null" @click="select(node.id)"><span :id="`relationships-${node.id}`" class="sr-only">{{ graph.projects.filter(project => node.projectIds.includes(project.id)).map(project => project.label).join(', ') }}</span><ModuleBody kind="technology" :height="moduleSize(node.id).height" /><span class="technology-label">{{ node.label }}</span></button>
    </div>
    </div>
@@ -140,7 +149,15 @@ useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 
    <TopologyDetail :project="project" :technology="technology" :projects="graph.projects" :text="text" :project-image="projectImage" :link="link" @select="select" />
    <button v-if="selected" class="close-detail" @click="clear">× <span>{{ text.close }}</span></button>
   </section>
+  </template>
  </main>
 </template>
 
 <style scoped src="../spatial-work/topology.css"></style>
+
+<style scoped>
+@media(max-width:1100px){
+.topology-page{height:100svh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:clip;padding: max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.periphery{flex:none;position:relative;z-index:5}
+}
+</style>
