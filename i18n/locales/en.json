@@ -873,5 +873,17 @@
       "title": "Useful Outcomes",
       "description": "The practical purpose: usable tools, accessible information and workflows that help people get things done."
     }
+  },
+  "spatialLab": {
+    "title": "Spatial Experiments",
+    "description": "A modular laboratory for interactive tools.",
+    "back": "Spatial Home",
+    "close": "Return module",
+    "hint": "Drag a ring · Inspect a module · Select to release",
+    "preview": "This tool is available in Classic. Its Spatial work surface will follow in a later milestone.",
+    "classic": "Open in Classic",
+    "pause": "Pause motion",
+    "resume": "Resume motion",
+    "instrument": "Modular lab"
   }
 }

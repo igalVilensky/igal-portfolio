@@ -873,5 +873,17 @@
       "title": "Praktischer Nutzen",
       "description": "Das Ziel: nutzbare Werkzeuge, zugängliche Informationen und Abläufe, die Menschen bei ihren Aufgaben unterstützen."
     }
+  },
+  "spatialLab": {
+    "title": "Spatial Experimente",
+    "description": "Ein modulares Labor für interaktive Werkzeuge.",
+    "back": "Spatial Home",
+    "close": "Modul zurücksetzen",
+    "hint": "Ring ziehen · Modul erkunden · Zum Lösen auswählen",
+    "preview": "Dieses Werkzeug ist in Classic verfügbar. Seine Spatial-Arbeitsfläche folgt in einem späteren Meilenstein.",
+    "classic": "In Classic öffnen",
+    "pause": "Bewegung pausieren",
+    "resume": "Bewegung fortsetzen",
+    "instrument": "Modulares Labor"
   }
 }
