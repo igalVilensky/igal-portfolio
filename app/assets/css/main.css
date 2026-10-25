@@ -5,6 +5,10 @@
 @layer base {
     :root {
         --color-canvas: #F6F8FB;
+        /* Spatial Home/Work atmosphere, shared by About and Experiments.
+           Approved Home/Work compositions retain their existing local values. */
+        --spatial-canvas: #f0f5f9;
+        --spatial-background: radial-gradient(ellipse at 50% 44%, #dceaf799, transparent 65%), #f0f5f9;
         --color-surface: #FFFFFF;
         --color-surface-raised: #EDF2F7;
         --color-text: #172334;
@@ -39,6 +43,8 @@
 
     .dark {
         --color-canvas: #0C121C;
+        --spatial-canvas: #0a111b;
+        --spatial-background: radial-gradient(ellipse at 50% 42%, #19395477, transparent 66%), #0a111b;
         --color-surface: #141E2B;
         --color-surface-raised: #1C2A3B;
         --color-text: #E6EDF5;
