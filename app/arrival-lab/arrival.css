@@ -1,0 +1,23 @@
+.arrival-world{position:fixed;inset:0;overflow:hidden;background:#dedfd8;color:#383b38;font-family:Inter,system-ui,sans-serif}
+.arrival-canvas{width:100%;height:100%;touch-action:none}
+.arrival-canvas canvas{display:block;outline:none;touch-action:none}
+.arrival-canvas canvas:focus-visible{outline:1px solid #8b8370;outline-offset:-5px}
+.arrival-tools{position:absolute;z-index:3;right:clamp(16px,3vw,40px);bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:6px;align-items:center}
+.arrival-tools button,.arrival-tools a{display:grid;place-items:center;width:42px;height:42px;border:1px solid #767c722b;border-radius:50%;background:#ebe9dfb8;backdrop-filter:blur(8px);font-size:19px;color:#454b47;text-decoration:none;cursor:pointer}
+.arrival-tools :is(a,button):hover,.arrival-tools :is(a,button):focus-visible{background:#fbf8ee;outline:1px solid #7c8175;outline-offset:3px}
+.arrival-controls{position:absolute;z-index:4;right:clamp(16px,3vw,40px);bottom:78px;width:min(340px,calc(100vw - 32px));padding:22px;background:#f4f1e8f5;border:1px solid #a5a49566;border-radius:14px;font-size:13px;line-height:1.7;box-shadow:0 12px 48px #353a3420}
+.arrival-controls p{margin:0 0 16px}.arrival-controls .arrival-fine{font-size:11px;margin:12px 0;color:#63685f}
+.arrival-controls button,.arrival-access button{border:1px solid #9a9e90;background:#fff9;border-radius:6px;padding:9px 12px;cursor:pointer;font:inherit}
+.arrival-controls label{display:flex;gap:10px;align-items:center;margin:14px 0}.arrival-controls input{accent-color:#6d7566}
+.arrival-access:not(.arrival-text),.arrival-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.arrival-access:not(.arrival-text):focus-within{clip-path:none;width:auto;height:auto;bottom:24px;left:24px;padding:8px;border-radius:8px;background:#f4f1e8}
+.arrival-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:clamp(28px,8vw,140px);max-width:850px;gap:24px;line-height:1.9;font-size:clamp(15px,2vw,20px)}
+.arrival-mouse-note{position:absolute;left:20px;bottom:22px;font-size:12px;max-width:min(400px,calc(100vw - 200px));padding:12px;background:#f4f1e8e8;border-radius:8px}
+@media(max-width:600px){.arrival-tools{right:16px;bottom:max(16px,env(safe-area-inset-bottom))}.arrival-access:not(.arrival-text):focus-within{bottom:80px;left:16px;right:16px}.arrival-mouse-note{bottom:80px;max-width:calc(100vw - 40px)}}
+.arrival-dark{background:#131d2b;color:#d5e1eb}
+.arrival-dark .arrival-tools :is(button,a){background:#182433b8;border-color:#a2c6e33d;color:#c5e0ed}
+.arrival-dark .arrival-tools :is(button,a):hover,.arrival-dark .arrival-tools :is(button,a):focus-visible{background:#304359;outline-color:#9dcbdf}
+.arrival-dark .arrival-controls,.arrival-dark .arrival-access:focus-within,.arrival-dark .arrival-mouse-note{background:#172432f5;color:#d5e1eb}
+.arrival-dark .arrival-controls .arrival-fine{color:#adc0d0}
+.arrival-dark .arrival-controls button,.arrival-dark .arrival-access button{background:#304359;color:#e2edf5}
+.arrival-world button:focus-visible{outline:2px solid #8aa7ba;outline-offset:4px}
