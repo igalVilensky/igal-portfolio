@@ -10,6 +10,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   const keys = new Set<string>();
   const velocity = new T.Vector3();
   let yaw = .0574, pitch = .0855, targetYaw = yaw, targetPitch = pitch;
+  let enabled = true;
   let dragging = false, distance = 0, lastX = 0, lastY = 0, multiple = false;
   const pointers = new Set<number>();
   const removers: (() => void)[] = [];
@@ -17,12 +18,14 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     target.addEventListener(name, handler, options); removers.push(() => target.removeEventListener(name, handler, options));
   };
   function down(event: PointerEvent) {
+    if (!enabled) return;
     pointers.add(event.pointerId); if (pointers.size > 1) multiple = true;
     dragging = true; distance = 0; lastX = event.clientX; lastY = event.clientY;
     canvas.focus({ preventScroll: true });
     if (document.pointerLockElement !== canvas) canvas.setPointerCapture(event.pointerId);
   }
   function move(event: PointerEvent) {
+    if (!enabled) return;
     const locked = document.pointerLockElement === canvas;
     if ((dragging || locked) && !multiple) {
       const dx = locked ? event.movementX : event.clientX - lastX;
@@ -35,6 +38,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (!dragging || locked) callbacks.hover(event.clientX, event.clientY, locked);
   }
   function up(event: PointerEvent) {
+    if (!enabled) return;
     pointers.delete(event.pointerId);
     if (dragging && distance < 6 && !multiple) callbacks.activate(event.clientX, event.clientY, document.pointerLockElement === canvas);
     if (!pointers.size) { dragging = false; multiple = false; }
@@ -43,6 +47,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     pointers.delete(event.pointerId); distance = 100; dragging = false; if (!pointers.size) multiple = false;
   }
   function keyboard(event: KeyboardEvent) {
+    if (!enabled) return;
     if (event.key === 'Escape') {
       if (document.pointerLockElement === canvas) document.exitPointerLock(); else callbacks.escape(); return;
     }
@@ -66,6 +71,8 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   listen(window, 'blur', (() => { keys.clear(); velocity.set(0,0,0); }) as EventListener);
   listen(document, 'pointerlockchange', (() => { dragging = false; distance = 100; keys.clear(); }) as EventListener);
   return {
+    setEnabled(value: boolean) { enabled = value; keys.clear(); velocity.set(0,0,0); dragging=false; pointers.clear(); multiple=false; },
+    restore(nextYaw:number,nextPitch:number) { yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
     stop() { keys.clear(); velocity.set(0,0,0); },
     movement(dt: number) {
       const x = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
