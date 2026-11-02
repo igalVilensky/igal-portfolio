@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import * as T from 'three';
+import { YouTubeRadio } from './audio/YouTubeRadio';
+import PersistentRadioPlayer from './audio/PersistentRadioPlayer.vue';
+import RadioControls from './audio/RadioControls.vue';
+import { audioCopy } from './audio/copy';
+import { createReceiver } from './audio/receiver';
+import './audio/audio.css';
 import { buildEnvironment, spawn } from './environment';
 import { illuminate } from './lighting';
 import { createCollision } from './collision';
@@ -13,6 +19,20 @@ import PortalWorkspace from './PortalWorkspace.vue';
 import { createTerminal, portalPath, pointOnPath, type PortalState } from './portal';
 import { portalCopy } from './portal-copy';
 
+const radio = new YouTubeRadio();
+const radioOpen=ref(false), radioSurface=ref<HTMLElement>(), playerAnchor=shallowRef<HTMLElement>(), gameDock=ref<HTMLElement>();
+const ac=computed(()=>audioCopy[locale.value as keyof typeof audioCopy]||audioCopy.en);
+let receiver:ReturnType<typeof createReceiver>|undefined, radioTravel=false;
+function closeRadio(){radioOpen.value=false;look?.setEnabled(!portalBusy.value);if(!portalBusy.value)nextTick(()=>renderer?.domElement.focus());}
+function approachRadio(){
+
+ if(portalBusy.value||guided)return;
+ if(!camera||failed.value||textMode.value){radio.setMode('expanded');return;}
+ if(document.pointerLockElement)document.exitPointerLock();
+ receiver!.resizeApproach();journey.cancel();look.stop();look.setEnabled(false);radioTravel=true;guided=true;
+ travel={path:camera.position.z < -64 ? portalPath(camera.position,receiver!.near) : [camera.position.clone(),receiver!.near.clone()],from:camera.quaternion.clone(),to:new T.Quaternion(),start:performance.now(),duration:reduced.value?0:3200,exiting:false};
+ const target=camera.clone();target.position.copy(receiver!.near);target.lookAt(-12,2.65,3);travel.to.copy(target.quaternion);
+}
 const colorMode = useColorMode();
 const dark = computed(() => colorMode.value === 'dark');
 const themeLabel = computed(() => locale.value === 'de' ? 'Licht / Dunkel' : locale.value === 'ru' ? 'Свет / Тьма' : 'Light / Dark');
@@ -58,6 +78,7 @@ function openWorkspace() {
   portalState.value='workspace-active';workspace.value=true;
 }
 function activateTerminal(direct=false) {
+  if(radioOpen.value)closeRadio();
   if(portalBusy.value)return;
   controlsOpen.value=false;resumeLook.value=false;
   if(!camera || failed.value || textMode.value){portalState.value='workspace-active';workspace.value=true;return;}
@@ -70,6 +91,7 @@ function activateTerminal(direct=false) {
   if(direct||reduced.value){travelled=entryPath.map(p=>p.clone());openWorkspace();}
 }
 function approachTerminal() {
+  if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
   if(!camera||failed.value||textMode.value){activateTerminal(true);return;}
   if(portalNear.value){activateTerminal();return;}
@@ -83,9 +105,9 @@ function restoreExploration() {
 }
 function closeWorkspace() {
   if(portalState.value==='exiting')return;
-  if(failed.value || textMode.value){workspace.value=false;travel=undefined;saved=undefined;portalState.value='exploring';nextTick(()=>document.querySelector<HTMLButtonElement>('[data-action="project-direct"]')?.focus());return;}
+  if(failed.value || textMode.value){workspace.value=false;travel=undefined;saved=undefined;portalState.value='exploring';nextTick(()=>document.querySelector<HTMLButtonElement>('[data-action="portal-approach"]')?.focus());return;}
   if(!saved) {workspace.value=false;}
-  if(!saved){portalState.value='exploring';nextTick(()=>document.querySelector<HTMLButtonElement>('[data-action="project-direct"]')?.focus());return;}
+  if(!saved){portalState.value='exploring';nextTick(()=>document.querySelector<HTMLButtonElement>('[data-action="portal-approach"]')?.focus());return;}
   portalState.value='exiting';
   // Reverse the actual travelled route, including a partially completed entry.
   const backPath=[camera.position.clone(),...travelled.slice().reverse()];
@@ -100,7 +122,7 @@ function updatePortal(now:number) {
   const t=travel.duration?T.MathUtils.clamp((now-travel.start)/travel.duration,0,1):1;
   const eased=t*t*(3-2*t);
   camera.position.copy(pointOnPath(travel.path,eased));if(!travel.exiting && (travelled.length===0 || travelled[travelled.length-1]!.distanceTo(camera.position)>.08))travelled.push(camera.position.clone());camera.quaternion.slerpQuaternions(travel.from,travel.to,Math.min(1,eased*1.7));needsRender=true;
-  if(t===1){if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
+  if(t===1){if(radioTravel){travel=undefined;guided=false;radioTravel=false;look.restore(0,Math.atan2(1,receiver!.near.z-3));radioOpen.value=true;nextTick(()=>radioSurface.value?.querySelector('button')?.focus());return;}if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
 }
 const wallState=ref('dormant');
 const actionLabel=computed(()=>state.value==='secondary'?c.value.back:state.value==='arrival'?c.value.approach:wallState.value==='open'?c.value.passage:c.value.activate);
@@ -124,11 +146,13 @@ function pick(x: number, y: number, center = false) {
   ray.setFromCamera(pointer, camera);
   const first = ray.intersectObjects(architecture.solids, false)[0];
   const data = first?.object.userData;
+  if(data?.radio)return 'radio';
   if(data?.terminal) {hoveredFacet=-1;return 'terminal';}
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
 }
 function enter() {
+  if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
   if (failed.value || textMode.value) { state.value = state.value === 'secondary' ? 'arrival' : 'secondary'; return; }
   renderer.domElement.focus({ preventScroll: true });
@@ -140,16 +164,19 @@ function enter() {
   } else mechanism.activate(performance.now());
 }
 function back() {
+  if(radioTravel){travel=undefined;guided=false;radioTravel=false;closeRadio();return;}
+  if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided){closeWorkspace();return;}
   if (failed.value || textMode.value) { state.value = 'arrival'; return; }
   if (!journey) return;
   renderer.domElement.focus({ preventScroll: true }); look.stop(); journey.return();
 }
-async function mouseLook() { if(portalBusy.value||guided)return; resumeLook.value=false; controlsOpen.value = false; mouseUnavailable.value = !(await look?.lock()); }
+async function mouseLook() { if(radioOpen.value)closeRadio(); if(portalBusy.value||guided)return; resumeLook.value=false; controlsOpen.value = false; mouseUnavailable.value = !(await look?.lock()); }
 function applyReduced(value: boolean) { reduced.value = value; journey?.setReduced(value); }
 function onMotion(event: MediaQueryListEvent) { applyReduced(event.matches); }
 function failure() { clearTimeout(exitTimer);travel=undefined;if(portalBusy.value) {workspace.value=true;portalState.value='workspace-active';} failed.value = true; cancelAnimationFrame(frame); }
 function showText() {
+  if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
   journey?.reset();
   textMode.value = !textMode.value;
@@ -176,7 +203,7 @@ function animate(now: number) {
   if(portalState.value==='entering'||portalState.value==='exiting'||guided)needsRender=true;
   const view = [camera.position.x,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>v.toFixed(5)).join(',');
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
-  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { renderer.render(scene, camera); needsRender = false; previousView = view; }
+  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { renderer.render(scene, camera); if(receiver){const r=host.value!.getBoundingClientRect();receiver.render(camera,r.width,r.height);} needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
     nextTelemetry = now + 100; wallState.value=mechanism.state;
     const canvas = renderer.domElement;
@@ -192,9 +219,16 @@ function applyTheme() {
   renderer.toneMappingExposure = dark.value ? 1.12 : 1.0;
   needsRender = true; renderer.shadowMap.needsUpdate = true;
 }
+watch(radioOpen,value=>{radio.setMode(value?'docked':'mini');if(renderer)renderer.domElement.inert=value;});
+watch(()=>radio.state.mode,mode=>{if(mode==='expanded'){if(document.pointerLockElement)document.exitPointerLock();look?.stop();look?.setEnabled(false);}else if(!radioOpen.value&&!portalBusy.value)look?.setEnabled(true);});
+watch(portalBusy,busy=>{if(busy)radio.setMode('mini');});
+function playerStopped(){radio.setMode(radioOpen.value?'docked':'mini');nextTick(()=>{if(radioOpen.value)radioSurface.value?.querySelector<HTMLButtonElement>('[data-action=radio-play]')?.focus();else document.querySelector<HTMLButtonElement>(portalBusy.value?'[data-action=portal-close]':'[data-action=radio-shortcut]')?.focus();});}
+function releaseDockPointer(){if(document.pointerLockElement)document.exitPointerLock();}
+function radioShortcut(){if(radio.state.power){if(document.pointerLockElement)document.exitPointerLock();radio.setMode('expanded');}else if(radioOpen.value){radio.setMode('docked');nextTick(()=>radioSurface.value?.querySelector<HTMLButtonElement>('[data-action=radio-play]')?.focus());}else approachRadio();}
 watch(dark, applyTheme);
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
 onMounted(() => {
+  radio.mount();
   try {
     media = matchMedia('(prefers-reduced-motion: reduce)'); reduced.value = media.matches;
     media.addEventListener('change', onMotion); cleanups.push(() => media.removeEventListener('change', onMotion));
@@ -206,19 +240,20 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 220); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids); collide = createCollision(architecture.solids); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radioSurface.value!,host.value!); mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids); collide = createCollision(architecture.solids); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
     look = createLook(camera, canvas, {
       activate(x, y, center) { if(portalBusy.value||guided)return; const hit=pick(x,y,center); if (!hit) return;
+        if(hit==='radio'){approachRadio();return;}
         if(hit==='terminal'){activateTerminal();return;}
         if (hit==='key' && camera.position.z < -50) mechanism.activate(performance.now());
         else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
         else mechanism.react(performance.now()); },
       hover(x, y, center) { const hit=pick(x,y,center); terminalHover=hit==='terminal';pointerHover = !!hit;needsRender=true; canvas.style.cursor = pointerHover ? 'pointer' : 'grab'; },
       manual() { if(portalBusy.value||guided)return; if (journey.moving) journey.cancel(); },
-      escape() { if(portalBusy.value||guided){closeWorkspace();return;} controlsOpen.value = false; look.stop(); if (journey.moving) journey.cancel(); },
+      escape() { if(radioOpen.value){closeRadio();return;} if(portalBusy.value||guided){closeWorkspace();return;} controlsOpen.value = false; look.stop(); if (journey.moving) journey.cancel(); },
     });
     observer = new ResizeObserver(() => {
       if (!host.value) return;
@@ -227,25 +262,30 @@ onMounted(() => {
     }); observer.observe(host.value!);
     const lost = (e: Event) => { e.preventDefault(); failure(); };
     canvas.addEventListener('webglcontextlost', lost); cleanups.push(() => canvas.removeEventListener('webglcontextlost', lost));
-    const escapePortal=(e:KeyboardEvent)=>{if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
+    const escapePortal=(e:KeyboardEvent)=>{if(e.key==='Escape'&&(radioOpen.value||radioTravel)){e.preventDefault();travel=undefined;guided=false;radioTravel=false;closeRadio();return;}if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
     window.addEventListener('keydown',escapePortal);cleanups.push(()=>window.removeEventListener('keydown',escapePortal));
     lastTime = performance.now(); animate(lastTime);
   } catch (error) { console.error('Arrival Chamber:', error); failure(); }
 });
 onBeforeUnmount(() => {
-  clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
+  radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
   terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
-  <main class="arrival-world" :class="{ 'arrival-dark': dark }" :aria-label="c.name">
+  <main class="arrival-world" :class="{ 'arrival-dark': dark, 'arrival-radio-active': radioOpen, 'arrival-player-active': radio.state.power }" :aria-label="c.name">
     <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided" class="arrival-canvas"/>
-    <nav v-show="!portalBusy" :inert="guided" class="arrival-tools" :aria-label="c.controls">
+    <div ref="radioSurface" class="receiver-surface" :class="{'receiver-interactive':radioOpen && radio.state.mode!=='expanded'}" :inert="!radioOpen || radio.state.mode==='expanded'" :aria-hidden="!radioOpen || radio.state.mode==='expanded'" @keydown.esc.stop.prevent="closeRadio">
+      <small>{{ ac.receiver }}</small><RadioControls :radio="radio" :locale="locale" @anchor="playerAnchor=$event" @close="closeRadio"/><button @click="closeRadio">{{ ac.close }} ↙</button>
+    </div>
+    <nav v-show="!portalBusy" ref="gameDock" :inert="guided" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
+      <button data-action="radio-shortcut" @keydown.stop :aria-label="ac.receiver" :title="ac.receiver" @click="radioShortcut">♫</button>
+      <button data-action="portal-approach" :aria-label="portalNear?pc.activate:pc.approach" :title="portalNear?pc.activate:pc.approach" @click="approachTerminal">▣</button>
       <button :aria-label="themeLabel" :title="themeLabel" :aria-pressed="dark" data-action="theme" @click="colorMode.preference = dark ? 'light' : 'dark'">{{ dark ? '◐' : '◑' }}</button>
-      <button :aria-label="c.mouse" :title="c.mouse" data-action="look" @click="mouseLook">⌖</button>
+      <button :aria-label="resumeLook?pc.resume:c.mouse" :title="resumeLook?pc.resume:c.mouse" data-action="look" @click="mouseLook">⌖</button>
       <button :aria-label="c.back" :title="c.back" data-action="return" @click="back">↶</button>
       <button :aria-label="c.controls" :title="c.controls" :aria-expanded="controlsOpen" aria-controls="arrival-controls" @click="controlsOpen = !controlsOpen">?</button>
-      <NuxtLink :to="localePath('/')" :aria-label="c.exit" :title="c.exit">↗</NuxtLink>
+      <NuxtLink data-action="world-exit" :to="localePath('/')" :aria-label="c.exit" :title="c.exit">↗</NuxtLink>
     </nav>
     <section v-if="controlsOpen && !portalBusy" id="arrival-controls" class="arrival-controls" :aria-label="c.controls">
       <p>{{ c.instructions }}</p>
@@ -259,16 +299,13 @@ onBeforeUnmount(() => {
       <p v-if="failed">{{ c.fallback }}</p>
       <p v-if="failed || textMode">{{ state === 'secondary' ? c.inside : c.intro }}</p>
       <button :disabled="state === 'outbound' || state === 'returning' || state === 'approaching'" @focus="focus = true" @blur="focus = false" @click="enter">{{ actionLabel }}</button>
+      <button :aria-label="ac.approach" @keydown.stop @click="approachRadio">{{ ac.approach }}</button>
     </nav>
-    <div v-if="!portalBusy && !guided" class="portal-discover">
-      <button data-action="portal-approach" @click="approachTerminal">{{ portalNear ? pc.activate : pc.approach }} <span>↗</span></button>
-      <button class="portal-direct" data-action="project-direct" @click="activateTerminal(true)">{{ pc.details }}</button>
-      <button v-if="resumeLook" @click="mouseLook">{{ pc.resume }}</button>
-    </div>
     <span v-if="!portalBusy && portalNear" class="portal-reticle" aria-hidden="true">+</span>
     <div v-if="portalState==='entering'" class="portal-progress" role="status">{{ pc.entering }} <button @click="openWorkspace">{{ pc.skip }}</button></div>
     <p v-if="portalState==='exiting'" class="portal-progress" role="status">{{ pc.exiting }}</p>
     <PortalWorkspace v-if="workspace" :project="project" :labels="pc" :visual-style="visualStyle" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
+    <PersistentRadioPlayer :radio="radio" :locale="locale" :anchor="playerAnchor" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/>
     <p class="arrival-status" aria-live="polite">{{ status }}</p>
   </main>
 </template>

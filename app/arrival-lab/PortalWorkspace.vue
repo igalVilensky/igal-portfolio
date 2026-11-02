@@ -8,6 +8,8 @@ const root=ref<HTMLElement>();
 onMounted(()=>root.value?.focus({preventScroll:true}));
 function trap(event:KeyboardEvent) {
   if(event.key!=='Tab')return;
+  // The persistent radio is a sibling of this workspace and must remain keyboard reachable.
+  if(document.querySelector('[data-radio-player]')?.getClientRects().length)return;
   const items=root.value?.querySelectorAll<HTMLElement>('button,a[href]');if(!items?.length)return;
   const first=items[0]!,last=items[items.length-1]!;
   if(event.shiftKey && (document.activeElement===first||document.activeElement===root.value)){event.preventDefault();last.focus();}
