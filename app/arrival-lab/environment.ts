@@ -87,7 +87,8 @@ export function buildEnvironment(scene: T.Scene) {
   const doors:T.Mesh[]=[], cues:T.Mesh[]=[];
 
   // Secondary space: a narrower, much taller light well, joined by the threshold.
-  box(2, 46, 36, -11, 23, -90, stone); box(2, 46, 36, 11, 23, -90, stone);
+  box(2, 46, 36, -11, 23, -90, stone); // Lateral passage into Works; the original Arrival shell stays intact.
+  box(2,46,20,11,23,-82,stone);box(2,46,12,11,23,-102,stone);box(2,38,4,11,27,-94,stone);
   box(24, 46, 2, 0, 23, -107, pale);
   box(24, 2, 36, 0, 47, -90, pale);
   // Long vertical fins frame a recessed luminous wall, rather than a freestanding object.

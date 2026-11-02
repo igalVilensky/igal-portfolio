@@ -1,8 +1,8 @@
 import * as T from 'three';
+import { worldPath } from './works/registry';
 import { spawn, destination, type Architecture } from './environment';
 export type JourneyState = 'arrival'|'approaching'|'investigating'|'outbound'|'secondary'|'returning';
 const inspection = new T.Vector3(0,1.65,-61);
-const near = new T.Vector3(0,1.65,-64), far = new T.Vector3(0,1.65,-76);
 const smooth = (t:number) => t*t*(3-2*t);
 export function createJourney(camera:T.Camera, _architecture:Architecture, onState:(s:JourneyState)=>void) {
   let state:JourneyState='arrival', started=0, duration=0, reduced=false, total=0;
@@ -11,11 +11,7 @@ export function createJourney(camera:T.Camera, _architecture:Architecture, onSta
   function change(next:JourneyState){state=next;onState(next);}
   function locate(){const next=camera.position.z < -72 ? 'secondary' : camera.position.z < -50 ? 'investigating' : 'arrival';if(next!==state)change(next);}
   function move(next:JourneyState, target:T.Vector3) {
-    path=[camera.position.clone()];
-    // Both faces of the throat are explicit waypoints, so lateral exploration never cuts a corner.
-    if(camera.position.z < -72 && target.z > -64) path.push(far.clone(),near.clone());
-    if(camera.position.z > -72 && target.z < -76) path.push(near.clone(),far.clone());
-    path.push(target.clone());total=0;
+    path=worldPath(camera.position,target);total=0;
     for(let i=1;i<path.length;i++)total+=path[i]!.distanceTo(path[i-1]!);
     started=performance.now();duration=reduced?.12:next==='approaching'?3.2:2.6;change(next);
   }

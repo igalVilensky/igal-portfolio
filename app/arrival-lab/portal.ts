@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { worldPath } from './works/registry';
 
 /** A diagram, not a product screenshot. Shared verbatim by WebGL and HTML. */
 export const portalVisual = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750"><rect width="1200" height="750" fill="#101b2c"/><g fill="none" stroke="#8eafff" stroke-width="2"><path d="M-100 590H270L450 375H740L950 160H1300"/><path d="M-100 630H290L470 415H760L970 200H1300" opacity=".25"/><circle cx="450" cy="375" r="55"/><circle cx="740" cy="375" r="55"/><circle cx="950" cy="160" r="28"/></g><g fill="#c8d8ff" font-family="monospace"><text x="72" y="100" font-size="19" letter-spacing="6">WORK / 01</text><text x="72" y="218" font-size="80">FlowForge</text><text x="72" y="270" font-size="20" letter-spacing="3">AI AUTOMATION COMPILER</text><text x="72" y="690" font-size="16" letter-spacing="3">IDEA → BLUEPRINT → HUMAN REVIEW</text></g></svg>`);
@@ -35,9 +36,7 @@ export function createTerminal(scene: T.Scene, solids: T.Mesh[]) {
 
 /** Travel stays in the open hall; passage waypoints prevent cutting the Living Wall. */
 export function portalPath(from:T.Vector3,to:T.Vector3) {
-  const path=[from.clone()];
-  if(from.z < -72)path.push(new T.Vector3(0,1.65,-76),new T.Vector3(0,1.65,-64));
-  path.push(new T.Vector3(0,1.65,-35),to.clone());return path;
+  return [...worldPath(from,new T.Vector3(0,1.65,-35)),to.clone()];
 }
 export function pointOnPath(path:T.Vector3[],t:number) {
   const lengths=path.slice(1).map((p,i)=>p.distanceTo(path[i]!));let d=lengths.reduce((a,b)=>a+b,0)*t;
