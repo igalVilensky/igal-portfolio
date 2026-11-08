@@ -68,7 +68,9 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   listen(canvas, 'contextmenu', (e => e.preventDefault()) as EventListener);
   listen(window, 'keydown', keyboard as EventListener);
   listen(window, 'keyup', ((e: KeyboardEvent) => { keys.delete(e.code); }) as EventListener);
+  listen(window, 'focusin', (event => { if (event.target !== canvas) { keys.clear(); velocity.set(0,0,0); } }) as EventListener);
   listen(window, 'blur', (() => { keys.clear(); velocity.set(0,0,0); }) as EventListener);
+  listen(document, 'visibilitychange', (() => { if (document.hidden) { keys.clear(); velocity.set(0,0,0); dragging = false; pointers.clear(); multiple = false; } }) as EventListener);
   listen(document, 'pointerlockchange', (() => { dragging = false; distance = 100; keys.clear(); }) as EventListener);
   return {
     setEnabled(value: boolean) { enabled = value; keys.clear(); velocity.set(0,0,0); dragging=false; pointers.clear(); multiple=false; },
@@ -77,7 +79,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     movement(dt: number) {
       const x = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
       const z = Number(keys.has('KeyS')) - Number(keys.has('KeyW'));
-      const target = new T.Vector3(x,0,z).normalize().applyAxisAngle(new T.Vector3(0,1,0),yaw).multiplyScalar(keys.has('ShiftLeft') || keys.has('ShiftRight') ? 9 : 4.8);
+      const target = new T.Vector3(x,0,z).normalize().applyAxisAngle(new T.Vector3(0,1,0),yaw).multiplyScalar(keys.has('ShiftLeft') || keys.has('ShiftRight') ? 10.8 : 4.8);
       velocity.lerp(target, 1 - Math.exp(-12 * dt));
       return { active: !!(x || z), delta: velocity.clone().multiplyScalar(dt) };
     },

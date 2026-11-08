@@ -59,3 +59,7 @@
 .radio-expanded .radio-level input{min-height:44px}
 
 .radio-expanded .radio-level button{min-width:44px;flex:none;font-size:18px}
+
+.radio-manual{padding:8px 12px;flex-shrink:0;font:inherit}
+.radio-manual :is(input,button){font:inherit;max-width:100%;box-sizing:border-box;min-height:44px}
+.radio-manual form{display:flex;gap:8px;flex-wrap:wrap}.radio-manual a{color:inherit}

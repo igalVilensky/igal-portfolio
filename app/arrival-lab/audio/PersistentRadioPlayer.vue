@@ -7,6 +7,7 @@ const props=defineProps<{radio:YouTubeRadio; locale:string; anchor?:HTMLElement;
 const emit=defineEmits<{leave:[]; stopped:[]}>();
 const c=computed(()=>audioCopy[props.locale as keyof typeof audioCopy]||audioCopy.en);
 const s=props.radio.state;
+const manualId=ref('');
 const root=ref<HTMLElement>(), playerHost=ref<HTMLElement>();
 const bounds=ref<Record<string,string>>({}), floating=ref<Record<string,string>>({}), expanded=ref<Record<string,string>>({});
 let observer:ResizeObserver|undefined, resizeFrame=0, presentationFrame=0;
@@ -41,10 +42,11 @@ function minimize(){props.radio.setMode('mini');emit('leave');nextTick(()=>root.
 function stop(){props.radio.stop();emit('stopped');}
 </script>
 <template>
- <section v-show="s.power" ref="root" class="persistent-radio" :class="{'radio-docked':docked,'radio-expanded':s.mode==='expanded','radio-mini':!docked && s.mode!=='expanded'}" :style="style" :aria-label="c.receiver" data-radio-player @pointerdown.stop="releasePointer" @focusin="releasePointer" @keydown.stop @keydown.esc.stop.prevent="minimize">
-  <header v-show="!docked" class="radio-player-actions"><span :title="radio.title" :aria-label="radio.title">{{ s.mode==='expanded'?radio.title:s.manualVideoId?'YT':String(s.station+1).padStart(2,'0') }}</span><RadioTransport :radio="radio" :locale="locale"/><button v-if="s.mode!=='expanded'" data-action="radio-expand" :aria-label="c.expand" :title="c.expand" @click="expand">↗</button><button v-else data-action="radio-minimize" :aria-label="c.minimize" :title="c.minimize" @click="minimize">↙</button><button data-action="radio-close" :aria-label="c.closeStop" :title="c.closeStop" @click="stop">×</button></header>
+ <section v-show="s.power || s.mode==='expanded'" ref="root" class="persistent-radio" :class="{'radio-docked':docked,'radio-expanded':s.mode==='expanded','radio-mini':!docked && s.mode!=='expanded'}" :style="style" :aria-label="c.receiver" data-radio-player @pointerdown.stop="releasePointer" @focusin="releasePointer" @keydown.stop @keydown.esc.stop.prevent="minimize">
+  <header v-show="!docked" class="radio-player-actions"><span :title="radio.title" :aria-label="radio.title">{{ s.mode==='expanded'?radio.title:s.manualVideoId?'YT':String(s.station+1).padStart(2,'0') }}</span><RadioTransport :radio="radio" :locale="locale" show-stop/><button v-if="s.mode!=='expanded'" data-action="radio-expand" :aria-label="c.expand" :title="c.expand" @click="expand">↗</button><button v-else data-action="radio-minimize" :aria-label="c.minimize" :title="c.minimize" @click="minimize">↙</button><button data-action="radio-close" :aria-label="c.closeStop" :title="c.closeStop" @click="stop">×</button></header>
   <div ref="playerHost" class="persistent-youtube"/>
   <RadioStationControls v-if="s.mode==='expanded'" :radio="radio" :locale="locale"/>
+  <details v-if="s.mode==='expanded'" class="radio-manual"><summary>{{ c.manual }}</summary><form @submit.prevent="radio.playManual(manualId)"><label>{{ c.videoId }}<input v-model="manualId" required pattern="[A-Za-z0-9_-]{11}" minlength="11" maxlength="11" autocomplete="off"></label><button type="submit">{{ c.load }}</button></form><a :href="radio.sourceUrl" target="_blank" rel="noopener noreferrer">{{ c.external }} ↗</a></details>
   <p v-if="['error','gesture','unavailable','presentation'].includes(s.status)" class="radio-player-error" role="status">{{ c[s.status as keyof typeof c] }} <a :href="radio.sourceUrl" target="_blank" rel="noopener noreferrer">{{ c.external }}</a></p>
  </section>
 </template>

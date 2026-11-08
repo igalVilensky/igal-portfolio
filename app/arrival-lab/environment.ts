@@ -43,8 +43,9 @@ export function buildEnvironment(scene: T.Scene) {
     return add(new T.ExtrudeGeometry(shape, { depth, bevelEnabled: false, steps: 1 }), m, new T.Vector3(0, 0, z));
   }
 
-  // Continuous barrel shell with an offset crown: structure bears directly on the walls.
-  box(51, 1.2, 132, 0, -.6, -42, floor);
+  // Continuous barrel shell with a centred crown: structure bears directly on the walls.
+  // Square slab edges meet the annex floor without a bevel gap.
+  add(new T.BoxGeometry(51, 1.2, 132), floor, new T.Vector3(0, -.6, -42));
   box(2, 25, 96, -25, 12.5, -24, stone);
   box(2, 25, 96, 25, 12.5, -24, pale);
   const vault = (z: number, depth: number, material: T.Material, rib = false) => {
@@ -52,11 +53,11 @@ export function buildEnvironment(scene: T.Scene) {
     const center = 0, rx = 24, ry = 19;
     for (let i = 0; i <= 48; i++) {
       const t = Math.PI * i / 48;
-      points.push([center + rx * Math.cos(t) - 3 * Math.sin(t), 24 + (ry - (rib ? 1.6 : 0)) * Math.sin(t) - (rib ? .15 : 0)]);
+      points.push([center + rx * Math.cos(t), 24 + (ry - (rib ? 1.6 : 0)) * Math.sin(t) - (rib ? .15 : 0)]);
     }
     for (let i = 48; i >= 0; i--) {
       const t = Math.PI * i / 48;
-      points.push([center + (rx + (rib ? 1.8 : 1.1)) * Math.cos(t) - 3 * Math.sin(t), 24 + (ry + (rib ? 1.8 : 1.1)) * Math.sin(t)]);
+      points.push([center + (rx + (rib ? 1.8 : 1.1)) * Math.cos(t), 24 + (ry + (rib ? 1.8 : 1.1)) * Math.sin(t)]);
     }
     return extrude(points, depth, z, material);
   };
@@ -64,7 +65,7 @@ export function buildEnvironment(scene: T.Scene) {
   // Three broad unequal diaphragms read as structural spans, rather than arcades.
   for (const [z, depth] of [[5, 3.2], [-27, 4.8], [-59, 2.4]]) {
     vault(z!, depth!, stone, true);
-    box(5, 24, depth!, -25, 12, z! + depth! / 2, stone);
+    box(3, 24, depth!, -24.5, 12, z! + depth! / 2, stone);
     box(3, 24, depth!, 24.5, 12, z! + depth! / 2, stone);
   }
   // Folded gallery mass anchored to the left enclosure; the opposite side stays open.
@@ -74,7 +75,7 @@ export function buildEnvironment(scene: T.Scene) {
   // A single tall reveal is the orientation landmark, visible from the whole chamber.
   box(.22, 32, 1, 23.85, 16, -47, daylight);
   box(1.3, 33, 2.2, 24, 16.5, -49, satin);
-  box(1, .12, 88, -3, 42.9, -24, daylight);
+  box(1, .12, 88, 0, 42.9, -24, daylight);
   // The living surface occupies an asymmetric recessed bay in the end enclosure.
   box(17,44,3,-16,22,-71,pale);box(17,44,3,16,22,-71,stone);
   box(15,34,3,0,27,-71,pale);
@@ -88,7 +89,10 @@ export function buildEnvironment(scene: T.Scene) {
 
   // Secondary space: a narrower, much taller light well, joined by the threshold.
   box(2, 46, 36, -11, 23, -90, stone); // Lateral passage into Works; the original Arrival shell stays intact.
-  box(2,46,20,11,23,-82,stone);box(2,46,12,11,23,-102,stone);box(2,38,4,11,27,-94,stone);
+  // The metal passage cheeks replace these lower wall ends, rather than overlap
+  // their z=-92/-96 faces. Preserve the original four-metre clear opening.
+  box(2,8,19.2,11,4,-81.6,stone);box(2,8,11.2,11,4,-102.4,stone);
+  box(2,38,36,11,27,-90,stone);
   box(24, 46, 2, 0, 23, -107, pale);
   box(24, 2, 36, 0, 47, -90, pale);
   // Long vertical fins frame a recessed luminous wall, rather than a freestanding object.

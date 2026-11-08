@@ -2,7 +2,6 @@
 import * as T from 'three';
 import { YouTubeRadio } from './audio/YouTubeRadio';
 import PersistentRadioPlayer from './audio/PersistentRadioPlayer.vue';
-import RadioControls from './audio/RadioControls.vue';
 import { audioCopy } from './audio/copy';
 import { createReceiver } from './audio/receiver';
 import './audio/audio.css';
@@ -56,10 +55,10 @@ function cancelWorks(){pendingWorks='';worksTrip.value='';travel=undefined;guide
 
 
 const radio = new YouTubeRadio();
-const radioOpen=ref(false), radioSurface=ref<HTMLElement>(), playerAnchor=shallowRef<HTMLElement>(), gameDock=ref<HTMLElement>();
+const radioOpen=computed(()=>radio.state.mode==='expanded'), gameDock=ref<HTMLElement>();
 const ac=computed(()=>audioCopy[locale.value as keyof typeof audioCopy]||audioCopy.en);
 let receiver:ReturnType<typeof createReceiver>|undefined, radioTravel=false;
-function closeRadio(){radioOpen.value=false;look?.setEnabled(!portalBusy.value);if(!portalBusy.value)nextTick(()=>renderer?.domElement.focus());}
+function closeRadio(){radio.setMode('mini');look?.setEnabled(!portalBusy.value&&!guided&&!worksUI.value&&!worksTrip.value);if(!portalBusy.value&&!worksUI.value)nextTick(()=>renderer?.domElement.focus());}
 function approachRadio(){
 
  if(portalBusy.value||guided)return;
@@ -161,7 +160,7 @@ function updatePortal(now:number) {
   const t=travel.duration?T.MathUtils.clamp((now-travel.start)/travel.duration,0,1):1;
   const eased=t*t*(3-2*t);
   camera.position.copy(pointOnPath(travel.path,eased));if(!worksTrip.value&&!radioTravel&&!guided&&!travel.exiting && (travelled.length===0 || travelled[travelled.length-1]!.distanceTo(camera.position)>.08))travelled.push(camera.position.clone());camera.quaternion.slerpQuaternions(travel.from,travel.to,Math.min(1,eased*1.7));needsRender=true;
-  if(t===1){if(worksTrip.value){const id=worksTrip.value;travel=undefined;guided=false;worksTrip.value='';const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);journey.locate();if(id==='matrix'||id==='archive'){worksUI.value=id;look.setEnabled(false);}else look.setEnabled(true);return;}if(radioTravel){travel=undefined;guided=false;radioTravel=false;look.restore(0,Math.atan2(1,receiver!.near.z-3));radioOpen.value=true;nextTick(()=>radioSurface.value?.querySelector('button')?.focus());return;}if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
+  if(t===1){if(worksTrip.value){const id=worksTrip.value;travel=undefined;guided=false;worksTrip.value='';const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);journey.locate();if(id==='matrix'||id==='archive'){worksUI.value=id;look.setEnabled(false);}else look.setEnabled(true);return;}if(radioTravel){travel=undefined;guided=false;radioTravel=false;look.restore(0,Math.atan2(1,receiver!.near.z-3));radioShortcut();return;}if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
 }
 const wallState=ref('dormant');
 const actionLabel=computed(()=>state.value==='secondary'?c.value.back:state.value==='arrival'?c.value.approach:wallState.value==='open'?c.value.passage:c.value.activate);
@@ -229,7 +228,7 @@ function animate(now: number) {
   if (failed.value || textMode.value) return;
   frame = requestAnimationFrame(animate);
   const dt = Math.min((now - lastTime) / 1000, .2); lastTime = now;
-  if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value) {
+  if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value && radio.state.mode!=='expanded') {
   look.update(dt, reduced.value);
   const movement = look.movement(dt);
   if (movement.active && journey.moving) journey.cancel();
@@ -238,7 +237,7 @@ function animate(now: number) {
   }
   if(pendingWorks&&['dormant','discovered'].includes(mechanism.state))mechanism.activate(now);
   if(pendingWorks&&mechanism.state==='open'){const id=pendingWorks;startWorks(id,id==='arrival'?spawn:id==='gallery'?worksArrival:new T.Vector3(...worksModules.find(m=>m.id===id)!.destination));}
-  updatePortal(now);
+  if(radio.state.mode!=='expanded')updatePortal(now);
   if(works?.update(dt,reduced.value)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
   if(!portalBusy.value && !guided && document.pointerLockElement===renderer.domElement) terminalHover=pick(0,0,true)==='terminal';
   if(terminal){const distance=camera.position.distanceTo(terminal.center);portalNear.value=distance<9;terminal.update(distance,terminalHover||portalState.value==='entering');if(!portalBusy.value&&!guided)portalState.value=portalNear.value&&terminalHover?'terminal-focused':'exploring';}
@@ -246,9 +245,10 @@ function animate(now: number) {
   mechanism.focus(focus.value ? 0 : hoveredFacet); mechanism.update(now,reduced.value);
   lighting.portal.intensity = T.MathUtils.damp(lighting.portal.intensity, pointerHover || focus.value ? 80 : 40, 7, dt);
   if(portalState.value==='entering'||portalState.value==='exiting'||guided)needsRender=true;
-  const view = [camera.position.x,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>v.toFixed(5)).join(',');
+  receiver?.update(locale.value,dark.value);
+  const view = [locale.value,radio.state.station,radio.state.status,radio.title,camera.position.x,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>typeof v==='number'?v.toFixed(5):v).join(',');
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
-  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { if(worksUI.value==='matrix'&&works&&innerWidth>900){const r=host.value!.getBoundingClientRect();worksSurfaceStyle.value=works.consoleStyle(camera,r.width,r.height);}renderer.render(scene, camera); if(receiver){const r=host.value!.getBoundingClientRect();receiver.render(camera,r.width,r.height);} needsRender = false; previousView = view; }
+  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { if(worksUI.value==='matrix'&&works&&innerWidth>900){const r=host.value!.getBoundingClientRect();worksSurfaceStyle.value=works.consoleStyle(camera,r.width,r.height);}renderer.render(scene, camera); needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
     nextTelemetry = now + 100; wallState.value=mechanism.state;
     const canvas = renderer.domElement;
@@ -264,12 +264,25 @@ function applyTheme() {
   renderer.toneMappingExposure = dark.value ? 1.12 : 1.0;
   needsRender = true; renderer.shadowMap.needsUpdate = true;
 }
-watch(radioOpen,value=>{radio.setMode(value?'docked':'mini');if(renderer)renderer.domElement.inert=value;});
-watch(()=>radio.state.mode,mode=>{if(mode==='expanded'){if(document.pointerLockElement)document.exitPointerLock();look?.stop();look?.setEnabled(false);}else if(!radioOpen.value&&!portalBusy.value&&!worksUI.value&&!guided&&!worksTrip.value)look?.setEnabled(true);});
+let radioPausedAt:number|undefined;
+watch(()=>radio.state.mode,mode=>{
+ const expanded=mode==='expanded';journey?.setPaused(expanded);
+ if(renderer)renderer.domElement.inert=expanded;
+ if(expanded){radioPausedAt=performance.now();if(document.pointerLockElement)document.exitPointerLock();look?.stop();look?.setEnabled(false);}
+ else {
+  if(travel&&radioPausedAt!==undefined)travel.start+=performance.now()-radioPausedAt;
+  radioPausedAt=undefined;
+  if(!radioOpen.value&&!portalBusy.value&&!worksUI.value&&!guided&&!worksTrip.value)look?.setEnabled(true);
+ }
+}, {flush:'sync'});
 watch(portalBusy,busy=>{if(busy)radio.setMode('mini');});
-function playerStopped(){radio.setMode(radioOpen.value?'docked':'mini');nextTick(()=>{if(radioOpen.value)radioSurface.value?.querySelector<HTMLButtonElement>('[data-action=radio-play]')?.focus();else document.querySelector<HTMLButtonElement>(portalBusy.value?'[data-action=portal-close]':'[data-action=radio-shortcut]')?.focus();});}
+function playerStopped(){closeRadio();nextTick(()=>document.querySelector<HTMLButtonElement>(portalBusy.value?'[data-action=portal-close]':'[data-action=radio-shortcut]')?.focus());}
 function releaseDockPointer(){if(document.pointerLockElement)document.exitPointerLock();}
-function radioShortcut(){if(radio.state.power){if(document.pointerLockElement)document.exitPointerLock();radio.setMode('expanded');}else if(radioOpen.value){radio.setMode('docked');nextTick(()=>radioSurface.value?.querySelector<HTMLButtonElement>('[data-action=radio-play]')?.focus());}else approachRadio();}
+function radioShortcut(){
+ if(document.pointerLockElement)document.exitPointerLock();
+ look?.stop();look?.setEnabled(false);radio.setMode('expanded');
+ nextTick(()=>document.querySelector<HTMLButtonElement>('.persistent-radio [data-action=radio-play]')?.focus());
+}
 watch(dark, applyTheme);
 watch(locale,value=>{works?.setLocale(value);needsRender=true;});
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
@@ -286,7 +299,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 220); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radioSurface.value!,host.value!); works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids); collide = createCollision(architecture.solids); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids); collide = createCollision(architecture.solids); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -309,7 +322,7 @@ onMounted(() => {
     }); observer.observe(host.value!);
     const lost = (e: Event) => { e.preventDefault(); failure(); };
     canvas.addEventListener('webglcontextlost', lost); cleanups.push(() => canvas.removeEventListener('webglcontextlost', lost));
-    const escapePortal=(e:KeyboardEvent)=>{if(e.key==='Escape'&&worksTrip.value){e.preventDefault();cancelWorks();return;}if(e.key==='Escape'&&worksUI.value){e.preventDefault();closeWorks();return;}if(e.key==='Escape'&&(radioOpen.value||radioTravel)){e.preventDefault();travel=undefined;guided=false;radioTravel=false;closeRadio();return;}if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
+    const escapePortal=(e:KeyboardEvent)=>{if(e.key==='Escape'&&radioOpen.value){e.preventDefault();closeRadio();return;}if(e.key==='Escape'&&worksTrip.value){e.preventDefault();cancelWorks();return;}if(e.key==='Escape'&&worksUI.value){e.preventDefault();closeWorks();return;}if(e.key==='Escape'&&radioTravel){e.preventDefault();travel=undefined;guided=false;radioTravel=false;closeRadio();return;}if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
     window.addEventListener('keydown',escapePortal);cleanups.push(()=>window.removeEventListener('keydown',escapePortal));
     lastTime = performance.now(); animate(lastTime);
   } catch (error) { console.error('Arrival Chamber:', error); failure(); }
@@ -322,9 +335,6 @@ onBeforeUnmount(() => {
 <template>
   <main class="arrival-world" :class="{ 'arrival-dark': dark, 'arrival-radio-active': radioOpen, 'arrival-player-active': radio.state.power, 'arrival-works-reading':worksUI==='matrix'||worksUI==='archive' }" :aria-label="c.name">
     <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided || !!worksUI || !!worksTrip" class="arrival-canvas"/>
-    <div ref="radioSurface" class="receiver-surface" :class="{'receiver-interactive':radioOpen && radio.state.mode!=='expanded'}" :inert="!radioOpen || radio.state.mode==='expanded'" :aria-hidden="!radioOpen || radio.state.mode==='expanded'" @keydown.esc.stop.prevent="closeRadio">
-      <small>{{ ac.receiver }}</small><RadioControls :radio="radio" :locale="locale" @anchor="playerAnchor=$event" @close="closeRadio"/><button @click="closeRadio">{{ ac.close }} ↙</button>
-    </div>
     <nav v-show="!portalBusy" ref="gameDock" :inert="guided" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
       <button data-action="radio-shortcut" @keydown.stop :aria-label="ac.receiver" :title="ac.receiver" @click="radioShortcut">♫</button>
       <button data-action="works-shortcut" :aria-label="wc.go" :title="wc.go" :aria-expanded="!!worksUI" @click="worksMenu">⋈</button>
@@ -358,7 +368,7 @@ onBeforeUnmount(() => {
     <WorksSurface v-if="worksUI && !portalBusy" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" :surface-style="worksSurfaceStyle" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix"/>
     <p v-if="worksTrip" class="works-travel" role="status">{{ wc.travel }} <button data-action="works-cancel" @click="cancelWorks">{{ ac.close }}</button></p>
     <PortalWorkspace v-if="workspace" :project="project" :labels="pc" :visual-style="visualStyle" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
-    <PersistentRadioPlayer :radio="radio" :locale="locale" :anchor="playerAnchor" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/>
+    <PersistentRadioPlayer :radio="radio" :locale="locale" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/>
     <p class="arrival-status" aria-live="polite">{{ status }}</p>
   </main>
 </template>

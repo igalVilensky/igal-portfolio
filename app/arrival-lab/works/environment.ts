@@ -21,10 +21,14 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
   const entry={canvas,texture,mesh,draw};labels.push(entry);return entry;
  }
  // An offset compression hall: heavy concrete below, pale folded roof, bronze bearing details.
- box(40,1,40,34,-.5,-94,floor);box(8,1,4,12,-.5,-94,floor);
+ // Arrival's existing slab reaches x=25.5, z=-108. Tile the remaining footprint;
+ // the old full annex slab and bridge duplicated its y=0 surface.
+ box(28.5,1,40,39.75,-.5,-94,floor);
+ box(11.5,1,6,19.75,-.5,-111,floor);
  box(1,23,16,15,11.5,-84);box(1,23,16,15,11.5,-104);box(1,15,4,15,15.5,-94);
  box(40,24,1,34,12,-114);box(40,24,1,34,12,-74);box(1,24,40,54,12,-94);
  // Passage side cheeks and a low lintel form a deliberate change in scale.
+ // Lower light-well wall ends stop at the outer cheek edges; the inner faces stay at z=-92/-96.
  for(const z of [-91.6,-96.4])box(5,8,.8,12,4,z,metal);
  box(7,.8,5,12,8,-94,bronze);
  box(40,1.2,13,34,23,-80);box(40,1.2,13,34,21,-108);
