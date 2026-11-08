@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import * as T from 'three';
+import TouchControls from './TouchControls.vue';
+import { createInteractables, interactionIntent } from './interactions';
+import { interactionCopy } from './interaction-copy';
+const ic=computed(()=>interactionCopy[locale.value as keyof typeof interactionCopy]||interactionCopy.en);
+const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(false), actionable=ref(false);
+let interactables:ReturnType<typeof createInteractables>|undefined;
+const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
+const touchVisible=computed(()=>touchMode.value&&freeInput.value);
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
+
 import { YouTubeRadio } from './audio/YouTubeRadio';
 import PersistentRadioPlayer from './audio/PersistentRadioPlayer.vue';
 import { audioCopy } from './audio/copy';
@@ -201,12 +212,37 @@ function pick(x: number, y: number, center = false) {
   ray.setFromCamera(pointer, camera);
   const first = ray.intersectObjects(architecture.solids, false)[0];
   const data = first?.object.userData;
+  const entry=interactables?.entries.find(e=>e.mesh===first?.object);
+  actionable.value=!!entry&&first!.distance<=entry.range && !(entry.id==='passage'&&mechanism.state!=='open') && !(['activated','propagating','opening','closing'].includes(mechanism.state)&&(entry.id==='key'||entry.id==='facet'));
+  if(!entry)return false;
   if(data?.works)return 'works:'+data.works+(data.criterion!==undefined?':'+data.criterion:'');
   if(data?.radio)return 'radio';
   if(data?.terminal) {hoveredFacet=-1;return 'terminal';}
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
 }
+function activateWorld(x:number,y:number,center:boolean,direct=false) { if(portalBusy.value||guided)return; let hit=pick(x,y,center);
+        if(!center&&touchMode.value&&!hit){for(const [dx,dy] of [[-10,0],[10,0],[0,-10],[0,10]]){hit=pick(x+dx!,y+dy!,false);if(hit&&actionable.value)break;}}
+        if (!hit || !freeInput.value) return;
+        const intent=interactionIntent(hit,actionable.value,direct);
+        if(intent==='none')return;
+        if(intent==='approach'){
+          // Reuse collision-safe routes instead of silently dropping a distant object click.
+          if(hit==='terminal'){activateTerminal();return;}
+          if(hit==='radio'){approachRadio();return;}
+          if(hit==='works:archive'){activateProjectScreen('archive');return;}
+          if(hit.startsWith('works:')){goWorks(hit==='works:matrix-details'||hit.startsWith('works:matrix:')?'matrix':hit.slice(6));return;}
+          if(!['activated','propagating','opening','closing'].includes(mechanism.state))enter();
+          return;
+        }
+        if(hit==='works:archive'){activateProjectScreen('archive');return;}
+        if(hit==='works:matrix-details'){activateProjectScreen('matrix');return;}
+        if(typeof hit==='string'&&hit.startsWith('works:')){const [,id,criterion]=hit.split(':');if(criterion!==undefined){const i=Number(criterion);changeWeight(i,weights.value[i]!%5+1);return;}goWorks(id!);return;}
+        if(hit==='radio'){approachRadio();return;}
+        if(hit==='terminal'){activateTerminal();return;}
+        if ((hit==='key'||hit==='facet') && camera.position.z < -50) {if(mechanism.state==='open')enter();else mechanism.activate(performance.now());}
+        else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
+        else mechanism.react(performance.now()); }
 function enter() {
   if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
@@ -259,7 +295,8 @@ function animate(now: number) {
   if(!portalBusy.value && !guided && document.pointerLockElement===renderer.domElement) terminalHover=pick(0,0,true)==='terminal';
   if(terminal){const distance=camera.position.distanceTo(terminal.center);portalNear.value=distance<9;terminal.update(distance,terminalHover||portalState.value==='entering');if(!portalBusy.value&&!guided)portalState.value=portalNear.value&&terminalHover?'terminal-focused':'exploring';}
   if (!worksTrip.value && camera.position.distanceTo(spawn) < 3 && mechanism.state === 'open') mechanism.close(now);
-  mechanism.focus(focus.value ? 0 : hoveredFacet); mechanism.update(now,reduced.value);
+  mechanism.focus(focus.value ? 0 : candidate.value==='key'?0:hoveredFacet); mechanism.update(now,reduced.value);
+  if(interactables?.update(now,candidate.value,actionable.value,!freeInput.value,reduced.value))needsRender=true;
   lighting.portal.intensity = T.MathUtils.damp(lighting.portal.intensity, pointerHover || focus.value ? 80 : 40, 7, dt);
   if(portalState.value==='entering'||portalState.value==='exiting'||guided)needsRender=true;
   receiver?.update(locale.value,dark.value);
@@ -267,7 +304,10 @@ function animate(now: number) {
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
   if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { renderer.render(scene, camera); needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
-    nextTelemetry = now + 100; wallState.value=mechanism.state;
+    nextTelemetry = now + 100;
+    inputReady.value=!guided&&!journey.moving&&!portalBusy.value;
+    if(freeInput.value){candidate.value=pick(0,0,true);}else{candidate.value=false;actionable.value=false;}
+    renderer.domElement.dataset.interaction=String(candidate.value||'');renderer.domElement.dataset.actionable=String(actionable.value); wallState.value=mechanism.state;
     const canvas = renderer.domElement;
     canvas.dataset.room=spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
     canvas.dataset.position = camera.position.toArray().map(n => n.toFixed(4)).join(',');
@@ -300,6 +340,7 @@ function radioShortcut(){
  look?.stop();look?.setEnabled(false);radio.setMode('expanded');
  nextTick(()=>document.querySelector<HTMLButtonElement>('.persistent-radio [data-action=radio-play]')?.focus());
 }
+watch(freeInput,value=>{look?.setEnabled(value);if(!value){candidate.value=false;actionable.value=false;}},{flush:'sync'});
 watch(dark, applyTheme);
 watch(locale,value=>{expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
@@ -316,24 +357,19 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 220); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids); collide = createCollision(architecture.solids); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
     look = createLook(camera, canvas, {
-      activate(x, y, center) { if(portalBusy.value||guided)return; const hit=pick(x,y,center); if (!hit) return;
-        if(hit==='works:archive'){activateProjectScreen('archive');return;}
-        if(hit==='works:matrix-details'){activateProjectScreen('matrix');return;}
-        if(typeof hit==='string'&&hit.startsWith('works:')){const [,id,criterion]=hit.split(':');if(criterion!==undefined){const i=Number(criterion);changeWeight(i,weights.value[i]!%5+1);return;}goWorks(id!);return;}
-        if(hit==='radio'){approachRadio();return;}
-        if(hit==='terminal'){activateTerminal();return;}
-        if (hit==='key' && camera.position.z < -50) mechanism.activate(performance.now());
-        else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
-        else mechanism.react(performance.now()); },
+      activate: activateWorld,
       hover(x, y, center) { const hit=pick(x,y,center); terminalHover=hit==='terminal';pointerHover = !!hit;needsRender=true; canvas.style.cursor = pointerHover ? 'pointer' : 'grab'; },
       manual() { if(portalBusy.value||guided)return; if (journey.moving) journey.cancel(); },
       escape() { if(worksTrip.value){cancelWorks();return;}if(worksUI.value){closeWorks();return;}if(radioOpen.value){closeRadio();return;} if(portalBusy.value||guided){closeWorkspace();return;} controlsOpen.value = false; look.stop(); if (journey.moving) journey.cancel(); },
     });
+    const capability=matchMedia('(pointer: coarse)');touchMode.value=capability.matches;
+    const detect=(e:PointerEvent)=>{if(e.pointerType==='touch')touchMode.value=true;else if(e.pointerType==='mouse')touchMode.value=false;};
+    window.addEventListener('pointerdown',detect);cleanups.push(()=>window.removeEventListener('pointerdown',detect));
     observer = new ResizeObserver(() => {
       if (!host.value) return;
       const rect = host.value.getBoundingClientRect(); renderer.setSize(rect.width, rect.height); camera.aspect = rect.width / rect.height;
@@ -348,7 +384,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  interactables?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
@@ -381,6 +417,9 @@ onBeforeUnmount(() => {
       <button @click="goWorks('archive')">{{ wc.archive }}</button>
       <button :aria-label="ac.approach" @keydown.stop @click="approachRadio">{{ ac.approach }}</button>
     </nav>
+    <TouchControls v-if="touchVisible" :label="ic.move" :help="ic.help" @move="mobileMove"/>
+    <p v-if="touchVisible" class="arrival-look-hint">{{ ic.look }}</p>
+    <button v-if="freeInput && candidate" class="arrival-context" :class="{'arrival-context-touch':touchMode}" :disabled="!actionable" @click="activateWorld(0,0,true)">{{ hint }}<kbd v-if="!touchMode && actionable">E</kbd></button>
     <span v-if="!portalBusy && portalNear" class="portal-reticle" aria-hidden="true">+</span>
     <div v-if="portalState==='entering'" class="portal-progress" role="status">{{ pc.entering }} <button @click="openWorkspace">{{ pc.skip }}</button></div>
     <p v-if="portalState==='exiting'" class="portal-progress" role="status">{{ pc.exiting }}</p>

@@ -21,3 +21,13 @@
 .arrival-dark .arrival-controls .arrival-fine{color:#adc0d0}
 .arrival-dark .arrival-controls button,.arrival-dark .arrival-access button{background:#304359;color:#e2edf5}
 .arrival-world button:focus-visible{outline:2px solid #8aa7ba;outline-offset:4px}
+.arrival-touch{position:absolute;z-index:3;left:max(22px,env(safe-area-inset-left));bottom:calc(max(85px,env(safe-area-inset-bottom)) + 22px);width:124px;text-align:center;pointer-events:none}
+.arrival-joystick{position:relative;width:124px;height:124px;border:1px solid #e1e8df99;border-radius:50%;background:#283b3938;box-shadow:inset 0 0 0 12px #edf0df12,0 2px 12px #152b2926;backdrop-filter:blur(3px);touch-action:none;pointer-events:auto}
+.joystick-thumb{position:absolute;left:40px;top:40px;width:44px;height:44px;border:1px solid #fff9;border-radius:50%;background:#e9eee8a6;box-shadow:0 2px 8px #152b2940;pointer-events:none}
+.joystick-direction{position:absolute;top:2px;left:54px;color:#fff9}.arrival-joystick.active{border-color:#fff}.arrival-joystick.fast{box-shadow:inset 0 0 0 5px #e6e8bc80}
+.arrival-touch p,.arrival-look-hint{font-size:10px;line-height:1.4;color:#fff;background:#203332bd;border-radius:8px;padding:5px 8px;margin:8px 0 0}
+.arrival-look-hint{position:absolute;right:22px;bottom:230px;pointer-events:none}
+.arrival-context{position:absolute;z-index:3;left:50%;bottom:100px;transform:translateX(-50%);min-height:48px;max-width:240px;border:1px solid #d9e2d3bb;border-radius:24px;padding:12px 18px;background:#203332e8;color:#f4f4e9;font-size:13px;box-shadow:0 4px 22px #182b2b33;cursor:pointer}
+.arrival-context:disabled{opacity:.8;cursor:default}.arrival-context kbd{margin-left:12px;padding:2px 5px;border:1px solid #fff7;border-radius:3px}.arrival-context-touch{left:auto;right:max(22px,env(safe-area-inset-right));transform:none;bottom:135px;max-width:175px}
+@media(max-width:600px){.arrival-tools{left:12px;right:12px;justify-content:center;gap:4px}.arrival-tools :is(button,a){width:39px;height:42px}.arrival-touch{width:112px;left:20px}.arrival-joystick{width:112px;height:112px}.joystick-thumb{left:34px;top:34px}.joystick-direction{left:48px}.arrival-context-touch{right:18px;max-width:170px}.arrival-look-hint{right:18px;bottom:214px;max-width:155px}}
+@media(max-height:500px){.arrival-touch{bottom:85px}.arrival-touch p{display:none}.arrival-context-touch{bottom:105px}.arrival-look-hint{bottom:175px}.arrival-player-active .arrival-touch{bottom:85px}}

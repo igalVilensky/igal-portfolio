@@ -2,13 +2,15 @@ import * as T from 'three';
 
 /** Orientation and movement intent; the scene loop alone applies translation. */
 export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElement, callbacks: {
-  activate: (x: number, y: number, locked: boolean) => void;
+  activate: (x: number, y: number, locked: boolean, direct: boolean) => void;
   hover: (x: number, y: number, locked: boolean) => void;
   escape: () => void;
   manual: () => void;
 }) {
   const keys = new Set<string>();
   const velocity = new T.Vector3();
+  let analogX=0, analogZ=0, sprint=false;
+  const reset=()=>{keys.clear();velocity.set(0,0,0);analogX=analogZ=0;sprint=false;dragging=false;pointers.clear();multiple=false;};
   let yaw = .0574, pitch = .0855, targetYaw = yaw, targetPitch = pitch;
   let enabled = true;
   let dragging = false, distance = 0, lastX = 0, lastY = 0, multiple = false;
@@ -25,7 +27,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (document.pointerLockElement !== canvas) canvas.setPointerCapture(event.pointerId);
   }
   function move(event: PointerEvent) {
-    if (!enabled) return;
+    if (!enabled || (event.pointerType==='touch' && !pointers.has(event.pointerId))) return;
     const locked = document.pointerLockElement === canvas;
     if ((dragging || locked) && !multiple) {
       const dx = locked ? event.movementX : event.clientX - lastX;
@@ -38,9 +40,9 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (!dragging || locked) callbacks.hover(event.clientX, event.clientY, locked);
   }
   function up(event: PointerEvent) {
-    if (!enabled) return;
+    if (!enabled || !pointers.has(event.pointerId)) return;
     pointers.delete(event.pointerId);
-    if (dragging && distance < 6 && !multiple) callbacks.activate(event.clientX, event.clientY, document.pointerLockElement === canvas);
+    if (dragging && distance < 6 && !multiple) callbacks.activate(event.clientX, event.clientY, document.pointerLockElement === canvas, true);
     if (!pointers.size) { dragging = false; multiple = false; }
   }
   function cancel(event: PointerEvent) {
@@ -57,29 +59,32 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
     const step = steps[event.key];
     if (step) { event.preventDefault(); targetYaw += step[0]; targetPitch = T.MathUtils.clamp(targetPitch + step[1], -1.25, 1.35); }
-    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); callbacks.activate(0, 0, true); }
+    if (!event.repeat && (event.code === 'KeyE' || event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); callbacks.activate(0, 0, true, false); }
   }
   listen(canvas, 'pointerdown', down as EventListener);
   listen(canvas, 'pointermove', move as EventListener);
   listen(canvas, 'pointerup', up as EventListener);
   listen(canvas, 'pointercancel', cancel as EventListener);
-  listen(canvas, 'lostpointercapture', (() => { dragging = false; }) as EventListener);
+  listen(canvas, 'lostpointercapture', cancel as EventListener);
   listen(canvas, 'pointerleave', (() => callbacks.hover(-1, -1, false)) as EventListener);
   listen(canvas, 'contextmenu', (e => e.preventDefault()) as EventListener);
   listen(window, 'keydown', keyboard as EventListener);
   listen(window, 'keyup', ((e: KeyboardEvent) => { keys.delete(e.code); }) as EventListener);
-  listen(window, 'focusin', (event => { if (event.target !== canvas) { keys.clear(); velocity.set(0,0,0); } }) as EventListener);
-  listen(window, 'blur', (() => { keys.clear(); velocity.set(0,0,0); }) as EventListener);
-  listen(document, 'visibilitychange', (() => { if (document.hidden) { keys.clear(); velocity.set(0,0,0); dragging = false; pointers.clear(); multiple = false; } }) as EventListener);
-  listen(document, 'pointerlockchange', (() => { dragging = false; distance = 100; keys.clear(); }) as EventListener);
+  listen(window, 'focusin', (event => { if (event.target !== canvas) reset(); }) as EventListener);
+  listen(document, 'pointerlockchange',reset as EventListener);
+  listen(window,'orientationchange',reset as EventListener);
+  listen(window,'blur',reset as EventListener);
+  listen(document,'visibilitychange',reset as EventListener);
   return {
-    setEnabled(value: boolean) { enabled = value; keys.clear(); velocity.set(0,0,0); dragging=false; pointers.clear(); multiple=false; },
+    setEnabled(value: boolean) { enabled = value; reset(); },
+    analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
+    reset,
     restore(nextYaw:number,nextPitch:number) { yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
-    stop() { keys.clear(); velocity.set(0,0,0); },
+    stop: reset,
     movement(dt: number) {
-      const x = Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
-      const z = Number(keys.has('KeyS')) - Number(keys.has('KeyW'));
-      const target = new T.Vector3(x,0,z).normalize().applyAxisAngle(new T.Vector3(0,1,0),yaw).multiplyScalar(keys.has('ShiftLeft') || keys.has('ShiftRight') ? 10.8 : 4.8);
+      const x = analogX || Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
+      const z = analogZ || Number(keys.has('KeyS')) - Number(keys.has('KeyW'));
+      const target = new T.Vector3(x,0,z).clampLength(0,1).applyAxisAngle(new T.Vector3(0,1,0),yaw).multiplyScalar(sprint || keys.has('ShiftLeft') || keys.has('ShiftRight') ? 10.8 : 4.8);
       velocity.lerp(target, 1 - Math.exp(-12 * dt));
       return { active: !!(x || z), delta: velocity.clone().multiplyScalar(dt) };
     },
