@@ -110,3 +110,54 @@ test('expanded rooms have continuous sprint-clear routes and solid perimeters',a
  }
  }finally{expansion.dispose();}
 });
+
+test('analog intent shares camera-relative movement and resets on interrupted ownership',()=>{
+ const oldWindow=globalThis.window,oldDocument=globalThis.document;
+ const win=new EventTarget(),doc=new EventTarget(),canvas=new EventTarget();
+ globalThis.window=win;globalThis.document=doc;
+ const camera=new T.PerspectiveCamera(),look=createLook(camera,canvas,{activate(){},hover(){},escape(){},manual(){}});
+ try{
+  look.restore(Math.PI/2,0);look.analog(0,-.5);let delta;for(let i=0;i<120;i++)delta=look.movement(1/60).delta;
+  assert.ok(Math.abs(delta.x*60+2.4)<.001);assert.ok(Math.abs(delta.z)<1e-6);
+  look.analog(0,0);assert.equal(look.movement(1/60).delta.length(),0);
+  for(const [target,event] of [[win,'blur'],[win,'orientationchange'],[doc,'visibilitychange'],[win,'focusin']]){look.analog(1,0,true);target.dispatchEvent(new Event(event));assert.equal(look.movement(1/60).delta.length(),0,event);}
+  look.analog(1,0,true);look.setEnabled(false);look.analog(1,0,true);assert.equal(look.movement(1/60).delta.length(),0);
+  look.setEnabled(true);assert.equal(look.movement(1/60).delta.length(),0);
+ }finally{look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});
+
+test('interactable affordances reuse real targets, keep reduced motion static, and restore owned materials',async()=>{
+ const {createInteractables,interactionId}=await import(join(temp,'interactions.mjs'));
+ const original=new T.MeshStandardMaterial({color:0x887766}),mesh=new T.Mesh(new T.BoxGeometry(1,1,1),original);mesh.userData.works='matrix';mesh.userData.criterion=2;
+ assert.equal(interactionId(mesh),'works:matrix:2');
+ const registry=createInteractables([mesh]);assert.equal(registry.entries[0].mesh,mesh);assert.notEqual(mesh.material,original);
+ registry.update(0,false,false,false,true);const idle=mesh.material.emissiveIntensity;registry.update(1000,false,false,false,true);assert.equal(mesh.material.emissiveIntensity,idle);
+ registry.update(1000,'works:matrix:2',false,false,true);assert.equal(registry.entries[0].state,'focused');const focused=mesh.material.emissiveIntensity;
+ registry.update(1000,'works:matrix:2',true,false,true);assert.equal(registry.entries[0].state,'actionable');assert(mesh.material.emissiveIntensity>focused);
+ registry.update(1000,false,false,true,true);assert.equal(registry.entries[0].state,'busy');
+ original.color.setHex(0x112233);registry.update(1000,false,false,false,true);assert.equal(mesh.material.color.getHex(),0x112233);
+ registry.dispose();assert.equal(mesh.material,original);mesh.geometry.dispose();original.dispose();
+});
+
+test('direct clicks retain guided interaction outside range while contextual use stays nearby',async()=>{
+ const {interactionIntent}=await import(join(temp,'interactions.mjs'));
+ for(const id of ['key','facet','terminal','radio','works:gallery','works:archive','works:matrix-details','works:matrix:0']){
+  assert.equal(interactionIntent(id,false,true),'approach',id+' distant object click');
+  assert.equal(interactionIntent(id,false,false),'none',id+' out-of-range contextual use');
+  assert.equal(interactionIntent(id,true,true),'activate',id+' nearby object click');
+  assert.equal(interactionIntent(id,true,false),'activate',id+' nearby contextual use');
+ }
+ assert.equal(interactionIntent(false,false,true),'none');
+});
+
+test('ordinary and pointer-locked canvas clicks retain direct-click intent',()=>{
+ const oldWindow=globalThis.window,oldDocument=globalThis.document;
+ const win=new EventTarget(),doc=new EventTarget(),canvas=new EventTarget(),activations=[];
+ globalThis.window=win;globalThis.document=doc;canvas.focus=()=>{};canvas.setPointerCapture=()=>{};
+ const look=createLook(new T.PerspectiveCamera(),canvas,{activate(...args){activations.push(args);},hover(){},escape(){},manual(){}});
+ const pointer=type=>{const e=new Event(type);Object.defineProperties(e,{pointerId:{value:1},clientX:{value:300},clientY:{value:200}});canvas.dispatchEvent(e);};
+ try{
+  for(const locked of [false,true]){doc.pointerLockElement=locked?canvas:null;pointer('pointerdown');pointer('pointerup');assert.equal(activations.at(-1)[2],locked);assert.equal(activations.at(-1)[3],true);}
+  assert.equal(activations.length,2);
+ }finally{doc.pointerLockElement=null;look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});
