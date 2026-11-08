@@ -43,3 +43,15 @@ export function pointOnPath(path:T.Vector3[],t:number) {
   for(let i=0;i<lengths.length;i++){const n=lengths[i]!;if(d<=n||i===lengths.length-1)return path[i]!.clone().lerp(path[i+1]!,n?Math.min(d/n,1):1);d-=n;}
   return path[0]!.clone();
 }
+
+/** Resolve the visible front of any screen through its full parent transform.
+ * World up deliberately removes roll while retaining the face's yaw and tilt.
+ */
+export function screenPose(screen:T.Mesh, distance=4.5) {
+ screen.updateWorldMatrix(true,false);
+ const center=screen.getWorldPosition(new T.Vector3());
+ const normal=new T.Vector3(0,0,1).transformDirection(screen.matrixWorld);
+ const position=center.clone().addScaledVector(normal,distance);
+ const camera=new T.PerspectiveCamera();camera.position.copy(position);camera.up.set(0,1,0);camera.lookAt(center);
+ return {center,normal,position,quaternion:camera.quaternion.clone()};
+}

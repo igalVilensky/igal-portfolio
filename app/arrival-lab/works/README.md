@@ -38,3 +38,13 @@ The route still owns the one YouTube controller and player. Works never mounts, 
 - Arrival's scene component, secondary enclosure, Journey and portal path integrate these pieces.
 
 Run `node app/arrival-lab/works/works.test.mjs`. Review materials and full browser logs are outside Git in `/tmp/arrival-06-living-works/`.
+
+## Arrival 06.3 — screen workspaces
+
+The operator board is now a low rail. Blades can be activated directly to cycle their 1–5 weight; the compact instrument strip offers labeled range inputs for keyboard/touch access without scrolling project prose over the mechanism. The adjacent small terminal deliberately enters project details.
+
+Archive and Matrix details share Arrival's existing portal state, pose capture, input suspension, entry/return travel and reduced-motion behavior with FlowForge. `screenPose()` resolves each actual mesh's full world matrix, visible front normal and upright camera quaternion. Archive's housing and face share one tilted parent. Its screen is never reoriented to face the visitor. Physical activation enters once; destination navigation first follows the existing safe Works route. Exit reverses the travelled path and restores the captured view. FlowForge retains its original reading component and routing.
+
+`ProjectWorkspace.vue` reads the existing `useProjects()` registry. Archive selection lives in the scene owner so opening/closing does not reset it. Navigation and short descriptions use the existing EN/DE/RU content; longer registry descriptions/highlights retain their original English and are marked `lang="en"`. Missing images/links are omitted. Matrix's screenshot is an actual source asset, downloaded unchanged from `matrix.png` at documented commit `832d96be4d893b5acece18596c227fd2bc7095d8`, not a generated mockup. The source README was rechecked during this milestone. No product results are synthesized.
+
+Review artifacts and validation logs: `/tmp/arrival-063-immersive-projects/`. `screen-entry.test.mjs` checks transformed/tilted screen alignment independently of Nuxt. No radio ownership or player mounting changes were made.

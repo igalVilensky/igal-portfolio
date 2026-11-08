@@ -15,16 +15,18 @@ import { arrivalCopy } from './copy';
 import './arrival.css';
 import './portal.css';
 import PortalWorkspace from './PortalWorkspace.vue';
-import { createTerminal, portalPath, pointOnPath, type PortalState } from './portal';
+import { createTerminal, screenPose, portalPath, pointOnPath, type PortalState } from './portal';
 import { portalCopy } from './portal-copy';
 import { createWorks } from './works/environment';
 import { worksModules, worksArrival, worldPath } from './works/registry';
 import { initialWeights } from './works/matrix';
 import { worksCopy } from './works/copy';
 import WorksSurface from './works/WorksSurface.vue';
+import ProjectWorkspace from './works/ProjectWorkspace.vue';
 import './works/works.css';
-const worksUI=ref<'destinations'|'matrix'|'archive'|null>(null), worksTrip=ref('');
-const worksSurfaceStyle=ref<Record<string,string>>({});
+const worksUI=ref<'destinations'|'matrix'|null>(null), worksTrip=ref('');
+const workspaceKind=ref<'flowforge'|'matrix'|'archive'>('flowforge');
+const archiveSelection=ref('decision-matrix-ai');
 const weights=ref([...initialWeights]), selectedCriterion=ref(0);
 const wc=computed(()=>worksCopy[locale.value as keyof typeof worksCopy]||worksCopy.en);
 let works:ReturnType<typeof createWorks>|undefined, pendingWorks='';
@@ -37,11 +39,11 @@ function goWorks(id:string){
  if(portalBusy.value||guided)return;
  worksUI.value=null;if(radioOpen.value)closeRadio();controlsOpen.value=false;
  if(id==='flowforge'){approachTerminal();return;}
- if(failed.value||textMode.value||!camera){if(id==='arrival'){state.value='arrival';closeWorks();return;}state.value='secondary';worksUI.value=id==='matrix'?'matrix':id==='archive'?'archive':'destinations';return;}
+ if(failed.value||textMode.value||!camera){if(id==='arrival'){state.value='arrival';closeWorks();return;}state.value='secondary';if(id==='archive'){activateProjectScreen('archive');return;}worksUI.value=id==='matrix'?'matrix':'destinations';return;}
  releaseDockPointer();look.stop();look.setEnabled(false);journey.cancel();
  pendingWorks=id;worksTrip.value=id;guided=true;
  const to=id==='arrival'?spawn:id==='gallery'?worksArrival:new T.Vector3(...worksModules.find(m=>m.id===id)!.destination);
- if(camera.position.distanceTo(to)<1&&(id==='matrix'||id==='archive')){pendingWorks='';worksTrip.value='';guided=false;worksUI.value=id;needsRender=true;return;}
+ if(camera.position.distanceTo(to)<1&&(id==='matrix'||id==='archive')){pendingWorks='';worksTrip.value='';guided=false;if(id==='archive')activateProjectScreen('archive');else worksUI.value='matrix';needsRender=true;return;}
  if((camera.position.z<-72)!==(to.z<-72)&&mechanism.state!=='open'){mechanism.activate(performance.now());return;}
  startWorks(id,to);
 }
@@ -97,7 +99,13 @@ function saveView() {
   journey.cancel();look.stop();look.setEnabled(false);
   if(document.pointerLockElement)document.exitPointerLock();
 }
-function screenOrientation(position=terminal.center.clone().add(terminal.normal)) {const dummy=camera.clone();dummy.position.copy(position);dummy.lookAt(terminal.center);return dummy.quaternion.clone();}
+function currentScreen(){return workspaceKind.value==='flowforge'?terminal.screen:works!.screens[workspaceKind.value];}
+function activateProjectScreen(kind:'matrix'|'archive') {
+ if(portalBusy.value||guided)return;
+ if(kind==='archive'&&camera&&works&&camera.position.distanceTo(screenPose(works.screens.archive).center)>16){goWorks('archive');return;}
+ workspaceKind.value=kind;activateTerminal(false,true);
+}
+function screenOrientation(position?:T.Vector3) {const pose=screenPose(currentScreen());const dummy=camera.clone();dummy.position.copy(position||pose.position);dummy.up.set(0,1,0);dummy.lookAt(pose.center);return dummy.quaternion.clone();}
 function projectVisual() {
   camera.updateMatrixWorld();terminal.screen.updateWorldMatrix(true,false);
   const a=new T.Vector3(-2.9,1.8125,0).applyMatrix4(terminal.screen.matrixWorld).project(camera);
@@ -109,11 +117,13 @@ function openWorkspace() {
   if(travel?.path)travelled=travel.path.map(p=>p.clone());
   travel=undefined;guided=false;
   if(camera && terminal && !failed.value && !textMode.value) {
-    camera.position.copy(terminal.center).addScaledVector(terminal.normal,.5);camera.quaternion.copy(screenOrientation());renderer.render(scene,camera);projectVisual();
+    const pose=screenPose(currentScreen(),.5);camera.position.copy(pose.position);camera.quaternion.copy(screenOrientation());renderer.render(scene,camera);if(workspaceKind.value==='flowforge')projectVisual();
   }
   portalState.value='workspace-active';workspace.value=true;
 }
-function activateTerminal(direct=false) {
+function activateTerminal(direct=false,keepScreen=false) {
+  if(portalBusy.value)return;
+  if(!keepScreen)workspaceKind.value='flowforge';
   if(radioOpen.value)closeRadio();
   if(worksUI.value)closeWorks();
   if(portalBusy.value)return;
@@ -121,16 +131,18 @@ function activateTerminal(direct=false) {
   if(!camera || failed.value || textMode.value){portalState.value='workspace-active';workspace.value=true;return;}
   saveView();
   portalState.value='entering';travelled=[camera.position.clone()];
-  const end=terminal.center.clone().addScaledVector(terminal.normal,.5);
-  const near=terminal.near.clone();
-  entryPath=camera.position.distanceTo(near)<5 ? [camera.position.clone(),near,end] : [...portalPath(camera.position,near),end];
-  travel={path:entryPath,from:camera.quaternion.clone(),to:screenOrientation(),start:performance.now(),duration:reduced.value?0:Math.max(2200,Math.min(6500,camera.position.distanceTo(near)*90)),exiting:false};
+  const pose=screenPose(currentScreen(),.5);
+  const end=pose.position;
+  const near=workspaceKind.value==='flowforge'?terminal.near.clone():screenPose(currentScreen(),5).position;
+  entryPath=camera.position.distanceTo(near)<5 ? [camera.position.clone(),near,end] : [...(workspaceKind.value==='flowforge'?portalPath(camera.position,near):[camera.position.clone(),near]),end];
+  travel={path:entryPath,from:camera.quaternion.clone(),to:screenOrientation(),start:performance.now(),duration:reduced.value?0:workspaceKind.value==='flowforge'?Math.max(2200,Math.min(6500,camera.position.distanceTo(near)*90)):1800,exiting:false};
   if(direct||reduced.value){travelled=entryPath.map(p=>p.clone());openWorkspace();}
 }
 function approachTerminal() {
   if(radioOpen.value)closeRadio();
   if(worksUI.value)closeWorks();
   if(portalBusy.value||guided)return;
+  workspaceKind.value='flowforge';
   if(!camera||failed.value||textMode.value){activateTerminal(true);return;}
   if(portalNear.value){activateTerminal();return;}
   saveView();guided=true;
@@ -160,7 +172,7 @@ function updatePortal(now:number) {
   const t=travel.duration?T.MathUtils.clamp((now-travel.start)/travel.duration,0,1):1;
   const eased=t*t*(3-2*t);
   camera.position.copy(pointOnPath(travel.path,eased));if(!worksTrip.value&&!radioTravel&&!guided&&!travel.exiting && (travelled.length===0 || travelled[travelled.length-1]!.distanceTo(camera.position)>.08))travelled.push(camera.position.clone());camera.quaternion.slerpQuaternions(travel.from,travel.to,Math.min(1,eased*1.7));needsRender=true;
-  if(t===1){if(worksTrip.value){const id=worksTrip.value;travel=undefined;guided=false;worksTrip.value='';const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);journey.locate();if(id==='matrix'||id==='archive'){worksUI.value=id;look.setEnabled(false);}else look.setEnabled(true);return;}if(radioTravel){travel=undefined;guided=false;radioTravel=false;look.restore(0,Math.atan2(1,receiver!.near.z-3));radioShortcut();return;}if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
+  if(t===1){if(worksTrip.value){const id=worksTrip.value;travel=undefined;guided=false;worksTrip.value='';const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);journey.locate();if(id==='archive'){activateProjectScreen('archive');}else if(id==='matrix'){worksUI.value='matrix';look.setEnabled(false);}else look.setEnabled(true);return;}if(radioTravel){travel=undefined;guided=false;radioTravel=false;look.restore(0,Math.atan2(1,receiver!.near.z-3));radioShortcut();return;}if(travel.exiting)restoreExploration();else if(guided){travel=undefined;guided=false;saved=undefined;look.restore(-Math.PI/2,Math.atan2(1.15,4.5));look.setEnabled(true);portalState.value='terminal-focused';renderer.domElement.focus();}else openWorkspace();}
 }
 const wallState=ref('dormant');
 const actionLabel=computed(()=>state.value==='secondary'?c.value.back:state.value==='arrival'?c.value.approach:wallState.value==='open'?c.value.passage:c.value.activate);
@@ -248,7 +260,7 @@ function animate(now: number) {
   receiver?.update(locale.value,dark.value);
   const view = [locale.value,radio.state.station,radio.state.status,radio.title,camera.position.x,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>typeof v==='number'?v.toFixed(5):v).join(',');
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
-  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { if(worksUI.value==='matrix'&&works&&innerWidth>900){const r=host.value!.getBoundingClientRect();worksSurfaceStyle.value=works.consoleStyle(camera,r.width,r.height);}renderer.render(scene, camera); needsRender = false; previousView = view; }
+  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { renderer.render(scene, camera); needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
     nextTelemetry = now + 100; wallState.value=mechanism.state;
     const canvas = renderer.domElement;
@@ -305,7 +317,9 @@ onMounted(() => {
     journey.setReduced(reduced.value);
     look = createLook(camera, canvas, {
       activate(x, y, center) { if(portalBusy.value||guided)return; const hit=pick(x,y,center); if (!hit) return;
-        if(typeof hit==='string'&&hit.startsWith('works:')){const [,id,criterion]=hit.split(':');if(criterion!==undefined)selectCriterion(Number(criterion));goWorks(id!);return;}
+        if(hit==='works:archive'){activateProjectScreen('archive');return;}
+        if(hit==='works:matrix-details'){activateProjectScreen('matrix');return;}
+        if(typeof hit==='string'&&hit.startsWith('works:')){const [,id,criterion]=hit.split(':');if(criterion!==undefined){const i=Number(criterion);changeWeight(i,weights.value[i]!%5+1);return;}goWorks(id!);return;}
         if(hit==='radio'){approachRadio();return;}
         if(hit==='terminal'){activateTerminal();return;}
         if (hit==='key' && camera.position.z < -50) mechanism.activate(performance.now());
@@ -318,11 +332,11 @@ onMounted(() => {
     observer = new ResizeObserver(() => {
       if (!host.value) return;
       const rect = host.value.getBoundingClientRect(); renderer.setSize(rect.width, rect.height); camera.aspect = rect.width / rect.height;
-      camera.fov = rect.width < 650 ? 72 : 65; camera.updateProjectionMatrix(); if(workspace.value && saved)projectVisual(); needsRender = true;
+      camera.fov = rect.width < 650 ? 72 : 65; camera.updateProjectionMatrix(); if(workspace.value && saved && workspaceKind.value==='flowforge')projectVisual(); needsRender = true;
     }); observer.observe(host.value!);
     const lost = (e: Event) => { e.preventDefault(); failure(); };
     canvas.addEventListener('webglcontextlost', lost); cleanups.push(() => canvas.removeEventListener('webglcontextlost', lost));
-    const escapePortal=(e:KeyboardEvent)=>{if(e.key==='Escape'&&radioOpen.value){e.preventDefault();closeRadio();return;}if(e.key==='Escape'&&worksTrip.value){e.preventDefault();cancelWorks();return;}if(e.key==='Escape'&&worksUI.value){e.preventDefault();closeWorks();return;}if(e.key==='Escape'&&radioTravel){e.preventDefault();travel=undefined;guided=false;radioTravel=false;closeRadio();return;}if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
+    const escapePortal=(e:KeyboardEvent)=>{if(e.repeat||e.defaultPrevented)return;if(e.key==='Escape'&&radioOpen.value){e.preventDefault();closeRadio();return;}if(e.key==='Escape'&&worksTrip.value){e.preventDefault();cancelWorks();return;}if(e.key==='Escape'&&worksUI.value){e.preventDefault();closeWorks();return;}if(e.key==='Escape'&&radioTravel){e.preventDefault();travel=undefined;guided=false;radioTravel=false;closeRadio();return;}if(e.key==='Escape'&&(portalBusy.value||guided)){e.preventDefault();closeWorkspace();}};
     window.addEventListener('keydown',escapePortal);cleanups.push(()=>window.removeEventListener('keydown',escapePortal));
     lastTime = performance.now(); animate(lastTime);
   } catch (error) { console.error('Arrival Chamber:', error); failure(); }
@@ -333,7 +347,7 @@ onBeforeUnmount(() => {
 });
 </script>
 <template>
-  <main class="arrival-world" :class="{ 'arrival-dark': dark, 'arrival-radio-active': radioOpen, 'arrival-player-active': radio.state.power, 'arrival-works-reading':worksUI==='matrix'||worksUI==='archive' }" :aria-label="c.name">
+  <main class="arrival-world" :class="{ 'arrival-dark': dark, 'arrival-radio-active': radioOpen, 'arrival-player-active': radio.state.power, 'arrival-works-reading':worksUI==='matrix' }" :aria-label="c.name">
     <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided || !!worksUI || !!worksTrip" class="arrival-canvas"/>
     <nav v-show="!portalBusy" ref="gameDock" :inert="guided" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
       <button data-action="radio-shortcut" @keydown.stop :aria-label="ac.receiver" :title="ac.receiver" @click="radioShortcut">♫</button>
@@ -365,9 +379,10 @@ onBeforeUnmount(() => {
     <span v-if="!portalBusy && portalNear" class="portal-reticle" aria-hidden="true">+</span>
     <div v-if="portalState==='entering'" class="portal-progress" role="status">{{ pc.entering }} <button @click="openWorkspace">{{ pc.skip }}</button></div>
     <p v-if="portalState==='exiting'" class="portal-progress" role="status">{{ pc.exiting }}</p>
-    <WorksSurface v-if="worksUI && !portalBusy" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" :surface-style="worksSurfaceStyle" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix"/>
+    <WorksSurface v-if="worksUI && !portalBusy" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix" @details="activateProjectScreen('matrix')"/>
     <p v-if="worksTrip" class="works-travel" role="status">{{ wc.travel }} <button data-action="works-cancel" @click="cancelWorks">{{ ac.close }}</button></p>
-    <PortalWorkspace v-if="workspace" :project="project" :labels="pc" :visual-style="visualStyle" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
+    <ProjectWorkspace v-if="workspace && workspaceKind!=='flowforge'" :kind="workspaceKind" :locale="locale" :projects="projects" v-model:selected="archiveSelection" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
+    <PortalWorkspace v-if="workspace && workspaceKind==='flowforge'" :project="project" :labels="pc" :visual-style="visualStyle" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
     <PersistentRadioPlayer :radio="radio" :locale="locale" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/>
     <p class="arrival-status" aria-live="polite">{{ status }}</p>
   </main>

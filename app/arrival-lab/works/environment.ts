@@ -14,12 +14,13 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  const criterionMaterials=[own(p.green,.2,.38),own('#688bbd',.25,.4),own(p.yellow,.25,.42)];
  function box(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material= shell,id?:string):T.Mesh{const g=new T.BoxGeometry(w,h,d);geometries.push(g);const mesh=new T.Mesh(g,m);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;if(id)mesh.userData.works=id;root.add(mesh);solids.push(mesh);return mesh;}
  function beam(a:T.Vector3,b:T.Vector3,width:number,m:T.Material){const mesh=box(width,1,width,0,0,0,m);mesh.userData.passage=true;const place=(a:T.Vector3,b:T.Vector3)=>{mesh.position.copy(a).add(b).multiplyScalar(.5);mesh.scale.y=a.distanceTo(b);mesh.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize());};place(a,b);return {mesh,place};}
+ let darkTheme=false;
  const labels:{canvas:HTMLCanvasElement;texture:T.CanvasTexture;mesh:T.Mesh;draw:(text:string,sub?:string)=>void}[]=[];
  function label(w:number,h:number,x:number,y:number,z:number,rotation=0){
   const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=280;
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;textures.push(texture);
   const m=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(m);const g=new T.PlaneGeometry(w,h);geometries.push(g);const mesh=new T.Mesh(g,m);mesh.position.set(x,y,z);mesh.rotation.y=rotation;root.add(mesh);
-  const draw=(text:string,sub='')=>{const ctx=canvas.getContext('2d')!;ctx.fillStyle='#23343c';ctx.fillRect(0,0,1200,280);ctx.fillStyle='#e1d8c4';ctx.font='48px monospace';ctx.fillText(text,36,108,1120);ctx.fillStyle='#a9bbb8';ctx.font='26px monospace';ctx.fillText(sub,36,205,1120);texture.needsUpdate=true;};
+  const draw=(text:string,sub='')=>{const ctx=canvas.getContext('2d')!;const lightFace=mesh.userData.workspaceFace&&!darkTheme;ctx.fillStyle=lightFace?'#f0ecdf':'#23343c';ctx.fillRect(0,0,1200,280);ctx.fillStyle=lightFace?'#23343c':'#e1d8c4';ctx.font='48px monospace';ctx.fillText(text,36,108,1120);ctx.fillStyle=lightFace?'#4d625e':'#a9bbb8';ctx.font='26px monospace';ctx.fillText(sub,36,205,1120);texture.needsUpdate=true;};
   const entry={canvas,texture,mesh,draw};labels.push(entry);return entry;
  }
  // An offset compression hall: heavy concrete below, pale folded roof, bronze bearing details.
@@ -74,17 +75,28 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  const stacks=[29,35].map(x=>[0,1,2].map(i=>{const mesh=box(2.4,1,1.7,x,3,-104,criterionMaterials[i],'matrix');const geometry=new T.CylinderGeometry(1.15,1.15,1,32);geometries.push(geometry);mesh.geometry=geometry;return mesh;}));
  const links=stacks.map((_,o)=>blades.map((_,i)=>beam(new T.Vector3(),new T.Vector3(1,1,1),.09,criterionMaterials[i]!)));
  const sumLabels=[29,35].map(x=>label(4,1,x,11,-102.9));
- const legend=label(9,1.5,32,14.7,-103.6);legend.mesh.userData.works='matrix';solids.push(legend.mesh);
- // Floor-bearing operator rail: the HTML reading surface follows this physical face.
- box(8.6,3.9,.45,28,2.3,-92.8,inset,'matrix');
- for(const x of [24.5,31.5])box(.4,1,1.4,x,.5,-92.8,metal,'matrix');
- box(9,.18,.85,28,4.3,-92.6,bronze,'matrix');
- const operatorLabel=label(7.8,3.4,28,2.3,-92.55);operatorLabel.mesh.userData.works='matrix';solids.push(operatorLabel.mesh);
+ const legend=label(5.5,.65,32,14.7,-103.6);legend.mesh.userData.works='matrix';solids.push(legend.mesh);
+ // Low, narrow control rail leaves the blades and contribution bridges exposed.
+ box(8.6,.65,.45,28,.85,-92.8,inset,'matrix');
+ for(const x of [24.5,31.5])box(.3,.7,.8,x,.35,-92.8,metal,'matrix');
+ const operatorLabel=label(7.8,.6,28,.9,-92.55);operatorLabel.mesh.userData.works='matrix';solids.push(operatorLabel.mesh);
+ const matrixPartsStart=solids.length;
+ // A deliberate details terminal beside the mechanism, outside the central aisle.
+ box(3.6,2.6,.5,42,2.4,-99,inset,'matrix-details');
+ box(.4,1.2,.6,42,.6,-99,metal);
+ const matrixDetails=label(3.2,2.1,42,2.4,-98.72);matrixDetails.mesh.userData.works='matrix-details';matrixDetails.mesh.userData.workspaceFace=true;solids.push(matrixDetails.mesh);
+ const matrixFrame=new T.Group();matrixFrame.position.set(42,2.4,-98.72);root.add(matrixFrame);root.updateMatrixWorld(true);
+ for(const mesh of solids.slice(matrixPartsStart))matrixFrame.attach(mesh);matrixFrame.rotation.y=-.18;
+ const archivePartsStart=solids.length;
  // Archive is cut into the boundary, with a deep reveal and a floor-bearing reading sill.
  box(10,8,.8,46,4,-112,inset,'archive');box(11,.3,1.4,46,8.1,-111.7,bronze,'archive');
  for(const x of [40.8,51.2])box(.35,8,1,x,4,-111.5,metal,'archive');
  box(10,.25,2,46,.7,-110.7,metal,'archive');
- const archiveLabel=label(9.4,4.6,46,4.2,-111.5);archiveLabel.mesh.userData.works='archive';solids.push(archiveLabel.mesh);
+ const archiveLabel=label(9.4,4.6,46,4.2,-111.45);
+ // Preserve the physical face, including its tilt, as the portal's source of truth.
+ const archiveFrame=new T.Group();archiveFrame.position.set(46,4.2,-111.45);root.add(archiveFrame);root.updateMatrixWorld(true);
+ for(const mesh of [...solids.slice(archivePartsStart),archiveLabel.mesh])archiveFrame.attach(mesh);
+ archiveFrame.rotation.set(-.08,-.12,0);archiveLabel.mesh.userData.works='archive';archiveLabel.mesh.userData.workspaceFace=true;solids.push(archiveLabel.mesh);
  // A single shadowed daylight source shines through the real open roof bay.
  const daylight=new T.SpotLight('#fff0d6',6500,85,.63,.65,1.5);
  daylight.position.set(30,36,-91);daylight.target.position.set(39,0,-96);
@@ -93,12 +105,13 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  const lamps=[new T.PointLight('#fff0d4',700,38,1.6),new T.PointLight('#ffdfac',220,22,1.7)];
  lamps[0]!.position.set(24,13,-87);lamps[1]!.position.set(44,11,-107);lamps.forEach(l=>root.add(l));
  let target=[3,3,3],current=[3,3,3],selected=0,locale='en',changing=true;
- function text(){const c=worksCopy[locale as keyof typeof worksCopy]||worksCopy.en;titleLabel.draw(c.name,c.boundary);operatorLabel.draw('Decision Matrix AI',c.inspect+' →');entryLabel.draw(c.name,'→ '+c.open);legend.draw('Decision Matrix AI',c.focus);archiveLabel.draw(c.archive,c.archiveHint);criterionLabels.forEach((l,i)=>l.draw(`${i+1} / ${c.criteria[i]}`,`${c.weight} ${target[i]} × ${c.score} A:${[5,2,3][i]} B:${[2,5,4][i]}`));const r=weightedResults(target);sumLabels.forEach((l,i)=>l.draw(`${c.option} ${i?'B':'A'} / ${r[i]!.total}`,`${r[i]!.percent}% · ${c.total}`));}
+ function text(){const c=worksCopy[locale as keyof typeof worksCopy]||worksCopy.en;titleLabel.draw(c.name,c.boundary);operatorLabel.draw('Decision Matrix AI',c.inspect+' →');matrixDetails.draw('Decision Matrix AI',c.project+' →');entryLabel.draw(c.name,'→ '+c.open);legend.draw('Decision Matrix AI',c.focus);archiveLabel.draw(c.archive,c.archiveHint);criterionLabels.forEach((l,i)=>l.draw(`${i+1} / ${c.criteria[i]}`,`${c.weight} ${target[i]} × ${c.score} A:${[5,2,3][i]} B:${[2,5,4][i]}`));const r=weightedResults(target);sumLabels.forEach((l,i)=>l.draw(`${c.option} ${i?'B':'A'} / ${r[i]!.total}`,`${r[i]!.percent}% · ${c.total}`));}
  function update(dt:number,reduced:boolean){if(!changing)return false;let changed=false;current=current.map((v,i)=>{const n=reduced?target[i]!:T.MathUtils.damp(v,target[i]!,7,dt);if(Math.abs(n-v)>.0001)changed=true;return Math.abs(n-target[i]!)<.0001?target[i]!:n;});changing=current.some((v,i)=>v!==target[i]);
   blades.forEach((b,i)=>{b.scale.y=1+current[i]!;b.position.y=4+b.scale.y/2;});
   stacks.forEach((stack,o)=>{let y=4;stack.forEach((mesh,i)=>{const h=current[i]!*([5,2,3,2,5,4][o*3+i]!)/5;mesh.scale.y=h;mesh.position.y=y+h/2;links[o]![i]!.place(new T.Vector3(blades[i]!.position.x,blades[i]!.position.y+blades[i]!.scale.y/2,-98),new T.Vector3(mesh.position.x,mesh.position.y,-103.1));y+=h+.08;});sumLabels[o]!.mesh.position.y=y+1;});return changed;
  }
  function setTheme(dark:boolean){
+  darkTheme=dark;text();
   const p=worksPalette[dark?'dark':'light'];
   for(const [m,color] of [[shell,p.shell],[floor,p.floor],[metal,p.blue],[bronze,p.yellow],[red,p.red],[green,p.green],[steel,p.steel],[inset,p.inset]] as const)m.color.set(color);
   daylight.color.set(dark?'#c5d5e8':'#fff0d6');daylight.intensity=dark?1400:6500;
@@ -106,9 +119,6 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
   lamps[1]!.color.set(dark?'#f4d4a5':'#ffdfac');lamps[1]!.intensity=dark?380:220;
  }
  text();update(1,true);
- return {entrance,setTheme,consoleStyle(camera:T.Camera,width:number,height:number){
-  camera.updateMatrixWorld();const a=new T.Vector3(24,4.15,-92.55).project(camera),b=new T.Vector3(32,.45,-92.55).project(camera);
-  return {left:`${(a.x+1)*width/2}px`,top:`${(1-a.y)*height/2}px`,width:`${(b.x-a.x)*width/2}px`,height:`${(a.y-b.y)*height/2}px`,bottom:'auto'};
- },setLocale(value:string){locale=value;text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
+ return {entrance, screens:{archive:archiveLabel.mesh,matrix:matrixDetails.mesh},setTheme,setLocale(value:string){locale=value;text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
  dispose(){daylight.shadow.dispose();root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}}
 }
