@@ -80,3 +80,33 @@ test('radio can pause and resume the existing journey without a camera jump',()=
  now+=200;journey.update(now,.016);assert.ok(camera.position.distanceTo(position)>0);
  }finally{globalThis.performance=clock;}
 });
+
+test('expanded rooms have continuous sprint-clear routes and solid perimeters',async()=>{
+ const {createExpansion}=await import(join(temp,'expansion.mjs'));
+ const {expansionSpaces,worldSpaces}=await import(join(temp,'spaces.mjs'));
+ for(const room of worldSpaces)for(const id of room.connections)assert.ok(worldSpaces.find(s=>s.id===id)?.connections.includes(room.id),'Bidirectional registry connection');
+ const {worldPath}=await import(join(temp,'works/registry.mjs'));
+ const oldDocument=globalThis.document;
+ globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})})};
+ const expansion=createExpansion(scene,architecture.solids);globalThis.document=oldDocument;
+ scene.updateMatrixWorld(true);const move=createCollision(architecture.solids);
+ try{
+ for(const start of [new T.Vector3(-57,1.65,13),new T.Vector3(-39.5,1.65,13),new T.Vector3(-48,1.65,13)]){
+ const path=worldPath(start,new T.Vector3(5,1.65,17)),p=start.clone();
+ for(const target of path.slice(1)){move(p,target.clone().sub(p));assert.ok(p.distanceTo(target)<.001,'Route around flared threshold');}
+ }
+ for(const room of expansionSpaces){
+ for(const reverse of [false,true]){
+ const anchor=new T.Vector3(...room.anchor),arrival=new T.Vector3(5,1.65,17);
+ const path=worldPath(reverse?anchor:arrival,reverse?arrival:anchor),p=path[0].clone();
+ for(const target of path.slice(1)){move(p,target.clone().sub(p));assert.ok(p.distanceTo(target)<.001,room.id+' unobstructed route');}
+ }
+ for(const other of expansionSpaces){
+ const path=worldPath(new T.Vector3(...room.anchor),new T.Vector3(...other.anchor)),position=path[0].clone();
+ for(const target of path.slice(1)){move(position,target.clone().sub(position));assert.ok(position.distanceTo(target)<.001,room.id+' to '+other.id);}
+ }
+ const p=new T.Vector3(...room.anchor);move(p,new T.Vector3(-120,0,0));assert.ok(p.x>room.bounds[0],room.id+' west wall');
+ const q=new T.Vector3(room.bounds[0]+2,1.65,room.anchor[2]);move(q,new T.Vector3(0,0,120));assert.ok(q.z<room.bounds[3]+.01,room.id+' south enclosure');
+ }
+ }finally{expansion.dispose();}
+});

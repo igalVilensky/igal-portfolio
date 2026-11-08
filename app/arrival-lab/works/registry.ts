@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { expansionLeg } from '../spaces';
 export interface WorksModule {
  id:string; type:'portal'|'mechanism'|'archive'; projectId?:string;
  location:readonly [number,number,number]; destination:readonly [number,number,number];
@@ -11,7 +12,11 @@ export const worksModules:readonly WorksModule[]=[
 ];
 export const worksArrival=new T.Vector3(22,1.65,-87);
 /** Shared passage waypoints keep guided routes on the floor and through actual openings. */
-export function worldPath(from:T.Vector3,to:T.Vector3){
+export function worldPath(from:T.Vector3,to:T.Vector3):T.Vector3[]{
+ if(from.distanceToSquared(to)<.0001)return [from.clone(),to.clone()];
+ const a=expansionLeg(from),b=expansionLeg(to);
+ if(a.length&&b.length)return [...a.slice(0,-1),...b.slice(0,-1).reverse()];
+ if(a.length||b.length){const start=a.at(-1)||from,end=b.at(-1)||to;return [...a,...worldPath(start,end),...b.reverse()];}
  const path=[from.clone()], fromWorks=from.x>10&&from.z<-72, toWorks=to.x>10&&to.z<-72;
  if(fromWorks){path.push(new T.Vector3(from.x,1.65,-87));if(!toWorks)path.push(new T.Vector3(22,1.65,-94),new T.Vector3(0,1.65,-94));}
  if(from.z<-72&&to.z>-72)path.push(new T.Vector3(0,1.65,-76),new T.Vector3(0,1.65,-64));

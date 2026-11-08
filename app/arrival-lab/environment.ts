@@ -46,7 +46,10 @@ export function buildEnvironment(scene: T.Scene) {
   // Continuous barrel shell with a centred crown: structure bears directly on the walls.
   // Square slab edges meet the annex floor without a bevel gap.
   add(new T.BoxGeometry(51, 1.2, 132), floor, new T.Vector3(0, -.6, -42));
-  box(2, 25, 96, -25, 12.5, -24, stone);
+  // West opening z=16..22 replaces the wall, with an intact bearing lintel.
+  box(2,25,88,-25,12.5,-28,stone);
+  box(2,25,2,-25,12.5,23,stone);
+  box(2,18,6,-25,16,19,stone);
   box(2, 25, 96, 25, 12.5, -24, pale);
   const vault = (z: number, depth: number, material: T.Material, rib = false) => {
     const points: number[][] = [];
