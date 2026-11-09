@@ -5,7 +5,7 @@ import * as T from 'three';
 export function createCollision(solids: T.Mesh[]) {
   const ray = new T.Raycaster(), direction = new T.Vector3();
   const radius = .32;
-  const barriers = solids.filter(m => !m.userData.passage && (m.material as T.Material).visible !== false);
+  const barriers = solids.filter(m => !m.userData.passage && !m.userData.noCollision && (m.material as T.Material).visible !== false);
   // Cache static expansion bounds; moving Living Wall meshes remain live raycast targets.
   solids[0]?.parent?.updateMatrixWorld(true);
   const staticBounds = new Map(barriers.filter(m => m.userData.room).map(m => [m, new T.Box3().setFromObject(m)]));

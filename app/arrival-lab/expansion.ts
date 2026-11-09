@@ -4,7 +4,7 @@ import { expansionSpaces } from './spaces';
 export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  const root=new T.Group();root.name='west-expansion';scene.add(root);
  const geometries=new Map<string,T.BoxGeometry>(),materials:T.MeshStandardMaterial[]=[];
- const material=(color:string)=>{const m=new T.MeshStandardMaterial({color,roughness:.78,side:T.DoubleSide});materials.push(m);return m;};
+ const material=(color:string)=>{const m=new T.MeshStandardMaterial({color,roughness:.78});materials.push(m);return m;};
  const stone=material('#c5bca9'),bronze=material('#8c7652');
  const accents=['#c3a264','#baad9a','#829ca5','#9da88d'].map(material);
  function box(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material=stone,room='gallery'){
@@ -24,13 +24,14 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  const length=Math.hypot(bx-ax,bz-az),mesh=box(.65,height,length,(ax+bx)/2,height/2,(az+bz)/2,m,room);
  mesh.rotation.y=Math.atan2(bx-ax,bz-az);return mesh;
  }
- expansionSpaces.forEach((s,i)=>{
+ expansionSpaces.filter(s=>s.id!=='atmosphere').forEach((s,i)=>{
  const [x0,x1,z0,z1]=s.bounds,w=x1-x0,d=z1-z0,cx=(x0+x1)/2,cz=(z0+z1)/2,h=s.height,m=accents[i]!;
  box(w,1,d,cx,-.5,cz,m,s.id);
  // Shared gallery boundary is omitted; its split walls are authoritative.
  if(s.id==='journey'){
  box(.7,h,d,x0,h/2,cz,m,s.id);
- box(.7,h,8,x1,h/2,12,m,s.id);box(.7,h,8,x1,h/2,26,m,s.id);
+ // Experiments and AI own the lower shared walls. Retain Journey's taller enclosure above them.
+ box(.7,h-14,8,x1,14+(h-14)/2,12,m,s.id);box(.7,h-9,8,x1,9+(h-9)/2,26,m,s.id);
  box(w,h,.7,cx,h/2,z0,m,s.id);box(w,h,.7,cx,h/2,z1,m,s.id);
  // Broad rising roof leaves an expansive west-facing focal wall.
  for(let n=0;n<6;n++){const roof=box(6.05,.65,d,x0+3+n*6,15-n*.55,cz,stone,s.id);roof.rotation.z=-.09;}
@@ -42,10 +43,12 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  }
  box(.9,.5,14,x0+1.1,8.3,cz,bronze,s.id);
  }else{
- box(.7,h,d,x0,h/2,cz,m,s.id);box(.7,h,d,x1,h/2,cz,m,s.id);
+ // AI owns the x=-38 partition shared with Commons.
+ if(s.id!=='commons')box(.7,h,d,x0,h/2,cz,m,s.id);
+ if(s.id==='commons'){box(.7,h,5,x1,h/2,24.5,m,s.id);box(.7,h,3,x1,h/2,32.5,m,s.id);box(.7,1,4,x1,5.5,29,m,s.id);}else box(.7,h,d,x1,h/2,cz,m,s.id);
  const end=s.id==='experiments'?z0:z1;box(w,h,.7,cx,h/2,end,m,s.id);
  if(s.id==='experiments'){
- // Offset folded roof: low entry, rising north bay. No freestanding sculpture.
+ // Offset folded roof: low entry, rising north bay. The orbital toy occupies the open central bay.
  for(let n=0;n<4;n++){const roof=box(w,.65,d/4+.15,cx,10.5+n*.85,z1-d/8-n*d/4,stone,s.id);roof.rotation.x=.12;}
  // Flared shear walls compress entry, then release into the wider chamber.
  wallBetween(-51,16,-55,10,9,bronze,s.id);wallBetween(-45,16,-41,10,9,bronze,s.id);

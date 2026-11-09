@@ -89,6 +89,9 @@ test('expanded rooms have continuous sprint-clear routes and solid perimeters',a
  const oldDocument=globalThis.document;
  globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})})};
  const expansion=createExpansion(scene,architecture.solids);globalThis.document=oldDocument;
+ const {createAtmosphere}=await import(join(temp,'atmosphere.mjs'));
+ const oldMatch=globalThis.matchMedia;globalThis.matchMedia=()=>({matches:false});
+ const atmosphere=createAtmosphere(scene,architecture.solids);globalThis.matchMedia=oldMatch;
  scene.updateMatrixWorld(true);const move=createCollision(architecture.solids);
  try{
  for(const start of [new T.Vector3(-57,1.65,13),new T.Vector3(-39.5,1.65,13),new T.Vector3(-48,1.65,13)]){
@@ -108,7 +111,7 @@ test('expanded rooms have continuous sprint-clear routes and solid perimeters',a
  const p=new T.Vector3(...room.anchor);move(p,new T.Vector3(-120,0,0));assert.ok(p.x>room.bounds[0],room.id+' west wall');
  const q=new T.Vector3(room.bounds[0]+2,1.65,room.anchor[2]);move(q,new T.Vector3(0,0,120));assert.ok(q.z<room.bounds[3]+.01,room.id+' south enclosure');
  }
- }finally{expansion.dispose();}
+ }finally{atmosphere.dispose();expansion.dispose();}
 });
 
 test('analog intent shares camera-relative movement and resets on interrupted ownership',()=>{
@@ -160,4 +163,55 @@ test('ordinary and pointer-locked canvas clicks retain direct-click intent',()=>
   for(const locked of [false,true]){doc.pointerLockElement=locked?canvas:null;pointer('pointerdown');pointer('pointerup');assert.equal(activations.at(-1)[2],locked);assert.equal(activations.at(-1)[3],true);}
   assert.equal(activations.length,2);
  }finally{doc.pointerLockElement=null;look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});
+
+
+test('shared expansion partitions have one surface owner',async()=>{
+ const {createExpansion}=await import(join(temp,'expansion.mjs'));
+ const oldDocument=globalThis.document;
+ globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})})};
+ const localScene=new T.Scene(),solids=[];
+ const expansion=createExpansion(localScene,solids);globalThis.document=oldDocument;
+ try{
+  for(const [x,z,owner] of [[-38,28,'ai-tools'],[-60,26,'ai-tools'],[-60,12,'experiments']]){
+   const walls=solids.filter(m=>m.geometry.parameters.width===.7&&m.position.x===x&&Math.abs(3-m.position.y)<m.geometry.parameters.height/2&&Math.abs(z-m.position.z)<m.geometry.parameters.depth/2);
+   assert.equal(walls.length,1,'Single wall at '+x+','+z);
+   assert.equal(walls[0].userData.room,owner);
+  }
+ }finally{expansion.dispose();}
+});
+
+test('orbital toy preserves its centre, settles after boost, and respects reduced motion',async()=>{
+ const {createOrbitalSculpture}=await import(join(temp,'orbital-sculpture.mjs'));
+ const localScene=new T.Scene(),solids=[],toy=createOrbitalSculpture(localScene,solids);
+ try{
+  const rings=solids.filter(m=>m.geometry.type==='TorusGeometry');assert.equal(rings.length,4);
+  toy.update(0,.016,true);const pose=rings.map(m=>m.parent.quaternion.clone());
+  assert.equal(toy.update(1000,.016,true),false);
+  rings.forEach((m,i)=>assert.ok(m.parent.quaternion.equals(pose[i])));
+  toy.activate(1000);assert.equal(toy.update(1000,.016,true),true);
+  assert.equal(toy.update(2000,.016,true),false);
+  const angle=()=>rings[0].parent.rotation.x;
+  toy.update(8000,.016,false);const idleStart=angle();toy.update(8016,.016,false);const idle=angle()-idleStart;
+  toy.activate(8016);toy.update(11266,.016,false);const fastStart=angle();toy.update(11282,.016,false);assert.ok(angle()-fastStart>idle*4);
+  toy.update(16000,.016,false);const settled=angle();toy.update(16016,.016,false);assert.ok(Math.abs(angle()-settled-idle)<1e-8);
+  const centres=rings.map(m=>m.getWorldPosition(new T.Vector3()));centres.forEach(p=>assert.ok(p.distanceTo(new T.Vector3(-49,4.65,0))<1e-8));
+ }finally{toy.dispose();assert.equal(localScene.children.length,0);}
+});
+
+
+test('atmosphere yields, bounds repeated impulses, recovers, freezes idle and disposes',async()=>{
+ const {createAtmosphere}=await import(join(temp,'atmosphere.mjs'));
+ const old=globalThis.matchMedia;globalThis.matchMedia=()=>({matches:false});
+ const scene=new T.Scene(),solids=[],matter=createAtmosphere(scene,solids);globalThis.matchMedia=old;
+ const cloud=solids.find(m=>m.userData.atmosphere===0).parent,home=cloud.position.clone();
+ const far=new T.Vector3(0,1.65,0),near=new T.Vector3(-14,1.65,37);
+ for(let i=0;i<120;i++)matter.update(i*16,1/60,true,near);
+ assert.ok(cloud.position.x>home.x+.5,'Presence displaces matter');
+ for(let i=0;i<600;i++){matter.activate(0);matter.update(i*16,1/60,false,near);assert.ok(cloud.scale.x<1.5);assert.ok(Number.isFinite(cloud.position.x));}
+ for(let i=0;i<1200;i++)matter.update(i*16,1/60,true,far);
+ assert.ok(cloud.position.distanceTo(home)<.001,'Recovery reaches home');
+ const before=cloud.position.clone();matter.update(50000,.05,true,far);assert.ok(cloud.position.distanceTo(before)<.0001);
+ const move=createCollision(solids),player=new T.Vector3(-18,1.65,37);move(player,new T.Vector3(9,0,0));assert.ok(Math.abs(player.x+9)<.001,'Cloud remains traversable');
+ let disposed=0;solids[0].geometry.addEventListener('dispose',()=>disposed++);matter.dispose();assert.equal(scene.children.length,0);assert.equal(disposed,1);
 });
