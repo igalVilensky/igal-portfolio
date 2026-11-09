@@ -161,3 +161,37 @@ test('ordinary and pointer-locked canvas clicks retain direct-click intent',()=>
   assert.equal(activations.length,2);
  }finally{doc.pointerLockElement=null;look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
 });
+
+
+test('shared expansion partitions have one surface owner',async()=>{
+ const {createExpansion}=await import(join(temp,'expansion.mjs'));
+ const oldDocument=globalThis.document;
+ globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})})};
+ const localScene=new T.Scene(),solids=[];
+ const expansion=createExpansion(localScene,solids);globalThis.document=oldDocument;
+ try{
+  for(const [x,z,owner] of [[-38,28,'ai-tools'],[-60,26,'ai-tools'],[-60,12,'experiments']]){
+   const walls=solids.filter(m=>m.geometry.parameters.width===.7&&m.position.x===x&&Math.abs(3-m.position.y)<m.geometry.parameters.height/2&&Math.abs(z-m.position.z)<m.geometry.parameters.depth/2);
+   assert.equal(walls.length,1,'Single wall at '+x+','+z);
+   assert.equal(walls[0].userData.room,owner);
+  }
+ }finally{expansion.dispose();}
+});
+
+test('orbital toy preserves its centre, settles after boost, and respects reduced motion',async()=>{
+ const {createOrbitalSculpture}=await import(join(temp,'orbital-sculpture.mjs'));
+ const localScene=new T.Scene(),solids=[],toy=createOrbitalSculpture(localScene,solids);
+ try{
+  const rings=solids.filter(m=>m.geometry.type==='TorusGeometry');assert.equal(rings.length,4);
+  toy.update(0,.016,true);const pose=rings.map(m=>m.parent.quaternion.clone());
+  assert.equal(toy.update(1000,.016,true),false);
+  rings.forEach((m,i)=>assert.ok(m.parent.quaternion.equals(pose[i])));
+  toy.activate(1000);assert.equal(toy.update(1000,.016,true),true);
+  assert.equal(toy.update(2000,.016,true),false);
+  const angle=()=>rings[0].parent.rotation.x;
+  toy.update(8000,.016,false);const idleStart=angle();toy.update(8016,.016,false);const idle=angle()-idleStart;
+  toy.activate(8016);toy.update(11266,.016,false);const fastStart=angle();toy.update(11282,.016,false);assert.ok(angle()-fastStart>idle*4);
+  toy.update(16000,.016,false);const settled=angle();toy.update(16016,.016,false);assert.ok(Math.abs(angle()-settled-idle)<1e-8);
+  const centres=rings.map(m=>m.getWorldPosition(new T.Vector3()));centres.forEach(p=>assert.ok(p.distanceTo(new T.Vector3(-49,4.65,0))<1e-8));
+ }finally{toy.dispose();assert.equal(localScene.children.length,0);}
+});

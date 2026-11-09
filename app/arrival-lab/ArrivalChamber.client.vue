@@ -8,7 +8,7 @@ const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(f
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -29,6 +29,10 @@ import PortalWorkspace from './PortalWorkspace.vue';
 import { createTerminal, screenPose, portalPath, pointOnPath, type PortalState } from './portal';
 import { portalCopy } from './portal-copy';
 import { createExpansion } from './expansion';
+import { createOrbitalSculpture } from './orbital-sculpture';
+import { createHallGallery } from './hall-gallery';
+let sculpture: ReturnType<typeof createOrbitalSculpture> | undefined;
+let hallGallery: ReturnType<typeof createHallGallery> | undefined;
 import { expansionSpaces, spaceAt } from './spaces';
 import { createWorks } from './works/environment';
 import { worksModules, worksArrival, worldPath } from './works/registry';
@@ -217,6 +221,7 @@ function pick(x: number, y: number, center = false) {
   if(!entry)return false;
   if(data?.works)return 'works:'+data.works+(data.criterion!==undefined?':'+data.criterion:'');
   if(data?.radio)return 'radio';
+  if(data?.sculpture)return 'sculpture';
   if(data?.terminal) {hoveredFacet=-1;return 'terminal';}
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
@@ -226,6 +231,7 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) { if(porta
         if (!hit || !freeInput.value) return;
         const intent=interactionIntent(hit,actionable.value,direct);
         if(intent==='none')return;
+        if(hit==='sculpture'){if(actionable.value){sculpture?.activate(performance.now());needsRender=true;}return;}
         if(intent==='approach'){
           // Reuse collision-safe routes instead of silently dropping a distant object click.
           if(hit==='terminal'){activateTerminal();return;}
@@ -291,6 +297,7 @@ function animate(now: number) {
   if(pendingWorks&&['dormant','discovered'].includes(mechanism.state))mechanism.activate(now);
   if(pendingWorks&&mechanism.state==='open'){const id=pendingWorks;startWorks(id,id==='arrival'?spawn:id==='gallery'?worksArrival:new T.Vector3(...worksModules.find(m=>m.id===id)!.destination));}
   if(radio.state.mode!=='expanded')updatePortal(now);
+  if(sculpture?.update(now,dt,reduced.value))needsRender=true;
   if(works?.update(dt,reduced.value)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
   if(!portalBusy.value && !guided && document.pointerLockElement===renderer.domElement) terminalHover=pick(0,0,true)==='terminal';
   if(terminal){const distance=camera.position.distanceTo(terminal.center);portalNear.value=distance<9;terminal.update(distance,terminalHover||portalState.value==='entering');if(!portalBusy.value&&!guided)portalState.value=portalNear.value&&terminalHover?'terminal-focused':'exploring';}
@@ -357,7 +364,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 220); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -384,7 +391,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  interactables?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  interactables?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
