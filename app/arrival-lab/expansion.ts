@@ -24,7 +24,7 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  const length=Math.hypot(bx-ax,bz-az),mesh=box(.65,height,length,(ax+bx)/2,height/2,(az+bz)/2,m,room);
  mesh.rotation.y=Math.atan2(bx-ax,bz-az);return mesh;
  }
- expansionSpaces.forEach((s,i)=>{
+ expansionSpaces.filter(s=>s.id!=='atmosphere').forEach((s,i)=>{
  const [x0,x1,z0,z1]=s.bounds,w=x1-x0,d=z1-z0,cx=(x0+x1)/2,cz=(z0+z1)/2,h=s.height,m=accents[i]!;
  box(w,1,d,cx,-.5,cz,m,s.id);
  // Shared gallery boundary is omitted; its split walls are authoritative.
@@ -45,7 +45,7 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  }else{
  // AI owns the x=-38 partition shared with Commons.
  if(s.id!=='commons')box(.7,h,d,x0,h/2,cz,m,s.id);
- box(.7,h,d,x1,h/2,cz,m,s.id);
+ if(s.id==='commons'){box(.7,h,5,x1,h/2,24.5,m,s.id);box(.7,h,3,x1,h/2,32.5,m,s.id);box(.7,1,4,x1,5.5,29,m,s.id);}else box(.7,h,d,x1,h/2,cz,m,s.id);
  const end=s.id==='experiments'?z0:z1;box(w,h,.7,cx,h/2,end,m,s.id);
  if(s.id==='experiments'){
  // Offset folded roof: low entry, rising north bay. The orbital toy occupies the open central bay.

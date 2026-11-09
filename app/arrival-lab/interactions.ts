@@ -2,7 +2,7 @@ import * as T from 'three';
 export type InteractionState='idle'|'focused'|'actionable'|'busy'|'disabled';
 export function interactionId(mesh:T.Object3D):string|undefined {
  const d=mesh.userData;
- return d.sculpture?'sculpture':d.works?'works:'+d.works+(d.criterion!==undefined?':'+d.criterion:''):d.radio?'radio':d.terminal?'terminal':d.key?'key':d.facet!==undefined?'facet':d.passage&&mesh instanceof T.Mesh&&(mesh.material as T.Material).visible===false?'passage':undefined;
+ return d.atmosphere!==undefined?'atmosphere:'+d.atmosphere:d.sculpture?'sculpture':d.works?'works:'+d.works+(d.criterion!==undefined?':'+d.criterion:''):d.radio?'radio':d.terminal?'terminal':d.key?'key':d.facet!==undefined?'facet':d.passage&&mesh instanceof T.Mesh&&(mesh.material as T.Material).visible===false?'passage':undefined;
 }
 /** Physical object clicks may request existing guided travel; contextual use stays nearby. */
 export function interactionIntent(id:string|false, inRange:boolean, direct:boolean):'activate'|'approach'|'none' {
