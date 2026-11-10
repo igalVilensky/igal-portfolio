@@ -80,7 +80,11 @@ export function buildEnvironment(scene: T.Scene) {
   box(1.3, 33, 2.2, 24, 16.5, -49, satin);
   box(1, .12, 88, 0, 42.9, -24, daylight);
   // The living surface occupies an asymmetric recessed bay in the end enclosure.
-  box(17,44,3,-16,22,-71,pale);box(17,44,3,16,22,-71,stone);
+  // Human-scale impossible threshold: true opening x=-13.08..-10.92.
+  box(11.42,44,3,-18.79,22,-71,pale);
+  box(3.42,44,3,-9.21,22,-71,pale);
+  box(2.16,41,3,-12,23.5,-71,pale);
+  box(17,44,3,16,22,-71,stone);
   box(15,34,3,0,27,-71,pale);
   const wall=createWall(scene);solids.push(...wall.solids);
   // Seams fan toward the mechanism instead of repeating a column rhythm.
