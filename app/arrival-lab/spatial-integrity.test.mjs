@@ -215,3 +215,43 @@ test('atmosphere yields, bounds repeated impulses, recovers, freezes idle and di
  const move=createCollision(solids),player=new T.Vector3(-18,1.65,37);move(player,new T.Vector3(9,0,0));assert.ok(Math.abs(player.x+9)<.001,'Cloud remains traversable');
  let disposed=0;solids[0].geometry.addEventListener('dispose',()=>disposed++);matter.dispose();assert.equal(scene.children.length,0);assert.equal(disposed,1);
 });
+
+test('both impossible doors cross the complete hall shell at walk and sprint speeds without bounce-back',async()=>{
+ const {createImpossibleThreshold}=await import(join(temp,'impossible-threshold.mjs'));
+ const oldWindow=globalThis.window,oldDocument=globalThis.document;
+ try{
+  for(const sun of [false,true])for(const dt of [1/60,.2])for(const fast of [false,true]){
+   const scene=new T.Scene(),architecture=buildEnvironment(scene);
+   const threshold=createImpossibleThreshold(scene,architecture.solids);
+   const collide=createCollision(architecture.solids.filter(m=>!threshold.worldSolids.includes(m)));
+   const camera=new T.PerspectiveCamera(65,1,.08,220),x=sun?12:-12;
+   const win=new EventTarget(),doc=new EventTarget(),canvas=new EventTarget();globalThis.window=win;globalThis.document=doc;
+   const look=createLook(camera,canvas,{activate(){},hover(){},escape(){},manual(){}});
+   const key=(code,down=true)=>{const e=new Event(down?'keydown':'keyup');Object.defineProperties(e,{code:{value:code},key:{value:code}});win.dispatchEvent(e);};
+   const step=()=>{look.update(dt,true);scene.updateMatrixWorld(true);threshold.move(camera.position,look.movement(dt).delta,collide);const before=threshold.active;
+    threshold.update(dt,true,camera);if(before!==threshold.active){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x,Math.PI);}
+    assert.equal(camera.position.y,1.65);
+   };
+   try{
+    camera.position.set(x,1.65,-66.7);look.restore(0,0);threshold.update(0,true,camera);
+    if(fast)key('ShiftLeft');key('KeyW');for(let i=0;i<Math.ceil(2/dt);i++)step();
+    assert.equal(threshold.active,false);assert(camera.position.z>-69.5,'Closed leaf blocks');
+    threshold.activate(sun);threshold.update(0,true,camera);
+    for(let i=0;i<Math.ceil(2/dt)&&!threshold.active;i++)step();
+    assert.equal(threshold.environment,sun?'sun-world':'antipayuta',`Full-shell crossing: ${sun?'sun':'north'}, dt=${dt}, sprint=${fast}, z=${camera.position.z}`);
+    // Keep the original W press held: transformed inertia must carry us away from the return plane.
+    for(let i=0;i<Math.ceil(.6/dt);i++){step();assert(threshold.active,'No immediate return or movement lock');}
+    assert(camera.position.z>2,'Continued forward movement after scene switch');
+    look.stop();look.restore(0,0);key('KeyW');if(fast)key('ShiftLeft');
+    for(let i=0;i<Math.ceil(4/dt)&&threshold.active;i++)step();
+    assert.equal(threshold.environment,'hall');assert(Math.abs(camera.position.x-x)<.001);
+    for(let i=0;i<Math.ceil(.6/dt);i++){step();assert.equal(threshold.environment,'hall','No immediate re-entry');}
+    assert(camera.position.z>-69,'Continued forward movement into the hall');
+    // The new cut-out never permits crossing an adjacent closed wall.
+    look.stop();camera.position.set(x+3,1.65,-67);look.restore(0,0);key('KeyW');
+    for(let i=0;i<Math.ceil(2/dt);i++)step();
+    assert.equal(threshold.environment,'hall');assert(camera.position.z>-69.5,'Adjacent wall still blocks');
+   }finally{look.dispose();threshold.dispose();architecture.dispose();}
+  }
+ }finally{globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});

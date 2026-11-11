@@ -53,7 +53,9 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (event.key === 'Escape') {
       if (document.pointerLockElement === canvas) document.exitPointerLock(); else callbacks.escape(); return;
     }
-    if (event.target !== canvas && document.pointerLockElement !== canvas) return;
+    // Page focus is movement-ready; focused UI owns its own keyboard input.
+    const target=event.target as HTMLElement | null;
+    if (target !== canvas && target?.closest?.('button,a,input,textarea,select,[contenteditable=true],[role=dialog],[tabindex]')) return;
     if (['KeyW','KeyA','KeyS','KeyD','ShiftLeft','ShiftRight'].includes(event.code)) { keys.add(event.code); event.preventDefault(); if (event.code.startsWith('Key')) callbacks.manual(); }
 
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
@@ -73,13 +75,16 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   listen(window, 'focusin', (event => { if (event.target !== canvas) reset(); }) as EventListener);
   listen(document, 'pointerlockchange',reset as EventListener);
   listen(window,'orientationchange',reset as EventListener);
+  listen(window,'resize',reset as EventListener);
+  listen(document,'fullscreenchange',reset as EventListener);
   listen(window,'blur',reset as EventListener);
   listen(document,'visibilitychange',reset as EventListener);
   return {
     setEnabled(value: boolean) { enabled = value; reset(); },
     analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
     reset,
-    restore(nextYaw:number,nextPitch:number) { yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
+    // Transport momentum with the doorway's rigid turn without clearing held keys/touch intent.
+    restore(nextYaw:number,nextPitch:number,movementTurn=0) { velocity.applyAxisAngle(new T.Vector3(0,1,0),movementTurn); yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
     stop: reset,
     movement(dt: number) {
       const x = analogX || Number(keys.has('KeyD')) - Number(keys.has('KeyA'));

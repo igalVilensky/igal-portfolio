@@ -84,7 +84,11 @@ export function buildEnvironment(scene: T.Scene) {
   box(11.42,44,3,-18.79,22,-71,pale);
   box(3.42,44,3,-9.21,22,-71,pale);
   box(2.16,41,3,-12,23.5,-71,pale);
-  box(17,44,3,16,22,-71,stone);
+  // Sun Door: matching 2.16 m clear cut-out x=10.92..13.08 through the full
+  // 3 m enclosure depth. Keep both piers and the bearing lintel collidable.
+  box(3.42,44,3,9.21,22,-71,stone);
+  box(11.42,44,3,18.79,22,-71,stone);
+  box(2.16,41,3,12,23.5,-71,stone);
   box(15,34,3,0,27,-71,pale);
   const wall=createWall(scene);solids.push(...wall.solids);
   // Seams fan toward the mechanism instead of repeating a column rhythm.

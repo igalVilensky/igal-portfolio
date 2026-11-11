@@ -1,7 +1,7 @@
 .arrival-world{position:fixed;inset:0;overflow:hidden;background:#dedfd8;color:#383b38;font-family:Inter,system-ui,sans-serif}
 .arrival-canvas{width:100%;height:100%;touch-action:none}
 .arrival-canvas canvas{display:block;outline:none;touch-action:none}
-.arrival-canvas canvas:focus-visible{outline:1px solid #8b8370;outline-offset:-5px}
+.arrival-canvas canvas:focus{outline:none}
 .arrival-tools{position:absolute;z-index:3;right:clamp(16px,3vw,40px);bottom:max(20px,env(safe-area-inset-bottom));display:flex;gap:6px;align-items:center}
 .arrival-tools button,.arrival-tools a{display:grid;place-items:center;width:42px;height:42px;border:1px solid #767c722b;border-radius:50%;background:#ebe9dfb8;backdrop-filter:blur(8px);font-size:19px;color:#454b47;text-decoration:none;cursor:pointer}
 .arrival-tools :is(a,button):hover,.arrival-tools :is(a,button):focus-visible{background:#fbf8ee;outline:1px solid #7c8175;outline-offset:3px}
