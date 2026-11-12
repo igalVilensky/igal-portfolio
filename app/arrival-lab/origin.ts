@@ -24,7 +24,13 @@ export function createOrigin(scene:T.Scene,solids:T.Mesh[]) {
  const pivots=[-1,1].map(side=>{const p=new T.Group();p.position.set(12+side*4.9,0,24);root.add(p);const leaf=box(4.9,11.8,.35,-side*2.45,5.9,0,bronze,true,p);leaf.userData.originDoor=true;delete leaf.userData.room;box(.08,2,.12,-side*4.4,1.5,side*.24,pale,false,p).userData.originDoor=true;return p;});
  // A broad procession and lateral mineral courts leave the building legible from a distance.
  box(18,.025,66,12,.014,64,path);box(72,.03,18,12,.016,62,pale);
- for(const side of [-1,1]){box(9,.025,109,side*35,.016,-2,path);for(const [z,d] of [[55,8],[72,14]] as const)box(1.5,1.2,d,12+side*16,.6,z,stone,true);box(1.8,2.4,12,side*24,1.2,46,basalt,true);}
+ for(const side of [-1,1]){if(side<0)box(9,.025,109,side*35,.016,-2,path);
+ else {
+ // Keep the exterior promenade continuous around the Little Explorer pavilion.
+ box(9,.025,48.5,35,.016,-32.25,path);
+ box(9,.025,18.5,35,.016,43.25,path);
+ box(37,.025,7,50,.016,-8,path);box(7,.025,49,65,.016,13,path);box(37,.025,7,50,.016,34,path);
+ }for(const [z,d] of [[55,8],[72,14]] as const)box(1.5,1.2,d,12+side*16,.6,z,stone,true);box(1.8,2.4,12,side*24,1.2,46,basalt,true);}
  box(55,.025,14,0,.018,115,pale);
  // Side shell: deep fins and a roof shoulder echo the existing barrel vault.
  for(const side of [-1,1])for(const z of [-58,-26,6])box(2.4,26,3.2,side*26.4,13,z,pale,true);

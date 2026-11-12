@@ -50,7 +50,10 @@ export function buildEnvironment(scene: T.Scene) {
   box(2,25,88,-25,12.5,-28,stone);
   box(2,25,2,-25,12.5,23,stone);
   box(2,18,6,-25,16,19,stone);
-  box(2, 25, 96, 25, 12.5, -24, pale);
+  // Little Explorer: east opening z=16..22, with the original bearing wall above.
+  box(2,25,88,25,12.5,-28,pale);
+  box(2,25,2,25,12.5,23,pale);
+  box(2,19,6,25,15.5,19,pale);
   const vault = (z: number, depth: number, material: T.Material, rib = false) => {
     const points: number[][] = [];
     const center = 0, rx = 24, ry = 19;
