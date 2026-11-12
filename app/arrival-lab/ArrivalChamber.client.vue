@@ -8,7 +8,7 @@ const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(f
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -19,7 +19,10 @@ import './audio/audio.css';
 import { buildEnvironment, spawn } from './environment';
 import { illuminate } from './lighting';
 import { createImpossibleThreshold } from './impossible-threshold';
+let pickedSunDoor=false;
 let threshold:ReturnType<typeof createImpossibleThreshold>|undefined;
+import { createOrigin } from './origin';
+let origin:ReturnType<typeof createOrigin>|undefined;
 import { createCollision } from './collision';
 import { createLook } from './camera';
 import { createJourney, type JourneyState } from './journey';
@@ -222,12 +225,13 @@ function pick(x: number, y: number, center = false) {
   if (!center && (x < rect.left || y < rect.top || x > rect.right || y > rect.bottom)) return false;
   pointer.set(center ? 0 : (x - rect.left) / rect.width * 2 - 1, center ? 0 : -(y - rect.top) / rect.height * 2 + 1);
   ray.setFromCamera(pointer, camera);
-  const first = ray.intersectObjects(threshold?.active?threshold.snowSolids:architecture.solids.filter(m=>!threshold?.snowSolids.includes(m)), false).filter(hit=>{let node:T.Object3D|null=hit.object;while(node){if(!node.visible)return false;node=node.parent;}return true;})[0];
+  const first = ray.intersectObjects(threshold?.active?threshold.worldSolids:architecture.solids.filter(m=>!threshold?.worldSolids.includes(m)), false).filter(hit=>{let node:T.Object3D|null=hit.object;while(node){if(!node.visible)return false;node=node.parent;}return true;})[0];
   const data = first?.object.userData;
   const entry=interactables?.entries.find(e=>e.mesh===first?.object);
   actionable.value=!!entry&&first!.distance<=entry.range && !(entry.id==='passage'&&mechanism.state!=='open') && !(['activated','propagating','opening','closing'].includes(mechanism.state)&&(entry.id==='key'||entry.id==='facet'));
   if(!entry)return false;
-  if(data?.threshold)return 'threshold';
+  if(data?.originDoor)return 'origin-door';
+  if(data?.threshold){pickedSunDoor=!!data.sunDoor;return 'threshold';}
   if(data?.works)return 'works:'+data.works+(data.criterion!==undefined?':'+data.criterion:'');
   if(data?.radio)return 'radio';
   if(data?.atmosphere!==undefined)return 'atmosphere:'+data.atmosphere;
@@ -241,7 +245,8 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) { if(porta
         if (!hit || !freeInput.value) return;
         const intent=interactionIntent(hit,actionable.value,direct);
         if(intent==='none')return;
-        if(hit==='threshold'){if(actionable.value){threshold?.activate();needsRender=true;}return;}
+        if(hit==='origin-door'){if(actionable.value){origin?.activate();needsRender=true;}return;}
+        if(hit==='threshold'){if(actionable.value){threshold?.activate(pickedSunDoor);needsRender=true;}return;}
         if(hit.startsWith('atmosphere:')){if(actionable.value){atmosphere?.activate(Number(hit.split(':')[1]));needsRender=true;}return;}
         if(hit==='sculpture'){if(actionable.value){sculpture?.activate(performance.now());needsRender=true;}return;}
         if(intent==='approach'){
@@ -275,6 +280,7 @@ function enter() {
   } else mechanism.activate(performance.now());
 }
 function back() {
+  if(threshold?.active){enter();return;}
   if(worksTrip.value){cancelWorks();return;}
   if(worksUI.value)closeWorks();
   if(radioTravel){travel=undefined;guided=false;radioTravel=false;closeRadio();return;}
@@ -307,7 +313,13 @@ function animate(now: number) {
   if (journey.moving) journey.update(now, dt);
   else { scene.updateMatrixWorld(true); threshold!.move(camera.position, movement.delta,collide); journey.locate(); }
   }
-  if(threshold?.update(dt,reduced.value,camera)){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,spaceAt(camera.position)?.id==='origin',journey.moving||guided)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(!threshold?.active&&spaceAt(camera.position)?.id==='origin'&&!reduced.value)needsRender=true;
+  const wasExterior=threshold?.active;
+  if(threshold?.update(dt,reduced.value,camera)){
+    if(threshold.active!==wasExterior){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x,Math.PI);}
+    needsRender=true;renderer.shadowMap.needsUpdate=true;
+  }
   if(pendingWorks&&['dormant','discovered'].includes(mechanism.state))mechanism.activate(now);
   if(pendingWorks&&mechanism.state==='open'){const id=pendingWorks,room=expansionSpaces.find(s=>s.id===id);startWorks(id,room?new T.Vector3(...room.anchor):id==='arrival'?spawn:id==='gallery'?worksArrival:new T.Vector3(...worksModules.find(m=>m.id===id)!.destination));}
   if(radio.state.mode!=='expanded')updatePortal(now);
@@ -331,7 +343,7 @@ function animate(now: number) {
     if(freeInput.value){candidate.value=pick(0,0,true);}else{candidate.value=false;actionable.value=false;}
     renderer.domElement.dataset.interaction=String(candidate.value||'');renderer.domElement.dataset.actionable=String(actionable.value); wallState.value=mechanism.state;
     const canvas = renderer.domElement;
-    canvas.dataset.environment=threshold?.active?'antipayuta':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?'antipayuta':spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
+    canvas.dataset.originDoor=origin?.opened?'open':'closed';canvas.dataset.environment=threshold?.active?threshold.environment:spaceAt(camera.position)?.id==='origin'?'origin':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?threshold.environment:spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
     canvas.dataset.position = camera.position.toArray().map(n => n.toFixed(4)).join(',');
     canvas.dataset.look = [look.yaw, look.pitch].map(n => n.toFixed(4)).join(',');
     canvas.dataset.wall = mechanism.state; canvas.dataset.opening = mechanism.opening.toFixed(4); canvas.dataset.triangles = String(renderer.info.render.triangles);
@@ -339,7 +351,7 @@ function animate(now: number) {
 }
 function applyTheme() {
   if (!architecture || !lighting) return;
-  architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);
+  architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);origin?.setTheme(dark.value);
   renderer.toneMappingExposure = dark.value ? 1.12 : 1.0;
   needsRender = true; renderer.shadowMap.needsUpdate = true;
 }
@@ -378,8 +390,8 @@ onMounted(() => {
     renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.06; renderer.outputColorSpace = T.SRGBColorSpace;
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
-    camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 220); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.snowSolids.includes(m))); applyTheme();
+    camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -406,7 +418,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  interactables?.dispose();threshold?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>

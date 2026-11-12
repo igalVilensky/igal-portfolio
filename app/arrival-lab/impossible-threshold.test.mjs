@@ -34,3 +34,26 @@ test('reduced motion opens immediately and inactive hall collisions never affect
  world.move(camera.position,new T.Vector3(1,0,1),()=>{usedHall=true;});assert.equal(usedHall,false);
  world.returnToHall(camera);assert.equal(world.active,false);assert.equal(world.state,'open');world.dispose();
 });
+test('Sun Door has independent opening, a walkable dogleg, coastal reveal and natural return',()=>{
+ const scene=new T.Scene(),hall=new T.Group();scene.add(hall);const solids=[];
+ const world=createImpossibleThreshold(scene,solids),camera=new T.PerspectiveCamera(65,1,.08,220);
+ const collide=collision.createCollision(world.hallSolids);
+ camera.position.set(12,1.65,-69);world.update(0,true,camera);world.activate(true);world.update(0,true,camera);
+ camera.position.z=-70.6;world.update(.01,true,camera);assert.equal(world.environment,'sun-world');
+ const moveTo=(x,z)=>{scene.updateMatrixWorld(true);world.move(camera.position,new T.Vector3(x-camera.position.x,0,z-camera.position.z),collide);assert(Math.abs(camera.position.x-x)<.02,`x ${camera.position.x} expected ${x}`);assert(Math.abs(camera.position.z-z)<.02,`z ${camera.position.z} expected ${z}`);world.update(.01,true,camera);};
+ moveTo(0,12.3);moveTo(12.7,12.3);moveTo(12.7,24);moveTo(10,30);
+ world.setTheme(true);assert.equal(world.environment,'sun-world');
+ moveTo(12.7,24);moveTo(12.7,12.3);moveTo(0,12.3);moveTo(0,3);moveTo(0,.9);
+ assert.equal(world.environment,'hall');assert.equal(hall.visible,true);assert(Math.abs(camera.position.x-12)<.02);
+ camera.position.set(-12,1.65,-69);world.update(.01,true,camera);assert.equal(world.state,'closed');
+ world.dispose();
+});
+test('both impossible worlds restore Origin view distance and exterior visibility',()=>{
+ for(const sun of [false,true]){
+  const scene=new T.Scene(),origin=new T.Group();scene.add(origin);
+  const world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera(65,1,.08,4000);
+  camera.position.set(sun?12:-12,1.65,-69);world.update(0,true,camera);world.activate(sun);world.update(0,true,camera);
+  camera.position.z=-70.6;world.update(.01,true,camera);assert.equal(origin.visible,false);
+  world.returnToHall(camera);assert.equal(camera.far,4000);assert.equal(origin.visible,true);world.dispose();
+ }
+});
