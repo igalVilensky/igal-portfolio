@@ -15,7 +15,8 @@ export const expansionSpaces:readonly WorldSpace[]=[
  space('commons',{en:'Commons',de:'Gemeinschaft',ru:'Общее пространство'},[-38,-26,22,34],6,[-32,1.65,22],[-32,1.65,28],'sage intimate court',[[-32,0,28]]),
 ];
 export const worldSpaces:readonly WorldSpace[]=[
- {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well','origin'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
+ {id:'little-explorer',names:{en:'Little Explorer',de:'Kleine Entdecker',ru:'Маленький исследователь'},bounds:[26,60,-2,24],position:[46,0,11],rotation:0,height:8,connections:['arrival'],anchor:[36,1.65,19],entry:[26,1.65,19],lookAt:[46,3,11],identity:'warm travel pavilion',status:'active',mounts:[]},
+ {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well','origin','little-explorer'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
  {id:'gallery',names:{en:'West gallery',de:'Westgalerie',ru:'Западная галерея'},bounds:[-60,-24,16,22],position:[-43,0,19],rotation:0,height:7,connections:['arrival',...expansionSpaces.filter(s=>s.id!=='atmosphere').map(s=>s.id)],anchor:[-43,1.65,19],entry:[-26,1.65,19],lookAt:[-60,3,19],identity:'bronze compression',status:'active',mounts:[]},
  {id:'light-well',names:{en:'Light well',de:'Lichthof',ru:'Световой колодец'},bounds:[-10,10,-106,-72],position:[0,0,-90],rotation:0,height:46,connections:['arrival','living-works'],anchor:[0,1.65,-88],entry:[0,1.65,-72],lookAt:[0,20,-105],identity:'vertical light',status:'active',mounts:[]},
  {id:'living-works',names:{en:'Living Works',de:'Lebendige Werke',ru:'Живые проекты'},bounds:[15,54,-114,-74],position:[34,0,-94],rotation:0,height:24,connections:['light-well'],anchor:[22,1.65,-87],entry:[15,1.65,-94],lookAt:[32,5,-101],identity:'Sunlit Primaries',status:'active',mounts:[]},...expansionSpaces,
@@ -33,6 +34,7 @@ export function expansionLeg(p:T.Vector3):T.Vector3[]{
   points.push(new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17));return points;
  }
 
+ if(spaceAt(p)?.id==='little-explorer')return [p.clone(),new T.Vector3(35,1.65,19),new T.Vector3(20,1.65,19)];
  if(p.z>=26&&p.x>=-26){return [p.clone(),new T.Vector3(-20,1.65,p.z),new T.Vector3(-20,1.65,29),new T.Vector3(-32,1.65,29),new T.Vector3(-32,1.65,19),new T.Vector3(-20,1.65,19)];}
  if(p.x>=-24)return [];
  const s=expansionSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);
