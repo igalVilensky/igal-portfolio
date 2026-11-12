@@ -15,13 +15,24 @@ export const expansionSpaces:readonly WorldSpace[]=[
  space('commons',{en:'Commons',de:'Gemeinschaft',ru:'Общее пространство'},[-38,-26,22,34],6,[-32,1.65,22],[-32,1.65,28],'sage intimate court',[[-32,0,28]]),
 ];
 export const worldSpaces:readonly WorldSpace[]=[
- {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
+ {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well','origin'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
  {id:'gallery',names:{en:'West gallery',de:'Westgalerie',ru:'Западная галерея'},bounds:[-60,-24,16,22],position:[-43,0,19],rotation:0,height:7,connections:['arrival',...expansionSpaces.filter(s=>s.id!=='atmosphere').map(s=>s.id)],anchor:[-43,1.65,19],entry:[-26,1.65,19],lookAt:[-60,3,19],identity:'bronze compression',status:'active',mounts:[]},
  {id:'light-well',names:{en:'Light well',de:'Lichthof',ru:'Световой колодец'},bounds:[-10,10,-106,-72],position:[0,0,-90],rotation:0,height:46,connections:['arrival','living-works'],anchor:[0,1.65,-88],entry:[0,1.65,-72],lookAt:[0,20,-105],identity:'vertical light',status:'active',mounts:[]},
- {id:'living-works',names:{en:'Living Works',de:'Lebendige Werke',ru:'Живые проекты'},bounds:[15,54,-114,-74],position:[34,0,-94],rotation:0,height:24,connections:['light-well'],anchor:[22,1.65,-87],entry:[15,1.65,-94],lookAt:[32,5,-101],identity:'Sunlit Primaries',status:'active',mounts:[]},...expansionSpaces];
+ {id:'living-works',names:{en:'Living Works',de:'Lebendige Werke',ru:'Живые проекты'},bounds:[15,54,-114,-74],position:[34,0,-94],rotation:0,height:24,connections:['light-well'],anchor:[22,1.65,-87],entry:[15,1.65,-94],lookAt:[32,5,-101],identity:'Sunlit Primaries',status:'active',mounts:[]},...expansionSpaces,
+ {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
 export function spaceAt(p:T.Vector3){return worldSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);}
 /** Route via the circulation centreline; works/light-well routing remains in its existing owner. */
 export function expansionLeg(p:T.Vector3):T.Vector3[]{
+ if(spaceAt(p)?.id==='origin'){
+  const points=[p.clone()];
+  // Return around the occupied annexes, then through the real main opening.
+  if(p.z<55){const east=p.x>24||p.z< -114;if(east)points.push(new T.Vector3(72,1.65,p.z),new T.Vector3(72,1.65,56));else points.push(new T.Vector3(-103,1.65,p.z),new T.Vector3(-103,1.65,62));}
+  if(p.y>2)points.push(new T.Vector3(54,5.65,82),new T.Vector3(54,1.65,56));
+  else if(p.z>=80)points.push(new T.Vector3(p.x,1.65,90),new T.Vector3(12,1.65,90));
+  else if(p.z>=55)points.push(new T.Vector3(p.x,1.65,62));
+  points.push(new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17));return points;
+ }
+
  if(p.z>=26&&p.x>=-26){return [p.clone(),new T.Vector3(-20,1.65,p.z),new T.Vector3(-20,1.65,29),new T.Vector3(-32,1.65,29),new T.Vector3(-32,1.65,19),new T.Vector3(-20,1.65,19)];}
  if(p.x>=-24)return [];
  const s=expansionSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);

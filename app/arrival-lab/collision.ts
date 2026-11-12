@@ -13,7 +13,7 @@ export function createCollision(solids: T.Mesh[]) {
   return (position: T.Vector3, displacement: T.Vector3) => {
     end.copy(position).add(displacement);
     sweep.setFromPoints([position,end]);sweep.min.addScalar(-radius);sweep.max.addScalar(radius);
-    sweep.min.y=0;sweep.max.y=1.98;
+    sweep.min.y=position.y-1.65;sweep.max.y=position.y+.33;
     const candidates=barriers.filter(m=>!staticBounds.has(m)||staticBounds.get(m)!.intersectsBox(sweep));
     const steps = Math.max(1, Math.ceil(displacement.length() / .16));
     const step = displacement.clone().divideScalar(steps);
@@ -24,7 +24,7 @@ export function createCollision(solids: T.Mesh[]) {
         let allowed = Math.abs(amount);
         for (const height of [.4, 1.15, 1.65]) {
           for (const offset of [-radius, 0, radius]) {
-            const origin = position.clone(); origin.y = height; origin[axis === 'x' ? 'z' : 'x'] += offset;
+            const origin = position.clone(); origin.y = position.y - 1.65 + height; origin[axis === 'x' ? 'z' : 'x'] += offset;
             ray.set(origin, direction); ray.far = allowed + radius;
             const hit = ray.intersectObjects(candidates, false)[0];
             if (hit) allowed = Math.min(allowed, Math.max(0, hit.distance - radius));

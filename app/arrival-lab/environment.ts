@@ -74,7 +74,13 @@ export function buildEnvironment(scene: T.Scene) {
   // Folded gallery mass anchored to the left enclosure; the opposite side stays open.
   extrude([[-24,8],[-17,11],[-17,13],[-24,16]], 67, -53, pale);
   box(2, 8, 67, -23, 4, -19.5, stone);
-  box(51, 45, 1.5, 0, 22.5, 24, stone);
+  // Main entrance x=7..17 avoids the Atmosphere annex at x=-22..2, z=26..54.
+  box(32.5,24,1.5,-9.25,12,24,stone);
+  box(8.5,24,1.5,21.25,12,24,stone);
+  box(10,12,1.5,12,18,24,stone);
+  const frontCrown:number[][]=[[-24,24],[24,24]];
+  for(let i=0;i<=48;i++){const t=Math.PI*i/48;frontCrown.push([24*Math.cos(t),24+19*Math.sin(t)]);}
+  extrude(frontCrown,1.5,23.25,stone);
   // A single tall reveal is the orientation landmark, visible from the whole chamber.
   box(.22, 32, 1, 23.85, 16, -47, daylight);
   box(1.3, 33, 2.2, 24, 16.5, -49, satin);

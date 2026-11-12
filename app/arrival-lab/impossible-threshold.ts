@@ -96,12 +96,12 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  const doors=[{state:'closed' as ThresholdState,progress:0},{state:'closed' as ThresholdState,progress:0}];
  let selected=doors[0]!;
  let active=false,previous=new T.Vector3(),initialized=false,dark=false;
- let savedBackground:T.Scene['background'],savedFog:T.Scene['fog'];
+ let savedBackground:T.Scene['background'],savedFog:T.Scene['fog'],savedFar=220;
  const snowCollision=createCollision(snowSolids);
  function appearance(){if(active){if(sunWorld){scene.background=new T.Color('#b4def1');scene.fog=new T.Fog('#c5e5ee',150,1100);return;}scene.background=new T.Color(dark?'#647e98':'#cbdde8');scene.fog=new T.FogExp2(dark?'#92a7ba':'#dde7ed',.0018);sun.intensity=dark?.5:2.1;fill.intensity=dark?1.15:2.3;} }
  function switchWorld(camera:T.PerspectiveCamera){
   selected.state='crossing';active=!active;
-  if(active){savedBackground=scene.background;savedFog=scene.fog;}
+  if(active){savedBackground=scene.background;savedFog=scene.fog;savedFar=camera.far;}
   if(active)hallObjects.forEach(o=>hallVisibility.set(o,o.visible));
   hallObjects.forEach(o=>o.visible=active?false:hallVisibility.get(o)!);hall.visible=!active;arctic.visible=active&&!sunWorld;coast.visible=active&&sunWorld;
   // A rigid half-turn maps the two doorway faces; preserve pitch and crossing depth.
@@ -109,7 +109,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
   camera.position.x=active?-(camera.position.x-hallX):-camera.position.x+hallX;
   camera.position.z=active?-(camera.position.z+69.5):-camera.position.z-69.5;
   camera.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.PI));
-  camera.far=active?9000:220;camera.updateProjectionMatrix();
+  camera.far=active?9000:savedFar;camera.updateProjectionMatrix();
   if(active)appearance();else{scene.background=savedBackground;scene.fog=savedFog;}
   selected.progress=1;selected.state='open';previous.copy(camera.position);
  }

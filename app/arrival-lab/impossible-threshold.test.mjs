@@ -48,3 +48,12 @@ test('Sun Door has independent opening, a walkable dogleg, coastal reveal and na
  camera.position.set(-12,1.65,-69);world.update(.01,true,camera);assert.equal(world.state,'closed');
  world.dispose();
 });
+test('both impossible worlds restore Origin view distance and exterior visibility',()=>{
+ for(const sun of [false,true]){
+  const scene=new T.Scene(),origin=new T.Group();scene.add(origin);
+  const world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera(65,1,.08,4000);
+  camera.position.set(sun?12:-12,1.65,-69);world.update(0,true,camera);world.activate(sun);world.update(0,true,camera);
+  camera.position.z=-70.6;world.update(.01,true,camera);assert.equal(origin.visible,false);
+  world.returnToHall(camera);assert.equal(camera.far,4000);assert.equal(origin.visible,true);world.dispose();
+ }
+});
