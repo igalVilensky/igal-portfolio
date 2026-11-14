@@ -57,3 +57,9 @@ test('both impossible worlds restore Origin view distance and exterior visibilit
   world.returnToHall(camera);assert.equal(camera.far,4000);assert.equal(origin.visible,true);world.dispose();
  }
 });
+test('roof is owned by the existing hall visibility switch and restored after world return',()=>{
+ const scene=new T.Scene(),solids=[],roof=load('ascent').createAscent(scene,solids),world=createImpossibleThreshold(scene,solids),camera=new T.PerspectiveCamera();
+ camera.position.set(-12,1.65,-68.6);world.update(.01,false,camera);world.activate();world.update(2,false,camera);
+ camera.position.set(-12,1.65,-69);world.update(.01,false,camera);camera.position.z=-70.6;world.update(.01,false,camera);assert(world.active);assert.equal(roof.root.visible,false);
+ world.returnToHall(camera);assert.equal(roof.root.visible,true);assert.equal(roof.root.parent,scene);world.dispose();roof.dispose();
+});

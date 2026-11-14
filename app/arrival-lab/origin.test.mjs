@@ -40,3 +40,8 @@ test('reduced motion freezes cloud drift and instancing releases its GPU buffers
  origin.update(1,true,p,true);assert.equal(cloud.material.uniforms.time.value,time);
  let released=false;banks.addEventListener('dispose',()=>released=true);origin.dispose();assert.ok(released);
 });
+test('shared Origin update preserves ladder and rooftop elevation while using exterior atmosphere',()=>{
+ const scene=new T.Scene();scene.fog=new T.FogExp2('#ffffff',.0035);const origin=createOrigin(scene,[]),p=new T.Vector3(-40,16.05,50);
+ origin.setTheme(false);origin.update(.05,false,p,true,false,false,true);assert.equal(p.y,16.05);assert.equal(scene.fog.density,.0009);
+ origin.setTheme(true);p.set(-57,6.8,19.5);origin.update(.05,true,p,true,false,false,true);assert.equal(p.y,6.8);origin.dispose();
+});

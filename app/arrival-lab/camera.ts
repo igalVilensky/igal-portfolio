@@ -12,7 +12,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   let analogX=0, analogZ=0, sprint=false;
   const reset=()=>{keys.clear();velocity.set(0,0,0);analogX=analogZ=0;sprint=false;dragging=false;pointers.clear();multiple=false;};
   let yaw = .0574, pitch = .0855, targetYaw = yaw, targetPitch = pitch;
-  let enabled = true;
+  let enabled = true, climbing=false;
   let dragging = false, distance = 0, lastX = 0, lastY = 0, multiple = false;
   const pointers = new Set<number>();
   const removers: (() => void)[] = [];
@@ -58,6 +58,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (target !== canvas && target?.closest?.('button,a,input,textarea,select,[contenteditable=true],[role=dialog],[tabindex]')) return;
     if (['KeyW','KeyA','KeyS','KeyD','ShiftLeft','ShiftRight'].includes(event.code)) { keys.add(event.code); event.preventDefault(); if (event.code.startsWith('Key')) callbacks.manual(); }
 
+    if(climbing && ['ArrowUp','ArrowDown'].includes(event.key)){keys.add(event.code);event.preventDefault();return;}
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
     const step = steps[event.key];
     if (step) { event.preventDefault(); targetYaw += step[0]; targetPitch = T.MathUtils.clamp(targetPitch + step[1], -1.25, 1.35); }
@@ -83,6 +84,8 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     setEnabled(value: boolean) { enabled = value; reset(); },
     analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
     reset,
+    setClimbing(value:boolean){climbing=value;reset();},
+    climbAxis(){return -analogZ+Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'));},
     // Transport momentum with the doorway's rigid turn without clearing held keys/touch intent.
     restore(nextYaw:number,nextPitch:number,movementTurn=0) { velocity.applyAxisAngle(new T.Vector3(0,1,0),movementTurn); yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
     stop: reset,
@@ -94,6 +97,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
       return { active: !!(x || z), delta: velocity.clone().multiplyScalar(dt) };
     },
     update(dt: number, reduced = false) {
+      if(climbing){targetYaw=T.MathUtils.clamp(targetYaw,-.55,.55);targetPitch=T.MathUtils.clamp(targetPitch,-.45,.75);}
       yaw = reduced ? targetYaw : T.MathUtils.damp(yaw, targetYaw, 18, dt);
       pitch = reduced ? targetPitch : T.MathUtils.damp(pitch, targetPitch, 18, dt);
       camera.rotation.set(pitch, yaw, 0, 'YXZ');
