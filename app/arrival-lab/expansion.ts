@@ -13,7 +13,10 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  }
  // Gallery sides are precisely replaced by room thresholds below.
  box(.5,1,6,-25.75,-.5,19); // Meet the existing slab edge at x=-25.5.
- box(34,1,6,-43,-.5,19);box(34,.6,6,-43,7.3,19);
+ box(34,1,6,-43,-.5,19);
+ // Local access well beside the existing far-gallery upper opening.
+ box(1.8,.6,6,-59.1,7.3,19);box(30,.6,6,-41,7.3,19);
+ box(2.2,.6,2.4,-57.1,7.3,17.2);box(2.2,.6,1.4,-57.1,7.3,21.3);
  // z=16: opening x=-51..-45. z=22 also contains the Commons opening.
  for(const [a,b] of [[-60,-51],[-45,-26]])box(b!-a!,7,.6,(a!+b!)/2,3.5,16,bronze);
  for(const [a,b] of [[-60,-51],[-45,-35],[-29,-26]])box(b!-a!,7,.6,(a!+b!)/2,3.5,22,bronze);

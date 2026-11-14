@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import * as T from 'three';
 import TouchControls from './TouchControls.vue';
+import { createAscent, createClimb, roofHeight, ascent, ascentCopy } from './ascent';
+let rooftop:ReturnType<typeof createAscent>|undefined;
+const climb=createClimb(), climbState=ref('walking');
+const asc=computed(()=>ascentCopy[locale.value as keyof typeof ascentCopy]||ascentCopy.en);
+function ladderNearby(){return !!camera&&!threshold?.active&&Math.abs(camera.position.x-ascent.x)<3&&Math.abs(camera.position.z-ascent.z)<2.5&&(camera.position.y<3||Math.abs(camera.position.y-ascent.roof-ascent.eye)<.2);}
+
 import { createInteractables, interactionIntent } from './interactions';
 import { interactionCopy } from './interaction-copy';
 const ic=computed(()=>interactionCopy[locale.value as keyof typeof interactionCopy]||interactionCopy.en);
@@ -8,7 +14,7 @@ const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(f
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id==='ladder')return camera.position.y>6?asc.value.down:asc.value.up;if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -61,8 +67,8 @@ function changeWeight(index:number,value:number){selectedCriterion.value=index;w
 function resetMatrix(){weights.value=[...initialWeights];selectedCriterion.value=0;works?.setWeights(weights.value,0);needsRender=true;}
 function selectCriterion(index:number){selectedCriterion.value=index;works?.setWeights(weights.value,index);needsRender=true;}
 function closeWorks(){worksUI.value=null;look?.setEnabled(!portalBusy.value&&radio.state.mode!=='expanded');nextTick(()=>{if(failed.value||textMode.value)document.querySelector<HTMLButtonElement>('[data-action=works-shortcut]')?.focus();else renderer?.domElement.focus();});}
-function worksMenu(){if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
-function goWorks(id:string){
+function worksMenu(){if(climb.active||camera?.position.y>7)return;if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
+function goWorks(id:string){if(climb.active||camera?.position.y>7)return;
  if(threshold?.active&&camera){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);}
  if(portalBusy.value||guided)return;
  worksUI.value=null;if(radioOpen.value)closeRadio();controlsOpen.value=false;
@@ -91,7 +97,7 @@ const radioOpen=computed(()=>radio.state.mode==='expanded'), gameDock=ref<HTMLEl
 const ac=computed(()=>audioCopy[locale.value as keyof typeof audioCopy]||audioCopy.en);
 let receiver:ReturnType<typeof createReceiver>|undefined, radioTravel=false;
 function closeRadio(){radio.setMode('mini');look?.setEnabled(!portalBusy.value&&!guided&&!worksUI.value&&!worksTrip.value);if(!portalBusy.value&&!worksUI.value)nextTick(()=>renderer?.domElement.focus());}
-function approachRadio(){
+function approachRadio(){if(climb.active||camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
 
  if(portalBusy.value||guided)return;
@@ -170,7 +176,7 @@ function activateTerminal(direct=false,keepScreen=false) {
   travel={path:entryPath,from:camera.quaternion.clone(),to:screenOrientation(),start:performance.now(),duration:reduced.value?0:workspaceKind.value==='flowforge'?Math.max(2200,Math.min(6500,camera.position.distanceTo(near)*90)):1800,exiting:false};
   if(direct||reduced.value){travelled=entryPath.map(p=>p.clone());openWorkspace();}
 }
-function approachTerminal() {
+function approachTerminal() {if(climb.active||camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
   if(radioOpen.value)closeRadio();
   if(worksUI.value)closeWorks();
@@ -223,6 +229,8 @@ const cleanups: (() => void)[] = [];
 
 function pick(x: number, y: number, center = false) {
   if (!renderer || failed.value || textMode.value || portalBusy.value || guided) return false;
+  if(climb.active)return false;
+  if(ladderNearby()){actionable.value=true;return 'ladder';}
   const rect = renderer.domElement.getBoundingClientRect();
   if (!center && (x < rect.left || y < rect.top || x > rect.right || y > rect.bottom)) return false;
   pointer.set(center ? 0 : (x - rect.left) / rect.width * 2 - 1, center ? 0 : -(y - rect.top) / rect.height * 2 + 1);
@@ -243,7 +251,8 @@ function pick(x: number, y: number, center = false) {
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
 }
-function activateWorld(x:number,y:number,center:boolean,direct=false) { if(portalBusy.value||guided)return; let hit=pick(x,y,center);
+function activateWorld(x:number,y:number,center:boolean,direct=false) { if(portalBusy.value||guided||climb.active)return;
+ if(freeInput.value&&ladderNearby()){journey.cancel();if(climb.activate(camera.position)){look.setClimbing(true);look.orient(0,.16);climbState.value=climb.state;candidate.value=false;needsRender=true;}return;} let hit=pick(x,y,center);
         if(!center&&touchMode.value&&!hit){for(const [dx,dy] of [[-10,0],[10,0],[0,-10],[0,10]]){hit=pick(x+dx!,y+dy!,false);if(hit&&actionable.value)break;}}
         if (!hit || !freeInput.value) return;
         const intent=interactionIntent(hit,actionable.value,direct);
@@ -271,6 +280,7 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) { if(porta
         else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
         else mechanism.react(performance.now()); }
 function enter() {
+  if(climb.active||camera?.position.y>7)return;
   if(threshold?.active){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;return;}
   if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
@@ -284,6 +294,7 @@ function enter() {
   } else mechanism.activate(performance.now());
 }
 function back() {
+  if(climb.active||camera?.position.y>7)return;
   if(threshold?.active){enter();return;}
   if(worksTrip.value){cancelWorks();return;}
   if(worksUI.value)closeWorks();
@@ -301,7 +312,7 @@ function failure() { clearTimeout(exitTimer);pendingWorks='';worksTrip.value='';
 function showText() {
   if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
-  journey?.reset();
+  if(!climb.active&&camera?.position.y<7)journey?.reset();
   textMode.value = !textMode.value;
   if (textMode.value) { if (document.pointerLockElement) document.exitPointerLock(); cancelAnimationFrame(frame); }
   else if (!failed.value) { lastTime = performance.now(); animate(lastTime); }
@@ -312,12 +323,20 @@ function animate(now: number) {
   const dt = Math.min((now - lastTime) / 1000, .2); lastTime = now;
   if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value && radio.state.mode!=='expanded') {
   look.update(dt, reduced.value);
+  const wasClimbing=climb.active;
+  if(wasClimbing){climb.update(dt,look.climbAxis(),camera.position,reduced.value);climbState.value=climb.state;needsRender=true;if(!climb.active){look.setClimbing(false);look.orient(-Math.PI/2,.02);}}
   const movement = look.movement(dt);
-  if (movement.active && journey.moving) journey.cancel();
-  if (journey.moving) journey.update(now, dt);
-  else { scene.updateMatrixWorld(true); threshold!.move(camera.position, movement.delta,collide); journey.locate(); }
+  if (!wasClimbing && movement.active && journey.moving) journey.cancel();
+  if(wasClimbing) { /* ladder owns translation until safe dismount */ }
+  else if (journey.moving) journey.update(now, dt);
+  else if(camera.position.y>7&&!threshold?.active){
+    const old=camera.position.clone();collide(camera.position,movement.delta);
+    const height=roofHeight(camera.position.x,camera.position.z);
+    const inWell=camera.position.x>=-58.5&&camera.position.x<=-55.65&&camera.position.z>=18.1&&camera.position.z<=20.9;
+    if(height===undefined||inWell)camera.position.copy(old);else camera.position.y=height+ascent.eye;
+  }else { scene.updateMatrixWorld(true); threshold!.move(camera.position, movement.delta,collide); journey.locate(); }
   }
-  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,spaceAt(camera.position)?.id==='origin',journey.moving||guided)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,spaceAt(camera.position)?.id==='origin',journey.moving||guided,climb.active||camera.position.y>7)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
   if(!threshold?.active&&spaceAt(camera.position)?.id==='origin'&&!reduced.value)needsRender=true;
   const wasExterior=threshold?.active;
   if(threshold?.update(dt,reduced.value,camera)){
@@ -339,7 +358,7 @@ function animate(now: number) {
   lighting.portal.intensity = T.MathUtils.damp(lighting.portal.intensity, pointerHover || focus.value ? 80 : 40, 7, dt);
   if(portalState.value==='entering'||portalState.value==='exiting'||guided)needsRender=true;
   receiver?.update(locale.value,dark.value);
-  const view = [locale.value,radio.state.station,radio.state.status,radio.title,camera.position.x,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>typeof v==='number'?v.toFixed(5):v).join(',');
+  const view = [locale.value,radio.state.station,radio.state.status,radio.title,camera.position.x,camera.position.y,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>typeof v==='number'?v.toFixed(5):v).join(',');
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
   if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { renderer.render(scene, camera); needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
@@ -348,7 +367,7 @@ function animate(now: number) {
     if(freeInput.value){candidate.value=pick(0,0,true);}else{candidate.value=false;actionable.value=false;}
     renderer.domElement.dataset.interaction=String(candidate.value||'');renderer.domElement.dataset.actionable=String(actionable.value); wallState.value=mechanism.state;
     const canvas = renderer.domElement;
-    canvas.dataset.explorerVisited=explorer?.visited.join(',')||'';canvas.dataset.originDoor=origin?.opened?'open':'closed';canvas.dataset.environment=threshold?.active?threshold.environment:spaceAt(camera.position)?.id==='origin'?'origin':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?threshold.environment:spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
+    canvas.dataset.climb=climb.state;canvas.dataset.rooftop=String(camera.position.y>7&&!climb.active);canvas.dataset.explorerVisited=explorer?.visited.join(',')||'';canvas.dataset.originDoor=origin?.opened?'open':'closed';canvas.dataset.environment=threshold?.active?threshold.environment:spaceAt(camera.position)?.id==='origin'?'origin':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?threshold.environment:spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
     canvas.dataset.position = camera.position.toArray().map(n => n.toFixed(4)).join(',');
     canvas.dataset.look = [look.yaw, look.pitch].map(n => n.toFixed(4)).join(',');
     canvas.dataset.wall = mechanism.state; canvas.dataset.opening = mechanism.opening.toFixed(4); canvas.dataset.triangles = String(renderer.info.render.triangles);
@@ -356,7 +375,7 @@ function animate(now: number) {
 }
 function applyTheme() {
   if (!architecture || !lighting) return;
-  explorer?.setTheme(dark.value);architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);origin?.setTheme(dark.value);
+  rooftop?.setTheme(dark.value);explorer?.setTheme(dark.value);architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);origin?.setTheme(dark.value);
   renderer.toneMappingExposure = dark.value ? 1.12 : 1.0;
   needsRender = true; renderer.shadowMap.needsUpdate = true;
 }
@@ -396,7 +415,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -423,7 +442,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
@@ -460,7 +479,8 @@ onBeforeUnmount(() => {
       <button :aria-label="ac.approach" @keydown.stop @click="approachRadio">{{ ac.approach }}</button>
     </nav>
     <TouchControls v-if="touchVisible" :label="ic.move" :help="ic.help" @move="mobileMove"/>
-    <p v-if="touchVisible" class="arrival-look-hint">{{ ic.look }}</p>
+<p v-if="touchVisible" class="arrival-look-hint">{{ climbState!=='walking' ? asc.touch : ic.look }}</p>
+    <p v-if="climbState!=='walking' && !touchMode" class="arrival-context" role="status">{{ asc.climbing }}</p>
     <button v-if="freeInput && candidate" class="arrival-context" :class="{'arrival-context-touch':touchMode}" :disabled="!actionable" @click="activateWorld(0,0,true)">{{ hint }}<kbd v-if="!touchMode && actionable">E</kbd></button>
     <span v-if="!portalBusy && portalNear" class="portal-reticle" aria-hidden="true">+</span>
     <div v-if="portalState==='entering'" class="portal-progress" role="status">{{ pc.entering }} <button @click="openWorkspace">{{ pc.skip }}</button></div>
