@@ -8,7 +8,7 @@ const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(f
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?'Touch · '+id.slice(9).replace(/^./,s=>s.toUpperCase()):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -33,7 +33,7 @@ import './portal.css';
 import PortalWorkspace from './PortalWorkspace.vue';
 import { createTerminal, screenPose, portalPath, pointOnPath, type PortalState } from './portal';
 import { portalCopy } from './portal-copy';
-import { createLittleExplorer } from './little-explorer';
+import { createLittleExplorer, explorerCountryName } from './little-explorer';
 let explorer:ReturnType<typeof createLittleExplorer>|undefined;
 import { createExpansion } from './expansion';
 import { createAtmosphere } from './atmosphere';
@@ -381,7 +381,7 @@ function radioShortcut(){
 }
 watch(freeInput,value=>{look?.setEnabled(value);if(!value){candidate.value=false;actionable.value=false;}},{flush:'sync'});
 watch(dark, applyTheme);
-watch(locale,value=>{atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
+watch(locale,value=>{explorer?.setLocale(value);atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
 onMounted(() => {
   radio.mount();
@@ -396,7 +396,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
