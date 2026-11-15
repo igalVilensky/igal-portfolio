@@ -31,12 +31,14 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
   assetStatus.state='ready';
  }).catch(error=>{assetStatus.state='error';assetStatus.error=String(error);console.error('Family character loading failed',error);});
  const collision=createCollision(solids.filter(m=>!m.userData.npc));
+ let conversationId:string|null=null,conversationPhase='listening';
  const probe=new T.Vector3(),delta=new T.Vector3();
- return {root,people,ready,assetStatus,activate(id:string){const p=people.find(p=>p.spec.id===id);if(p&&root.visible&&p.reaction<=0){p.reaction=2.4;p.state='reacting';}},update(now:number,dt:number,reduced:boolean,player:T.Vector3,enabled=true){root.visible=enabled;if(!enabled)return false;dt=Math.min(Math.max(dt,0),.2);
+ return {root,people,ready,assetStatus,converse(id:string|null,phase='listening'){conversationId=id;conversationPhase=phase;},activate(id:string){const p=people.find(p=>p.spec.id===id);if(p&&root.visible&&p.reaction<=0){p.reaction=2.4;p.state='reacting';}},update(now:number,dt:number,reduced:boolean,player:T.Vector3,enabled=true){root.visible=enabled;if(!enabled)return false;dt=Math.min(Math.max(dt,0),.2);
   for(const p of people){
    const distance=p.person.position.distanceTo(player);p.near=distance<3.5&&player.y<4;
    let walking=false;
-   if(p.reaction>0){p.reaction=Math.max(0,p.reaction-dt);p.state='reacting';}
+   if(conversationId===p.spec.id){p.state=conversationPhase;p.reaction=conversationPhase==='responding'?.8:0;}
+   else if(p.reaction>0){p.reaction=Math.max(0,p.reaction-dt);p.state='reacting';}
    else if(p.wait>0){p.wait-=dt;p.state='pausing';}
    else {
     if(!p.route.length){const destinations=[0,1,2,3,4,5,6,7,8,9,16];let target=destinations[(p.cycle++*3+people.indexOf(p)*2)%destinations.length]!;if(target===p.node)target=(target+1)%5;p.route=familyRoute(p.node,target);}
@@ -51,7 +53,8 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
      }
     }p.state=walking?'walking':'idle';
    }
-   if(p.reaction>0){const target=Math.atan2(player.x-p.person.position.x,player.z-p.person.position.z);p.person.rotation.y+=Math.atan2(Math.sin(target-p.person.rotation.y),Math.cos(target-p.person.rotation.y))*(1-Math.exp(-dt*4));}
+   if(p.reaction>0||conversationId===p.spec.id){const target=Math.atan2(player.x-p.person.position.x,player.z-p.person.position.z);p.person.rotation.y+=Math.atan2(Math.sin(target-p.person.rotation.y),Math.cos(target-p.person.rotation.y))*(1-Math.exp(-dt*4));}
+   if(conversationId===p.spec.id&&!reduced){p.body.rotation.z=Math.sin(now/450+p.phase)*(conversationPhase==='thinking'?.012:conversationPhase==='responding'?.025:.005);}else p.body.rotation.z=T.MathUtils.damp(p.body.rotation.z,0,5,dt);
    p.visual?.update(dt,walking,p.reaction>0,reduced);
   }return true;
  },dispose(){disposed=true;assets?.dispose();for(const p of people){p.visual?.mixer.stopAllAction();if(p.visual)p.visual.mixer.uncacheRoot(p.visual.mixer.getRoot());}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};

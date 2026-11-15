@@ -1,5 +1,22 @@
 <script setup lang="ts">
 import * as T from 'three';
+import { createIntelligence } from './intelligence';
+import EntityConversation from './EntityConversation.vue';
+import { useWorldConversation,conversationCopy,entityOrder,type EntityId } from './conversation';
+const encounter=useWorldConversation();
+const activeEntity=encounter.active;
+const encounterCopy=computed(()=>conversationCopy[locale.value==='de'||locale.value==='ru'?locale.value:'en']);
+let intelligence:ReturnType<typeof createIntelligence>|undefined;
+function openEncounter(id:EntityId){
+ if(!freeInput.value)return;
+ journey.cancel();look.stop();look.setEnabled(false);releaseDockPointer();
+ const entity=intelligence?.entities.find(e=>e.spec.id===id);
+ const person=entity?.person||family?.people.find(p=>p.spec.id===id)?.person;
+ if(person){const aim=person.position.clone();aim.y=entity?entity.spec.height-0.6:1.3;const target=camera.clone();target.lookAt(aim);if(window.innerWidth>850){aim.add(new T.Vector3(1,0,0).applyQuaternion(target.quaternion).multiplyScalar(camera.position.distanceTo(aim)*.32));target.lookAt(aim);}const e=new T.Euler().setFromQuaternion(target.quaternion,'YXZ');look.orient(e.y,e.x);}
+ encounter.open(id);family?.converse(id);needsRender=true;
+}
+function closeEncounter(){encounter.close();family?.converse(null);look?.stop();look?.setEnabled(freeInput.value);nextTick(()=>renderer?.domElement.focus());needsRender=true;}
+
 import TouchControls from './TouchControls.vue';
 import { createSkyTube, skyCopy, skyStations, type TransitPhase, type StationId } from './skytube';
 let skytube:ReturnType<typeof createSkyTube>|undefined;
@@ -15,9 +32,9 @@ import { interactionCopy } from './interaction-copy';
 const ic=computed(()=>interactionCopy[locale.value as keyof typeof interactionCopy]||interactionCopy.en);
 const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(false), actionable=ref(false);
 let interactables:ReturnType<typeof createInteractables>|undefined;
-const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
+const freeInput=computed(()=>inputReady.value&&!activeEntity.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value&&!transitPassenger.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+(({de:'Begrüßen',ru:'Поздороваться'} as Record<string,string>)[locale.value]||'Say hello');if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id==='skytube:board'?skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id==='chamber-door')return encounterCopy.value.title+' · '+(({de:'Tür öffnen / schließen',ru:'Открыть / закрыть дверь'} as Record<string,string>)[locale.value]||'Open / close door');if(id.startsWith('entity:'))return encounterCopy.value.names[entityOrder.indexOf(id.slice(7) as EntityId)]+' · '+encounterCopy.value.talk;if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+encounterCopy.value.talk;if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id==='skytube:board'?skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -249,6 +266,8 @@ function pick(x: number, y: number, center = false) {
   const entry=interactables?.entries.find(e=>e.mesh===first?.object);
   actionable.value=!!entry&&first!.distance<=entry.range&&(!data?.skytube||!!skytube?.canActivate(data.skytube,camera.position)) && !(entry.id==='passage'&&mechanism.state!=='open') && !(['activated','propagating','opening','closing'].includes(mechanism.state)&&(entry.id==='key'||entry.id==='facet'));
   if(!entry)return false;
+  if(data?.entity)return 'entity:'+data.entity;
+  if(data?.chamberDoor)return 'chamber-door';
   if(data?.npc)return 'npc:'+data.npc;
   if(data?.skytube)return 'skytube:'+data.skytube;
   if(data?.explorer)return 'explorer:'+data.explorer;
@@ -270,7 +289,9 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) {if(skytub
         const intent=interactionIntent(hit,actionable.value,direct);
         if(intent==='none')return;
         if(hit.startsWith('skytube:')){if(actionable.value&&skytube?.activate(hit.slice(8),camera,reduced.value)){journey.cancel();look.stop();needsRender=true;}return;}
-        if(hit.startsWith('npc:')){if(actionable.value)family?.activate(hit.slice(4));return;}
+        if(hit==='chamber-door'){if(actionable.value){intelligence?.activate();needsRender=true;}return;}
+        if(hit.startsWith('entity:')){if(actionable.value)openEncounter(hit.slice(7) as EntityId);return;}
+        if(hit.startsWith('npc:')){if(actionable.value)openEncounter(hit.slice(4) as EntityId);return;}
         if(hit.startsWith('explorer:')){if(actionable.value){explorer?.activate(hit.slice(9),performance.now());needsRender=true;}return;}
         if(typeof hit==='string'&&hit.startsWith('loop:')){if(actionable.value){district?.activate(hit.slice(5));needsRender=true;}return;}
         if(hit==='origin-door'){if(actionable.value){origin?.activate();needsRender=true;}return;}
@@ -337,7 +358,8 @@ function animate(now: number) {
   frame = requestAnimationFrame(animate);
   const rawDt=Math.max(0,(now-lastTime)/1000),dt=Math.min(rawDt,.2);lastTime=now;
   const movementStart=camera.position.clone();
-  if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value && radio.state.mode!=='expanded') {
+  if(activeEntity.value)look.update(dt,reduced.value);
+  if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value && radio.state.mode!=='expanded' && !activeEntity.value) {
   if(skytube?.ownsPassenger&&!transitPassenger.value)look.stop();
   look.update(dt, reduced.value);
   const movement = look.movement(dt);
@@ -367,6 +389,8 @@ function animate(now: number) {
   if(pendingWorks&&['dormant','discovered'].includes(mechanism.state))mechanism.activate(now);
   if(pendingWorks&&mechanism.state==='open'){const id=pendingWorks,room=expansionSpaces.find(s=>s.id===id);startWorks(id,room?new T.Vector3(...room.anchor):id==='arrival'?spawn:id==='gallery'?worksArrival:new T.Vector3(...worksModules.find(m=>m.id===id)!.destination));}
   if(radio.state.mode!=='expanded')updatePortal(now);
+  family?.converse(activeEntity.value,encounter.phase.value);
+  if(intelligence?.update(now,dt,reduced.value,camera.position,activeEntity.value,encounter.phase.value))needsRender=true;
   if(family?.update(now,dt,reduced.value,camera.position,!threshold?.active&&!district?.active))needsRender=true;
   if(workWing?.update(dt,camera.position,reduced.value))needsRender=true;
   if(explorer?.update(now,dt,reduced.value,camera.position,candidate.value))needsRender=true;
@@ -424,7 +448,7 @@ function radioShortcut(){
 }
 watch(freeInput,value=>{look?.setEnabled(value);if(!value){candidate.value=false;actionable.value=false;}},{flush:'sync'});
 watch(dark, applyTheme);
-watch(locale,value=>{skytube?.setLocale(value);explorer?.setLocale(value);atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
+watch(locale,value=>{intelligence?.setLocale(value);skytube?.setLocale(value);explorer?.setLocale(value);atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
 onMounted(() => {
   radio.mount();
@@ -439,7 +463,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyTube(scene,architecture.solids);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);family=createFamily(scene,architecture.solids);workWing=createWorkWing(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyTube(scene,architecture.solids);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);intelligence=createIntelligence(scene,architecture.solids);intelligence.setLocale(locale.value);family=createFamily(scene,architecture.solids);workWing=createWorkWing(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -468,13 +492,13 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  livingQuarters?.dispose();family?.dispose();workWing?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  intelligence?.dispose();livingQuarters?.dispose();family?.dispose();workWing?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
   <main class="arrival-world" :class="{ 'arrival-dark': dark, 'arrival-radio-active': radioOpen, 'arrival-player-active': radio.state.power, 'arrival-works-reading':worksUI==='matrix' }" :aria-label="c.name">
-    <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided || !!worksUI || !!worksTrip" class="arrival-canvas"/>
-    <nav v-show="!portalBusy" ref="gameDock" :inert="guided" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
+    <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided || !!worksUI || !!worksTrip || !!activeEntity" class="arrival-canvas"/>
+    <nav v-show="!portalBusy" ref="gameDock" :inert="guided || !!activeEntity" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
       <button data-action="radio-shortcut" @keydown.stop :aria-label="ac.receiver" :title="ac.receiver" @click="radioShortcut">♫</button>
       <button data-action="works-shortcut" :disabled="transitPassenger" :aria-label="wc.go" :title="wc.go" :aria-expanded="!!worksUI" @click="worksMenu">⋈</button>
       <button data-action="portal-approach" :disabled="transitPassenger" :aria-label="portalNear?pc.activate:pc.approach" :title="portalNear?pc.activate:pc.approach" @click="approachTerminal">▣</button>
@@ -493,7 +517,7 @@ onBeforeUnmount(() => {
       <button :aria-pressed="textMode" @click="showText">{{ c.alternative }}</button>
     </section>
     <p v-if="mouseUnavailable" class="arrival-mouse-note" role="status">{{ c.unsupported }}</p>
-    <nav v-show="!portalBusy" :inert="guided||transitPassenger" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
+    <nav v-show="!portalBusy" :inert="guided||transitPassenger||!!activeEntity" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
       <p v-if="failed">{{ c.fallback }}</p>
       <p v-if="failed || textMode">{{ ic.atmosphereDescription }}</p>
       <button v-if="failed || textMode" @click="goWorks('atmosphere')">{{ ic.atmosphereName }}</button>
@@ -514,9 +538,10 @@ onBeforeUnmount(() => {
     <p v-if="portalState==='exiting'" class="portal-progress" role="status">{{ pc.exiting }}</p>
     <WorksSurface v-if="worksUI && !portalBusy" :spaces="expansionSpaces" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix" @details="activateProjectScreen('matrix')"/>
     <p v-if="worksTrip" class="works-travel" role="status">{{ wc.travel }} <button data-action="works-cancel" @click="cancelWorks">{{ ac.close }}</button></p>
+    <EntityConversation v-if="activeEntity" :entity="activeEntity" :locale="locale" :messages="encounter.messages.value" :pending="encounter.pending.value" :error="encounter.error.value" @close="closeEncounter" @ask="encounter.ask($event,locale)"/>
     <ProjectWorkspace v-if="workspace && workspaceKind!=='flowforge'" :kind="workspaceKind" :locale="locale" :projects="projects" v-model:selected="archiveSelection" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
     <PortalWorkspace v-if="workspace && workspaceKind==='flowforge'" :project="project" :labels="pc" :visual-style="visualStyle" :exiting="portalState==='exiting'" @close="closeWorkspace"/>
-    <PersistentRadioPlayer :radio="radio" :locale="locale" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/>
+    <div :inert="!!activeEntity"><PersistentRadioPlayer :radio="radio" :locale="locale" :dock="gameDock" @leave="closeRadio" @stopped="playerStopped"/></div>
     <p class="arrival-status" aria-live="polite">{{ status }}</p>
   </main>
 </template>

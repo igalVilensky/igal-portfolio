@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     },
   ],
   nitro: {
+    // Bundle the shared policies into Nitro's dev server instead of externalizing
+    // their source path relative to the generated .nuxt/dev entry point.
+    externals: {
+      inline: [fileURLToPath(new URL('./shared/', import.meta.url))],
+    },
     prerender: { routes: ['/spatial-experiments', '/de/spatial-experiments', '/ru/spatial-experiments', '/spatial-work', '/de/spatial-work', '/ru/spatial-work', '/spatial-home', '/de/spatial-home', '/ru/spatial-home', '/design-lab'] },
   },
   i18n: {

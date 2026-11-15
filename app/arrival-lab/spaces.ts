@@ -5,7 +5,7 @@ export interface WorldSpace {
  position:Point; rotation:number; height:number; connections:readonly string[];
  anchor:Point; entry:Point; lookAt:Point; identity:string; status:'active'|'reserved'; mounts:readonly Point[];
 }
-const space=(id:string,names:WorldSpace['names'],bounds:WorldSpace['bounds'],height:number,entry:Point,anchor:Point,identity:string,mounts:readonly Point[]):WorldSpace=>({id,names,bounds,height,entry,anchor,position:anchor,rotation:0,connections:id==='commons'?['gallery','atmosphere']:id==='journey'?['gallery','loop-district']:['gallery'],lookAt:id==='journey'?[-94,5,19]:id==='ai-tools'?[-48,4,41]:id==='commons'?[-32,4,32]:[-48,5,-11],identity,status:'reserved',mounts});
+const space=(id:string,names:WorldSpace['names'],bounds:WorldSpace['bounds'],height:number,entry:Point,anchor:Point,identity:string,mounts:readonly Point[]):WorldSpace=>({id,names,bounds,height,entry,anchor,position:anchor,rotation:0,connections:id==='commons'?['gallery','atmosphere']:id==='journey'?['gallery','loop-district','intelligence-chamber']:['gallery'],lookAt:id==='journey'?[-94,5,19]:id==='ai-tools'?[-48,4,41]:id==='commons'?[-32,4,32]:[-48,5,-11],identity,status:'reserved',mounts});
 export const atmosphereSpace:WorldSpace={id:'atmosphere',names:{en:'Living Atmosphere',de:'Lebendige Atmosphäre',ru:'Живая атмосфера'},bounds:[-22,2,26,54],position:[-10,0,40],rotation:0,height:12,connections:['commons'],entry:[-20,1.65,29],anchor:[-17,1.65,33],lookAt:[-12,3.3,39],identity:'mineral chamber of responsive matter',status:'active',mounts:[]};
 export const expansionSpaces:readonly WorldSpace[]=[
  atmosphereSpace,
@@ -14,7 +14,9 @@ export const expansionSpaces:readonly WorldSpace[]=[
  space('ai-tools',{en:'AI & Tools',de:'KI & Werkzeuge',ru:'ИИ и инструменты'},[-60,-38,22,42],9,[-48,1.65,22],[-48,1.65,32],'blue grey coffered structure',[[-48,2,41]]),
  space('commons',{en:'Commons',de:'Gemeinschaft',ru:'Общее пространство'},[-38,-26,22,34],6,[-32,1.65,22],[-32,1.65,28],'sage intimate court',[[-32,0,28]]),
 ];
+export const intelligenceSpace:WorldSpace={id:'intelligence-chamber',names:{en:'The Intelligence Chamber',de:'Die Intelligenzkammer',ru:'Палата разума'},bounds:[-110,-88,-32,8],position:[-99,0,-12],rotation:0,height:23,connections:['journey'],entry:[-92,1.65,8],anchor:[-98,1.65,0],lookAt:[-103,3,-23],identity:'dark mineral fins and three intelligences',status:'active',mounts:[]};
 export const worldSpaces:readonly WorldSpace[]=[
+ intelligenceSpace,
  {id:'living-quarters',names:{en:'The Living Quarters',de:'Die Wohnräume',ru:'Жилое крыло'},bounds:[60,103,0,38],position:[84,0,19],rotation:0,height:6,connections:['little-explorer'],anchor:[76,1.65,19],entry:[60,1.65,19],lookAt:[84,2,16],identity:'warm mineral atrium and five private rooms',status:'active',mounts:[]},
  {id:'little-explorer',names:{en:'Little Explorer',de:'Kleine Entdecker',ru:'Маленький исследователь'},bounds:[26,60,-2,24],position:[46,0,11],rotation:0,height:8,connections:['arrival','living-quarters'],anchor:[36,1.65,19],entry:[26,1.65,19],lookAt:[46,3,11],identity:'warm travel pavilion',status:'active',mounts:[]},
  {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well','origin','little-explorer'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
@@ -28,6 +30,7 @@ export const worldSpaces:readonly WorldSpace[]=[
 export function spaceAt(p:T.Vector3){return worldSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);}
 /** Route via the circulation centreline; works/light-well routing remains in its existing owner. */
 export function expansionLeg(p:T.Vector3):T.Vector3[]{
+ if(spaceAt(p)?.id==='intelligence-chamber')return [p.clone(),new T.Vector3(-92,1.65,p.z),new T.Vector3(-92,1.65,19),new T.Vector3(-60,1.65,19),new T.Vector3(-20,1.65,19)];
  if(spaceAt(p)?.id==='skybridge')return [p.clone(),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='loop-district')return [p.clone(),new T.Vector3(p.x,1.65,58),new T.Vector3(151,1.65,58),new T.Vector3(151,1.65,48),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='origin'){

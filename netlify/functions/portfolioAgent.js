@@ -1,3 +1,4 @@
+import { resolveEntity, entityInstruction, entityKnowledge, familyBoundary } from "../../shared/world-entities.js";
 import {
   sourceLabels,
   agentData,
@@ -1104,7 +1105,7 @@ const extractJson = (value) => {
   return trimmed;
 };
 
-const sanitizeModelResponse = (raw, retrievedItems, locale, mode) => {
+const sanitizeModelResponse = (raw, retrievedItems, locale, mode, entityId) => {
   if (!raw || typeof raw !== "object") return null;
 
   const validStatuses = new Set(["answered", "partial", "unknown", "needs_clarification"]);
@@ -1152,7 +1153,7 @@ const sanitizeModelResponse = (raw, retrievedItems, locale, mode) => {
     status: validStatuses.has(raw.status) ? raw.status : "partial",
     answer,
     confidence: validConfidences.has(raw.confidence) ? raw.confidence : "medium",
-    sources: sources.length ? sources : sourcesFromItems(retrievedItems, locale, 3),
+    sources: sources.length ? sources : entityId ? [] : sourcesFromItems(retrievedItems, locale, 3),
     suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 4),
     actions: actions.length ? actions : allowedActions,
     ...(clarification ? { clarification } : {}),
@@ -1164,7 +1165,7 @@ const modeInstruction = (mode) =>
     ? "Use a warmer, more relaxed conversational style. You may ask one natural follow-up question when it helps. A single subtle emoji is allowed but never required."
     : "Use a concise, polished, evidence-driven professional style. Ask follow-up questions only when the answer depends on missing context.";
 
-const buildSystemPrompt = (retrievedItems, actions, locale, mode) => `You are Igal's interactive portfolio guide.
+const buildSystemPrompt = (retrievedItems, actions, locale, mode, entityId) => `You are Igal's interactive portfolio guide.
 Answer in ${localeCopy[locale].languageName}.
 Use only the verified portfolio knowledge supplied in this request.
 Do not browse, invent facts, assume missing details, perform external actions, or pretend to be Igal.
@@ -1178,6 +1179,7 @@ For professional summaries, keep the answer focused on software experience, stac
 Salary questions are controlled by server policy. If salary context is supplied in the knowledge, follow it exactly and do not call EUR 45,000 an absolute minimum.
 If the supplied knowledge does not answer the question, return status "unknown" and answer "${localeCopy[locale].unknownAnswer}".
 If one focused follow-up question is necessary, return status "needs_clarification" and include the same question in clarification.question.
+${entityId ? entityInstruction(entityId) : ""}
 Return valid JSON only with this shape:
 {
   "status": "answered" | "partial" | "unknown" | "needs_clarification",
@@ -1195,12 +1197,12 @@ ${actions.map((action) => `- ${action.href}`).join("\n")}
 Verified portfolio knowledge:
 ${retrievedItems.map((item) => `SOURCE ${item.id} (${item.type}) - ${item.label}\n${item.text}`).join("\n\n")}`;
 
-const callGroq = async (apiKey, question, conversation, retrievedItems, locale, mode) => {
+const callGroq = async (apiKey, question, conversation, retrievedItems, locale, mode, entityId) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   const actions = getKnownActions(retrievedItems, locale);
   const messages = [
-    { role: "system", content: buildSystemPrompt(retrievedItems, actions, locale, mode) },
+    { role: "system", content: buildSystemPrompt(retrievedItems, actions, locale, mode, entityId) },
     ...conversation.map((message) => ({
       role: message.role,
       content: message.content.slice(0, 900),
@@ -1219,7 +1221,8 @@ const callGroq = async (apiKey, question, conversation, retrievedItems, locale, 
         model: "openai/gpt-oss-120b",
         messages,
         temperature: 0.2,
-        max_tokens: 900,
+        max_tokens: entityId ? 2048 : 900,
+        ...(entityId ? { reasoning_effort: "low", response_format: { type: "json_object" } } : {}),
       }),
       signal: controller.signal,
     });
@@ -1228,14 +1231,17 @@ const callGroq = async (apiKey, question, conversation, retrievedItems, locale, 
     if (!response.ok) {
       console.error("portfolioAgent Groq API error", {
         status: response.status,
-        body: text.slice(0, 500),
+        category: "provider_http",
       });
       return null;
     }
 
     const json = JSON.parse(text);
     const content = json?.choices?.[0]?.message?.content;
-    if (typeof content !== "string") return null;
+    if (typeof content !== "string" || !content.trim() || json?.choices?.[0]?.finish_reason === "length") {
+      console.error("portfolioAgent incomplete provider response", { category: "provider_response", finishReason: json?.choices?.[0]?.finish_reason, entityId });
+      return null;
+    }
 
     let parsedModelResponse;
     try {
@@ -1243,16 +1249,16 @@ const callGroq = async (apiKey, question, conversation, retrievedItems, locale, 
     } catch (error) {
       console.error("portfolioAgent model JSON parse failed", {
         name: error?.name,
-        message: error?.message,
+        category: "provider_response",
       });
       return null;
     }
 
-    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale, mode);
+    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale, mode, entityId);
   } catch (error) {
     console.error("portfolioAgent Groq request failed", {
       name: error?.name,
-      message: error?.message,
+      category: "provider_network_or_timeout",
     });
     return null;
   } finally {
@@ -1277,9 +1283,11 @@ const cleanConversation = (value) => {
 
 const parseBody = (event) => {
   if (!event.body) return null;
+  if (event.body.length > 16000) throw new Error("Request too large");
   const rawBody = event.isBase64Encoded
     ? Buffer.from(event.body, "base64").toString("utf8")
     : event.body;
+  if (rawBody.length > 12000) throw new Error("Request too large");
   return JSON.parse(rawBody);
 };
 
@@ -1317,6 +1325,18 @@ export const handler = async (event) => {
     }
 
     const conversation = cleanConversation(body.conversation);
+    const entityId = resolveEntity(body?.entityId);
+    if (body?.entityId !== undefined && !entityId) {
+      return jsonResponse(400, { error: "Unknown entity" });
+    }
+    if (entityId) {
+      const boundary = familyBoundary(entityId, question, locale);
+      const items = entityKnowledge(entityId, retrieveKnowledge(question, conversation, locale));
+      if (boundary) { return jsonResponse(200, { status: "partial", answer: boundary, confidence: "high", sources: [], suggestedQuestions: [], actions: [] }); }
+      if (!process.env.GROQ_API_KEY) { return jsonResponse(503, { code: "AI_NOT_CONFIGURED", error: "AI service is not configured" }); }
+      const response = await callGroq(process.env.GROQ_API_KEY, question, conversation, items, locale, mode, entityId);
+      return response ? jsonResponse(200, response) : jsonResponse(502, { code: "AI_PROVIDER_FAILURE", error: "AI service could not answer. Please retry." });
+    }
     const recallResponse = conversationRecallResponse(question, conversation, locale, mode);
     if (recallResponse) {
       return jsonResponse(200, recallResponse);
@@ -1367,7 +1387,7 @@ export const handler = async (event) => {
   } catch (error) {
     console.error("portfolioAgent failed", {
       name: error?.name,
-      message: error?.message,
+      category: "provider_response",
       stack: error?.stack,
     });
     return jsonResponse(200, unknownResponse(requestLocale));

@@ -1,3 +1,4 @@
+import { resolveEntity, entityInstruction, entityKnowledge, familyBoundary } from "../../shared/world-entities.js";
 import sourceLabelsData from "../../content/source-labels.json";
 import profileData from "../../content/profile.json";
 import localizedProjectsData from "../../content/projects.json";
@@ -908,6 +909,7 @@ const conversationRecallResponse = (
   conversation: PortfolioConversationMessage[],
   locale: LocaleCode,
   mode: PortfolioAgentMode,
+  entityId?: string,
 ): PortfolioAgentResponse | null => {
   const text = lowerText(question);
   if (!conversationRecallPatterns.some((pattern) => pattern.test(text))) return null;
@@ -1208,6 +1210,7 @@ const sanitizeModelResponse = (
   retrievedItems: KnowledgeItem[],
   locale: LocaleCode,
   mode: PortfolioAgentMode,
+  entityId?: string,
 ): PortfolioAgentResponse | null => {
   if (!raw || typeof raw !== "object") return null;
 
@@ -1270,7 +1273,7 @@ const sanitizeModelResponse = (
     confidence,
     sources: sources.length
       ? sources
-      : retrievedItems.slice(0, 3).map((item) => formatSource(item, locale)),
+      : entityId ? [] : retrievedItems.slice(0, 3).map((item) => formatSource(item, locale)),
     suggestedQuestions: suggestedQuestionsFor(locale, mode).slice(0, 4),
     actions: actions.length ? actions : allowedActions,
     ...(clarification ? { clarification } : {}),
@@ -1287,6 +1290,7 @@ const buildSystemPrompt = (
   actions: PortfolioAgentAction[],
   locale: LocaleCode,
   mode: PortfolioAgentMode,
+  entityId?: string,
 ) => `You are Igal's interactive portfolio guide.
 Answer in ${localeCopy[locale].languageName}.
 Use only the verified portfolio knowledge supplied in this request.
@@ -1301,6 +1305,7 @@ For professional summaries, keep the answer focused on software experience, stac
 Salary questions are controlled by server policy. If salary context is supplied in the knowledge, follow it exactly and do not call EUR 45,000 an absolute minimum.
 If the supplied knowledge does not answer the question, return status "unknown" and answer "${localeCopy[locale].unknownAnswer}".
 If one focused follow-up question is necessary, return status "needs_clarification" and include the same question in clarification.question.
+${entityId ? entityInstruction(entityId) : ""}
 Return valid JSON only with this shape:
 {
   "status": "answered" | "partial" | "unknown" | "needs_clarification",
@@ -1325,13 +1330,14 @@ const callGroq = async (
   retrievedItems: KnowledgeItem[],
   locale: LocaleCode,
   mode: PortfolioAgentMode,
+  entityId?: string,
 ) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   const actions = getKnownActions(retrievedItems, locale);
 
   const messages: GroqMessage[] = [
-    { role: "system", content: buildSystemPrompt(retrievedItems, actions, locale, mode) },
+    { role: "system", content: buildSystemPrompt(retrievedItems, actions, locale, mode, entityId) },
     ...conversation.map((message) => ({
       role: message.role,
       content: message.content.slice(0, 900),
@@ -1350,7 +1356,8 @@ const callGroq = async (
         model: "openai/gpt-oss-120b",
         messages,
         temperature: 0.2,
-        max_tokens: 900,
+        max_tokens: entityId ? 2048 : 900,
+        ...(entityId ? { reasoning_effort: "low", response_format: { type: "json_object" } } : {}),
       }),
       signal: controller.signal,
     });
@@ -1359,14 +1366,17 @@ const callGroq = async (
     if (!response.ok) {
       console.error("portfolioAgent Groq API error", {
         status: response.status,
-        body: text.slice(0, 500),
+        category: "provider_http",
       });
       return null;
     }
 
     const json = JSON.parse(text);
     const content = json?.choices?.[0]?.message?.content;
-    if (typeof content !== "string") return null;
+    if (typeof content !== "string" || !content.trim() || json?.choices?.[0]?.finish_reason === "length") {
+      console.error("portfolioAgent incomplete provider response", { category: "provider_response", finishReason: json?.choices?.[0]?.finish_reason, entityId });
+      return null;
+    }
 
     let parsedModelResponse: unknown;
     try {
@@ -1374,16 +1384,16 @@ const callGroq = async (
     } catch (error) {
       console.error("portfolioAgent model JSON parse failed", {
         name: error instanceof Error ? error.name : "UnknownError",
-        message: error instanceof Error ? error.message : String(error),
+        category: "provider_response",
       });
       return null;
     }
 
-    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale, mode);
+    return sanitizeModelResponse(parsedModelResponse, retrievedItems, locale, mode, entityId);
   } catch (error) {
     console.error("portfolioAgent Groq request failed", {
       name: error instanceof Error ? error.name : "UnknownError",
-      message: error instanceof Error ? error.message : String(error),
+      category: "provider_network_or_timeout",
     });
     return null;
   } finally {
@@ -1408,7 +1418,10 @@ const cleanConversation = (value: unknown): PortfolioConversationMessage[] => {
 };
 
 export default defineEventHandler(async (event): Promise<PortfolioAgentResponse> => {
-  const body = await readBody<{ question?: unknown; locale?: unknown; mode?: unknown; conversation?: unknown }>(event);
+  const rawBody = await readRawBody(event);
+  if ((rawBody?.length ?? 0) > 12000) throw createError({ statusCode: 413, statusMessage: "Request too large" });
+  let body: { question?: unknown; locale?: unknown; mode?: unknown; entityId?: unknown; conversation?: unknown };
+  try { body = JSON.parse(rawBody || "{}"); } catch { throw createError({ statusCode: 400, statusMessage: "Invalid request body" }); }
   const locale = validateLocale(body?.locale);
   const mode = validateMode(body?.mode);
   const question = typeof body?.question === "string" ? body.question.trim() : "";
@@ -1425,6 +1438,19 @@ export default defineEventHandler(async (event): Promise<PortfolioAgentResponse>
   }
 
   const conversation = cleanConversation(body.conversation);
+  const entityId = resolveEntity(body?.entityId);
+  if (body?.entityId !== undefined && !entityId) {
+    throw createError({ statusCode: 400, statusMessage: "Unknown entity" });
+  }
+  if (entityId) {
+    const boundary = familyBoundary(entityId, question, locale);
+    const items = entityKnowledge(entityId, retrieveKnowledge(question, conversation, locale));
+    if (boundary) { return { status: "partial", answer: boundary, confidence: "high", sources: [], suggestedQuestions: [], actions: [] }; }
+    if (!process.env.GROQ_API_KEY) { throw createError({ statusCode: 503, data: { code: "AI_NOT_CONFIGURED" }, statusMessage: "AI service is not configured" }); }
+    const response = await callGroq(process.env.GROQ_API_KEY, question, conversation, items, locale, mode, entityId);
+    if (!response) throw createError({ statusCode: 502, data: { code: "AI_PROVIDER_FAILURE" }, statusMessage: "AI service could not answer. Please retry." });
+    return response;
+  }
   const recallResponse = conversationRecallResponse(question, conversation, locale, mode);
   if (recallResponse) {
     return recallResponse;

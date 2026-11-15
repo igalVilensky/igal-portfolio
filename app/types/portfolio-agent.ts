@@ -44,6 +44,7 @@ export type PortfolioConversationMessage = {
 
 export type PortfolioAgentRequest = {
   question: string;
+  entityId?: "archivist" | "engineer" | "wanderer" | "igal" | "anastasia" | "amelia" | "nataniel" | "adriel";
   locale?: "en" | "de" | "ru";
   mode?: PortfolioAgentMode;
   conversation?: PortfolioConversationMessage[];
