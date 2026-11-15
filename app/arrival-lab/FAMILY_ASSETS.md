@@ -22,24 +22,16 @@ largely the base model's; this is approximate stylized identity, not a reconstru
 Three.js AnimationMixer blends locally authored idle, walk and greeting clips. Navigation,
 turning, interaction identities and world visibility remain owned by `family.ts`.
 
-## Local portraits
+## Public portraits
 
-Run `npm run dev -- --host 127.0.0.1` and open `/arrival-lab` locally. No environment
-variable or URL flag is needed. The five allowlisted originals remain under
-`docs/design/design-references/family/`, excluded from Git. The development endpoint
-reads them on demand with `Cache-Control: no-store`. Direct non-loopback clients are
-rejected. Nuxt's Unix-socket proxy is accepted only for local Host names and an entirely
-loopback forwarded chain. Keep the development server bound to loopback.
+The five explicitly approved portraits (Igal, Anastasia, Amelia, Nataniel and Adriel)
+are optimized progressive JPEGs under `public/arrival-lab/family/`. These public assets
+ship with Nuxt builds and Netlify static generation. Original reference photographs
+remain excluded from Git under `docs/design/design-references/family/`.
 
-The framed photographs reuse Arrival Hall's TextureLoader → sRGB texture → fitted
-MeshBasicMaterial plane pattern with physical depth between wall, frame, mat and print.
-A ceramic nameplate labels each frame. Images retain their entire native aspect ratio;
-Amelia's supplied image includes social-media chrome, which is intentionally preserved.
-
-Production excludes the client fetch at compile time. The server endpoint returns 404
-before any file read in production. Originals are never statically imported or copied to
-public assets. Production portrait publication requires a separate explicit decision and
-approved assets; the current production mounts have no private photograph.
-
-Review screenshots contain private photos and belong only in `/tmp/arrival-0911-family-rebuild/`.
-Do not commit or upload those artifacts.
+The framed photographs use TextureLoader → sRGB texture → fitted MeshBasicMaterial
+planes in development and production. Frames and nameplates are unchanged. Images
+are orientation-corrected, retain their full aspect ratio and are limited to 960 pixels
+on the longest edge (JPEG quality 85, metadata removed). Amelia's supplied image
+includes social-media chrome, which is preserved. A loading failure displays an error
+inside the frame and reports the identity and asset URL in the browser console.

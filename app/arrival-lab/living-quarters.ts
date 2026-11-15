@@ -36,14 +36,14 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
   box(3,1.8,.4,r.x,4.1,boundary,m);box(r.width,.3,r.depth,r.x,5.2,r.z);
   box(r.width-2,.06,.15,r.x,4.7,outer+(north?.3:-.3),light,false);
   // Deep oak surround, bronze inner reveal and a warm archival mat.
-  // Private bytes are fetched only in development; never imported into Vite.
+  // Approved public photographs are available in development and production.
   const z=outer+(north?.3:-.3),rotation=north?0:Math.PI;
   const frame=new T.Group();frame.name=`Portrait · ${r.id}`;frame.position.set(r.x,2.35,z);frame.rotation.y=rotation;root.add(frame);
   const add=(w:number,h:number,d:number,x:number,y:number,zz:number,material:T.Material)=>{const g=new T.BoxGeometry(w,h,d);geometry.push(g);const mesh=new T.Mesh(g,material);mesh.position.set(x,y,zz);frame.add(mesh);return mesh;};
   add(2.3,2.9,.14,0,0,0,oak);add(2.14,2.74,.04,0,0,.09,bronze);
   add(2.04,2.64,.035,0,0,.12,stone);
   const name=r.id[0]!.toUpperCase()+r.id.slice(1);
-  const status={id:r.id,frame,kind:'unpublished' as 'unpublished'|'local-photograph'|'unavailable'};
+  const status={id:r.id,frame,kind:'loading' as 'loading'|'photograph'|'unavailable'};
   // Printed ceramic nameplate, legible at a natural approach distance.
   add(.88,.19,.045,0,-1.64,.02,stone);
   if(typeof document!=='undefined'){
@@ -60,14 +60,27 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
   box(2.2,.4,1,r.x+r.width/2-2,.2,r.z,oak);
   box(2.12,.12,.94,r.x+r.width/2-2,.46,r.z,m);
   const l=new T.PointLight('#ffe8c6',28,14,1.5);l.position.set(r.x,3.8,r.z);root.add(l);lights.push(l);
-  if(import.meta.dev){
-   new T.TextureLoader().load('/api/dev-family-portrait?id='+r.id,texture=>{
+  const portraitUrl=`/arrival-lab/family/${r.id}.jpg`;
+  new T.TextureLoader().load(portraitUrl,texture=>{
     if(disposed){texture.dispose();return;}texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=4;textures.push(texture);
     const ratio=texture.image.width/texture.image.height,h=Math.min(2.3,1.7/ratio),w=h*ratio;
     const g=new T.PlaneGeometry(w,h);geometry.push(g);const photoMaterial=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(photoMaterial);
-    const portrait=new T.Mesh(g,photoMaterial);portrait.name=`${name} · local photograph`;portrait.position.z=.15;frame.add(portrait);status.kind='local-photograph';
-   },undefined,()=>{status.kind='unavailable';});
-  }
+    const portrait=new T.Mesh(g,photoMaterial);portrait.name=`${name} · photograph`;portrait.position.z=.15;frame.add(portrait);status.kind='photograph';
+   },undefined,error=>{
+    if(disposed)return;
+    status.kind='unavailable';
+    console.error(`Failed to load portrait for ${name}: ${portraitUrl}`,error);
+    const canvas=document.createElement('canvas');canvas.width=680;canvas.height=180;
+    const ctx=canvas.getContext('2d');
+    if(ctx){
+     ctx.fillStyle='#742d24';ctx.fillRect(0,0,680,180);ctx.fillStyle='#ffffff';ctx.textAlign='center';ctx.font='32px sans-serif';
+     ctx.fillText(`${name}: photo unavailable`,340,76);ctx.fillText('Please reload to retry',340,126);
+     const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;textures.push(texture);
+     const material=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(material);
+     const g=new T.PlaneGeometry(1.7,.45);geometry.push(g);
+     const notice=new T.Mesh(g,material);notice.name=`${name} · portrait loading error`;notice.position.z=.15;frame.add(notice);
+    }
+   });
   return status;
  });
  return {root,portraits,setTheme(dark:boolean){stone.color.set(dark?'#70685e':'#e4d8c5');floor.color.set(dark?'#675d50':'#c9baa0');lights.forEach(l=>l.intensity=dark?40:55);},dispose(){disposed=true;textures.forEach(t=>t.dispose());root.removeFromParent();geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
