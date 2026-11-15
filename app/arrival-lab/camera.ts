@@ -88,6 +88,8 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     climbAxis(){return -analogZ+Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'));},
     // Transport momentum with the doorway's rigid turn without clearing held keys/touch intent.
     restore(nextYaw:number,nextPitch:number,movementTurn=0) { velocity.applyAxisAngle(new T.Vector3(0,1,0),movementTurn); yaw=targetYaw=nextYaw; pitch=targetPitch=nextPitch; camera.rotation.set(pitch,yaw,0,'YXZ'); },
+    // Move the reference frame without replacing the passenger's independent look intent.
+    rotateFrame(turn:number){yaw+=turn;targetYaw+=turn;camera.rotation.set(pitch,yaw,0,'YXZ');},
     stop: reset,
     movement(dt: number) {
       const x = analogX || Number(keys.has('KeyD')) - Number(keys.has('KeyA'));

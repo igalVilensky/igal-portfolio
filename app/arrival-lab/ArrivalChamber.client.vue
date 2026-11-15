@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import * as T from 'three';
 import TouchControls from './TouchControls.vue';
+import { createSkyTube, skyCopy, skyStations, type TransitPhase, type StationId } from './skytube';
+let skytube:ReturnType<typeof createSkyTube>|undefined;
+const transitPassenger=ref(false),transitPhase=ref<TransitPhase>('docked'),transitDestination=ref<StationId>('district');
+const skyLanguage=computed(()=>locale.value==='de'||locale.value==='ru'?locale.value:'en');
+const skyText=computed(()=>skyCopy[skyLanguage.value]);
+const transitStatus=computed(()=>skyText.value[transitPhase.value]+' · '+skyStations[transitDestination.value].names[skyLanguage.value]);
 import { createAscent, createClimb, roofHeight, ascent, ascentCopy } from './ascent';
 let rooftop:ReturnType<typeof createAscent>|undefined;
 const climb=createClimb(), climbState=ref('walking');
@@ -13,8 +19,8 @@ const ic=computed(()=>interactionCopy[locale.value as keyof typeof interactionCo
 const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(false), actionable=ref(false);
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
-const touchVisible=computed(()=>touchMode.value&&freeInput.value);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id==='ladder')return camera.position.y>6?asc.value.down:asc.value.up;if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const touchVisible=computed(()=>touchMode.value&&freeInput.value&&!transitPassenger.value);
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id==='skytube:board'?skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(id==='ladder')return camera.position.y>6?asc.value.down:asc.value.up;if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -27,6 +33,8 @@ import { illuminate } from './lighting';
 import { createImpossibleThreshold } from './impossible-threshold';
 let pickedSunDoor=false;
 let threshold:ReturnType<typeof createImpossibleThreshold>|undefined;
+import { createLoopDistrict } from './loop-district';
+let district:ReturnType<typeof createLoopDistrict>|undefined;
 import { createOrigin } from './origin';
 let origin:ReturnType<typeof createOrigin>|undefined;
 import { createCollision } from './collision';
@@ -67,8 +75,8 @@ function changeWeight(index:number,value:number){selectedCriterion.value=index;w
 function resetMatrix(){weights.value=[...initialWeights];selectedCriterion.value=0;works?.setWeights(weights.value,0);needsRender=true;}
 function selectCriterion(index:number){selectedCriterion.value=index;works?.setWeights(weights.value,index);needsRender=true;}
 function closeWorks(){worksUI.value=null;look?.setEnabled(!portalBusy.value&&radio.state.mode!=='expanded');nextTick(()=>{if(failed.value||textMode.value)document.querySelector<HTMLButtonElement>('[data-action=works-shortcut]')?.focus();else renderer?.domElement.focus();});}
-function worksMenu(){if(climb.active||camera?.position.y>7)return;if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
-function goWorks(id:string){if(climb.active||camera?.position.y>7)return;
+function worksMenu(){if(skytube?.ownsPassenger)return;if(climb.active||camera?.position.y>7)return;if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
+function goWorks(id:string){if(skytube?.ownsPassenger)return;if(climb.active||camera?.position.y>7)return;
  if(threshold?.active&&camera){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);}
  if(portalBusy.value||guided)return;
  worksUI.value=null;if(radioOpen.value)closeRadio();controlsOpen.value=false;
@@ -97,7 +105,7 @@ const radioOpen=computed(()=>radio.state.mode==='expanded'), gameDock=ref<HTMLEl
 const ac=computed(()=>audioCopy[locale.value as keyof typeof audioCopy]||audioCopy.en);
 let receiver:ReturnType<typeof createReceiver>|undefined, radioTravel=false;
 function closeRadio(){radio.setMode('mini');look?.setEnabled(!portalBusy.value&&!guided&&!worksUI.value&&!worksTrip.value);if(!portalBusy.value&&!worksUI.value)nextTick(()=>renderer?.domElement.focus());}
-function approachRadio(){if(climb.active||camera?.position.y>7)return;
+function approachRadio(){if(skytube?.ownsPassenger){radioShortcut();return;}if(climb.active||camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
 
  if(portalBusy.value||guided)return;
@@ -137,7 +145,7 @@ function saveView() {
   if(document.pointerLockElement)document.exitPointerLock();
 }
 function currentScreen(){return workspaceKind.value==='flowforge'?terminal.screen:works!.screens[workspaceKind.value];}
-function activateProjectScreen(kind:'matrix'|'archive') {
+function activateProjectScreen(kind:'matrix'|'archive') {if(skytube?.ownsPassenger)return;
  if(portalBusy.value||guided)return;
  if(kind==='archive'&&camera&&works&&camera.position.distanceTo(screenPose(works.screens.archive).center)>16){goWorks('archive');return;}
  workspaceKind.value=kind;activateTerminal(false,true);
@@ -158,7 +166,7 @@ function openWorkspace() {
   }
   portalState.value='workspace-active';workspace.value=true;
 }
-function activateTerminal(direct=false,keepScreen=false) {
+function activateTerminal(direct=false,keepScreen=false) {if(skytube?.ownsPassenger)return;
   if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
   if(portalBusy.value)return;
   if(!keepScreen)workspaceKind.value='flowforge';
@@ -176,7 +184,7 @@ function activateTerminal(direct=false,keepScreen=false) {
   travel={path:entryPath,from:camera.quaternion.clone(),to:screenOrientation(),start:performance.now(),duration:reduced.value?0:workspaceKind.value==='flowforge'?Math.max(2200,Math.min(6500,camera.position.distanceTo(near)*90)):1800,exiting:false};
   if(direct||reduced.value){travelled=entryPath.map(p=>p.clone());openWorkspace();}
 }
-function approachTerminal() {if(climb.active||camera?.position.y>7)return;
+function approachTerminal() {if(skytube?.ownsPassenger)return;if(climb.active||camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
   if(radioOpen.value)closeRadio();
   if(worksUI.value)closeWorks();
@@ -229,6 +237,7 @@ const cleanups: (() => void)[] = [];
 
 function pick(x: number, y: number, center = false) {
   if (!renderer || failed.value || textMode.value || portalBusy.value || guided) return false;
+  if(skytube?.ownsPassenger){actionable.value=skytube.phase==='docked';return actionable.value?'skytube:exit':false;}
   if(climb.active)return false;
   if(ladderNearby()){actionable.value=true;return 'ladder';}
   const rect = renderer.domElement.getBoundingClientRect();
@@ -238,9 +247,11 @@ function pick(x: number, y: number, center = false) {
   const first = ray.intersectObjects(threshold?.active?threshold.worldSolids:architecture.solids.filter(m=>!threshold?.worldSolids.includes(m)), false).filter(hit=>{let node:T.Object3D|null=hit.object;while(node){if(!node.visible)return false;node=node.parent;}return true;})[0];
   const data = first?.object.userData;
   const entry=interactables?.entries.find(e=>e.mesh===first?.object);
-  actionable.value=!!entry&&first!.distance<=entry.range && !(entry.id==='passage'&&mechanism.state!=='open') && !(['activated','propagating','opening','closing'].includes(mechanism.state)&&(entry.id==='key'||entry.id==='facet'));
+  actionable.value=!!entry&&first!.distance<=entry.range&&(!data?.skytube||!!skytube?.canActivate(data.skytube,camera.position)) && !(entry.id==='passage'&&mechanism.state!=='open') && !(['activated','propagating','opening','closing'].includes(mechanism.state)&&(entry.id==='key'||entry.id==='facet'));
   if(!entry)return false;
+  if(data?.skytube)return 'skytube:'+data.skytube;
   if(data?.explorer)return 'explorer:'+data.explorer;
+  if(data?.loopDoor)return 'loop:'+data.loopDoor;
   if(data?.originDoor)return 'origin-door';
   if(data?.threshold){pickedSunDoor=!!data.sunDoor;return 'threshold';}
   if(data?.works)return 'works:'+data.works+(data.criterion!==undefined?':'+data.criterion:'');
@@ -251,13 +262,15 @@ function pick(x: number, y: number, center = false) {
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
 }
-function activateWorld(x:number,y:number,center:boolean,direct=false) { if(portalBusy.value||guided||climb.active)return;
+function activateWorld(x:number,y:number,center:boolean,direct=false) {if(skytube?.ownsPassenger){if(freeInput.value)skytube.activate('exit',camera,reduced.value);return;} if(portalBusy.value||guided||climb.active)return;
  if(freeInput.value&&ladderNearby()){journey.cancel();if(climb.activate(camera.position)){look.setClimbing(true);look.orient(0,.16);climbState.value=climb.state;candidate.value=false;needsRender=true;}return;} let hit=pick(x,y,center);
         if(!center&&touchMode.value&&!hit){for(const [dx,dy] of [[-10,0],[10,0],[0,-10],[0,10]]){hit=pick(x+dx!,y+dy!,false);if(hit&&actionable.value)break;}}
         if (!hit || !freeInput.value) return;
         const intent=interactionIntent(hit,actionable.value,direct);
         if(intent==='none')return;
+        if(hit.startsWith('skytube:')){if(actionable.value&&skytube?.activate(hit.slice(8),camera,reduced.value)){journey.cancel();look.stop();needsRender=true;}return;}
         if(hit.startsWith('explorer:')){if(actionable.value){explorer?.activate(hit.slice(9),performance.now());needsRender=true;}return;}
+        if(typeof hit==='string'&&hit.startsWith('loop:')){if(actionable.value){district?.activate(hit.slice(5));needsRender=true;}return;}
         if(hit==='origin-door'){if(actionable.value){origin?.activate();needsRender=true;}return;}
         if(hit==='threshold'){if(actionable.value){threshold?.activate(pickedSunDoor);needsRender=true;}return;}
         if(hit.startsWith('atmosphere:')){if(actionable.value){atmosphere?.activate(Number(hit.split(':')[1]));needsRender=true;}return;}
@@ -279,7 +292,7 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) { if(porta
         if ((hit==='key'||hit==='facet') && camera.position.z < -50) {if(mechanism.state==='open')enter();else mechanism.activate(performance.now());}
         else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
         else mechanism.react(performance.now()); }
-function enter() {
+function enter() {if(skytube?.ownsPassenger)return;
   if(climb.active||camera?.position.y>7)return;
   if(threshold?.active){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;return;}
   if(radioOpen.value)closeRadio();
@@ -293,7 +306,7 @@ function enter() {
     const returning=journey.state==='secondary'; look.stop(); journey.activate(); look.orient(returning ? Math.PI : 0,.02);
   } else mechanism.activate(performance.now());
 }
-function back() {
+function back() {if(skytube?.ownsPassenger)return;
   if(climb.active||camera?.position.y>7)return;
   if(threshold?.active){enter();return;}
   if(worksTrip.value){cancelWorks();return;}
@@ -309,7 +322,7 @@ async function mouseLook() { if(worksUI.value)closeWorks(); if(radioOpen.value)c
 function applyReduced(value: boolean) { reduced.value = value; journey?.setReduced(value); }
 function onMotion(event: MediaQueryListEvent) { applyReduced(event.matches); }
 function failure() { clearTimeout(exitTimer);pendingWorks='';worksTrip.value='';guided=false;travel=undefined;if(portalBusy.value) {workspace.value=true;portalState.value='workspace-active';} failed.value = true; cancelAnimationFrame(frame); }
-function showText() {
+function showText() {if(skytube?.ownsPassenger)return;
   if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
   if(!climb.active&&camera?.position.y<7)journey?.reset();
@@ -320,15 +333,19 @@ function showText() {
 function animate(now: number) {
   if (failed.value || textMode.value) return;
   frame = requestAnimationFrame(animate);
-  const dt = Math.min((now - lastTime) / 1000, .2); lastTime = now;
+  const rawDt=Math.max(0,(now-lastTime)/1000),dt=Math.min(rawDt,.2);lastTime=now;
+  const movementStart=camera.position.clone();
   if(!portalBusy.value && !guided && !worksUI.value && !worksTrip.value && radio.state.mode!=='expanded') {
+  if(skytube?.ownsPassenger&&!transitPassenger.value)look.stop();
   look.update(dt, reduced.value);
   const wasClimbing=climb.active;
   if(wasClimbing){climb.update(dt,look.climbAxis(),camera.position,reduced.value);climbState.value=climb.state;needsRender=true;if(!climb.active){look.setClimbing(false);look.orient(-Math.PI/2,.02);}}
   const movement = look.movement(dt);
   if (!wasClimbing && movement.active && journey.moving) journey.cancel();
-  if(wasClimbing) { /* ladder owns translation until safe dismount */ }
+  if(skytube?.ownsPassenger) { /* capsule owns position; the existing look controller stays active */ }
+  else if(wasClimbing) { /* ladder owns translation until safe dismount */ }
   else if (journey.moving) journey.update(now, dt);
+  else if(!threshold?.active&&district?.contains(camera.position)){scene.updateMatrixWorld(true);district.move(camera.position,movement.delta);journey.locate();}
   else if(camera.position.y>7&&!threshold?.active){
     const old=camera.position.clone();collide(camera.position,movement.delta);
     const height=roofHeight(camera.position.x,camera.position.z);
@@ -336,8 +353,14 @@ function animate(now: number) {
     if(height===undefined||inWell)camera.position.copy(old);else camera.position.y=height+ascent.eye;
   }else { scene.updateMatrixWorld(true); threshold!.move(camera.position, movement.delta,collide); journey.locate(); }
   }
-  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,spaceAt(camera.position)?.id==='origin',journey.moving||guided,climb.active||camera.position.y>7)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(!skytube?.ownsPassenger&&!climb.active&&!journey.moving&&!guided&&movementStart.distanceToSquared(camera.position)>1e-10)skytube?.constrain(movementStart,camera.position);
+  const transitUpdate=skytube?.update(rawDt,reduced.value,camera,!!threshold?.active||!!district?.active);
+  if(transitUpdate?.turn)look.rotateFrame(transitUpdate.turn);
+  if(transitUpdate?.changed)needsRender=true;
+  if(skytube){if(transitPassenger.value!==skytube.ownsPassenger)look.stop();transitPassenger.value=skytube.ownsPassenger;transitPhase.value=skytube.phase;transitDestination.value=skytube.destination;}
+  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,!!skytube?.ownsPassenger||spaceAt(camera.position)?.id==='origin'||(!!district?.contains(camera.position)&&!district.active),journey.moving||guided,!!skytube?.ownsPassenger||climb.active||camera.position.y>7||!!district?.contains(camera.position))){needsRender=true;renderer.shadowMap.needsUpdate=true;}
   if(!threshold?.active&&spaceAt(camera.position)?.id==='origin'&&!reduced.value)needsRender=true;
+  if(!skytube?.ownsPassenger&&!threshold?.active&&district?.update(dt,reduced.value,camera)){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;renderer.shadowMap.needsUpdate=true;}
   const wasExterior=threshold?.active;
   if(threshold?.update(dt,reduced.value,camera)){
     if(threshold.active!==wasExterior){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x,Math.PI);}
@@ -367,7 +390,8 @@ function animate(now: number) {
     if(freeInput.value){candidate.value=pick(0,0,true);}else{candidate.value=false;actionable.value=false;}
     renderer.domElement.dataset.interaction=String(candidate.value||'');renderer.domElement.dataset.actionable=String(actionable.value); wallState.value=mechanism.state;
     const canvas = renderer.domElement;
-    canvas.dataset.climb=climb.state;canvas.dataset.rooftop=String(camera.position.y>7&&!climb.active);canvas.dataset.explorerVisited=explorer?.visited.join(',')||'';canvas.dataset.originDoor=origin?.opened?'open':'closed';canvas.dataset.environment=threshold?.active?threshold.environment:spaceAt(camera.position)?.id==='origin'?'origin':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?threshold.environment:spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
+    canvas.dataset.climb=climb.state;canvas.dataset.rooftop=String(camera.position.y>7&&!climb.active);canvas.dataset.explorerVisited=explorer?.visited.join(',')||'';canvas.dataset.originDoor=origin?.opened?'open':'closed';canvas.dataset.environment=district?.active?'loop-vault':district?.contains(camera.position)?'loop-district':threshold?.active?threshold.environment:spaceAt(camera.position)?.id==='origin'?'origin':'hall';canvas.dataset.threshold=threshold?.state||'closed';canvas.dataset.room=threshold?.active?threshold.environment:spaceAt(camera.position)?.id||'';canvas.dataset.works=worksUI.value||worksTrip.value||(camera.position.x>15&&camera.position.z<-72?'gallery':'');canvas.dataset.portal=portalState.value;canvas.dataset.guided=String(guided);canvas.dataset.ready = 'true'; canvas.dataset.state = journey.state;
+    canvas.dataset.transit=skytube?.phase||'docked';canvas.dataset.transitPassenger=String(!!skytube?.ownsPassenger);canvas.dataset.transitStation=skytube?.station||'origin';canvas.dataset.transitProgress=skytube?.progress.toFixed(5)||'0';canvas.dataset.transitDoor=skytube?.doorProgress.toFixed(3)||'0';
     canvas.dataset.position = camera.position.toArray().map(n => n.toFixed(4)).join(',');
     canvas.dataset.look = [look.yaw, look.pitch].map(n => n.toFixed(4)).join(',');
     canvas.dataset.wall = mechanism.state; canvas.dataset.opening = mechanism.opening.toFixed(4); canvas.dataset.triangles = String(renderer.info.render.triangles);
@@ -375,7 +399,7 @@ function animate(now: number) {
 }
 function applyTheme() {
   if (!architecture || !lighting) return;
-  rooftop?.setTheme(dark.value);explorer?.setTheme(dark.value);architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);origin?.setTheme(dark.value);
+  rooftop?.setTheme(dark.value);explorer?.setTheme(dark.value);architecture.setTheme(dark.value); lighting.setTheme(dark.value);works?.setTheme(dark.value);expansion?.setTheme(dark.value);atmosphere?.setTheme(dark.value);threshold?.setTheme(dark.value);origin?.setTheme(dark.value);district?.setTheme(dark.value);skytube?.setTheme(dark.value);
   renderer.toneMappingExposure = dark.value ? 1.12 : 1.0;
   needsRender = true; renderer.shadowMap.needsUpdate = true;
 }
@@ -400,7 +424,7 @@ function radioShortcut(){
 }
 watch(freeInput,value=>{look?.setEnabled(value);if(!value){candidate.value=false;actionable.value=false;}},{flush:'sync'});
 watch(dark, applyTheme);
-watch(locale,value=>{explorer?.setLocale(value);atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
+watch(locale,value=>{skytube?.setLocale(value);explorer?.setLocale(value);atmosphere?.setLocale(value);expansion?.setLocale(value);works?.setLocale(value);needsRender=true;});
 watch(reduced, value => {journey?.setReduced(value);if(value && travel)travel.duration=0;});
 onMounted(() => {
   radio.mount();
@@ -415,7 +439,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
+    architecture = buildEnvironment(scene); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyTube(scene,architecture.solids);skytube.setLocale(locale.value);threshold=createImpossibleThreshold(scene,architecture.solids);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);interactables=createInteractables(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -425,6 +449,8 @@ onMounted(() => {
       manual() { if(portalBusy.value||guided)return; if (journey.moving) journey.cancel(); },
       escape() { if(worksTrip.value){cancelWorks();return;}if(worksUI.value){closeWorks();return;}if(radioOpen.value){closeRadio();return;} if(portalBusy.value||guided){closeWorkspace();return;} controlsOpen.value = false; look.stop(); if (journey.moving) journey.cancel(); },
     });
+    if(import.meta.dev)(window as any).__skyReview={camera,look,skytube,origin,district,threshold,scene,renderer};
+    const pauseTransit=()=>{skytube?.setPaused(document.hidden);lastTime=performance.now();};document.addEventListener('visibilitychange',pauseTransit);cleanups.push(()=>document.removeEventListener('visibilitychange',pauseTransit));
     const capability=matchMedia('(pointer: coarse)');touchMode.value=capability.matches;
     const detect=(e:PointerEvent)=>{if(e.pointerType==='touch')touchMode.value=true;else if(e.pointerType==='mouse')touchMode.value=false;};
     window.addEventListener('pointerdown',detect);cleanups.push(()=>window.removeEventListener('pointerdown',detect));
@@ -442,7 +468,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
@@ -450,11 +476,11 @@ onBeforeUnmount(() => {
     <div v-show="!failed && !textMode" ref="host" :inert="portalBusy || guided || !!worksUI || !!worksTrip" class="arrival-canvas"/>
     <nav v-show="!portalBusy" ref="gameDock" :inert="guided" class="arrival-tools" @focusin="releaseDockPointer" @pointerdown="releaseDockPointer" @keydown.stop :aria-label="c.controls">
       <button data-action="radio-shortcut" @keydown.stop :aria-label="ac.receiver" :title="ac.receiver" @click="radioShortcut">♫</button>
-      <button data-action="works-shortcut" :aria-label="wc.go" :title="wc.go" :aria-expanded="!!worksUI" @click="worksMenu">⋈</button>
-      <button data-action="portal-approach" :aria-label="portalNear?pc.activate:pc.approach" :title="portalNear?pc.activate:pc.approach" @click="approachTerminal">▣</button>
+      <button data-action="works-shortcut" :disabled="transitPassenger" :aria-label="wc.go" :title="wc.go" :aria-expanded="!!worksUI" @click="worksMenu">⋈</button>
+      <button data-action="portal-approach" :disabled="transitPassenger" :aria-label="portalNear?pc.activate:pc.approach" :title="portalNear?pc.activate:pc.approach" @click="approachTerminal">▣</button>
       <button :aria-label="themeLabel" :title="themeLabel" :aria-pressed="dark" data-action="theme" @click="colorMode.preference = dark ? 'light' : 'dark'">{{ dark ? '◐' : '◑' }}</button>
       <button :aria-label="resumeLook?pc.resume:c.mouse" :title="resumeLook?pc.resume:c.mouse" data-action="look" @click="mouseLook">⌖</button>
-      <button :aria-label="c.back" :title="c.back" data-action="return" @click="back">↶</button>
+      <button :aria-label="c.back" :title="c.back" data-action="return" :disabled="transitPassenger" @click="back">↶</button>
       <button :aria-label="c.controls" :title="c.controls" :aria-expanded="controlsOpen" aria-controls="arrival-controls" @click="controlsOpen = !controlsOpen">?</button>
       <NuxtLink data-action="world-exit" :to="localePath('/')" :aria-label="c.exit" :title="c.exit">↗</NuxtLink>
     </nav>
@@ -467,7 +493,7 @@ onBeforeUnmount(() => {
       <button :aria-pressed="textMode" @click="showText">{{ c.alternative }}</button>
     </section>
     <p v-if="mouseUnavailable" class="arrival-mouse-note" role="status">{{ c.unsupported }}</p>
-    <nav v-show="!portalBusy" :inert="guided" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
+    <nav v-show="!portalBusy" :inert="guided||transitPassenger" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
       <p v-if="failed">{{ c.fallback }}</p>
       <p v-if="failed || textMode">{{ ic.atmosphereDescription }}</p>
       <button v-if="failed || textMode" @click="goWorks('atmosphere')">{{ ic.atmosphereName }}</button>
@@ -478,6 +504,8 @@ onBeforeUnmount(() => {
       <button @click="goWorks('archive')">{{ wc.archive }}</button>
       <button :aria-label="ac.approach" @keydown.stop @click="approachRadio">{{ ac.approach }}</button>
     </nav>
+    <p v-if="transitPassenger && transitPhase!=='docked'" class="arrival-context" role="status" aria-live="polite">{{ transitStatus }}</p>
+    <p v-if="touchMode && transitPassenger" class="arrival-look-hint">{{ ic.look }}</p>
     <TouchControls v-if="touchVisible" :label="ic.move" :help="ic.help" @move="mobileMove"/>
 <p v-if="touchVisible" class="arrival-look-hint">{{ climbState!=='walking' ? asc.touch : ic.look }}</p>
     <p v-if="climbState!=='walking' && !touchMode" class="arrival-context" role="status">{{ asc.climbing }}</p>
