@@ -11,7 +11,7 @@ for(const name of ['three','three/addons/loaders/GLTFLoader.js','three/addons/ut
 const {loadCharacterAssets}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
 const directory=new URL('../../public/arrival-lab/characters/',import.meta.url);
 
-test('real rigged assets retain metre calibration, child anatomy and blended animation',async()=>{
+test('real rigs preserve anatomy, ground seated transitions and raise a connected waving arm',async()=>{
  const original=GLTFLoader.prototype.loadAsync,previous=globalThis.ProgressEvent;
  globalThis.ProgressEvent=class {};
  GLTFLoader.prototype.loadAsync=async function(path){
@@ -36,6 +36,67 @@ test('real rigged assets retain metre calibration, child anatomy and blended ani
    visual.update(.1,true,false,false);visual.update(.2,true,false,false);assert(before.angleTo(thigh.quaternion)>.01);
    const time=visual.mixer.time;visual.update(.1,true,false,false);assert(visual.mixer.time>time);
    visual.update(.1,false,true,false);visual.update(.2,false,true,true);
+   const bone=name=>body.skeleton.bones.find(b=>b.name===name);
+   const point=name=>visual.root.worldToLocal(bone(name).getWorldPosition(new T.Vector3()));
+   visual.update(.3,false,false,false);visual.update(.3,false,false,false);visual.root.updateMatrixWorld(true);
+   const idleHand=point('hand_r'),armLengths=[point('upperarm_r').distanceTo(point('lowerarm_r')),point('lowerarm_r').distanceTo(point('hand_r'))];
+   const wavePoints=[];
+   for(let n=0;n<40;n++){
+    visual.update(.05,false,true,false);visual.root.updateMatrixWorld(true);
+    if(n<8)continue;
+    const shoulder=point('upperarm_r'),elbow=point('lowerarm_r'),hand=point('hand_r'),head=point('Head');wavePoints.push(hand);
+    assert(elbow.y>shoulder.y+height*.04,`${id}: upper arm rises above shoulder`);
+    assert(hand.y>head.y+height*.04,`${id}: waving hand clears head height`);
+    assert(hand.distanceTo(head)>height*.14,`${id}: hand stays outside head`);
+    assert(Math.abs(shoulder.distanceTo(elbow)-armLengths[0])<.001,`${id}: connected upper arm`);
+    assert(Math.abs(elbow.distanceTo(hand)-armLengths[1])<.001,`${id}: connected forearm`);
+   }
+   assert(Math.max(...wavePoints.map(p=>p.x))-Math.min(...wavePoints.map(p=>p.x))>height*.035,`${id}: visible lateral wave`);
+   visual.update(.3,false,false,false);visual.update(.3,false,false,false);visual.root.updateMatrixWorld(true);
+   assert(point('hand_r').distanceTo(idleHand)<.02,`${id}: wave returns to idle`);
+
+   // Smaller children currently cannot select adult furniture; verify their pose
+   // against proportionate seat heights without changing that eligibility rule.
+   const seatHeight=age<5?.24:age<10?.30:.48;
+   const standing=thigh.quaternion.clone(),ankleHeight=point('foot_l').y;
+   const legLengths=[point('thigh_l').distanceTo(point('calf_l')),point('calf_l').distanceTo(point('foot_l'))];
+   for(let n=1;n<=20;n++){
+    visual.update(.05,false,false,false,n/20,seatHeight);visual.root.updateMatrixWorld(true);
+    assert(new T.Box3().setFromObject(visual.root,true).min.y>-.015,`${id}: sit-down does not sink feet through floor`);
+   }
+   const hip=point('thigh_l'),knee=point('calf_l'),ankle=point('foot_l');
+   assert(thigh.quaternion.angleTo(standing)>.8,`${id}: seated thigh bends`);
+   assert(hip.y>seatHeight&&hip.y<seatHeight+height*.12,`${id}: hip sockets sit naturally above cushion`);
+   assert(Math.abs(hip.z)<.002,`${id}: hips align with seat anchor`);
+   let underside=Infinity;
+   const vertex=new T.Vector3();
+   for(let i=0;i<body.geometry.attributes.position.count;i++){
+    body.getVertexPosition(i,vertex).applyMatrix4(body.matrixWorld);visual.root.worldToLocal(vertex);
+    if(Math.abs(vertex.x)<height*.35/1.65&&vertex.z>-height*.3/1.65&&vertex.z<height*(age<10?.10:.18)/1.65)underside=Math.min(underside,vertex.y);
+   }
+   assert(underside>=seatHeight-.005&&underside<seatHeight+.015,`${id}: skinned hips/thighs rest on cushion without sinking or hovering (${underside})`);
+
+   assert(knee.z>hip.z+height*.15&&knee.y<hip.y,`${id}: thighs extend forward with a natural downward slope`);
+   assert(Math.abs(knee.z-ankle.z)<.005&&knee.y>ankle.y,`${id}: shins extend vertically to floor`);
+   assert(Math.abs(ankle.y-ankleHeight)<.005,`${id}: feet stay at standing floor height`);
+   assert(Math.abs(hip.distanceTo(knee)-legLengths[0])<.001&&Math.abs(knee.distanceTo(ankle)-legLengths[1])<.001,`${id}: leg joints remain connected at original lengths`);
+   if(age>=17){
+    for(const height of [.51,.48]){
+     visual.update(.05,false,false,false,1,height);visual.root.updateMatrixWorld(true);
+     assert(Math.abs(point('foot_l').y-ankleHeight)<.005,`${id}: changing seat height keeps feet grounded`);
+    }
+   }
+   for(let n=19;n>=0;n--){
+    visual.update(.05,false,false,false,n/20,seatHeight);visual.root.updateMatrixWorld(true);
+    assert(new T.Box3().setFromObject(visual.root,true).min.y>-.015,`${id}: stand-up does not sink feet through floor`);
+   }
+   visual.update(.3,false,false,false,0,seatHeight);visual.root.updateMatrixWorld(true);
+   assert(thigh.quaternion.angleTo(standing)<.02,`${id}: stand-up restores idle legs`);
+   const upright=new T.Box3().setFromObject(visual.root,true);
+   assert(Math.abs(upright.max.y-upright.min.y-height)<.025,`${id}: stand-up restores height`);
+   visual.update(.2,true,false,false);visual.update(.3,true,false,false);
+   assert(thigh.quaternion.angleTo(standing)>.01,`${id}: walking resumes after sitting`);
+
    visual.root.traverse(o=>{if(o instanceof T.Mesh)for(const n of o.geometry.attributes.position.array)assert(Number.isFinite(n));});
   }
   // Later child creation must never mutate the adult's inverse bind matrices.

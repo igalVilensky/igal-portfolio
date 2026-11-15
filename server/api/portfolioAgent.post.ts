@@ -1,3 +1,4 @@
+import { familyAnswer } from "../../shared/family-knowledge.js";
 import { resolveEntity, entityInstruction, entityKnowledge, familyBoundary } from "../../shared/world-entities.js";
 import sourceLabelsData from "../../content/source-labels.json";
 import profileData from "../../content/profile.json";
@@ -1443,8 +1444,10 @@ export default defineEventHandler(async (event): Promise<PortfolioAgentResponse>
     throw createError({ statusCode: 400, statusMessage: "Unknown entity" });
   }
   if (entityId) {
+    const factual = familyAnswer(entityId, question, locale);
+    if (factual) return { status: "answered", answer: factual, confidence: "high", sources: [], suggestedQuestions: [], actions: [] };
     const boundary = familyBoundary(entityId, question, locale);
-    const items = entityKnowledge(entityId, retrieveKnowledge(question, conversation, locale));
+    const items = entityKnowledge(entityId, retrieveKnowledge(question, conversation, locale), question);
     if (boundary) { return { status: "partial", answer: boundary, confidence: "high", sources: [], suggestedQuestions: [], actions: [] }; }
     if (!process.env.GROQ_API_KEY) { throw createError({ statusCode: 503, data: { code: "AI_NOT_CONFIGURED" }, statusMessage: "AI service is not configured" }); }
     const response = await callGroq(process.env.GROQ_API_KEY, question, conversation, items, locale, mode, entityId);

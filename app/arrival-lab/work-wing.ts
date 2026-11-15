@@ -38,7 +38,7 @@ export function createWorkWing(scene:T.Scene,solids:T.Mesh[]){
  box(8,2.6,.12,-49,2.5,41.55,ink);
  for(let i=0;i<4;i++){box(1.6,1.25,.07,-52+i*2,2.65,41.45,screen,false);box(1.2,.035,.08,-52+i*2,2.3,41.39,light,false);}
  // Commons: a social table and upholstered bench, leaving its through-route clear.
- table(-32,30,3.3,1.5);box(4,.42,.95,-32,.45,32.5,sage);box(4,.8,.2,-32,1.05,32.9,sage);
+ table(-32,30,3.3,1.5);box(4,.42,.95,-32,.3,32.5,sage);box(4,.8,.2,-32,1.05,32.9,sage);
  box(.28,.3,.28,-31.5,1.08,30,stone);box(.28,.3,.28,-32.4,1.08,30,stone);
  // Experiments: a standing prototype bench beside, never inside, the sculpture bay.
  table(-57,2,3,2);for(let i=0;i<3;i++)box(.4,.35+i*.12,.4,-58+i*.7,1.08+i*.06,2,light,false);
@@ -46,6 +46,6 @@ export function createWorkWing(scene:T.Scene,solids:T.Mesh[]){
  // Journey doubles as a quiet project library and the architectural stair hall.
  table(-90,25,4);box(5,2.8,.5,-90,1.4,29.3,ink);for(let i=0;i<12;i++)box(.22,1.1,.35,-92+i*.35,1.9,28.95,i%2?oak:stone,false);
  sign('ROOF TERRACE  ↑',-64,2.6,11.5,0,4);
- function update(dt:number,p:T.Vector3,reduced:boolean){let changed=false;for(const d of doors){const target=Math.hypot(p.x-d.x,p.z-d.z)<10?1:0;const next=reduced?target:T.MathUtils.damp(d.progress,target,5,dt);if(Math.abs(next-d.progress)>.0001)changed=true;d.progress=next;for(const {leaf,side} of d.leaves)leaf.position.x=side*(d.width/4-.1+d.progress*(d.width/2-.3));}return changed;}
+ function update(dt:number,p:T.Vector3,reduced:boolean,npcs:T.Vector3[]=[]){let changed=false;for(const d of doors){const target=[p,...npcs].some(p=>Math.hypot(p.x-d.x,p.z-d.z)<10)?1:0;const next=reduced?target:T.MathUtils.damp(d.progress,target,5,dt);if(Math.abs(next-d.progress)>.0001)changed=true;d.progress=next;for(const {leaf,side} of d.leaves)leaf.position.x=side*(d.width/4-.1+d.progress*(d.width/2-.3));}return changed;}
  return {root,update,setTheme(dark:boolean){stone.color.set(dark?'#82938e':'#e0ddd1');light.emissiveIntensity=dark?1:.6;},dispose(){root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}};
 }

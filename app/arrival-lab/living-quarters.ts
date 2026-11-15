@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 /** Metres; east of Little Explorer, separate from the professional west wing. */
 export const personalRooms = [
@@ -55,13 +56,46 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
     const g=new T.PlaneGeometry(.84,.18);geometry.push(g);const label=new T.Mesh(g,labelMaterial);label.name=`${name} · caption`;label.position.set(0,-1.64,.047);frame.add(label);
    }
   }
-  // Slim shelf and low upholstered seat sit outside the central walking path.
-  box(2.6,.1,.38,r.x,.62,z+(north?.27:-.27),oak,false);
-  box(2.2,.4,1,r.x+r.width/2-2,.2,r.z,oak);
-  box(2.12,.12,.94,r.x+r.width/2-2,.46,r.z,m);
+  // Furniture stays in side bays, preserving the portrait axis and three-metre entrance.
+  const textile=mat(r.id==='amelia'?'#536679':r.id==='adriel'?'#dfa969':r.id==='nataniel'?'#648c80':r.id==='anastasia'?'#b59078':'#455b62');
+  const ivory=mat('#eee3cc'),ink=mat('#35444a'),leaf=mat('#738460');
+  const round=(w:number,h:number,d:number,x:number,y:number,zz:number,m:T.Material)=>{const g=new RoundedBoxGeometry(w,h,d,2,Math.min(.12,h/3));geometry.push(g);const mesh=new T.Mesh(g,m);mesh.position.set(x,y,zz);mesh.userData.room='living-quarters';root.add(mesh);solids.push(mesh);return mesh;};
+  const leg=(x:number,zz:number,h=.72)=>box(.07,h,.07,x,h/2,zz,bronze);
+  const table=(x:number,zz:number,w:number,d:number,h=.78)=>{round(w,.12,d,x,h,zz,oak);for(const dx of [-w/2+.15,w/2-.15])for(const dz of [-d/2+.15,d/2-.15])leg(x+dx,zz+dz,h-.06);};
+  const rug=(x:number,zz:number,w:number,d:number)=>round(w,.025,d,x,.016,zz,textile).userData.noCollision=true;
+  const bed=(x:number,zz:number,w=1.8,h=.5)=>{round(w,h,3.1,x,h/2,zz,oak);round(w-.08,.22,2.95,x,h+.1,zz,ivory);round(w-.12,.10,1.65,x,h+.24,zz+.5,textile);round(w-.35,.16,.55,x,h+.25,zz-1,ivory);round(w,.9,.13,x,.65,zz-1.55,textile);};
+  const shelf=(x:number,zz:number,w=2.2)=>{for(const dx of [-w/2,w/2])box(.1,2.2,.45,x+dx,1.1,zz,oak);for(const y of [.25,1,1.8,2.2])box(w,.08,.45,x,y,zz,oak);for(let i=0;i<6;i++)box(.12,.35+(i%3)*.08,.25,x-w/2+.25+i*.22,1.24,zz, i%2?ivory:textile,false);};
+  const chair=(x:number,zz:number,rotation=0)=>{const group=new T.Group();group.position.set(x,0,zz);group.rotation.y=rotation;root.add(group);const part=(w:number,h:number,d:number,xx:number,y:number,z:number,m:T.Material)=>{const o=round(w,h,d,0,0,0,m);group.add(o);o.position.set(xx,y,z);};part(1.1,.2,1,0,.38,0,textile);part(1.1,.85,.18,0,.85,.43,textile);for(const side of [-1,1]){part(.14,.5,1,side*.55,.65,0,oak);part(.09,.3,.8,side*.42,.15,0,bronze);}};
+  const plant=(x:number,zz:number)=>{round(.5,.55,.5,x,.275,zz,ivory);for(const side of [-1,0,1]){const o=round(.42,.8,.17,x+side*.16,.95+Math.abs(side)*.15,zz,leaf);o.rotation.z=side*.4;}};
+  const lamp=(x:number,zz:number)=>{leg(x,zz,1.7);round(.65,.32,.65,x,1.75,zz,ivory);box(.5,.025,.5,x,1.57,zz,light,false);};
+  const display=(x:number,zz:number,w=1.3)=>{round(w,.85,.10,x,1.4,zz,ink);box(w-.12,.69,.015,x,1.4,zz+.06,mat('#78a7ac',true),false);box(.08,.3,.1,x,.96,zz,bronze);};
+  const left=r.x-r.width/2+1.8,right=r.x+r.width/2-2;
+  if(r.id==='igal'){
+   table(left+1,4.2,3.8,1.25);display(left,3.9);display(left+1.5,3.7,1.5);shelf(right,1.3,2.5);table(right,8,2.5,1.4,.95);
+   for(let i=0;i<3;i++){const o=round(.35,.35,.35,right-.7+i*.65,1.2,8,i%2?textile:ivory);o.rotation.y=i*.4;}
+   rug(left+1,7,4,3);lamp(left-1,8);for(let i=0;i<4;i++){const o=box(.8,.65,.03,left+i*.8,2.8,1,ivory,false);o.rotation.z=(i%2-.5)*.15;for(let j=0;j<3;j++)box(.5,.025,.035,left+i*.8,2.6+j*.12,1.03,ink,false);}
+  }else if(r.id==='anastasia'){
+   rug(left+2,6,5.2,4.8);chair(78.3,6,-Math.PI/2);chair(84.2,6,-Math.PI/2);table(81.2,3.5,1.8,1.8,.62);
+   // Abstract reflection game: original neutral grid and wooden tokens.
+   box(1.3,.025,1.3,81.2,.704,3.5,ivory,false);for(let i=0;i<5;i++)for(let j=0;j<5;j++)box(.2,.015,.2,80.72+i*.24,.726,3.02+j*.24,(i+j)%2?textile:oak,false);
+   shelf(right,1.1);plant(left,2);plant(right,9);lamp(77,8.5);
+  }else if(r.id==='amelia'){
+   bed(right,4.5,1.65);table(left+1,3,2.7,1.2);chair(92.15,7,-Math.PI/2);rug(left+1,7,3.6,3.5);shelf(right,9,2.3);lamp(left-1,9);
+   round(.9,2.3,.08,left-1.1,1.5,1,bronze);box(.76,2.12,.03,left-1.1,1.5,1.06,mat('#c3d5d4',true),false);
+   for(let i=0;i<3;i++){box(.7,.9,.05,r.x-1+i*.9,2.8,.65,i%2?ivory:textile,false);}
+  }else if(r.id==='nataniel'){
+   bed(left,34.8,1.5);table(right-1,35,2.5,1.3,.65);shelf(right,28.2,2.5);rug(r.x+1,33,4,3.5);lamp(left+1,28);
+   for(let i=0;i<5;i++){const o=round(.38,.25+(i%2)*.3,.38,r.x+1+(i%3)*.55,.2,34+Math.floor(i/3)*.6,i%2?textile:oak);o.rotation.y=i*.3;}
+   for(let i=0;i<3;i++){const o=box(1.3,1.1,.06,r.x-1+i*1.5,2.7,37.65,ivory,false);o.rotation.z=(i-1)*.06;box(.75,.06,.08,r.x-1+i*1.5,2.7,37.7,textile,false);}
+  }else{
+   bed(left,34.5,1.35,.24);rug(r.x+1,33.5,5,4);table(right,34,1.6,1.2,.42);lamp(left,28);
+   for(let i=0;i<6;i++){round(.55,.55,.55,r.x+1+(i%3)*.7,.3+(i>2?.55:0),34+Math.floor(i/3)*.2,mat(['#cc885e','#7ba5a4','#d8b767'][i%3]!));}
+   for(const y of [.22,.85])round(3,.12,.65,right-1,y,28,oak);for(let i=0;i<4;i++)round(.4,.35,.4,right-2+i*.6,.45,28,i%2?textile:ivory);
+   for(let i=0;i<3;i++){const g=new T.CircleGeometry(.4+i*.12,24);geometry.push(g);const o=new T.Mesh(g,[textile,ivory,leaf][i]);o.position.set(r.x-1+i*1.6,2.6,37.7);o.rotation.y=Math.PI;root.add(o);}
+  }
   const l=new T.PointLight('#ffe8c6',28,14,1.5);l.position.set(r.x,3.8,r.z);root.add(l);lights.push(l);
   const portraitUrl=`/arrival-lab/family/${r.id}.jpg`;
-  new T.TextureLoader().load(portraitUrl,texture=>{
+  if(typeof document!=='undefined')new T.TextureLoader().load(portraitUrl,texture=>{
     if(disposed){texture.dispose();return;}texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=4;textures.push(texture);
     const ratio=texture.image.width/texture.image.height,h=Math.min(2.3,1.7/ratio),w=h*ratio;
     const g=new T.PlaneGeometry(w,h);geometry.push(g);const photoMaterial=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(photoMaterial);

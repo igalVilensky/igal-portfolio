@@ -7,7 +7,7 @@ export type CharacterIdentity = {
 };
 export type CharacterVisual = {
  root:T.Group; mixer:T.AnimationMixer; height:number;
- update:(dt:number,walking:boolean,greeting:boolean,reduced:boolean)=>void;
+ update:(dt:number,walking:boolean,greeting:boolean,reduced:boolean,seated?:number,seatHeight?:number,pace?:number)=>void;
 };
 
 /** CC0 Quaternius base meshes. No reference photographs enter this pipeline. */
@@ -101,15 +101,16 @@ export async function loadCharacterAssets() {
    const clip=(name:string,duration:number,gait:boolean,greet:boolean)=>{
     const count=17,times=Array.from({length:count},(_,i)=>duration*i/(count-1));
     const tracks:T.KeyframeTrack[]=[];
-    for(const bone of ['upperarm_l','upperarm_r','lowerarm_l','lowerarm_r','thigh_l','thigh_r','calf_l','calf_r','Head','spine_02']){
+    for(const bone of ['upperarm_l','upperarm_r','lowerarm_l','lowerarm_r','thigh_l','thigh_r','calf_l','calf_r','hand_l','hand_r','Head','spine_02']){
      const values:number[]=[];
      for(let i=0;i<count;i++){
       const phase=i/(count-1)*Math.PI*2,s=Math.sin(phase),left=bone.endsWith('_l'),side=left?1:-1;
       let x=0,z=0;
-      if(bone.startsWith('upperarm')){z=-side*1.35;x=gait?s*side*.23:Math.sin(phase)*.015;if(greet&&!left){z=.35;x=-.3;}}
-      if(bone.startsWith('lowerarm')){x=-.10;if(greet&&!left){x=-.65;z=Math.sin(phase)*.16;}}
+      if(bone.startsWith('upperarm')){z=-side*1.35;x=gait?s*side*.23:Math.sin(phase)*.015;if(greet&&!left){z=-.75;x=-.12;}}
+      if(bone.startsWith('lowerarm')){x=-.10;if(greet&&!left){x=-.15;z=-.65+Math.sin(phase*2)*.25;}}
       if(bone.startsWith('thigh')&&gait)x=s*side*.53;
       if(bone.startsWith('calf')&&gait)x=Math.max(0,-s*side)*.48;
+      if(bone==='hand_r'&&greet)z=Math.sin(phase*2)*.12;
       if(bone==='Head'&&greet)x=Math.sin(phase)*.055;
       if(bone==='spine_02')x=Math.sin(phase)*.009;
       values.push(...rotation(bone,x,z).toArray());
@@ -125,12 +126,86 @@ export async function loadCharacterAssets() {
    const baseY=model.position.y,support=bones.filter(b=>/^(foot|ball)_[lr]$/.test(b.name)),supportPoint=new T.Vector3();
    const lowestSupport=()=>Math.min(...support.map(bone=>root.worldToLocal(bone.getWorldPosition(supportPoint)).y));
    const restSupport=lowestSupport();
-   return {root,mixer,height:spec.height,update(dt,walking,greeting,reduced){
+   // Calibrate in visual-root metres, after anatomy and scale have been applied.
+   const point=(bone:T.Bone)=>root.worldToLocal(bone.getWorldPosition(new T.Vector3()));
+   const legs=['l','r'].map(side=>{
+    const thigh=bones.find(b=>b.name===`thigh_${side}`)!,calf=bones.find(b=>b.name===`calf_${side}`)!,foot=bones.find(b=>b.name===`foot_${side}`)!;
+    const hip=point(thigh),knee=point(calf),ankle=point(foot);
+    return {thigh,calf,foot,hip,ankle,upper:knee.clone().sub(hip),lower:ankle.clone().sub(knee),
+     thighWorld:thigh.getWorldQuaternion(new T.Quaternion()),calfWorld:calf.getWorldQuaternion(new T.Quaternion()),footWorld:foot.getWorldQuaternion(new T.Quaternion()),parentWorld:thigh.parent!.getWorldQuaternion(new T.Quaternion())};
+   });
+   const hipCenter=legs[0]!.hip.clone().add(legs[1]!.hip).multiplyScalar(.5);
+   // Restore mixer-owned transforms before each update: constant idle tracks are cached.
+   const seatedBones=legs.flatMap(leg=>[leg.thigh,leg.calf,leg.foot]).map(bone=>({bone,animated:bone.quaternion.clone(),seated:bone.quaternion.clone()}));
+   let cachedSeatHeight=NaN;
+   const seatPoses=new Map<number,T.Quaternion[]>(),seatMeshes:{mesh:T.SkinnedMesh;indices:number[]}[]=[];
+   model.updateMatrixWorld(true);
+   model.traverse(object=>{
+    if(!(object instanceof T.SkinnedMesh))return;
+    const indices:number[]=[];
+    const toRoot=root.matrixWorld.clone().invert().multiply(object.matrixWorld);
+    const kneeLevel=hipCenter.y-Math.max(...legs.map(leg=>leg.upper.length()))-.04*spec.height/1.65;
+    for(let i=0;i<object.geometry.attributes.position!.count;i++){
+     object.getVertexPosition(i,v).applyMatrix4(toRoot);
+     // Keep the hips and upper legs, not shoes or lower legs that must hang off the edge.
+     if(v.y>=kneeLevel&&v.y<=hipCenter.y+spec.height*.06)indices.push(i);
+    }
+    if(indices.length)seatMeshes.push({mesh:object,indices});
+   });
+   function configureSeat(height:number){
+    if(height===cachedSeatHeight)return;
+    cachedSeatHeight=height;
+    const cached=seatPoses.get(height);
+    if(cached){seatedBones.forEach((pose,i)=>pose.seated.copy(cached[i]!));return;}
+    let hipClearance=.08*spec.height/1.65;
+    // A bounded, cached fit to the actual skinned underside of the hips/thighs.
+    // Socket height alone misses the volume of this stylized mesh's clothing.
+    for(let pass=0;pass<6;pass++){
+     for(const leg of legs){
+      const upperLength=leg.upper.length(),lowerLength=leg.lower.length();
+      // Solve thigh slope with a vertical shin and the ankle at its standing height.
+      const drop=T.MathUtils.clamp(height+hipClearance-lowerLength-leg.ankle.y,-upperLength*.35,upperLength*.8);
+      const upperDirection=new T.Vector3(0,-drop,Math.sqrt(upperLength*upperLength-drop*drop)).normalize();
+      const thighWorld=new T.Quaternion().setFromUnitVectors(leg.upper.clone().normalize(),upperDirection).multiply(leg.thighWorld);
+      const calfWorld=new T.Quaternion().setFromUnitVectors(leg.lower.clone().normalize(),new T.Vector3(0,-1,0)).multiply(leg.calfWorld);
+      const targets=[leg.parentWorld.clone().invert().multiply(thighWorld),thighWorld.clone().invert().multiply(calfWorld),calfWorld.clone().invert().multiply(leg.footWorld)];
+      for(const [i,bone] of [leg.thigh,leg.calf,leg.foot].entries())seatedBones.find(pose=>pose.bone===bone)!.seated.copy(targets[i]!);
+     }
+     for(const pose of seatedBones)pose.bone.quaternion.copy(pose.seated);
+     model.position.set(0,baseY,-hipCenter.z);model.updateWorldMatrix(true,true);
+     model.position.y+=restSupport-lowestSupport();model.updateMatrixWorld(true);
+     let underside=Infinity;
+     for(const {mesh,indices} of seatMeshes){
+      const toRoot=root.matrixWorld.clone().invert().multiply(mesh.matrixWorld);
+      for(const i of indices){
+       mesh.getVertexPosition(i,v).applyMatrix4(toRoot);
+       if(Math.abs(v.x)<spec.height*.35/1.65&&v.z>-spec.height*.3/1.65&&v.z<spec.height*(child?.10:.18)/1.65)underside=Math.min(underside,v.y);
+      }
+     }
+     const correction=height+.003-underside;
+     if(!Number.isFinite(correction)||Math.abs(correction)<.001)break;
+     hipClearance+=correction;
+    }
+    seatPoses.set(height,seatedBones.map(pose=>pose.seated.clone()));
+    for(const pose of seatedBones)pose.bone.quaternion.copy(pose.animated);
+    model.position.set(0,baseY,0);
+   }
+   return {root,mixer,height:spec.height,update(dt,walking,greeting,reduced,seated=0,seatHeight=.48,pace=1){
     const next=greeting?'greet':walking?'walk':'idle';
     if(next!==state){const previous=actions[state as keyof typeof actions];const action=actions[next];action.reset().play().crossFadeFrom(previous,.22,true);state=next;}
-    idle.timeScale=reduced?0:1;greet.timeScale=reduced?.4:1;mixer.update(dt);
-    // Keep the supporting foot at floor level as the stride bends hips and knees.
-    model.position.y=baseY;model.updateWorldMatrix(true,true);
+    idle.timeScale=reduced?0:1;greet.timeScale=reduced?.4:1;walk.timeScale=pace;
+    for(const pose of seatedBones)pose.bone.quaternion.copy(pose.animated);
+    mixer.update(dt);
+    for(const pose of seatedBones)pose.animated.copy(pose.bone.quaternion);
+    model.position.set(0,baseY,0);
+    if(seated>.001){
+     configureSeat(seatHeight);
+     for(const pose of seatedBones)pose.bone.quaternion.slerp(pose.seated,seated);
+     model.position.z=-hipCenter.z*seated;
+    }
+    // Ground AFTER joint posing. This gives the hips their natural curved descent
+    // as the knees bend, rather than lowering the whole rig through the floor.
+    model.updateWorldMatrix(true,true);
     model.position.y+=restSupport-lowestSupport();
    }};
   },

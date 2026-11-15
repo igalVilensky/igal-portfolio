@@ -21,7 +21,7 @@ test('family privacy refusal works offline in EN DE RU; provider outage retains 
  const oldKey=process.env.GROQ_API_KEY;delete process.env.GROQ_API_KEY;
  try{for(const locale of ['en','de','ru']){const response=JSON.parse((await handler(event({entityId:'amelia',question:'What is your school address?',locale}))).body);assert.equal(response.status,'partial');assert.equal(response.sources.length,0);}
  const fallback=await handler(event({entityId:'wanderer',question:'Where is Little Explorer?'}));assert.equal(fallback.statusCode,503);assert.equal(JSON.parse(fallback.body).code,'AI_NOT_CONFIGURED');
- assert.deepEqual(entityKnowledge('nataniel',[{id:'private',type:'personal'}]),[worldGuide]);
+ const items=entityKnowledge('nataniel',[{id:'private',type:'personal'}]);assert.equal(items[0],worldGuide);assert.match(items[1].text,/Nataniel/);assert(!items.some(x=>x.id==='private'));
  }finally{if(oldKey!==undefined)process.env.GROQ_API_KEY=oldKey;}
 });
 
@@ -37,4 +37,10 @@ test('truncated provider output fails explicitly and a retry succeeds',async()=>
   const failed=await handler(event(body));assert.equal(failed.statusCode,502);assert.equal(JSON.parse(failed.body).code,'AI_PROVIDER_FAILURE');
   const retried=await handler(event(body));assert.equal(retried.statusCode,200);assert.equal(JSON.parse(retried.body).status,'answered');
  }finally{globalThis.fetch=oldFetch;if(oldKey===undefined)delete process.env.GROQ_API_KEY;else process.env.GROQ_API_KEY=oldKey;}
+});
+
+test('identity answers require neither provider key nor network',async()=>{
+ const old=process.env.GROQ_API_KEY,fetch=globalThis.fetch;delete process.env.GROQ_API_KEY;globalThis.fetch=()=>{throw new Error('Identity must not call provider');};
+ try{for(const entityId of entityIds.slice(3))for(const [locale,question] of [['en','How old are you?'],['de','Wo wohnst du?'],['ru','Как тебя зовут?']]){const response=await handler(event({entityId,locale,question,profile:{age:999}}));assert.equal(response.statusCode,200);assert.equal(JSON.parse(response.body).status,'answered');assert(!JSON.parse(response.body).answer.includes('999'));}}
+ finally{globalThis.fetch=fetch;if(old!==undefined)process.env.GROQ_API_KEY=old;}
 });
