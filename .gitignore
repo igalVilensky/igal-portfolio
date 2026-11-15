@@ -28,3 +28,6 @@ logs
 
 # Temporary milestone review captures, recordings, and verification results
 /artifacts/milestone-*/
+
+# Private family design references: never add new originals to source control.
+/docs/design/design-references/family/

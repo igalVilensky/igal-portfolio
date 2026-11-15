@@ -23,7 +23,7 @@ test('closed door blocks; opening alone never switches; real crossing returns wi
  camera.position.set(-12,1.65,-69);world.update(.01,false,camera);camera.position.z=-70.6;world.update(.01,false,camera);
  assert.equal(world.active,true);assert.equal(hall.visible,false);assert.equal(camera.far,9000);assert(Math.abs(camera.position.z-1.1)<1e-8);
  world.update(.01,false,camera);assert.equal(world.active,true);
- camera.position.z=3;world.update(.01,false,camera);camera.position.z=.9;world.update(.01,false,camera);
+ camera.position.z=3;world.update(.01,false,camera);camera.position.z=0;world.update(.01,false,camera);
  assert.equal(world.active,false);assert.equal(hall.visible,true);assert.equal(camera.far,220);assert(Math.abs(camera.position.x+12)<1e-8);
  world.update(.01,false,camera);assert.equal(world.active,false);world.dispose();
 });
@@ -43,7 +43,7 @@ test('Sun Door has independent opening, a walkable dogleg, coastal reveal and na
  const moveTo=(x,z)=>{scene.updateMatrixWorld(true);world.move(camera.position,new T.Vector3(x-camera.position.x,0,z-camera.position.z),collide);assert(Math.abs(camera.position.x-x)<.02,`x ${camera.position.x} expected ${x}`);assert(Math.abs(camera.position.z-z)<.02,`z ${camera.position.z} expected ${z}`);world.update(.01,true,camera);};
  moveTo(0,12.3);moveTo(12.7,12.3);moveTo(12.7,24);moveTo(10,30);
  world.setTheme(true);assert.equal(world.environment,'sun-world');
- moveTo(12.7,24);moveTo(12.7,12.3);moveTo(0,12.3);moveTo(0,3);moveTo(0,.9);
+ moveTo(12.7,24);moveTo(12.7,12.3);moveTo(0,12.3);moveTo(0,3);moveTo(0,0);
  assert.equal(world.environment,'hall');assert.equal(hall.visible,true);assert(Math.abs(camera.position.x-12)<.02);
  camera.position.set(-12,1.65,-69);world.update(.01,true,camera);assert.equal(world.state,'closed');
  world.dispose();
@@ -62,4 +62,9 @@ test('roof is owned by the existing hall visibility switch and restored after wo
  camera.position.set(-12,1.65,-68.6);world.update(.01,false,camera);world.activate();world.update(2,false,camera);
  camera.position.set(-12,1.65,-69);world.update(.01,false,camera);camera.position.z=-70.6;world.update(.01,false,camera);assert(world.active);assert.equal(roof.root.visible,false);
  world.returnToHall(camera);assert.equal(roof.root.visible,true);assert.equal(roof.root.parent,scene);world.dispose();roof.dispose();
+});
+test('live doorway views preserve scene visibility, clipping, render targets and viewer camera',()=>{
+ const scene=new T.Scene(),hall=new T.Group();scene.add(hall);const world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera(65,1.6,.08,4000);camera.position.set(12,1.65,-66);world.update(0,true,camera);world.activate(true);world.update(0,true,camera);const p=camera.position.clone(),q=camera.quaternion.clone(),visibility=scene.children.map(o=>o.visible),clipping=[],calls=[];let target=null;
+ const renderer={clippingPlanes:clipping,shadowMap:{autoUpdate:false,needsUpdate:true},getRenderTarget:()=>target,setRenderTarget:t=>target=t,render:(s,c)=>calls.push({p:c.position.clone(),hall:hall.visible,planes:renderer.clippingPlanes.length,clip:renderer.clippingPlanes[0]?.clone()})};world.renderViews(renderer,camera);assert.equal(calls.length,1);assert.equal(calls[0].hall,false);assert.equal(calls[0].planes,1);assert(Math.abs(calls[0].p.z+3.5)<.001);assert.deepEqual(scene.children.map(o=>o.visible),visibility);assert.equal(renderer.clippingPlanes,clipping);assert.equal(target,null);assert(camera.position.equals(p));assert(camera.quaternion.equals(q));assert.equal(renderer.shadowMap.needsUpdate,true);
+ camera.position.z=-69.6;world.update(.01,true,camera);assert(world.active);camera.position.set(0,1.65,3);world.renderViews(renderer,camera);assert.equal(calls.length,2);assert.equal(calls[1].hall,true);assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-66))>0,'return aperture keeps the Arrival side of the wall');assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-75))<0,'return aperture clips the deep back side');world.dispose();
 });

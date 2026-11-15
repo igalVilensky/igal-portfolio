@@ -14,9 +14,7 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  // Gallery sides are precisely replaced by room thresholds below.
  box(.5,1,6,-25.75,-.5,19); // Meet the existing slab edge at x=-25.5.
  box(34,1,6,-43,-.5,19);
- // Local access well beside the existing far-gallery upper opening.
- box(1.8,.6,6,-59.1,7.3,19);box(30,.6,6,-41,7.3,19);
- box(2.2,.6,2.4,-57.1,7.3,17.2);box(2.2,.6,1.4,-57.1,7.3,21.3);
+ box(34,.6,6,-43,7.3,19);
  // z=16: opening x=-51..-45. z=22 also contains the Commons opening.
  for(const [a,b] of [[-60,-51],[-45,-26]])box(b!-a!,7,.6,(a!+b!)/2,3.5,16,bronze);
  for(const [a,b] of [[-60,-51],[-45,-35],[-29,-26]])box(b!-a!,7,.6,(a!+b!)/2,3.5,22,bronze);
@@ -37,7 +35,7 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  box(.7,h-14,8,x1,14+(h-14)/2,12,m,s.id);box(.7,h-9,8,x1,9+(h-9)/2,26,m,s.id);
  box(w,h,.7,cx,h/2,z0,m,s.id);box(w,h,.7,cx,h/2,z1,m,s.id);
  // Broad rising roof leaves an expansive west-facing focal wall.
- for(let n=0;n<6;n++){const roof=box(6.05,.65,d,x0+3+n*6,15-n*.55,cz,stone,s.id);roof.rotation.z=-.09;}
+ for(let n=0;n<6;n++){const roof=box(6.05,.65,d,x0+3+n*6,16-n*.25,cz,stone,s.id);roof.rotation.z=-.09;}
  box(.6,8,12,x0+1,4,cz,stone,s.id);
  // Deep perimeter bearings articulate the long wing without obstructing its floor.
  for(const x of [-89,-79,-69]){

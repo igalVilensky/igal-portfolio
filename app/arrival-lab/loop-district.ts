@@ -1,5 +1,6 @@
 import * as T from 'three';
 import { createCollision } from './collision';
+import { createThresholdView } from './threshold-view';
 
 export const loopTopology = {
  district: 'loop-district', interior: 'loop-vault',
@@ -50,7 +51,7 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  for(const x of [146,210]){box(.45,1.15,55,x,.575,53,plaster);}
  // West edge leaves a seven-metre opening exactly where the bridge arrives.
  own.filter(o=>o.position.x===146&&o.position.y===.575).forEach(o=>{o.userData.noCollision=true;o.visible=false;});
- for(const [z,d] of [[35,19],[66,29]])box(.45,1.15,d,146,.575,z);
+ for(const [z,d] of [[35,19],[66,29]] as const)box(.45,1.15,d,146,.575,z);
  for(const z of [25.5,80.5])box(64,1.15,.45,178,.575,z);
  // Radial mineral paving and a slender open-loop sculpture mark the plaza.
 
@@ -73,10 +74,10 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  for(const x of [180.2,189.8])box(.3,7.2,.9,x,3.6,40.3,terra);
  box(6,.25,3,198,8.6,55,aqua,false);for(const x of [195.5,200.5])box(.2,2.5,.2,x,9.7,55,metal,false);
  for(let z=53.5;z<=57;z+=.6)box(6,.12,.15,198,11,z,terra,false);
- for(const [x,z] of [[153,53],[190,48],[204,69]]){box(.15,2.8,.15,x,1.4,z,metal);box(.6,.4,.6,x,2.9,z,warm,false);}
+ for(const [x,z] of [[153,53],[190,48],[204,69]] as const){box(.15,2.8,.15,x,1.4,z,metal);box(.6,.4,.6,x,2.9,z,warm,false);}
  // Courtyard and shaded lane between the blue house and the luminous house.
  for(let x=173;x<191;x+=3){box(.18,3.7,.18,x,1.85,26.7,metal);box(.16,.18,9,x,3.7,30,metal,false);}
- for(const [x,z] of [[151,69],[207,31],[175,29],[187,75]]){box(2.5,.65,2.5,x,.325,z,terra);const g=new T.IcosahedronGeometry(1.7,1);geometries.set(`tree-${x}`,g);const tree=new T.Mesh(g,green);tree.position.set(x,2,z);root.add(tree);}
+ for(const [x,z] of [[151,69],[207,31],[175,29],[187,75]] as const){box(2.5,.65,2.5,x,.325,z,terra);const g=new T.IcosahedronGeometry(1.7,1);geometries.set(`tree-${x}`,g);const tree=new T.Mesh(g,green);tree.position.set(x,2,z);root.add(tree);}
  box(7,.18,1.1,191,.65,72,aqua);for(const x of [188.5,193.5])box(.3,.6,1,x,.3,72,stone);
  // The third house contains an actual shallow stair; its top doorway maps to another roof.
  for(let i=0;i<18;i++)box(3,.2, .5,198,.1+i*.2,58.5-i*.5,stone,false);
@@ -106,6 +107,8 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
   box(.18,3.3,.5,-1.25,1.65,0,color,true,r);box(.18,3.3,.5,1.25,1.65,0,color,true,r);box(2.7,.18,.5,0,3.3,0,color,true,r);
   const pivot=new T.Group();pivot.position.x=-1.13;r.add(pivot);const leaf=box(2.26,3.15,.15,1.13,1.575,0,color,true,pivot);delete leaf.userData.room;leaf.userData.loopDoor=id;
   const handle=box(.3,.07,.2,1.9,1.25,.16,warm,false,pivot);handle.userData.loopDoor=id;
+  for(const side of [-1,1]){box(.06,2.6,.52,side*1.1,1.6,0,warm,false,r);const brace=box(.7,.16,.56,side*1.1,3.1,0,metal,false,r);brace.rotation.z=-side*.45;}
+  for(let n=0;n<3;n++)box(1.95,.035,.17,1.13,.65+n*.85,0,warm,false,pivot);
   const doorway={id,root:r,pivot,progress:0,opened:false,environment};doors.push(doorway);return doorway;
  }
  const home=door('homecoming',164,0,43,0,'loop-district',blue);
@@ -118,13 +121,31 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  const inside=door('impossible-return',400,0,420,0,'loop-vault',terra,vault);
  const stair=door('loop-stair',198,3.6,49.5,0,'loop-district',aqua);
  const roof=door('loop-stair-return',164,4.15,32,Math.PI,'loop-district',aqua);
+ const views=new Map(doors.map(d=>[d,createThresholdView(d.root,2.27,3.16)]));
  const pairs=[[home,departure],[impossible,inside],[stair,roof]] as const;
  scene.updateMatrixWorld(true);
  const indoorCollision=createCollision(indoor), exteriorCollision=createCollision(own);
  let active=false,previous=new T.Vector3(),initialized=false;
  const local=new T.Vector3(),before=new T.Vector3(),turn=new T.Matrix4().makeRotationY(Math.PI);
  function height(p:T.Vector3){if(active)return 0;if(p.x>=196.1&&p.x<=199.9&&p.z>=48.3&&p.z<=59)return T.MathUtils.clamp((59-p.z)*.4,0,3.6);if(p.x>=158&&p.x<=170&&p.z>=29.3&&p.z<=43.3&&p.y>4)return 4.15;return 0;}
- return {root,vault,doors,pairs,get active(){return active;},get environment(){return active?'loop-vault':'loop-district';},
+ const viewCamera=new T.PerspectiveCamera();
+ function renderViews(renderer:T.WebGLRenderer,camera:T.PerspectiveCamera){
+  for(const pair of pairs)for(let i=0;i<2;i++){
+   const source=pair[i]!,destination=pair[1-i]!,view=views.get(source)!;
+   if(source.progress<=0||source.environment==='loop-vault'!==active||camera.position.distanceTo(source.root.position)>20)continue;
+   const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());
+   viewCamera.copy(camera);viewCamera.position.applyMatrix4(mapping);viewCamera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));viewCamera.updateProjectionMatrix();
+   const height=Math.max(256,Math.round(640/camera.aspect));if(view.target.height!==height)view.target.setSize(640,height);
+   const visibility=scene.children.map(o=>[o,o.visible] as const),wasVault=vault.visible,clip=renderer.clippingPlanes,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.needsUpdate;
+   try{
+    if(destination.environment==='loop-vault')scene.children.forEach(o=>o.visible=o===root);
+    vault.visible=destination.environment==='loop-vault';views.forEach(v=>v.mesh.visible=false);
+    renderer.clippingPlanes=[new T.Plane(new T.Vector3(0,0,1),-.01).applyMatrix4(destination.root.matrixWorld)];renderer.shadowMap.needsUpdate=false;
+    renderer.setRenderTarget(view.target);renderer.render(scene,viewCamera);
+   }finally{visibility.forEach(([o,v])=>o.visible=v);vault.visible=wasVault;views.forEach(v=>v.mesh.visible=true);renderer.clippingPlanes=clip;renderer.setRenderTarget(target);renderer.shadowMap.needsUpdate=shadows;}
+  }
+ }
+ return {renderViews,root,vault,doors,pairs,get active(){return active;},get environment(){return active?'loop-vault':'loop-district';},
  contains(p:T.Vector3){return active||p.x>79&&p.z>=25&&p.z<=81;},
  activate(id:string){const d=doors.find(d=>d.id===id);if(d)d.opened=true;},
  move(p:T.Vector3,delta:T.Vector3){const old=p.clone(),level=height(p);if(active)indoorCollision(p,delta);else exteriorCollision(p,delta);p.y=old.y;const next=height(p);p.y=(Math.abs(next-level)<.65?next:level)+1.65;},
@@ -133,13 +154,13 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  if(initialized)for(const pair of pairs)for(let i=0;i<2;i++){
   const source=pair[i]!,destination=pair[1-i]!;if(source.progress<.99||source.environment==='loop-vault'!==active)continue;
   local.copy(camera.position);source.root.worldToLocal(local);before.copy(previous);source.root.worldToLocal(before);
-  if(before.z>-.6&&local.z<=-.6&&Math.abs(local.x)<.85&&local.y>1&&local.y<2.3){
+  if(before.z>-.02&&local.z<=-.02&&Math.abs(local.x)<.85&&local.y>1&&local.y<2.3){
    const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());camera.position.applyMatrix4(mapping);camera.position.y=destination.root.position.y+1.65;camera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));
    destination.opened=true;destination.progress=1;destination.pivot.rotation.y=-Math.PI*.55;active=destination.environment==='loop-vault';vault.visible=active;changed=true;
   }
  }
  previous.copy(camera.position);initialized=true;return changed;},
  setTheme(dark:boolean){plaster.color.set(dark?'#8290a2':'#f1e5d7');stone.color.set(dark?'#53697d':'#b9b8ac');cliff.color.set(dark?'#304254':'#667985');warm.emissiveIntensity=dark?.8:.25;},
- dispose(){root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());},
+ dispose(){views.forEach(v=>v.dispose());root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());},
  };
 }

@@ -30,7 +30,7 @@ export function createLittleExplorer(scene:T.Scene, solids:T.Mesh[]) {
  // A six-metre opening, level corridor, and a pavilion with a genuinely open west threshold.
  box(6,1,6,29,-.5,19,floor);box(6,6,.5,29,3,15.75,teal,root,true);box(6,6,.5,29,3,22.25,teal,root,true);box(6,.5,6,29,6.25,19);
  box(28,1,26,46,-.5,11,floor);
- box(28,8,.5,46,4,-2,cream,root,true);box(28,8,.5,46,4,24,cream,root,true);box(.5,8,26,60,4,11,cream,root,true);
+ box(28,8,.5,46,4,-2,cream,root,true);box(28,8,.5,46,4,24,cream,root,true);box(.5,8,18,60,4,7,cream,root,true);box(.5,8,2,60,4,23,cream,root,true);box(.5,3,6,60,6.5,19,cream,root,true);
  box(.5,8,18,32,4,7,cream,root,true);box(.5,8,2,32,4,23,cream,root,true);box(.5,2,6,32,7,19,cream,root,true);
  // Perimeter canopy frames a sky-like luminous oculus, keeping the centre airy.
  box(28,.5,4,46,8,-.25,teal);box(28,.5,4,46,8,22.25,teal);box(4,.5,22,34,8,11,teal);box(4,.5,22,58,8,11,teal);

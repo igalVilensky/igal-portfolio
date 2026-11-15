@@ -7,10 +7,25 @@ export const ascentCopy = {
  de: { up: 'Hinaufsteigen', down: 'Hinabsteigen', climbing: 'W / ↑ · hinauf   S / ↓ · hinab', touch: 'Joystick zum Klettern nach oben oder unten bewegen', access: 'Dachzugang' },
  ru: { up: 'Подняться', down: 'Спуститься', climbing: 'W / ↑ · вверх   S / ↓ · вниз', touch: 'Двигайте джойстик вверх или вниз', access: 'Выход на крышу' },
 };
+/** Stair heights share the exact tread endpoints. Undefined means ground level. */
+export function stairHeight(x:number,z:number):number|undefined {
+ if(x>=-85&&x<=-63&&z>=12.8&&z<=15.2)return (-63-x)*5.2/22;
+ if(x>=-87&&x<=-85&&z>=12.8&&z<=20.4)return 5.2;
+ if(x>=-85&&x<=-63&&z>=18&&z<=20.4)return 5.2+(x+85)*5.2/22;
+ if(x>=-63&&x<=-60&&z>=18&&z<=20.4)return 10.4;
+}
 export function roofHeight(x:number,z:number):number|undefined {
+ const stair=stairHeight(x,z);if(stair!==undefined)return stair;
  if(x>=-60&&x<=-36&&z>=17&&z<=21)return ascent.roof;
  if(x>=-42&&x<=-38&&z>=21&&z<=43)return ascent.roof+(z-21)*4/22;
  if(x>=-48&&x<=-30&&z>=43&&z<=57)return 14.4;
+}
+export function inStairHall(p:T.Vector3){return p.x>=-88&&p.x<=-60&&p.z>=12&&p.z<=21;}
+/** Resolve the current level without lifting a ground-floor visitor onto an overhead flight. */
+export function accessHeight(x:number,z:number,previousEye:number):number|undefined {
+ const h=previousEye>7?roofHeight(x,z):stairHeight(x,z);
+ if(h!==undefined&&Math.abs(h+ascent.eye-previousEye)<=.65)return h;
+ if(previousEye<=2&&(h===undefined||h>=2.1))return 0;
 }
 export function createClimb(){
  let state:'walking'|'aligning'|'climbing'|'dismounting'='walking',time=0,progress=0;
@@ -39,26 +54,34 @@ export function createAscent(scene:T.Scene,solids:T.Mesh[]){
  const mat=(color:string,metalness=0)=>{const m=new T.MeshStandardMaterial({color,roughness:.65,metalness});ms.push(m);return m;};
  const stone=mat('#e0e5df'),metal=mat('#526c7a',.65),dark=mat('#899ca8',.25);
  function box(w:number,h:number,d:number,x:number,y:number,z:number,m=stone,solid=true){const key=[w,h,d].join();let g=gs.get(key);if(!g){g=new T.BoxGeometry(w,h,d);gs.set(key,g);}const o=new T.Mesh(g,m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;o.userData.room='rooftop';o.userData.noCollision=!solid;root.add(o);solids.push(o);return o;}
- // Four supported slabs surround the access well; no invisible floor covers its opening.
- box(1.8,.45,4,-59.1,10.175,19,stone,false);
- box(19.8,.45,4,-45.9,10.175,19,stone,false);
- box(2.2,.45,1.4,-57.1,10.175,17.7,stone,false);
- box(2.2,.45,.4,-57.1,10.175,20.8,stone,false);
- // Bearings follow gallery wall lines, keeping the original circulation clear.
- for(const x of [-59.6,-53,-45,-36.4])for(const z of [16.8,21.2])box(.35,10.4,.35,x,5.2,z,dark);
- for(const x of [-57.65,-56.35]){box(.09,11.5,.12,x,5.75,18.9,metal,false);for(const y of [1,4,7,9.7])box(.12,.1,.5,x,y,18.7,metal,false);}
- for(let y=.3;y<11.4;y+=.3)box(1.3,.055,.12,-57,y,18.9,metal,false);
- // Small base and broad top approach, clear of the gallery centreline.
- box(2.4,.06,2.4,-57,.03,19.5,dark,false);
- // Protected roof walk, with a deliberate opening into the southbound connector.
+ // The corridor roof is now a continuous slab; the stair arrives from Journey.
+ box(24,.45,4,-48,10.175,19,stone,false);
  for(const z of [17,21]){
- if(z===17)box(24,1.1,.25,-48,10.95,z);
- else {box(18,1.1,.25,-51,10.95,z);box(2,1.1,.25,-37,10.95,z);}
+  if(z===17)box(24,1.1,.25,-48,10.95,z);
+  else {box(18,1.1,.25,-51,10.95,z);box(2,1.1,.25,-37,10.95,z);}
  }
- for(const x of [-60,-36])box(.25,1.1,4,x,10.95,19);
- // Guard the well on three sides; the east edge is the controlled ladder dismount.
- box(.12,1.1,2.2,-58.2,10.95,19.5,metal);
- for(const z of [18.4,20.6])box(2.2,1.1,.12,-57.1,10.95,z,metal);
+ box(.25,1.1,4,-36,10.95,19);
+ // Two broad flights in the final room. Treads are visual; the shared continuous
+ // surface resolver gives keyboard and touch movement an identical smooth ascent.
+ for(let i=0;i<32;i++){
+  const h=(i+1)*5.2/32,x=-63-(i+.5)*22/32;
+  box(22/32,.18,2.4,x,h-.09,14,dark,false);
+  box(22/32,.18,2.4,x,10.4-h+5.2/32-.09,19.2,dark,false);
+ }
+ box(2,.22,7.6,-86,5.09,16.6,dark,false);
+ box(3,.22,2.4,-61.5,10.29,19.2,dark,false);
+ // Sloping rails sit outside the walkable width, with clear landings at both ends.
+ const flightLength=Math.hypot(22,5.2),angle=Math.atan2(5.2,22);
+ for(const z of [12.65,15.35,17.85,20.55]){
+  const upper=z>17,rail=box(flightLength,.09,.09,-74,upper?8.85:3.65,z,metal,false);
+  rail.rotation.z=upper?angle:-angle;
+  for(const x of [-83,-77,-71,-65]){
+   const h=upper?5.2+(x+85)*5.2/22:(-63-x)*5.2/22;
+   box(.07,1,.07,x,h+.5,z,metal,false);
+  }
+ }
+ box(.12,1.1,7.6,-87,5.75,16.6,metal);
+ for(const x of [-85,-74,-64])box(.22,5,.22,x,2.5,19.2,metal,false);
  // Continuous shallow skybridge incline; geometry and surface resolver share endpoints.
  const slope=Math.atan2(4,22),length=Math.hypot(22,4);
  const bridge=box(4,.45,length,-40,12.175,32,dark,false);bridge.rotation.x=-slope;

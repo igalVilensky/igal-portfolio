@@ -3,7 +3,7 @@ import { createCollision } from './collision';
 
 export type ThresholdState = 'closed' | 'opening' | 'open' | 'crossing';
 export const thresholdAnchor = new T.Vector3(-12, 1.65, -69.4);
-/** A concealed scene switch, deliberately not a portal renderer. Camera orientation survives. */
+/** Live apertures preview isolated destinations; rigid crossings preserve camera orientation. */
 export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  const hallObjects=[...scene.children], hallVisibility=new Map(hallObjects.map(o=>[o,o.visible])), hall=new T.Group(), arctic=new T.Group(), coast=new T.Group();scene.add(hall,arctic,coast);arctic.visible=coast.visible=false;
  const geometries:T.BufferGeometry[]=[], materials:T.Material[]=[];
@@ -18,12 +18,19 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
   const pivot=new T.Group();pivot.position.set(-.99,0,0);root.add(pivot);
   const leaf=box(pivot,list,1.98,2.7,.12,.99,1.35,0,wood);leaf.userData.threshold=true;
   const handle=box(pivot,list,.3,.055,.13,1.72,1.12,.13,metal);handle.userData.threshold=true;
-  // A short, enclosed white reveal fills peripheral vision at the crossing plane.
-  for(const side of [-1,1])box(root,list,.12,2.85,2.8,side*1.08,1.425,-1.3,returning?stone:white);
-  box(root,list,2.3,.12,2.8,0,2.9,-1.3,white);
-  box(root,list,2.3,.08,3,0,-.04,-1.4,returning?snow:stone);
-  const veil=box(root,list,2.05,2.75,.025,0,1.375,-1.5,white);veil.userData.noCollision=true;
-  return {root,pivot,leaf};
+  // A thin framed aperture carries a live destination view, never a blank mask.
+  for(const side of [-1,1]){
+   box(root,list,.10,3.1,.4,side*1.23,1.55,0,metal);
+   const brace=box(root,list,.5,.12,.4,side*1.05,2.95,0,metal);brace.rotation.z=-side*.55;
+  }
+  box(root,list,2.4,.08,.4,0,3.1,0,warm);
+  box(root,list,2.3,.06,.7,0,-.03,0,stone);
+  const viewMaterial=new T.ShaderMaterial({uniforms:{view:{value:null}},vertexShader:`varying vec4 projected; void main(){projected=projectionMatrix*modelViewMatrix*vec4(position,1.0);gl_Position=projected;gl_Position.z=max(gl_Position.z,-gl_Position.w+.00001);}`,fragmentShader:`uniform sampler2D view; varying vec4 projected; void main(){vec2 uv=projected.xy/projected.w*.5+.5;gl_FragColor=texture2D(view,uv);
+#include <colorspace_fragment>
+}`,side:T.DoubleSide,toneMapped:false});
+  materials.push(viewMaterial);const viewGeometry=new T.PlaneGeometry(2.04,2.77);geometries.push(viewGeometry);
+  const aperture=new T.Mesh(viewGeometry,viewMaterial);aperture.position.set(0,1.385,-.015);aperture.userData.noCollision=true;root.add(aperture);
+  return {root,pivot,leaf,aperture,viewMaterial};
  }
  const entry=door(hall,hallSolids,-12,-69.5);
  const sunEntry=door(hall,hallSolids,12,-69.5);
@@ -67,7 +74,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  const coastCollision=createCollision(coastSolids);
 
  const exit=door(arctic,snowSolids,0,0,true);exit.root.rotation.y=Math.PI;
- // Arctic door opens toward the snowfield; its white reveal conceals the reverse crossing.
+ // The Arctic return frame shares the same live aperture and reversible crossing.
  const fill=new T.HemisphereLight('#d6e7f6','#8d9da9',2.3);arctic.add(fill);
  const sun=new T.DirectionalLight('#fff1db',2.1);sun.position.set(-80,90,-130);arctic.add(sun);
  const ground=box(arctic,[],12000,1,12000,0,-.55,0,snow);
@@ -113,19 +120,45 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
   if(active)appearance();else{scene.background=savedBackground;scene.fog=savedFog;}
   selected.progress=1;selected.state='open';previous.copy(camera.position);
  }
- return {get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
+ // One bounded offscreen pass per nearby open aperture, no recursive portals.
+ const targets=[new T.WebGLRenderTarget(768,768),new T.WebGLRenderTarget(768,768)];
+ targets.forEach(t=>{t.texture.colorSpace=T.SRGBColorSpace;});
+ const portalCamera=new T.PerspectiveCamera(),primedViews=new Set<number>();
+ function renderViews(renderer:T.WebGLRenderer,camera:T.PerspectiveCamera){
+  const candidates=active?[{door:sunWorld?sunExit:exit,index:sunWorld?1:0,x:0,z:0}]:[{door:entry,index:0,x:-12,z:-69.5},{door:sunEntry,index:1,x:12,z:-69.5}];
+  for(const item of candidates){
+   if(doors[item.index]!.progress<=0||Math.hypot(camera.position.x-item.x,camera.position.z-item.z)>22)continue;
+   const target=targets[item.index]!,height=Math.max(256,Math.round(768/camera.aspect));if(target.height!==height)target.setSize(768,height);
+   const visibility=scene.children.map(o=>[o,o.visible] as const),background=scene.background,fog=scene.fog,renderTarget=renderer.getRenderTarget(),clip=renderer.clippingPlanes;
+   const shadowAuto=renderer.shadowMap.autoUpdate,shadowNeeds=renderer.shadowMap.needsUpdate;
+   portalCamera.copy(camera);portalCamera.position.set(active?-camera.position.x+(sunWorld?12:-12):-(camera.position.x-item.x),camera.position.y,active?-camera.position.z-69.5:-(camera.position.z+69.5));
+   portalCamera.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.PI));portalCamera.far=active?savedFar:9000;portalCamera.updateProjectionMatrix();
+   try{
+    hallObjects.forEach(o=>o.visible=active?(hallVisibility.get(o)??true):false);hall.visible=active;arctic.visible=!active&&item.index===0;coast.visible=!active&&item.index===1;
+    for(const d of [entry,sunEntry,exit,sunExit])d.aperture.visible=false;
+    if(active){scene.background=savedBackground;scene.fog=savedFog;}else{scene.background=new T.Color(item.index?'#b4def1':dark?'#647e98':'#cbdde8');scene.fog=item.index?new T.Fog('#c5e5ee',150,1100):new T.FogExp2(dark?'#92a7ba':'#dde7ed',.0018);}
+    renderer.clippingPlanes=[new T.Plane(new T.Vector3(0,0,1),active?69.49:-.01)];
+    renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=!primedViews.has(item.index);renderer.setRenderTarget(target);renderer.render(scene,portalCamera);primedViews.add(item.index);
+    item.door.viewMaterial.uniforms.view!.value=target.texture;
+   }finally{
+    visibility.forEach(([o,v])=>o.visible=v);for(const d of [entry,sunEntry,exit,sunExit])d.aperture.visible=true;
+    scene.background=background;scene.fog=fog;renderer.clippingPlanes=clip;renderer.setRenderTarget(renderTarget);renderer.shadowMap.autoUpdate=shadowAuto;renderer.shadowMap.needsUpdate=shadowNeeds;
+   }
+  }
+ }
+ return {renderViews,get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
   activate(sun=false){if(!active){sunWorld=sun;selected=doors[sun?1:0]!;}if(selected.state==='closed')selected.state='opening';},
   move(position:T.Vector3,delta:T.Vector3,hallCollision:ReturnType<typeof createCollision>){(active?(sunWorld?coastCollision:snowCollision):hallCollision)(position,delta);if(active){ground.position.x=position.x;ground.position.z=position.z;}},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.min(1,doorway.progress+(reduced?1:dt/1.05));if(doorway.progress===1)doorway.state='open';changed=true;}}
    entry.pivot.rotation.y=exit.pivot.rotation.y=-doors[0]!.progress*Math.PI*.56;
    sunEntry.pivot.rotation.y=sunExit.pivot.rotation.y=-doors[1]!.progress*Math.PI*.56;
    if(!active&&Math.abs(camera.position.x)>10){sunWorld=camera.position.x>0;selected=doors[sunWorld?1:0]!;}
-   const centerX=active?0:sunWorld?12:-12,plane=active?1:-70.5;
+   const centerX=active?0:sunWorld?12:-12,plane=active?.02:-69.52;
    if(initialized&&selected.state==='open'&&previous.z>plane&&camera.position.z<=plane){const t=(plane-previous.z)/(camera.position.z-previous.z);const crossingX=T.MathUtils.lerp(previous.x,camera.position.x,t);if(Math.abs(crossingX-centerX)<.72){switchWorld(camera);changed=true;}}
    previous.copy(camera.position);initialized=true;return changed;
   },
   returnToHall(camera:T.PerspectiveCamera){if(active){camera.position.set(0,1.65,-1.01);switchWorld(camera);camera.position.copy(thresholdAnchor);if(sunWorld)camera.position.x=12;previous.copy(camera.position);}},
-  setTheme(value:boolean){dark=value;if(active){savedBackground=scene.background;savedFog=scene.fog;}stone.color.set(dark?'#434b57':'#d8d2c6');wood.color.set(dark?'#58616a':'#777a74');appearance();},
-  dispose(){hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  setTheme(value:boolean){primedViews.clear();dark=value;if(active){savedBackground=scene.background;savedFog=scene.fog;}stone.color.set(dark?'#434b57':'#d8d2c6');wood.color.set(dark?'#58616a':'#777a74');appearance();},
+  dispose(){targets.forEach(t=>t.dispose());hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };
 }
