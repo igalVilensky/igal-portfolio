@@ -10,3 +10,13 @@ test('all Living Quarters graph edges clear the actual room shells in both direc
 test('the full Origin and Living Quarters collision owners permit east-room access',()=>{const scene=new T.Scene(),solids=[],wing=module('./living-quarters.ts').createLivingQuarters(scene,solids);const origin=module('./origin.ts').createOrigin(scene,solids);scene.updateMatrixWorld(true);const move=module('./collision.ts').createCollision(solids);for(const [x,z] of [[96,6],[94,32]]){const p=new T.Vector3(62,1.65,19);move(p,new T.Vector3(x-62,0,0));move(p,new T.Vector3(0,0,z-19));assert(Math.hypot(p.x-x,p.z-z)<.01);}wing.dispose();origin.dispose();});
 
 test('Explorer circulation edges clear the existing flag installations in both directions',()=>{const oldDocument=globalThis.document,oldImage=globalThis.Image;globalThis.document={createElement:()=>({getContext:()=>new Proxy({},{get:()=>()=>{}})})};globalThis.Image=class {};const scene=new T.Scene(),solids=[];let explorer;try{explorer=module('./little-explorer.ts').createLittleExplorer(scene,solids);scene.updateMatrixWorld(true);const move=module('./collision.ts').createCollision(solids);for(const [a,b] of nav.familyEdges.filter(([a,b])=>a>=10&&b<=15)){for(const [from,to] of [[a,b],[b,a]]){const start=nav.familyNodes[from],end=nav.familyNodes[to],p=new T.Vector3(start[0],1.65,start[1]);move(p,new T.Vector3(end[0]-start[0],0,end[1]-start[1]));assert(Math.hypot(p.x-end[0],p.z-end[1])<.01,`${from} -> ${to}: ${p.toArray()}`);}}}finally{explorer?.dispose();globalThis.document=oldDocument;globalThis.Image=oldImage;}});
+
+test('NPC travel covers the same distance at 5 and 20 frames per second',()=>{
+ const slow=out.createFamily(new T.Scene()),fast=out.createFamily(new T.Scene());
+ for(const family of [slow,fast]){family.people[0].wait=0;family.people[0].route=[5];}
+ for(let n=0;n<5;n++)slow.update(n*200,.2,true,new T.Vector3());
+ for(let n=0;n<20;n++)fast.update(n*50,.05,true,new T.Vector3());
+ assert(slow.people[0].person.position.distanceTo(fast.people[0].person.position)<.001);
+ assert(Math.abs(slow.people[0].person.position.z-6.9)<.001);
+ slow.dispose();fast.dispose();
+});

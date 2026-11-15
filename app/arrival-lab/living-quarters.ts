@@ -26,7 +26,7 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
  for(const x of [78,91]){box(3,.48,1,x,.24,24,oak);box(3,.65,.2,x,.8,24.4);}
  const lights:T.PointLight[]=[];
  for(const x of [69,81,96]){const l=new T.PointLight('#ffe2b4',55,23,1.5);l.position.set(x,4.5,19);root.add(l);lights.push(l);}
- const portraits=personalRooms.map((r,i)=>{
+ const portraits=personalRooms.map(r=>{
   const north=r.z<19,boundary=north?12:26,outer=north?0:38,m=mat(r.color);
   box(r.width,1,r.depth,r.x,-.5,r.z,floor);
   box(r.width,5,.4,r.x,2.5,outer,m);
@@ -35,23 +35,40 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
   for(const side of [-1,1])box((r.width-3)/2,5,.4,r.x+side*(r.width+3)/4,2.5,boundary,m);
   box(3,1.8,.4,r.x,4.1,boundary,m);box(r.width,.3,r.depth,r.x,5.2,r.z);
   box(r.width-2,.06,.15,r.x,4.7,outer+(north?.3:-.3),light,false);
-  // Production-safe non-identifying artwork. No private file is imported or served.
+  // Deep oak surround, bronze inner reveal and a warm archival mat.
+  // Private bytes are fetched only in development; never imported into Vite.
   const z=outer+(north?.3:-.3),rotation=north?0:Math.PI;
-  const frame=new T.Group();frame.position.set(r.x,2.35,z);frame.rotation.y=rotation;root.add(frame);
+  const frame=new T.Group();frame.name=`Portrait · ${r.id}`;frame.position.set(r.x,2.35,z);frame.rotation.y=rotation;root.add(frame);
   const add=(w:number,h:number,d:number,x:number,y:number,zz:number,material:T.Material)=>{const g=new T.BoxGeometry(w,h,d);geometry.push(g);const mesh=new T.Mesh(g,material);mesh.position.set(x,y,zz);frame.add(mesh);return mesh;};
-  add(2.2,2.8,.12,0,0,0,oak);add(2,2.6,.03,0,0,.08,stone);
-  add(1.7,2.3,.025,0,0,.105,m);add(1.2,.65,.03,0,-.65,.13,bronze);add(.5,.5,.03,.22,.52,.13,light);
-  box(2.2,.4,1,r.x+r.width/2-2,.2,r.z,oak);
-  const l=new T.PointLight('#ffe8c6',28,14,1.5);l.position.set(r.x,3.8,r.z);root.add(l);lights.push(l);
-  if(import.meta.dev && new URLSearchParams(location.search).get('privatePortraits')==='1'){
-   new T.TextureLoader().load('/api/dev-family-portrait?id='+r.id,texture=>{
-    if(disposed){texture.dispose();return;}texture.colorSpace=T.SRGBColorSpace;textures.push(texture);
-    const ratio=texture.image.width/texture.image.height,h=Math.min(2.3,1.7/ratio),w=h*ratio;
-    const g=new T.PlaneGeometry(w,h);geometry.push(g);const m=new T.MeshBasicMaterial({map:texture});materials.push(m);
-    const portrait=new T.Mesh(g,m);portrait.position.z=.16;frame.add(portrait);
-   },undefined,()=>{/* Keep the designed public fallback when opt-in is unavailable. */});
+  add(2.3,2.9,.14,0,0,0,oak);add(2.14,2.74,.04,0,0,.09,bronze);
+  add(2.04,2.64,.035,0,0,.12,stone);
+  const name=r.id[0]!.toUpperCase()+r.id.slice(1);
+  const status={id:r.id,frame,kind:'unpublished' as 'unpublished'|'local-photograph'|'unavailable'};
+  // Printed ceramic nameplate, legible at a natural approach distance.
+  add(.88,.19,.045,0,-1.64,.02,stone);
+  if(typeof document!=='undefined'){
+   const canvas=document.createElement('canvas');canvas.width=704;canvas.height=152;
+   const ctx=canvas.getContext('2d');
+   if(ctx){ctx.fillStyle='#e4d8c5';ctx.fillRect(0,0,704,152);ctx.fillStyle='#342d27';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='500 76px Georgia, serif';ctx.fillText(name,352,80);
+    const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;textures.push(texture);
+    const labelMaterial=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(labelMaterial);
+    const g=new T.PlaneGeometry(.84,.18);geometry.push(g);const label=new T.Mesh(g,labelMaterial);label.name=`${name} · caption`;label.position.set(0,-1.64,.047);frame.add(label);
+   }
   }
-  return {id:r.id,frame,kind:'privacy-safe-artwork' as const};
+  // Slim shelf and low upholstered seat sit outside the central walking path.
+  box(2.6,.1,.38,r.x,.62,z+(north?.27:-.27),oak,false);
+  box(2.2,.4,1,r.x+r.width/2-2,.2,r.z,oak);
+  box(2.12,.12,.94,r.x+r.width/2-2,.46,r.z,m);
+  const l=new T.PointLight('#ffe8c6',28,14,1.5);l.position.set(r.x,3.8,r.z);root.add(l);lights.push(l);
+  if(import.meta.dev){
+   new T.TextureLoader().load('/api/dev-family-portrait?id='+r.id,texture=>{
+    if(disposed){texture.dispose();return;}texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=4;textures.push(texture);
+    const ratio=texture.image.width/texture.image.height,h=Math.min(2.3,1.7/ratio),w=h*ratio;
+    const g=new T.PlaneGeometry(w,h);geometry.push(g);const photoMaterial=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(photoMaterial);
+    const portrait=new T.Mesh(g,photoMaterial);portrait.name=`${name} · local photograph`;portrait.position.z=.15;frame.add(portrait);status.kind='local-photograph';
+   },undefined,()=>{status.kind='unavailable';});
+  }
+  return status;
  });
  return {root,portraits,setTheme(dark:boolean){stone.color.set(dark?'#70685e':'#e4d8c5');floor.color.set(dark?'#675d50':'#c9baa0');lights.forEach(l=>l.intensity=dark?40:55);},dispose(){disposed=true;textures.forEach(t=>t.dispose());root.removeFromParent();geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

@@ -1,11 +1,19 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-/** Explicitly opt-in, loopback-only development preview. Never imports photo bytes. */
+/** Loopback-only development preview. Originals are never imported into Vite. */
 export default defineEventHandler(async event => {
-  if (!import.meta.dev || process.env.ARRIVAL_PRIVATE_PORTRAITS !== '1') throw createError({ statusCode: 404 });
+  if (!import.meta.dev) throw createError({ statusCode: 404 });
+  const loopback = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
   const address = event.node.req.socket.remoteAddress;
-  if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address || '')) throw createError({ statusCode: 404 });
+  // Nuxt's development proxy uses a Unix socket, so remoteAddress is absent.
+  // In that case require a local Host and an entirely loopback forwarded chain.
+  const headers = event.node.req.headers;
+  const forwarded = String(headers['x-forwarded-for'] || '').split(',').map(value => value.trim());
+  const localHost = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/.test(String(headers.host || ''));
+  const local = localHost && (!address || loopback.includes(address))
+    && (headers['x-forwarded-for'] ? forwarded.every(value => loopback.includes(value)) : !!address);
+  if (!local) throw createError({ statusCode: 404 });
   const files:Record<string,string> = { igal:'igal.jpeg', anastasia:'anastasia.jpg', amelia:'amelia.jpg', nataniel:'nataniel.jpg', adriel:'adriel.jpg' };
   const id = String(getQuery(event).id || '');
   if (!Object.hasOwn(files,id)) throw createError({ statusCode: 404 });
