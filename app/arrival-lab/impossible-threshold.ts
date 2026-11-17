@@ -71,6 +71,25 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  build(38,.65,.3,5,.325,37.4,plaster);
  build(.4,3,40,-13,1.5,20,plaster);build(.4,3,40,24,1.5,20,plaster);
  const diskGeo=new T.SphereGeometry(18,24,12);geometries.push(diskGeo);const disk=new T.Mesh(diskGeo,sunGlow);disk.position.set(-180,110,700);coast.add(disk);
+ // Coastal street details: pale limestone, olive crowns, pergola and striped sunshades.
+ const leaf=material('#71835a'),sand=material('#e5d2a6'),cloth=material('#f6faf1');
+ build(38,.08,3,5,-.1,40,sand,false);
+ for(const [x,z] of [[-9,29],[20,31]] as const){
+  build(.22,2.6,.22,x,1.3,z,wood);
+  const g=new T.IcosahedronGeometry(1.5,1);geometries.push(g);const crown=new T.Mesh(g,leaf);crown.scale.set(1,.65,1);crown.position.set(x,2.9,z);coast.add(crown);
+ }
+ for(const x of [6,12])build(.15,3,.15,x,1.5,30,wood);
+ for(let i=0;i<8;i++)build(6.4,.12,.16,9,3,28+i*.5,wood,false);
+ for(const x of [-7,18]){build(.08,2.6,.08,x,1.3,34,blue);for(let i=0;i<6;i++)build(.45,.1,2.5,x-1.125+i*.45,2.65,34,i%2?blue:cloth,false);}
+ const walkers:Array<{root:T.Group;legs:T.Mesh[];x:number;z:number;range:number;phase:number}>=[];
+ for(let i=0;i<4;i++){
+  const person=new T.Group();coast.add(person);const legs:T.Mesh[]=[];
+  box(person,[],.42,.65,.27,0,1.05,0,i%2?blue:coral);
+  const headGeo=new T.SphereGeometry(.17,8,6);geometries.push(headGeo);const head=new T.Mesh(headGeo,blanket);head.position.y=1.58;person.add(head);
+  for(const side of [-1,1])legs.push(box(person,[],.13,.7,.16,side*.12,.37,0,wood));
+  const walker={root:person,legs,x:i<2?7+i*.85:17,z:i<2?32:28+i,range:i===3?0:i<2?4:2,phase:i<2?0:1.8};person.position.set(walker.x,0,walker.z);walkers.push(walker);
+ }
+ let ambientTime=0;
  const coastCollision=createCollision(coastSolids);
 
  const exit=door(arctic,snowSolids,0,0,true);exit.root.rotation.y=Math.PI;
@@ -84,18 +103,31 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  for(let i=0;i<38;i++){const angle=i*2.39996, r=210+(i%7)*100;const ridge=new T.Mesh(ridgeGeo,snow);ridge.position.set(Math.cos(angle)*r,-6,Math.sin(angle)*r);ridge.scale.set(95+(i%4)*24,9+(i%5)*2,60);arctic.add(ridge);}
  // The house is a memory-inspired vignette, not a historical reconstruction.
  const house=new T.Group();house.position.set(13,0,78);arctic.add(house);
- box(house,snowSolids,6,3.1,5,0,1.55,0,timber);
- for(let i=0;i<14;i++)box(house,[],6.04,.035,5.04,0,.15+i*.22,0,wood);
+ // Separate wall panels leave a 1.4m walk-through doorway and a real glazed opening.
+ const wall=(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material=timber)=>box(house,snowSolids,w,h,d,x,y,z,m);
+ wall(.22,3.1,5,-3,1.55,0);wall(.22,3.1,5,3,1.55,0);wall(6,3.1,.22,0,1.55,2.5);
+ wall(.6,3.1,.22,-2.7,1.55,-2.5);wall(.7,3.1,.22,-.65,1.55,-2.5);
+ wall(1.4,.7,.22,-1.7,2.75,-2.5);wall(1.2,3.1,.22,2.4,1.55,-2.5);
+ wall(2.1,1.05,.22,.75,.525,-2.5);wall(2.1,.55,.22,.75,2.825,-2.5);
+ box(house,[],5.8,.08,4.8,0,-.01,0,blanket);
  for(const side of [-1,1]){const panel=box(house,[],3.65,.2,6,side*1.52,3.65,0,roof);panel.rotation.z=-side*.42;}
- box(house,[],.3,1.5,.35,1.65,4,1,timber);
- box(house,[],1.05,2.15,.12,-1.7,1.075,-2.57,wood);
- // Recessed warm window with a tiny cradle and folded blanket, readable on approach.
- box(house,[],1.8,1.35,.12,.9,1.8,-2.57,warm);
- for(const x of [-.08,.9,1.88])box(house,[],.07,1.5,.12,x,1.8,-2.66,timber);
- for(const y of [1.08,2.52])box(house,[],2,.07,.12,.9,y,-2.66,timber);
- box(house,[],1.1,.18,.22,.9,1.42,-2.72,blanket);
- for(const x of [.33,1.47])box(house,[],.06,.48,.25,x,1.5,-2.73,timber);
- const glow=new T.PointLight('#ffc78b',18,9,2);glow.position.set(13.9,1.8,75);arctic.add(glow);
+ box(house,[],6,.16,5,0,3.12,0,timber);
+ const glass=new T.MeshStandardMaterial({color:'#ffdfb3',transparent:true,opacity:.15,roughness:.18,depthWrite:false,side:T.DoubleSide});materials.push(glass);
+ box(house,snowSolids,2.1,1.5,.035,.75,1.8,-2.5,glass);
+ for(const x of [-.3,.75,1.8])box(house,[],.06,1.55,.12,x,1.8,-2.54,timber);
+ for(const y of [1.04,2.56])box(house,[],2.2,.07,.18,.75,y,-2.54,blanket);
+ // An open leaf rests against the inside wall; no trigger or teleport is needed.
+ const cabinDoor=wall(.12,2.35,1.3,-2.35,1.175,-1.85,wood);cabinDoor.rotation.y=.08;
+ wall(1.45,.35,2.15,1.85,.25,1,wood);box(house,[],1.4,.16,2.05,1.85,.5,1,blanket);
+ wall(1.25,.12,.85,.25,.82,.6,wood);
+ for(const x of [-.22,.72])wall(.08,.78,.08,x,.39,.6);
+ box(house,[],.35,.06,.35,.25,.92,.6,metal);box(house,[],.07,.45,.07,.25,1.15,.6,metal);
+ const shadeGeo=new T.ConeGeometry(.32,.35,12,1,true);geometries.push(shadeGeo);
+ const shade=new T.Mesh(shadeGeo,warm);shade.position.set(.25,1.45,.6);house.add(shade);
+ const glow=new T.PointLight('#ffc078',32,10,2);glow.position.set(.25,1.3,.6);house.add(glow);
+ // Shadowed point lighting transmits through the window and open doorway only.
+ glow.castShadow=true;glow.shadow.mapSize.set(512,512);glow.shadow.bias=-.002;
+ house.traverse(o=>{if(o instanceof T.Mesh){o.castShadow=o.material!==glass;o.receiveShadow=true;}});shade.castShadow=false;
  // Soft approach drifts make the field readable at walking height.
  for(let i=0;i<22;i++){const drift=new T.Mesh(ridgeGeo,snow);drift.position.set(Math.sin(i*3.7)*65,-.65,8+i*6);drift.scale.set(9,.75,3);arctic.add(drift);}
  solids.push(...hallSolids,...snowSolids,...coastSolids);
@@ -149,7 +181,9 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  return {renderViews,get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
   activate(sun=false){if(!active){sunWorld=sun;selected=doors[sun?1:0]!;}if(selected.state==='closed')selected.state='opening';},
   move(position:T.Vector3,delta:T.Vector3,hallCollision:ReturnType<typeof createCollision>){(active?(sunWorld?coastCollision:snowCollision):hallCollision)(position,delta);if(active){ground.position.x=position.x;ground.position.z=position.z;}},
-  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.min(1,doorway.progress+(reduced?1:dt/1.05));if(doorway.progress===1)doorway.state='open';changed=true;}}
+  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;
+   if(active&&sunWorld&&!reduced){ambientTime+=dt;for(const p of walkers){const phase=ambientTime*.13+p.phase,travel=Math.sin(phase);p.root.position.set(p.x+travel*p.range,0,p.z);p.root.rotation.y=Math.cos(phase)>0?Math.PI/2:-Math.PI/2;for(const [i,leg] of p.legs.entries())leg.rotation.x=p.range?Math.sin(ambientTime*3+i*Math.PI)*.25*Math.abs(Math.cos(phase)):0;}changed=true;}
+for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.min(1,doorway.progress+(reduced?1:dt/1.05));if(doorway.progress===1)doorway.state='open';changed=true;}}
    entry.pivot.rotation.y=exit.pivot.rotation.y=-doors[0]!.progress*Math.PI*.56;
    sunEntry.pivot.rotation.y=sunExit.pivot.rotation.y=-doors[1]!.progress*Math.PI*.56;
    if(!active&&Math.abs(camera.position.x)>10){sunWorld=camera.position.x>0;selected=doors[sunWorld?1:0]!;}

@@ -52,14 +52,14 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
    else {
     if(!p.route.length){
      const index=people.indexOf(p);p.cycle++;
-     const available=familySpots.filter(s=>(!s.owner||s.owner===p.spec.id)&&(!s.seatHeight||s.seatHeight<p.spec.height*.36)&&(familyNodes[s.node]![0]>=62||people.filter(other=>other!==p&&familyNodes[other.destination]![0]<62).length<2)&&people.filter(other=>other!==p&&other.destination===s.node).length<s.capacity);
+     const available=familySpots.filter(s=>(!s.owner||s.owner===p.spec.id)&&(!s.seatHeight||s.seatHeight<p.spec.height*.36)&&people.filter(other=>other!==p&&other.destination===s.node).length<s.capacity);
      // Stagger a nearby seated pause every third choice; retain home returns and
      // the existing varied destinations between pauses. Never reserve an occupied seat.
      const nearbySeats=available.filter(s=>s.activity==='sitting'&&s.node!==p.node).sort((a,b)=>{
       const distance=(node:number)=>familyRoute(p.node,node).reduce((total,next,i,path)=>{const previous=familyNodes[i?path[i-1]!:p.node]!,point=familyNodes[next]!;return total+Math.hypot(point[0]-previous[0],point[1]-previous[1]);},0);
       return distance(a.node)-distance(b.node);
      });
-     const seat=(p.cycle+index)%3===1?nearbySeats[0]:undefined;
+     const seat=p.cycle===1||(p.cycle+index)%3===1?nearbySeats[0]:undefined;
      const spot=(p.cycle%4===0?available.find(s=>s.node===index):undefined)||seat||available[(p.cycle*7+index*3)%available.length];
      if(spot){p.destination=spot.node;p.activity=spot.activity;p.facing=spot.facing;p.seatHeight=spot.seatHeight||0;p.seatAnchor=spot.seatAnchor;p.pace=p.cycle%5===0?1.22:1;p.route=familyRoute(p.node,spot.node);if(!p.route.length)p.wait=spot.stay;}
     }

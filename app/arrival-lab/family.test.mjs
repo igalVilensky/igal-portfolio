@@ -100,3 +100,16 @@ test('seat alignment completes before sitting and stand-up completes before turn
   assert.equal(p.seatBlend,0);assert(p.body.position.length()<.001);assert(Math.abs(p.person.rotation.y-facing)>.1,'turns to visitor once upright');
  }finally{family.dispose();}
 });
+
+test('outdoor roaming edges clear the Origin landscape and welcoming portico',()=>{
+ const scene=new T.Scene(),solids=[],origin=module('./origin.ts').createOrigin(scene,solids);
+ try{
+  origin.welcome();for(let i=0;i<60;i++)origin.update(.1,true,new T.Vector3(),false);
+  scene.updateMatrixWorld(true);const move=module('./collision.ts').createCollision(solids);
+  for(const [a,b] of nav.familyEdges.filter(([a,b])=>a>=37||b>=37))for(const [from,to] of [[a,b],[b,a]]){
+   const start=nav.familyNodes[from],end=nav.familyNodes[to],p=new T.Vector3(start[0],1.65,start[1]);
+   move(p,new T.Vector3(end[0]-start[0],0,end[1]-start[1]));
+   assert(Math.hypot(p.x-end[0],p.z-end[1])<.01,`${from} -> ${to}: ${p.toArray()}`);
+  }
+ }finally{origin.dispose();}
+});

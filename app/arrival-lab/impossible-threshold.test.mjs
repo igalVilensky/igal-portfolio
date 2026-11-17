@@ -68,3 +68,16 @@ test('live doorway views preserve scene visibility, clipping, render targets and
  const renderer={clippingPlanes:clipping,shadowMap:{autoUpdate:false,needsUpdate:true},getRenderTarget:()=>target,setRenderTarget:t=>target=t,render:(s,c)=>calls.push({p:c.position.clone(),hall:hall.visible,planes:renderer.clippingPlanes.length,clip:renderer.clippingPlanes[0]?.clone()})};world.renderViews(renderer,camera);assert.equal(calls.length,1);assert.equal(calls[0].hall,false);assert.equal(calls[0].planes,1);assert(Math.abs(calls[0].p.z+3.5)<.001);assert.deepEqual(scene.children.map(o=>o.visible),visibility);assert.equal(renderer.clippingPlanes,clipping);assert.equal(target,null);assert(camera.position.equals(p));assert(camera.quaternion.equals(q));assert.equal(renderer.shadowMap.needsUpdate,true);
  camera.position.z=-69.6;world.update(.01,true,camera);assert(world.active);camera.position.set(0,1.65,3);world.renderViews(renderer,camera);assert.equal(calls.length,2);assert.equal(calls[1].hall,true);assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-66))>0,'return aperture keeps the Arrival side of the wall');assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-75))<0,'return aperture clips the deep back side');world.dispose();
 });
+
+test('North cabin entrance is traversable both ways while glazing remains solid',()=>{
+ const scene=new T.Scene(),solids=[],world=createImpossibleThreshold(scene,solids);
+ try{
+  scene.updateMatrixWorld(true);const move=collision.createCollision(world.snowSolids);
+  const player=new T.Vector3(11.3,1.65,74);
+  move(player,new T.Vector3(0,0,4));assert(Math.abs(player.z-78)<.01,'walk directly inside');
+  move(player,new T.Vector3(0,0,-4));assert(Math.abs(player.z-74)<.01,'walk back outside');
+  player.set(13.75,1.65,74);move(player,new T.Vector3(0,0,4));assert(player.z<75.5,'window cannot be walked through');
+  const lamp=scene.getObjectsByProperty('type','PointLight').find(o=>o.castShadow);
+  assert(lamp,'interior has a shadow casting light');assert(lamp.getWorldPosition(new T.Vector3()).z>75.5);
+ }finally{world.dispose();}
+});

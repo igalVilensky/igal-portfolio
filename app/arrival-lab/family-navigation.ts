@@ -4,8 +4,9 @@ export const familyNodes = [
  [70,19],[82,19],[96,19],[73,19],[94,19],
  [62,19],[56,19],[56,17],[35,17],[35,19],[20,19],[5,19],
  [-20,19],[-28,19],[-32,19],[-48,19],[-57,19],[-32,24],[-32,27],[-48,24],[-48,28],[-48,14],[-48,10],[46,17],[78,23.15],[91,23.15],[-32,31.5],[79.15,6],[93,7],[-35,27],[-35,31.5],[5,8],
+ [12,19],[12,38],[65,50],[35,50],[35,62],[12,62],[-35,62],[-35,90],[12,115],[35,90],[65,58],
 ] as const;
-export const familyEdges = [[0,5],[1,6],[2,7],[3,8],[4,9],[5,8],[8,6],[6,9],[9,7],[5,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],[17,18],[18,19],[19,20],[20,21],[19,22],[22,23],[20,24],[24,25],[20,26],[26,27],[12,28],[5,29],[7,30],[23,34],[34,35],[35,31],[1,32],[2,33],[16,36]] as const;
+export const familyEdges = [[0,5],[1,6],[2,7],[3,8],[4,9],[5,8],[8,6],[6,9],[9,7],[5,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],[17,18],[18,19],[19,20],[20,21],[19,22],[22,23],[20,24],[24,25],[20,26],[26,27],[12,28],[5,29],[7,30],[23,34],[34,35],[35,31],[1,32],[2,33],[16,36],[16,37],[37,38],[38,42],[39,40],[40,41],[41,42],[42,43],[43,44],[44,45],[45,46],[46,41],[39,47]] as const;
 export function familyRoute(from:number,to:number){
  const queue=[from],previous=new Map<number,number>([[from,-1]]);
  for(let i=0;i<queue.length;i++){const current=queue[i]!;if(current===to)break;for(const [a,b] of familyEdges){const next=a===current?b:b===current?a:undefined;if(next!==undefined&&!previous.has(next)){previous.set(next,current);queue.push(next);}}}
@@ -32,4 +33,5 @@ export const familySpots:ActivitySpot[]=[
  {node:31,room:'commons',activity:'sitting',facing:Math.PI,seatHeight:.51,seatAnchor:[-32,.51,32.205],stay:40,capacity:1},
  {node:32,room:'anastasia',owner:'anastasia',activity:'sitting',facing:Math.PI/2,seatHeight:.48,seatAnchor:[78.62,.48,6],stay:40,capacity:1},
  {node:33,room:'amelia',owner:'amelia',activity:'sitting',facing:Math.PI/2,seatHeight:.48,seatAnchor:[92.47,.48,7],stay:38,capacity:1},
+ ...[39,40,42,43,44,45,46,47].map((node,i)=>({node,room:'origin',activity:'observing' as const,facing:i*.8,stay:18+i*3,capacity:1})),
 ];
