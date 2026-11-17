@@ -15,6 +15,7 @@ export function createCollision(solids: T.Mesh[]) {
     sweep.setFromPoints([position,end]);sweep.min.addScalar(-radius);sweep.max.addScalar(radius);
     sweep.min.y=position.y-1.65;sweep.max.y=position.y+.33;
     const candidates=barriers.filter(m=>!staticBounds.has(m)||staticBounds.get(m)!.intersectsBox(sweep));
+    const safety=candidates.filter(m=>m.userData.safetyBarrier);
     const steps = Math.max(1, Math.ceil(displacement.length() / .16));
     const step = displacement.clone().divideScalar(steps);
     for (let i = 0; i < steps; i++) {
@@ -27,6 +28,8 @@ export function createCollision(solids: T.Mesh[]) {
             const origin = position.clone(); origin.y = position.y - 1.65 + height; origin[axis === 'x' ? 'z' : 'x'] += offset;
             ray.set(origin, direction); ray.far = allowed + radius;
             const hit = ray.intersectObjects(candidates, false)[0];
+            // Perimeter protection remains continuous above unsupported cloud space.
+            if(safety.length){const low=origin.clone();low.y=.5;ray.set(low,direction);const guard=ray.intersectObjects(safety,false)[0];if(guard)allowed=Math.min(allowed,Math.max(0,guard.distance-radius));ray.set(origin,direction);}
             if (hit) allowed = Math.min(allowed, Math.max(0, hit.distance - radius));
           }
         }

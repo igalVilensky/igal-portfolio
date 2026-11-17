@@ -29,3 +29,13 @@ test('vehicle reference turns preserve independent passenger yaw and pitch',()=>
  const event=new Event('keydown',{cancelable:true});Object.defineProperties(event,{key:{value:'ArrowLeft'},code:{value:'ArrowLeft'},target:{value:canvas}});window.dispatchEvent(event);look.rotateFrame(-.1);look.update(.1,true);assert.ok(Math.abs(look.yaw-.72)<1e-8);assert.ok(Math.abs(look.pitch+.2)<1e-8);
  }finally{look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
 });
+test('Space owns jumping only in exploration focus and never activates a world interaction',()=>{
+ const oldWindow=globalThis.window,oldDocument=globalThis.document;
+ globalThis.window=new EventTarget();globalThis.document=new EventTarget();const canvas=new EventTarget();let jumps=0,actions=0;
+ const look=exports.createLook(new T.PerspectiveCamera(),canvas,{jump(){jumps++;},activate(){actions++;},hover(){},escape(){},manual(){}});
+ function space(target=canvas,repeat=false){const e=new Event('keydown',{cancelable:true});Object.defineProperties(e,{key:{value:' '},code:{value:'Space'},target:{value:target},repeat:{value:repeat}});window.dispatchEvent(e);return e;}
+ try{assert.ok(space().defaultPrevented);space(canvas,true);assert.equal(jumps,1);assert.equal(actions,0);
+  assert.equal(space({closest:()=>({tagName:'INPUT'})}).defaultPrevented,false);assert.equal(jumps,1);
+  look.setClimbing(true);space();assert.equal(jumps,1);look.setEnabled(false);space();assert.equal(jumps,1);
+ }finally{look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
+});

@@ -7,15 +7,15 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'skytube-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['skytube','collision']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
+for(const name of ['skytube','collision','geography']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {createSkyTube,skyEase,createSkyRoute}=await import(join(dir,'skytube.mjs'));
 after(()=>rm(dir,{recursive:true,force:true}));
 function setup(){const scene=new T.Scene(),solids=[],tube=createSkyTube(scene,solids),camera=new T.PerspectiveCamera();scene.updateMatrixWorld(true);return {scene,solids,tube,camera};}
 function board(tube,camera,reduced=false){camera.position.copy(tube.vehicle.localToWorld(new T.Vector3(-3.55,1.65,0)));camera.position.y=1.65;assert.ok(tube.activate('board',camera,reduced));}
 function advance(tube,camera,seconds,step=.1,reduced=false){for(let t=0;t<seconds;t+=step)tube.update(Math.min(step,seconds-t),reduced,camera);}
 test('route is bounded, raised and smooth; profile starts and stops gently',()=>{
- const route=createSkyRoute();assert.ok(route.getPointAt(0).distanceTo(new T.Vector3(77,2.12,66))<1e-7);assert.ok(route.getPointAt(1).distanceTo(new T.Vector3(201,2.12,74))<1e-7);
- let last=0,previousYaw;for(let i=0;i<=200;i++){const t=i/200,eased=skyEase(t),p=route.getPointAt(t),v=route.getTangentAt(t),yaw=Math.atan2(v.x,v.z);assert.ok(eased>=last&&eased<=1);assert.ok(p.y>=1.9&&p.y<12);if(previousYaw!==undefined)assert.ok(Math.abs(yaw-previousYaw)<.12);last=eased;previousYaw=yaw;}
+ const route=createSkyRoute();assert.ok(route.getPointAt(0).distanceTo(new T.Vector3(77,2.12,66))<1e-7);assert.ok(route.getPointAt(1).distanceTo(new T.Vector3(265,2.12,74))<1e-7);
+ let last=0,previousYaw;for(let i=0;i<=200;i++){const t=i/200,eased=skyEase(t),p=route.getPointAt(t),v=route.getTangentAt(t),yaw=Math.atan2(v.x,v.z);assert.ok(eased>=last&&eased<=1);assert.ok(p.y>=1.9&&p.y<18);if(previousYaw!==undefined)assert.ok(Math.abs(yaw-previousYaw)<.12);last=eased;previousYaw=yaw;}
  assert.equal(skyEase(-1),0);assert.equal(skyEase(2),1);assert.ok(skyEase(.001)/.001<.001);assert.ok((1-skyEase(.999))/.001<.001);
 });
 test('three physical round trips keep one capsule, close doors for travel and restore platform ownership',()=>{
@@ -48,13 +48,13 @@ test('elapsed-time partitions agree; pause, reduced motion and theme changes pre
 });
 test('platform exits remain inside the existing safe land and require a nearby side-door approach',()=>{
  const {tube,camera}=setup();camera.position.set(0,1.65,0);assert.equal(tube.activate('board',camera),false);
- for(const destination of ['district','origin']){board(tube,camera);advance(tube,camera,tube.duration+5);assert.equal(tube.station,destination);tube.activate('exit',camera);advance(tube,camera,2);const p=camera.position;if(destination==='district')assert.ok(p.x>196&&p.x<209&&p.z>74&&p.z<80);else assert.ok(p.x>70.7&&p.x<84&&p.z>60&&p.z<79);}
+ for(const destination of ['district','origin']){board(tube,camera);advance(tube,camera,tube.duration+5);assert.equal(tube.station,destination);tube.activate('exit',camera);advance(tube,camera,2);const p=camera.position;if(destination==='district')assert.ok(p.x>260&&p.x<273&&p.z>74&&p.z<80);else assert.ok(p.x>70.7&&p.x<84&&p.z>60&&p.z<79);}
  tube.dispose();
 });
 test('the capsule clears both existing island parapets throughout the real route',()=>{
  const {tube,camera}=setup();board(tube,camera);advance(tube,camera,3.5);
  const originEdge=new T.Box3(new T.Vector3(83.775,0,51.5),new T.Vector3(84.225,.85,105));
- const districtEdge=new T.Box3(new T.Vector3(146,0,80.275),new T.Vector3(210,1.15,80.725));
+ const districtEdge=new T.Box3(new T.Vector3(210,0,80.275),new T.Vector3(274,1.15,80.725));
  function intersectsSurface(edge){let hit=false;tube.vehicle.traverse(mesh=>{if(hit||!mesh.isMesh||!new T.Box3().setFromObject(mesh).intersectsBox(edge))return;const g=mesh.geometry,p=g.getAttribute('position'),index=g.index,count=index?index.count:p.count;for(let i=0;i<count;i+=3){const vertices=[0,1,2].map(j=>new T.Vector3().fromBufferAttribute(p,index?index.getX(i+j):i+j).applyMatrix4(mesh.matrixWorld));if(edge.intersectsTriangle(new T.Triangle(...vertices))){hit=true;break;}}});return hit;}
  for(let t=0;t<tube.duration;t+=.05){tube.update(.05,false,camera);assert.ok(!intersectsSurface(originEdge),`Origin parapet at ${tube.progress}`);assert.ok(!intersectsSurface(districtEdge),`District parapet at ${tube.progress}`);}
  tube.dispose();

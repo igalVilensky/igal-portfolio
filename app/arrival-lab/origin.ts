@@ -18,6 +18,7 @@ export function createOrigin(scene:T.Scene,solids:T.Mesh[]) {
  // The enclosed Living Quarters replaces the x=84 edge rail for z=0..26; its perimeter owns protection there.
  // Edge protection is coincident with the visible retaining edge, including angled corners.
  originBoundary.forEach((a,i)=>{const b=originBoundary[(i+1)%originBoundary.length]!;if(a[0]===84&&b[0]===84){for(const [z,d] of [[-41,82],[35.25,18.5],[78.25,53.5]] as const)box(.45,.85,d,84,.425,z,pale,true);return;}const length=Math.hypot(b[0]-a[0],b[1]-a[1]);const o=box(length,.85,.45,(a[0]+b[0])/2,.425,(a[1]+b[1])/2,pale,true);o.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0]);});
+ root.traverse(o=>{if(o instanceof T.Mesh&&o.userData.room==='origin'&&!o.userData.noCollision)o.userData.safetyBarrier=true;});
  // South portico: deep jambs, recessed bronze doors, cantilevered canopy.
  for(const side of [-1,1]){box(1.4,14,6,12+side*5.7,7,26,pale,true);box(1,24,2.5,side*19,12,25.5,pale,true);}
  box(14,1.2,9,12,14,27,pale);box(19,.5,12,12,14.85,27,bronze);

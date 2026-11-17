@@ -2,9 +2,11 @@ import * as T from 'three';
 import { createCollision } from './collision';
 import { createThresholdView } from './threshold-view';
 
+import { districtOffset } from './geography';
+export { districtOffset } from './geography';
 export const loopTopology = {
  district: 'loop-district', interior: 'loop-vault',
- bridge: { start: 80, end: 148, z: 48, width: 7 },
+ bridge: { start: 80, end: 212, z: 48, width: 7 },
  departure: { room: 'journey', position: [-92,0,19] as const, yaw: Math.PI/2 },
  connections: ['homecoming', 'impossible-house', 'loop-stair'] as const,
 } as const;
@@ -17,14 +19,18 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  const mat=(color:string,metalness=0)=>{const m=new T.MeshStandardMaterial({color,roughness:.72,metalness});materials.push(m);return m;};
  const plaster=mat('#f1e5d7'),stone=mat('#b9b8ac'),cliff=mat('#667985'),terra=mat('#be7057'),blue=mat('#285b9f'),aqua=mat('#4b9092'),metal=mat('#647980',.65),green=mat('#52765a'),warm=mat('#f7ca83');warm.emissive.set('#f7b35d');warm.emissiveIntensity=.25;
  function box(w:number,h:number,d:number,x:number,y:number,z:number,m=plaster,solid=true,parent:T.Object3D=root){const key=[w,h,d].join();let g=geometries.get(key);if(!g){g=new T.BoxGeometry(w,h,d);geometries.set(key,g);}const o=new T.Mesh(g,m);o.position.set(x,y,z);o.castShadow=solid&&h>2;o.receiveShadow=true;o.userData.room='loop-district';o.userData.noCollision=!solid;parent.add(o);solids.push(o);let ancestor:T.Object3D|null=parent;while(ancestor&&ancestor!==vault)ancestor=ancestor.parent;(ancestor===vault?indoor:own).push(o);return o;}
- // Continuous deck overlaps the plateau and the island. Rails terminate on their landings.
- const bridgeDeck=box(62,.65,7,115,-.325,48,stone,false);bridgeDeck.name='loop-bridge-deck';
+ // Repeated bridge bays span the expanded gap; the island keeps its local layout.
+ const span=68+districtOffset, end=148+districtOffset;
+ const bridgeDeck=box(62+districtOffset,.65,7,115+districtOffset/2,-.325,48,stone,false);bridgeDeck.name='loop-bridge-deck';
  box(32,.035,7,68,.02,48,stone,false);
  for(const z of [44.5,51.5]){
-  box(68,.5,.3,114,.25,z,plaster);box(68,.09,.12,114,1.3,z,metal);
-  for(let x=81;x<149;x+=4){box(.12,1.3,.12,x,.65,z,metal);box(.65,2,.7,x,-1,z,metal,false);}
+  box(span,.5,.3,80+span/2,.25,z,plaster).userData.safetyBarrier=true;
+  box(span,.09,.12,80+span/2,1.3,z,metal).userData.safetyBarrier=true;
+  for(let x=81;x<end;x+=4){box(.12,1.3,.12,x,.65,z,metal);box(.65,2,.7,x,-1,z,metal,false);}
  }
- for(let x=84;x<149;x+=8){box(.07,.025,6.6,x,.018,48,metal,false);for(const z of [44.5,51.5]){box(.45,3,.6,x,-1.7,z,plaster,false);}}
+ for(let x=84;x<end;x+=8){box(.07,.025,6.6,x,.018,48,metal,false);for(const z of [44.5,51.5])box(.45,3,.6,x,-1.7,z,plaster,false);}
+ const bridgeObjects=new Set(root.children);
+ const island=new T.Group();island.name='Loop District · geographic transform';island.position.x=districtOffset;root.add(island);
  // Faceted floating land, with a crisp mineral cap and tapered keel.
  const land=new T.Mesh(new T.CylinderGeometry(34,16,20,7),cliff);geometries.set('land',land.geometry);land.position.set(178,-11,53);land.scale.z=.9;root.add(land);
  // The slab supplies sides and underside only. Its removed top is owned by one inlaid surface.
@@ -123,16 +129,19 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  const roof=door('loop-stair-return',164,4.15,32,Math.PI,'loop-district',aqua);
  const views=new Map(doors.map(d=>[d,createThresholdView(d.root,2.27,3.16)]));
  const pairs=[[home,departure],[impossible,inside],[stair,roof]] as const;
+ // Remote vault and Homecoming destination stay in their original world spaces.
+ for(const child of [...root.children])if(child!==island&&child!==vault&&!bridgeObjects.has(child)&&child!==departure.root)island.add(child);
  scene.updateMatrixWorld(true);
+ own.forEach(o=>{if(o.position.y===.575)o.userData.safetyBarrier=true;});
  const indoorCollision=createCollision(indoor), exteriorCollision=createCollision(own);
  let active=false,previous=new T.Vector3(),initialized=false;
  const local=new T.Vector3(),before=new T.Vector3(),turn=new T.Matrix4().makeRotationY(Math.PI);
- function height(p:T.Vector3){if(active)return 0;if(p.x>=196.1&&p.x<=199.9&&p.z>=48.3&&p.z<=59)return T.MathUtils.clamp((59-p.z)*.4,0,3.6);if(p.x>=158&&p.x<=170&&p.z>=29.3&&p.z<=43.3&&p.y>4)return 4.15;return 0;}
+ function height(p:T.Vector3){if(active)return 0;const x=p.x-districtOffset;if(x>=196.1&&x<=199.9&&p.z>=48.3&&p.z<=59)return T.MathUtils.clamp((59-p.z)*.4,0,3.6);if(x>=158&&x<=170&&p.z>=29.3&&p.z<=43.3&&p.y>4)return 4.15;return 0;}
  const viewCamera=new T.PerspectiveCamera();
  function renderViews(renderer:T.WebGLRenderer,camera:T.PerspectiveCamera){
   for(const pair of pairs)for(let i=0;i<2;i++){
    const source=pair[i]!,destination=pair[1-i]!,view=views.get(source)!;
-   if(source.progress<=0||source.environment==='loop-vault'!==active||camera.position.distanceTo(source.root.position)>20)continue;
+   if(source.progress<=0||source.environment==='loop-vault'!==active||camera.position.distanceTo(source.root.getWorldPosition(new T.Vector3()))>20)continue;
    const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());
    viewCamera.copy(camera);viewCamera.position.applyMatrix4(mapping);viewCamera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));viewCamera.updateProjectionMatrix();
    const height=Math.max(256,Math.round(640/camera.aspect));if(view.target.height!==height)view.target.setSize(640,height);
@@ -146,7 +155,7 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
   }
  }
  return {renderViews,root,vault,doors,pairs,get active(){return active;},get environment(){return active?'loop-vault':'loop-district';},
- contains(p:T.Vector3){return active||p.x>79&&p.z>=25&&p.z<=81;},
+ contains(p:T.Vector3){return active||(p.x>79&&p.x<146+districtOffset&&p.z>=44.8&&p.z<=51.2)||(p.x>=146+districtOffset&&p.x<=210+districtOffset&&p.z>=25&&p.z<=81);},
  activate(id:string){const d=doors.find(d=>d.id===id);if(d)d.opened=true;},
  move(p:T.Vector3,delta:T.Vector3){const old=p.clone(),level=height(p);if(active)indoorCollision(p,delta);else exteriorCollision(p,delta);p.y=old.y;const next=height(p);p.y=(Math.abs(next-level)<.65?next:level)+1.65;},
  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;if(active&&camera.position.x<300){active=false;vault.visible=false;changed=true;}for(const d of doors){const next=Math.min(1,d.progress+(d.opened?(reduced?1:dt*1.7):0));if(next!==d.progress)changed=true;d.progress=next;d.pivot.rotation.y=-next*Math.PI*.55;}
@@ -155,7 +164,7 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
   const source=pair[i]!,destination=pair[1-i]!;if(source.progress<.99||source.environment==='loop-vault'!==active)continue;
   local.copy(camera.position);source.root.worldToLocal(local);before.copy(previous);source.root.worldToLocal(before);
   if(before.z>-.02&&local.z<=-.02&&Math.abs(local.x)<.85&&local.y>1&&local.y<2.3){
-   const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());camera.position.applyMatrix4(mapping);camera.position.y=destination.root.position.y+1.65;camera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));
+   const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());camera.position.applyMatrix4(mapping);camera.position.y=destination.root.getWorldPosition(new T.Vector3()).y+1.65;camera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));
    destination.opened=true;destination.progress=1;destination.pivot.rotation.y=-Math.PI*.55;active=destination.environment==='loop-vault';vault.visible=active;changed=true;
   }
  }

@@ -1,11 +1,12 @@
 import * as T from 'three';
+import { districtOffset } from './geography';
 import { createCollision } from './collision';
 
 export type StationId = 'origin' | 'district';
 export type TransitPhase = 'docked' | 'opening' | 'boarding' | 'closing' | 'riding' | 'calling' | 'arriving' | 'exiting';
 export const skyStations = {
  origin: { point: [77, 2.12, 66], names: { en: 'The Origin', de: 'Der Ursprung', ru: 'Исток' } },
- district: { point: [201, 2.12, 74], names: { en: 'Loop District', de: 'Loop-Viertel', ru: 'Квартал петель' } },
+ district: { point: [201 + districtOffset, 2.12, 74], names: { en: 'Loop District', de: 'Loop-Viertel', ru: 'Квартал петель' } },
 } as const;
 export const skyCopy = {
  en: { call: 'Call capsule', approach: 'Approach the side door', board: 'Board capsule', exit: 'Exit to platform', opening: 'Doors opening', boarding: 'Boarding', closing: 'Doors closing', riding: 'In transit', calling: 'Capsule approaching', arriving: 'Arriving', exiting: 'Exiting', unavailable: 'Capsule in transit', docked: 'Capsule ready', destination: 'Destination' },
@@ -15,8 +16,8 @@ export const skyCopy = {
 export const skyEase = (t: number) => { t = T.MathUtils.clamp(t, 0, 1); return t * t * t * (10 + t * (-15 + 6 * t)); };
 export function createSkyRoute() {
  return new T.CatmullRomCurve3([
-  new T.Vector3(...skyStations.origin.point), new T.Vector3(91,8,76), new T.Vector3(114,10,88),
-  new T.Vector3(145,9,91), new T.Vector3(176,10,86), new T.Vector3(...skyStations.district.point),
+  new T.Vector3(...skyStations.origin.point), new T.Vector3(91,8,76), new T.Vector3(130,14,92),
+  new T.Vector3(177,16,104), new T.Vector3(230,12,92), new T.Vector3(...skyStations.district.point),
  ], false, 'centripetal');
 }
 const other = (station: StationId): StationId => station === 'origin' ? 'district' : 'origin';
@@ -45,8 +46,8 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[]) {
   constructor(private offsetY=0){super();}
   getPoint(t:number,target=new T.Vector3()) { route.getPointAt(T.MathUtils.lerp(7/length,1-7/length,t),target);target.y+=this.offsetY;return target; }
  }
- const tube=mesh(new T.TubeGeometry(new RouteSection(),80,3.2,20,false),tubeGlass,root);tube.name='SkyTube continuous glass shell';
- const railGeometry=new T.TubeGeometry(new RouteSection(-2.35),80,.065,6,false);
+ const tube=mesh(new T.TubeGeometry(new RouteSection(),120,3.2,20,false),tubeGlass,root);tube.name='SkyTube continuous glass shell';
+ const railGeometry=new T.TubeGeometry(new RouteSection(-2.35),120,.065,6,false);
  mesh(railGeometry,metal,root);
  const ribGeometry=new T.TorusGeometry(3.22,.045,6,32),zAxis=new T.Vector3(0,0,1);
  for(let distance=7;distance<length-6;distance+=8){const u=distance/length,rib=mesh(ribGeometry,metal,root);rib.position.copy(route.getPointAt(u));rib.quaternion.setFromUnitVectors(zAxis,route.getTangentAt(u));}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { joystickIntent } from './touch-input.mjs';
-const props=defineProps<{label:string;help:string}>();
-const emit=defineEmits<{move:[x:number,z:number,sprint:boolean]}>();
+const props=defineProps<{label:string;help:string;jumpLabel:string}>();
+const emit=defineEmits<{move:[x:number,z:number,sprint:boolean];jump:[]}>();
 const pad=ref<HTMLElement>();const thumb=ref({x:0,y:0});const active=ref(false);const fast=ref(false);
 let pointer:number|undefined, originX=0,originY=0;
 function reset(){pointer=undefined;active.value=false;fast.value=false;thumb.value={x:0,y:0};emit('move',0,0,false);}
@@ -11,4 +11,4 @@ function up(e:PointerEvent){if(e.pointerId===pointer)reset();}
 onMounted(()=>{window.addEventListener('blur',reset);window.addEventListener('orientationchange',reset);window.addEventListener('resize',reset);document.addEventListener('visibilitychange',reset);});
 onBeforeUnmount(()=>{reset();window.removeEventListener('blur',reset);window.removeEventListener('orientationchange',reset);window.removeEventListener('resize',reset);document.removeEventListener('visibilitychange',reset);});
 </script>
-<template><div class="arrival-touch"><div ref="pad" class="arrival-joystick" :class="{active,fast}" role="group" :aria-label="props.label" @pointerdown.prevent="down" @pointermove.prevent="move" @pointerup="up" @pointercancel="up" @lostpointercapture="up"><span class="joystick-thumb" :style="{transform:`translate(${thumb.x}px,${thumb.y}px)`}"/><span class="joystick-direction" aria-hidden="true">↑</span></div><p>{{ help }}</p></div></template>
+<template><div class="arrival-touch"><div ref="pad" class="arrival-joystick" :class="{active,fast}" role="group" :aria-label="props.label" @pointerdown.prevent="down" @pointermove.prevent="move" @pointerup="up" @pointercancel="up" @lostpointercapture="up"><span class="joystick-thumb" :style="{transform:`translate(${thumb.x}px,${thumb.y}px)`}"/><span class="joystick-direction" aria-hidden="true">↑</span></div><button class="arrival-jump" :aria-label="jumpLabel" @pointerdown.stop.prevent="emit('jump')" @click.stop.prevent @keydown.space.stop.prevent="emit('jump')">↑<small>{{ jumpLabel }}</small></button><p>{{ help }}</p></div></template>

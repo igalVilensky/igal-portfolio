@@ -6,6 +6,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   hover: (x: number, y: number, locked: boolean) => void;
   escape: () => void;
   manual: () => void;
+  jump: () => void;
 }) {
   const keys = new Set<string>();
   const velocity = new T.Vector3();
@@ -62,7 +63,8 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
     const step = steps[event.key];
     if (step) { event.preventDefault(); targetYaw += step[0]; targetPitch = T.MathUtils.clamp(targetPitch + step[1], -1.25, 1.35); }
-    if (!event.repeat && (event.code === 'KeyE' || event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); callbacks.activate(0, 0, true, false); }
+    if(event.code==='Space'){event.preventDefault();if(!event.repeat&&!climbing)callbacks.jump();return;}
+    if (!event.repeat && (event.code === 'KeyE' || event.key === 'Enter')) { event.preventDefault(); callbacks.activate(0, 0, true, false); }
   }
   listen(canvas, 'pointerdown', down as EventListener);
   listen(canvas, 'pointermove', move as EventListener);
@@ -91,11 +93,11 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     // Move the reference frame without replacing the passenger's independent look intent.
     rotateFrame(turn:number){yaw+=turn;targetYaw+=turn;camera.rotation.set(pitch,yaw,0,'YXZ');},
     stop: reset,
-    movement(dt: number) {
+    movement(dt: number, airborne=false) {
       const x = analogX || Number(keys.has('KeyD')) - Number(keys.has('KeyA'));
       const z = analogZ || Number(keys.has('KeyS')) - Number(keys.has('KeyW'));
       const target = new T.Vector3(x,0,z).clampLength(0,1).applyAxisAngle(new T.Vector3(0,1,0),yaw).multiplyScalar(sprint || keys.has('ShiftLeft') || keys.has('ShiftRight') ? 10.8 : 4.8);
-      velocity.lerp(target, 1 - Math.exp(-12 * dt));
+      velocity.lerp(target, 1 - Math.exp(-(airborne?4:12) * dt));
       return { active: !!(x || z), delta: velocity.clone().multiplyScalar(dt) };
     },
     update(dt: number, reduced = false) {

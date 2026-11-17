@@ -7,7 +7,7 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'loop-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
+for(const name of ['geography','threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {buildEnvironment}=await import(join(dir,'environment.mjs'));
 const {createExpansion}=await import(join(dir,'expansion.mjs'));
 const {worldSpaces,spaceAt}=await import(join(dir,'spaces.mjs'));
@@ -30,7 +30,7 @@ test('all threshold pairs map position and orientation reversibly over three phy
  district.dispose();assert.equal(district.root.parent,null);
 });
 test('stairs raise the walking surface continuously and theme keeps state and roots',()=>{
- const scene=new T.Scene(),district=createLoopDistrict(scene,[]),p=new T.Vector3(198,1.65,59);
+ const scene=new T.Scene(),district=createLoopDistrict(scene,[]),p=new T.Vector3(262,1.65,59);
  for(let i=0;i<95;i++)district.move(p,new T.Vector3(0,0,-.1));assert.ok(p.y>5.1);const before=p.clone(),root=district.root;district.setTheme(true);assert.ok(p.equals(before));assert.equal(root,district.root);district.dispose();
 });
 
@@ -66,7 +66,7 @@ test('island paving has one upward surface per point, including lane, courtyard 
  assert.equal(paving.geometry.groups.length,3,'inlaid materials share one triangulated surface');
  const ray=new T.Raycaster();
  for(const [x,z] of [[148.123,48.321],[160.123,55.321],[174.123,33.321],[181.123,28.321],[200.123,74.321],[209.123,78.321],[145.999,48.321],[146.001,48.321]]){
-  ray.set(new T.Vector3(x,2,z),new T.Vector3(0,-1,0));const hits=ray.intersectObjects(solids,false).filter(h=>Math.abs(h.point.y)<1e-6);
+  ray.set(new T.Vector3(x+64,2,z),new T.Vector3(0,-1,0));const hits=ray.intersectObjects(solids,false).filter(h=>Math.abs(h.point.y)<1e-6);
   assert.equal(hits.length,1,`exactly one floor face at ${x},${z}`);
  }
  assert.ok(paving.material.every(m=>m.depthTest&&!m.polygonOffset));district.dispose();
