@@ -21,7 +21,7 @@ onMounted(()=>window.addEventListener('keydown',escape));onBeforeUnmount(()=>win
 <template>
  <main class="world-lab" :class="{'world-light':isLight}">
   <header class="world-header">
-   <div><NuxtLink :to="localePath('/')" class="world-back">{{c.brand}} <span>↗ {{ c.back }}</span></NuxtLink><p class="world-edition">{{c.edition}} <span>{{c.review}}</span></p></div>
+   <div><NuxtLink :to="localePath('/portfolio')" class="world-back">{{c.brand}} <span>↗ {{ c.back }}</span></NuxtLink><p class="world-edition">{{c.edition}} <span>{{c.review}}</span></p></div>
    <nav class="world-settings" :aria-label="c.preferences"><NuxtLink v-for="l in (['en','de','ru'] as const)" :key="l" :to="switchLocalePath(l)" :aria-current="lang===l?'true':undefined">{{l.toUpperCase()}}</NuxtLink><ThemeToggle/></nav>
   </header>
   <section class="world-stage" :aria-label="c.title">

@@ -581,9 +581,10 @@ onBeforeUnmount(() => {
       <button class="arrival-mouse-mode" v-if="!touchMode" :aria-pressed="!pointerLocked" title="Hold left mouse button and drag to look" @click="dragLook">Drag Look</button>
       <button :aria-label="c.back" :title="c.back" data-action="return" :disabled="transitPassenger" @click="back">↶</button>
       <button :aria-label="c.controls" :title="c.controls" :aria-expanded="controlsOpen" aria-controls="arrival-controls" @click="controlsOpen = !controlsOpen">?</button>
-      <NuxtLink data-action="world-exit" :to="localePath('/')" :aria-label="c.exit" :title="c.exit">↗</NuxtLink>
+      <NuxtLink data-action="world-exit" :to="localePath('/')" :aria-label="$t('gateway.back')" :title="$t('gateway.back')">↗</NuxtLink>
     </nav>
     <section v-if="controlsOpen && !portalBusy" id="arrival-controls" class="arrival-controls" :aria-label="c.controls">
+      <p><NuxtLink :to="localePath('/')">{{ $t('gateway.back') }}</NuxtLink> · <NuxtLink :to="localePath('/site-directory')">{{ $t('gateway.allPages') }}</NuxtLink></p>
       <p>{{ c.instructions }}</p>
       <p>{{ ic.atmosphereDescription }}</p>
       <button v-if="!failed && !textMode" @click="mouseLook">{{ c.mouse }}</button>

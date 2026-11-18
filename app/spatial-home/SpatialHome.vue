@@ -6,6 +6,7 @@ import ThemeToggle from '~/components/ThemeToggle.vue';
 // Locale changes reuse this page; leaving and returning mounts a fresh stack.
 definePageMeta({ layout: false, key: 'spatial-home' });
 const { locale, t } = useI18n();
+const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath();
 const text = computed(() => copy[locale.value as keyof typeof copy] ?? copy.en);
 const paused = ref(false);
@@ -25,7 +26,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
       </div>
     </header>
     <SpatialStack :copy="text" :paused="paused" :navigation="navigation" />
-    <div class="spatial-motion"><button type="button" :aria-pressed="paused" @click="paused = !paused"><span aria-hidden="true">{{ paused ? '▷' : 'Ⅱ' }}</span> {{ paused ? text.resume : text.pause }}</button></div>
+    <div class="spatial-motion"><nav class="gateway-links"><NuxtLink :to="localePath('/')">{{ t('gateway.back') }}</NuxtLink><NuxtLink :to="localePath('/site-directory')">{{ t('gateway.allPages') }}</NuxtLink></nav><button type="button" :aria-pressed="paused" @click="paused = !paused"><span aria-hidden="true">{{ paused ? '▷' : 'Ⅱ' }}</span> {{ paused ? text.resume : text.pause }}</button></div>
   </main>
 </template>
 
@@ -36,9 +37,10 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
 .spatial-signature p { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }.spatial-signature span { display: block; font-size: 11px; color: var(--color-text-muted); }
 .spatial-settings { display: flex; gap: 14px; align-items: center; }.spatial-languages { display: flex; }.spatial-languages a { display: grid; place-items: center; width: 44px; min-height: 44px; font: 11px var(--font-mono); color: var(--color-text-muted); }.spatial-languages a[aria-current] { color: var(--color-accent); text-decoration: underline; text-underline-offset: 7px; }
 .spatial-settings :deep(.shell-control) { min-width: 44px; min-height: 44px; background: transparent; border-color: transparent; }
+.gateway-links { display:flex; flex-wrap:wrap; gap:16px; justify-content:center; font-size:14px; }.gateway-links a { padding:12px 0; }.gateway-links a:focus-visible { outline:2px solid currentColor; }
 .spatial-motion { position: relative; z-index: 3; text-align: right; }.spatial-motion button { min-height: 44px; font: 11px var(--font-mono); color: var(--color-text-muted); }.spatial-motion button span { margin-right: 6px; }
 @media (max-width: 600px) { .spatial-home { padding: 18px 12px 8px; gap: 16px; }.spatial-periphery { gap: 8px; }.spatial-signature p { font-size: 13px; }.spatial-signature span { font-size: 10px; }.spatial-settings { gap: 0; }.spatial-languages a { width: 44px; }.spatial-motion { text-align: center; } }
 @media (max-width: 359px) { .spatial-periphery { flex-wrap: wrap; }.spatial-settings { margin-left: auto; } }
 @media (max-height: 600px) and (min-width: 601px) { .spatial-object { width: min(64vw, 480px); } }
-@media (prefers-reduced-motion: reduce) { .spatial-motion { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .spatial-motion > button { visibility: hidden; } }
 </style>

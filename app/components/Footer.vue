@@ -5,6 +5,8 @@
       <p>© {{ currentYear }} Igal Vilensky</p>
 
       <nav class="flex flex-wrap justify-center gap-x-5 gap-y-2" :aria-label="t('ui.footer_links')">
+        <NuxtLink :to="localePath('/')" class="nav-link">{{ t('gateway.back') }}</NuxtLink>
+        <NuxtLink :to="localePath('/site-directory')" class="nav-link">{{ t('gateway.allPages') }}</NuxtLink>
         <a
           href="mailto:vilenskyigal@gmail.com"
           class="nav-link"
@@ -34,5 +36,6 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
+const localePath = useLocalePath();
 const currentYear = new Date().getFullYear();
 </script>

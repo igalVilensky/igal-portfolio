@@ -50,7 +50,7 @@ const dismissMenu = () => { closeMobileMenu(); menuToggle.value?.focus(); };
 watch(() => route.fullPath, () => closeMobileMenu());
 
 const navigationItems = computed(() => [
-  { id: "home", path: "/", label: t("nav.home"), icon: Home },
+  { id: "home", path: "/portfolio", label: t("nav.home"), icon: Home },
   { id: "case-studies", path: "/case-studies", label: t("nav.work"), icon: Briefcase },
   { id: "experiments", path: "/experiments", label: t("nav.experiments"), icon: FlaskConical },
   { id: "ask-igal", path: "/ask-igal", label: t("nav.askIgal"), icon: MessageCircle },
