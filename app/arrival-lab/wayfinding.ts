@@ -3,6 +3,7 @@ import * as T from 'three';
 /** Shared destination records can later carry discovery/unlock state. Portal worlds
  * use their hall entrance on the island map, never their unrelated local coordinates. */
 export const islandDestinations = [
+ {id:'print-lab',name:'Print Lab',x:-66,z:58},
  {id:'arrival',name:'Arrival',x:5,z:8},
  {id:'home',name:'Vilensky home',x:82,z:19},
  {id:'work',name:'Offices / Work Wing',x:-48,z:19},
@@ -17,7 +18,7 @@ export function createWayfinding(scene:T.Scene){
  const gs:T.BufferGeometry[]=[],ms:T.Material[]=[],textures:T.Texture[]=[];
  const timber=new T.MeshStandardMaterial({color:'#526560',roughness:.8});ms.push(timber);
  function board(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material){const g=new T.BoxGeometry(w,h,d);gs.push(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);root.add(o);return o;}
- for(const [x,z,ids] of [[20,20,['work','home','north','israel']],[-35,41,['work','home','tube']],[62,49,['home','tube','north','israel']]] as const){
+ for(const [x,z,ids] of [[20,20,['work','home','print-lab','israel']],[-35,41,['work','print-lab','tube']],[62,49,['home','tube','north','israel']]] as const){
   board(.16,3.8,.16,x,1.9,z,timber);
   ids.forEach((id,i)=>{
    const dest=islandDestinations.find(d=>d.id===id)!;

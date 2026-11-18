@@ -17,6 +17,7 @@ export const expansionSpaces:readonly WorldSpace[]=[
 export const intelligenceSpace:WorldSpace={id:'intelligence-chamber',names:{en:'The Intelligence Chamber',de:'Die Intelligenzkammer',ru:'Палата разума'},bounds:[-110,-88,-32,8],position:[-99,0,-12],rotation:0,height:23,connections:['journey'],entry:[-92,1.65,8],anchor:[-98,1.65,0],lookAt:[-103,3,-23],identity:'dark mineral fins and three intelligences',status:'active',mounts:[]};
 export const worldSpaces:readonly WorldSpace[]=[
  intelligenceSpace,
+ {id:'print-lab',names:{en:'Print Lab',de:'Drucklabor',ru:'Лаборатория печати'},bounds:[-76,-56,48,68],position:[-66,0,58],rotation:0,height:6,connections:['origin'],anchor:[-60,1.65,61],entry:[-56,1.65,61],lookAt:[-66,2,52],identity:'playful mint and lilac maker pavilion',status:'active',mounts:[]},
  {id:'living-quarters',names:{en:'The Living Quarters',de:'Die Wohnräume',ru:'Жилое крыло'},bounds:[60,103,0,38],position:[84,0,19],rotation:0,height:6,connections:['little-explorer'],anchor:[76,1.65,19],entry:[60,1.65,19],lookAt:[84,2,16],identity:'warm mineral atrium and five private rooms',status:'active',mounts:[]},
  {id:'little-explorer',names:{en:'Little Explorer',de:'Kleine Entdecker',ru:'Маленький исследователь'},bounds:[26,60,-2,24],position:[46,0,11],rotation:0,height:8,connections:['arrival','living-quarters'],anchor:[36,1.65,19],entry:[26,1.65,19],lookAt:[46,3,11],identity:'warm travel pavilion',status:'active',mounts:[]},
  {id:'arrival',names:{en:'Arrival',de:'Ankunft',ru:'Прибытие'},bounds:[-24,24,-72,24],position:[0,0,0],rotation:0,height:43,connections:['gallery','light-well','origin','little-explorer'],anchor:[5,1.65,17],entry:[-24,1.65,19],lookAt:[0,4,-65],identity:'monumental stone',status:'active',mounts:[]},
@@ -26,13 +27,14 @@ export const worldSpaces:readonly WorldSpace[]=[
  {id:'loop-vault',names:{en:'Impossible House',de:'Unmögliches Haus',ru:'Невозможный дом'},bounds:[383,417,420,466],position:[400,0,443],rotation:0,height:23,connections:['loop-district'],anchor:[400,1.65,424],entry:[400,1.65,421],lookAt:[400,13,447],identity:'luminous oversized vault',status:'active',mounts:[]},
  {id:'loop-district',names:{en:'The Loop District',de:'Das Loop-Viertel',ru:'Квартал петель'},bounds:[146,210,25.5,80.5],position:[178,0,53],rotation:0,height:12,connections:['skybridge','journey','loop-vault'],anchor:[174,1.65,58],entry:[149,1.65,48],lookAt:[177,3,59],identity:'impossible mineral neighborhood',status:'active',mounts:[]},
  {id:'skybridge',names:{en:'Skybridge',de:'Himmelsbrücke',ru:'Небесный мост'},bounds:[84,146,44.5,51.5],position:[114,0,48],rotation:0,height:2,connections:['origin','loop-district'],anchor:[114,1.65,48],entry:[84,1.65,48],lookAt:[164,3,43],identity:'open mineral and metal crossing',status:'active',mounts:[]},
- {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival','skybridge'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
+ {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival','skybridge','print-lab'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
 export function spaceAt(p:T.Vector3){return worldSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);}
 /** Route via the circulation centreline; works/light-well routing remains in its existing owner. */
 export function expansionLeg(p:T.Vector3):T.Vector3[]{
  if(spaceAt(p)?.id==='intelligence-chamber')return [p.clone(),new T.Vector3(-92,1.65,p.z),new T.Vector3(-92,1.65,19),new T.Vector3(-60,1.65,19),new T.Vector3(-20,1.65,19)];
  if(spaceAt(p)?.id==='skybridge')return [p.clone(),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='loop-district')return [p.clone(),new T.Vector3(p.x,1.65,58),new T.Vector3(151,1.65,58),new T.Vector3(151,1.65,48),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
+ if(spaceAt(p)?.id==='print-lab')return [p.clone(),new T.Vector3(-60,1.65,61),new T.Vector3(-60,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='origin'){
   const points=[p.clone()];
   // Return around the occupied annexes, then through the real main opening.
