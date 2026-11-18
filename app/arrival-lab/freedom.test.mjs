@@ -9,6 +9,7 @@ const dir=await mkdtemp(join(tmpdir(),'arrival-freedom-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
 for(const name of ['jumping','sky-coaster','skytube','collision','geography']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {createJump}=await import(join(dir,'jumping.mjs'));
+const {createSkyNetwork}=await import(join(dir,'skytube.mjs'));
 const {createSkyCoaster}=await import(join(dir,'sky-coaster.mjs'));
 after(()=>rm(dir,{recursive:true,force:true}));
 test('jump has one apex, rejects airborne repeats, lands and supports raised solids',()=>{
@@ -32,4 +33,30 @@ test('coaster completes repeated physical circuits, gates exit, inverts the ride
   assert.equal(ride.ownsPassenger,false);assert.ok(camera.position.distanceTo(new T.Vector3(-58,1.65,92))<1e-7);
  }
  ride.dispose();assert.equal(ride.root.parent,null);
+});
+
+test('grand circuit has independent docking, repeat journeys and separated ride corridors',()=>{
+ const scene=new T.Scene(),solids=[],network=createSkyNetwork(scene,solids),ride=createSkyCoaster(scene,solids),camera=new T.PerspectiveCamera();
+ const tube=network.scenic;
+ console.log(`Grand circuit: ${tube.length.toFixed(0)}m / ${tube.duration.toFixed(0)}s; coaster: ${ride.length.toFixed(0)}m / ${ride.duration.toFixed(0)}s`);
+ assert.ok(tube.length>900);assert.ok(ride.length>1600);
+ for(let round=0;round<2;round++){
+  camera.position.copy(tube.vehicle.localToWorld(new T.Vector3(-3.55,1.65,0)));camera.position.y=1.65;
+  assert.ok(network.activate('scenic:board',camera));
+  assert.equal(network.activate('board',camera),false);
+  for(let t=0;t<tube.duration+6;t+=.1)network.update(.1,false,camera);
+  assert.equal(tube.phase,'docked');assert.equal(tube.station,'origin');assert.equal(network.transport.progress,0);
+  assert.ok(network.activate('exit',camera));for(let t=0;t<2;t+=.1)network.update(.1,false,camera);
+  assert.equal(network.ownsPassenger,false);assert.ok(Math.abs(camera.position.y-1.65)<1e-6);
+ }
+ const scenic=Array.from({length:1001},(_,i)=>tube.route.getPointAt(i/1000));
+ let minimum=Infinity;
+ for(let i=0;i<=1600;i++){const p=ride.route.getPointAt(i/1600);for(const q of scenic)minimum=Math.min(minimum,p.distanceTo(q));}
+ console.log(`Minimum scenic/coaster centerline separation: ${minimum.toFixed(2)}m`);
+ assert.ok(minimum>7,`ride volumes approach within ${minimum}m`);
+ const interIsland=Array.from({length:401},(_,i)=>network.transport.route.getPointAt(i/400));
+ let transportClearance=Infinity;
+ for(const p of scenic)for(const q of interIsland)transportClearance=Math.min(transportClearance,p.distanceTo(q));
+ assert.ok(transportClearance>7,`tube services approach within ${transportClearance}m`);
+ network.dispose();ride.dispose();
 });

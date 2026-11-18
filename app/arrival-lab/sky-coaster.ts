@@ -7,9 +7,17 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  const points=[[-58,1,96],[-77,1,96],[-96,15,99],[-117,43,107],[-136,47,122],[-149,29,142],[-146,5,162],[-120,3,163],[-111,4,173],[-110,4,180]];
  // A complete vertical loop, with a small lateral drift separating entry and exit.
  for(let i=1;i<=16;i++){const a=i/16*Math.PI*2;points.push([-110+i*.45,18-14*Math.cos(a),180+14*Math.sin(a)]);}
- points.push([-102,4,187],[-91,5,203],[-65,12,203],[-42,24,187],[-31,28,163],[-37,11,143],[-23,8,132],[-25,6,110],[-40,1,96],[-48,1,96]);
+ points.push([-99,5,205],[-65,20,220],[-26,55,205],[0,70,175],
+  [-60,62,155],[-135,40,100],[-158,12,25],[-160,10,-68],
+  [-137,36,-145],[-80,65,-175],[-15,76,-145],[0,65,-80],
+  [0,58,-20],[40,52,20],[76,35,-15],[147,8,-38],[155,6,-5]);
+ // Second real vertical loop over the eastern cloud ocean, clear of the scenic tube.
+ for(let i=1;i<=24;i++){const a=i/24*Math.PI*2;points.push([155+i*.25,27-21*Math.cos(a),-5+21*Math.sin(a)]);}
+ points.push([163,8,32],[164,28,80],[150,48,127],[120,35,170],
+  [79,15,195],[30,10,190],[-5,22,171],[-29,25,151],
+  [-46,14,132],[-30,6,112],[-40,1,96],[-48,1,96]);
  const route=new T.CatmullRomCurve3(points.map(p=>new T.Vector3(p[0]!,p[1]!,p[2]!)),true,'centripetal');route.arcLengthDivisions=4000;route.updateArcLengths();
- const length=route.getLength(),samples=1600;
+ const length=route.getLength(),samples=2400;
  const gs=new Set<T.BufferGeometry>(),ms=new Set<T.Material>();
  const mat=(color:string,metalness=0,glow=false)=>{const m=new T.MeshStandardMaterial({color,roughness:.38,metalness,emissive:glow?color:'#000000',emissiveIntensity:glow?.8:0});ms.add(m);return m;};
  const pale=mat('#e9dfcc'),metal=mat('#304957',.75),accent=mat('#f19a50',.5),seat=mat('#244e66'),light=mat('#74f7ed',.3,true);
@@ -21,19 +29,17 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  for(let i=1;i<=samples;i++){rotation.setFromUnitVectors(tangents[i-1]!,tangents[i]!);rights.push(rights[i-1]!.clone().applyQuaternion(rotation).normalize());}
  // Distribute any closing twist so the station has no orientation seam.
  const twist=Math.atan2(axis.crossVectors(rights[samples]!,rights[0]!).dot(tangents[0]!),rights[samples]!.dot(rights[0]!));
- // Anchor the loop crown to an inverted frame; ease the roll correction in and out.
- let crown=0,best=Infinity;
- for(let i=0;i<=samples;i++){const d=route.getPointAt(i/samples).distanceToSquared(new T.Vector3(-106.4,32,180));if(d<best){best=d;crown=i;}}
- const crownT=tangents[crown]!,crownRight=rights[crown]!.clone().applyAxisAngle(crownT,twist*crown/samples);
- const desired=new T.Vector3(-1,0,0).addScaledVector(crownT,crownT.x).normalize();
- const crownRoll=Math.atan2(new T.Vector3().crossVectors(crownRight,desired).dot(crownT),crownRight.dot(desired));
+ // Parallel transport naturally carries each vertical loop through inversion.
+ // A full authored barrel roll is added on the open eastern return.
+ const nearest=(p:T.Vector3)=>{let best=Infinity,index=0;for(let i=0;i<=samples;i++){const d=route.getPointAt(i/samples).distanceToSquared(p);if(d<best){best=d;index=i;}}return index/samples;};
+ const rollStart=nearest(new T.Vector3(164,28,80)),rollEnd=nearest(new T.Vector3(79,15,195));
  const frames:T.Quaternion[]=[];
  for(let i=0;i<=samples;i++){
   const u=i/samples,t=tangents[i]!,r=rights[i]!.applyAxisAngle(t,twist*u);
   const bend=new T.Vector3().crossVectors(tangents[Math.max(0,i-5)]!,tangents[Math.min(samples,i+5)]!).y;
   const bank=T.MathUtils.clamp(bend*2,-.5,.5)*Math.sin(Math.PI*u);
-  const loopWeight=Math.max(0,1-Math.abs(i-crown)/(samples*.19));
-  r.applyAxisAngle(t,bank+crownRoll*skyEase(loopWeight));const up=new T.Vector3().crossVectors(r,t).normalize();
+  const roll=2*Math.PI*skyEase((u-rollStart)/(rollEnd-rollStart));
+  r.applyAxisAngle(t,bank+roll);const up=new T.Vector3().crossVectors(r,t).normalize();
   frames.push(new T.Quaternion().setFromRotationMatrix(new T.Matrix4().makeBasis(r,up,t.clone().negate())));
  }
  const frame=new T.Quaternion(),right=new T.Vector3(),up=new T.Vector3();
@@ -42,9 +48,11 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  for(const side of [-1.05,1.05])mesh(new T.TubeGeometry(new Rail(side),1200,.13,6,true),accent);
  mesh(new T.TubeGeometry(new Rail(0,-.55),1200,.22,6,true),metal);
  const tieG=new T.BoxGeometry(2.65,.16,.2),point=new T.Vector3();
- for(let d=0;d<length;d+=2){const u=d/length,tie=mesh(tieG,metal);route.getPointAt(u,tie.position);orientation(u,tie.quaternion);}
+ const tieCount=Math.ceil(length/2),ties=new T.InstancedMesh(tieG,metal,tieCount);gs.add(tieG);root.add(ties);
+ const tiePose=new T.Object3D();for(let i=0;i<tieCount;i++){const u=i*2/length;route.getPointAt(u,tiePose.position);orientation(u,tiePose.quaternion);tiePose.updateMatrix();ties.setMatrixAt(i,tiePose.matrix);}
  // Piers remain outside the loop; its two side towers form a clear skyline landmark.
- for(let d=14;d<length;d+=22){const u=d/length;route.getPointAt(u,point);if(point.x> -112&&point.x< -100&&point.z>162)continue;const base=point.z>132||point.x< -112?-17:0;box(.65,point.y-base,.65,point.x,(point.y+base)/2,point.z,metal);box(4,.3,4,point.x,base,point.z,metal);}
+ // Sparse ocean pylons avoid sending supports through occupied rooms or roof paths.
+ for(let d=18;d<length;d+=72){const u=d/length;route.getPointAt(u,point);if(point.x>-120&&point.x<135&&point.z>-135&&point.z<145)continue;const base=-20;box(.65,point.y-base,.65,point.x,(point.y+base)/2,point.z,metal);box(4,.3,4,point.x,base,point.z,metal);}
  for(const x of [-116,-97]){box(.8,53,.8,x,9.5,180,metal);box(.18,34,.18,x,15,180,light);}
  box(20,.18,6,-58,.09,92,pale,root,true);
  for(const x of [-67,-49]){box(.3,5,.3,x,2.5,90,metal,root,true);box(.15,.15,5,x,4.9,92,light);}
@@ -68,9 +76,10 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  const start=new T.Vector3(),anchor=new T.Vector3(),exit=new T.Vector3(-58,1.65,92),startLook=new T.Quaternion(),exitLook=new T.Quaternion();
  const times=[0];let total=0,runningSpeed=3;
  // Potential-energy inspired profile: deliberate lift, fast plunge, sustained loop, station brakes.
- for(let i=0;i<samples;i++){const u=(i+.5)/samples,p=route.getPointAt(u),t=tangents[i]!;let speed=T.MathUtils.clamp(Math.sqrt(160+2*16*Math.max(0,47-p.y)),15,39);if(u<.19&&t.y>.1)speed=9;if(u<.035)speed=T.MathUtils.lerp(3,14,u/.035);if(u>.91)speed=T.MathUtils.lerp(18,3,(u-.91)/.09);runningSpeed=T.MathUtils.lerp(runningSpeed,speed,.045);total+=length/samples/runningSpeed;times.push(total);}
+ for(let i=0;i<samples;i++){const u=(i+.5)/samples,p=route.getPointAt(u),t=tangents[i]!;let speed=T.MathUtils.clamp(Math.sqrt(160+2*16*Math.max(0,76-p.y)),18,48);if(t.y>.45)speed=18;if(u<.035)speed=T.MathUtils.lerp(3,14,u/.035);if(u>.97)speed=T.MathUtils.lerp(22,3,(u-.97)/.03);runningSpeed=T.MathUtils.lerp(runningSpeed,speed,.045);total+=length/samples/runningSpeed;times.push(total);}
  function pose(){const u=distance/length;route.getPointAt(u,car.position);orientation(u,car.quaternion);car.updateMatrixWorld(true);}
- function rider(camera:T.PerspectiveCamera){car.localToWorld(camera.position.set(0,1.85,-1.25));camera.quaternion.copy(car.quaternion);}
+ const passengerLook=new T.Quaternion();
+ function rider(camera:T.PerspectiveCamera){car.localToWorld(camera.position.set(0,1.85,-1.25));camera.quaternion.copy(car.quaternion).multiply(passengerLook);}
  pose();
  return {
   root,route,car,length,duration:total,
@@ -78,7 +87,7 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
   canBoard(p:T.Vector3){return !passenger&&phase==='docked'&&p.distanceTo(exit)<4.5;},
   activate(camera:T.PerspectiveCamera){if(passenger){if(phase!=='docked')return false;phase='exiting';elapsed=0;start.copy(camera.position);startLook.copy(camera.quaternion);exitLook.setFromEuler(new T.Euler(0,Math.PI,0));return true;}if(!this.canBoard(camera.position))return false;passenger=true;phase='boarding';elapsed=0;start.copy(camera.position);startLook.copy(camera.quaternion);return true;},
   setPaused(value:boolean){paused=value;},
-  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){if(paused||!passenger||!Number.isFinite(dt)||dt<0)return {changed:false,turn:0};elapsed+=dt;
+  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,localLook?:T.Quaternion){if(localLook)passengerLook.copy(localLook);if(paused||!passenger||!Number.isFinite(dt)||dt<0)return {changed:false,turn:0};elapsed+=dt;
    if(phase==='boarding'){car.localToWorld(anchor.set(0,1.85,-1.25));const blend=skyEase(elapsed/1.5);camera.position.lerpVectors(start,anchor,blend);camera.quaternion.slerpQuaternions(startLook,car.quaternion,blend);if(elapsed>=1.5){phase='riding';elapsed=0;}}
    else if(phase==='riding'){
     const time=Math.min(total,elapsed/(reduced?1.65:1));let lo=0,hi=samples;while(lo+1<hi){const mid=(lo+hi)>>1;if(times[mid]!<=time)lo=mid;else hi=mid;}

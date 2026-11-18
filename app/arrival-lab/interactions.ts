@@ -12,7 +12,7 @@ export function interactionIntent(id:string|false, inRange:boolean, direct:boole
 }
 /** Actual registered meshes only. Occlusion continues to use the world's solid geometry. */
 export function createInteractables(solids:T.Mesh[]) {
- const entries=solids.flatMap(mesh=>{const id=interactionId(mesh);return id?[{id,mesh,range:id.startsWith('entity:')?5:id==='chamber-door'?7:id.startsWith('npc:')?3.5:id==='skytube:board'?6.5:id.startsWith('skytube:')?4:id.startsWith('loop:')?3.5:id==='origin-door'?16:id==='threshold'?3.5:id==='facet'||id==='key'||id==='passage'?12:9,state:'idle' as InteractionState}]:[];});
+ const entries=solids.flatMap(mesh=>{const id=interactionId(mesh);return id?[{id,mesh,range:id.startsWith('entity:')?5:id==='chamber-door'?7:id.startsWith('npc:')?3.5:(id==='skytube:board'||id==='skytube:scenic:board')?6.5:id.startsWith('skytube:')?4:id.startsWith('loop:')?3.5:id==='origin-door'?16:id==='threshold'?3.5:id==='facet'||id==='key'||id==='passage'?12:9,state:'idle' as InteractionState}]:[];});
  const materials=new Map<T.Mesh,{original:T.Material|T.Material[];owned:T.MeshStandardMaterial}>();
  for(const entry of entries){const original=entry.mesh.material;if(original instanceof T.MeshStandardMaterial && entry.id!=='facet' && entry.id!=='key'){const owned=original.clone();entry.mesh.material=owned;materials.set(entry.mesh,{original,owned});}}
  return {entries,
