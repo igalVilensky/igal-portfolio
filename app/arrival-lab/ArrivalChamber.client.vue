@@ -17,7 +17,7 @@ import { createWayfinding } from './wayfinding';
 let wayfinding:ReturnType<typeof createWayfinding>|undefined;
 const mapOpen=ref(false),mapPosition=ref({x:0,z:0}),mapEnvironment=ref('hall');
 function closeMap(){mapOpen.value=false;nextTick(()=>{document.querySelector<HTMLButtonElement>('[data-action="map"]')?.focus();});}
-function toggleMap(){if(mapOpen.value){closeMap();return;}if(guided||portalBusy.value)return;mapPosition.value={x:camera.position.x,z:camera.position.z};mapEnvironment.value=threshold?.active?threshold.environment:district?.active?'vault':district?.contains(camera.position)?'loop':'hall';journey?.cancel();look?.stop();releaseDockPointer();mapOpen.value=true;}
+function toggleMap(){if(mapOpen.value){closeMap();return;}if(guided||portalBusy.value||secrets?.busy)return;mapPosition.value={x:camera.position.x,z:camera.position.z};mapEnvironment.value=threshold?.active?threshold.environment:district?.active?'vault':district?.contains(camera.position)?'loop':'hall';journey?.cancel();look?.stop();releaseDockPointer();mapOpen.value=true;}
 
 import { createIntelligence } from './intelligence';
 import EntityConversation from './EntityConversation.vue';
@@ -38,10 +38,13 @@ function closeEncounter(){encounter.close();family?.converse(null);look?.stop();
 
 import { createJump } from './jumping';
 import { createSkyCoaster } from './sky-coaster';
+import { createTwoSecrets } from './two-secrets';
+let secrets:ReturnType<typeof createTwoSecrets>|undefined;
+const secretPassenger=ref(false),secretBusy=ref(false);
 let jumping:ReturnType<typeof createJump>|undefined;
 let coaster:ReturnType<typeof createSkyCoaster>|undefined;
 const coasterPassenger=ref(false);
-function requestJump(){if(freeInput.value&&!guided&&!journey?.moving&&!skytube?.ownsPassenger&&!coaster?.ownsPassenger)jumping?.request();}
+function requestJump(){if(freeInput.value&&!guided&&!journey?.moving&&!skytube?.ownsPassenger&&!coaster?.ownsPassenger&&!secrets?.ownsMotion)jumping?.request();}
 import TouchControls from './TouchControls.vue';
 import { createSkyNetwork, skyCopy, skyStations, type TransitPhase, type StationId } from './skytube';
 let skytube:ReturnType<typeof createSkyNetwork>|undefined;
@@ -58,8 +61,8 @@ const ic=computed(()=>interactionCopy[locale.value as keyof typeof interactionCo
 const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(false), actionable=ref(false);
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!printOpen.value&&!mapOpen.value&&!activeEntity.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
-const touchVisible=computed(()=>touchMode.value&&freeInput.value&&!transitPassenger.value&&!coasterPassenger.value&&!guided);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id==='print-lab')return actionable.value?'Print Lab · Choose / make / print':'Approach the Print Lab station';if(id==='chamber-door')return encounterCopy.value.title+' · '+(({de:'Tür öffnen / schließen',ru:'Открыть / закрыть дверь'} as Record<string,string>)[locale.value]||'Open / close door');if(id.startsWith('entity:'))return encounterCopy.value.names[entityOrder.indexOf(id.slice(7) as EntityId)]+' · '+encounterCopy.value.talk;if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+encounterCopy.value.talk;if(id==='coaster')return coasterPassenger.value?(({de:'Aussteigen',ru:'Выйти'} as Record<string,string>)[locale.value]||'Exit carriage'):(({de:'Sky Coaster · Einsteigen',ru:'Небесные горки · Сесть'} as Record<string,string>)[locale.value]||'Cloudbreaker · Ride coaster');if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id.includes('scenic:')?'Grand Scenic Loop · '+skyText.value.board:id==='skytube:board'?'Loop District · '+skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const touchVisible=computed(()=>touchMode.value&&freeInput.value&&!transitPassenger.value&&!coasterPassenger.value&&!secretPassenger.value&&!guided);
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id.startsWith('secret:'))return secrets?.hint(id.slice(7))||'';if(id==='print-lab')return actionable.value?'Print Lab · Choose / make / print':'Approach the Print Lab station';if(id==='chamber-door')return encounterCopy.value.title+' · '+(({de:'Tür öffnen / schließen',ru:'Открыть / закрыть дверь'} as Record<string,string>)[locale.value]||'Open / close door');if(id.startsWith('entity:'))return encounterCopy.value.names[entityOrder.indexOf(id.slice(7) as EntityId)]+' · '+encounterCopy.value.talk;if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+encounterCopy.value.talk;if(id==='coaster')return coasterPassenger.value?(({de:'Aussteigen',ru:'Выйти'} as Record<string,string>)[locale.value]||'Exit carriage'):(({de:'Sky Coaster · Einsteigen',ru:'Небесные горки · Сесть'} as Record<string,string>)[locale.value]||'Cloudbreaker · Ride coaster');if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id.includes('scenic:')?'Grand Scenic Loop · '+skyText.value.board:id==='skytube:board'?'Loop District · '+skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -119,8 +122,8 @@ function changeWeight(index:number,value:number){selectedCriterion.value=index;w
 function resetMatrix(){weights.value=[...initialWeights];selectedCriterion.value=0;works?.setWeights(weights.value,0);needsRender=true;}
 function selectCriterion(index:number){selectedCriterion.value=index;works?.setWeights(weights.value,index);needsRender=true;}
 function closeWorks(){worksUI.value=null;look?.setEnabled(!portalBusy.value&&radio.state.mode!=='expanded');nextTick(()=>{if(failed.value||textMode.value)document.querySelector<HTMLButtonElement>('[data-action=works-shortcut]')?.focus();else renderer?.domElement.focus();});}
-function worksMenu(){if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;if(camera?.position.y>7)return;if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
-function goWorks(id:string){if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;if(camera?.position.y>7)return;
+function worksMenu(){if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;if(camera?.position.y>7)return;if(portalBusy.value||guided)return;if(radioOpen.value)closeRadio();releaseDockPointer();look?.stop();look?.setEnabled(false);worksUI.value=worksUI.value==='destinations'?null:'destinations';if(!worksUI.value)closeWorks();}
+function goWorks(id:string){if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;if(camera?.position.y>7)return;
  if(threshold?.active&&camera){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);}
  if(portalBusy.value||guided)return;
  worksUI.value=null;if(radioOpen.value)closeRadio();controlsOpen.value=false;
@@ -149,7 +152,7 @@ const radioOpen=computed(()=>radio.state.mode==='expanded'), gameDock=ref<HTMLEl
 const ac=computed(()=>audioCopy[locale.value as keyof typeof audioCopy]||audioCopy.en);
 let receiver:ReturnType<typeof createReceiver>|undefined, radioTravel=false;
 function closeRadio(){radio.setMode('mini');look?.setEnabled(!portalBusy.value&&!guided&&!worksUI.value&&!worksTrip.value);if(!portalBusy.value&&!worksUI.value)nextTick(()=>renderer?.domElement.focus());}
-function approachRadio(){if(skytube?.ownsPassenger){radioShortcut();return;}if(camera?.position.y>7)return;
+function approachRadio(){if(secrets?.busy){radioShortcut();return;}if(skytube?.ownsPassenger){radioShortcut();return;}if(camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
 
  if(portalBusy.value||guided)return;
@@ -189,7 +192,7 @@ function saveView() {
   if(document.pointerLockElement)document.exitPointerLock();
 }
 function currentScreen(){return workspaceKind.value==='flowforge'?terminal.screen:works!.screens[workspaceKind.value];}
-function activateProjectScreen(kind:'matrix'|'archive') {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
+function activateProjectScreen(kind:'matrix'|'archive') {if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;
  if(portalBusy.value||guided)return;
  if(kind==='archive'&&camera&&works&&camera.position.distanceTo(screenPose(works.screens.archive).center)>16){goWorks('archive');return;}
  workspaceKind.value=kind;activateTerminal(false,true);
@@ -210,7 +213,7 @@ function openWorkspace() {
   }
   portalState.value='workspace-active';workspace.value=true;
 }
-function activateTerminal(direct=false,keepScreen=false) {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
+function activateTerminal(direct=false,keepScreen=false) {if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;
   if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
   if(portalBusy.value)return;
   if(!keepScreen)workspaceKind.value='flowforge';
@@ -228,7 +231,7 @@ function activateTerminal(direct=false,keepScreen=false) {if(skytube?.ownsPassen
   travel={path:entryPath,from:camera.quaternion.clone(),to:screenOrientation(),start:performance.now(),duration:reduced.value?0:workspaceKind.value==='flowforge'?Math.max(2200,Math.min(6500,camera.position.distanceTo(near)*90)):1800,exiting:false};
   if(direct||reduced.value){travelled=entryPath.map(p=>p.clone());openWorkspace();}
 }
-function approachTerminal() {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;if(camera?.position.y>7)return;
+function approachTerminal() {if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;if(camera?.position.y>7)return;
  if(threshold?.active){threshold.returnToHall(camera);look.restore(0,0);}
   if(radioOpen.value)closeRadio();
   if(worksUI.value)closeWorks();
@@ -281,13 +284,16 @@ const cleanups: (() => void)[] = [];
 
 function pick(x: number, y: number, center = false) {
   if (!renderer || failed.value || textMode.value || portalBusy.value || guided) return false;
+  if(secrets?.ownsMotion){actionable.value=secrets.ownsPassenger&&secrets.whalePhase==='landed';return actionable.value?'secret:ride':false;}
   if(coaster?.ownsPassenger){actionable.value=coaster.phase==='docked';return actionable.value?'coaster':false;}
   if(skytube?.ownsPassenger){actionable.value=skytube.phase==='docked';return actionable.value?'skytube:exit':false;}
   const rect = renderer.domElement.getBoundingClientRect();
   if (!center && (x < rect.left || y < rect.top || x > rect.right || y > rect.bottom)) return false;
   pointer.set(center ? 0 : (x - rect.left) / rect.width * 2 - 1, center ? 0 : -(y - rect.top) / rect.height * 2 + 1);
   ray.setFromCamera(pointer, camera);
-  const first = ray.intersectObjects(threshold?.active?threshold.worldSolids:architecture.solids.filter(m=>!threshold?.worldSolids.includes(m)), false).filter(hit=>{let node:T.Object3D|null=hit.object;while(node){if(!node.visible)return false;node=node.parent;}return true;})[0];
+  const secretHit=secrets?.pick(ray);
+  const first = secrets?.active?undefined:ray.intersectObjects(threshold?.active?threshold.worldSolids:architecture.solids.filter(m=>!threshold?.worldSolids.includes(m)), false).filter(hit=>{let node:T.Object3D|null=hit.object;while(node){if(!node.visible)return false;node=node.parent;}return true;})[0];
+  if(secretHit&&(!first||secretHit.distance<first.distance)){const action=String(secretHit.object.userData.secret);actionable.value=secretHit.distance<6&&!!secrets?.canActivate(action,camera.position);return 'secret:'+action;}
   const data = first?.object.userData;
   if(data?.printLab){actionable.value=first!.distance<6;return 'print-lab';}
   if(data?.coaster){actionable.value=!!coaster?.canBoard(camera.position);return 'coaster';}
@@ -310,12 +316,13 @@ function pick(x: number, y: number, center = false) {
   hoveredFacet = data?.facet ?? (data?.key ? 0 : -1);
   return data?.key ? 'key' : data?.facet !== undefined ? 'facet' : data?.passage && mechanism.state === 'open' ? 'passage' : false;
 }
-function activateWorld(x:number,y:number,center:boolean,direct=false) {if(coaster?.ownsPassenger){if(freeInput.value)coaster.activate(camera);return;}if(skytube?.ownsPassenger){if(freeInput.value)skytube.activate('exit',camera,reduced.value);return;} if(portalBusy.value||guided)return;
+function activateWorld(x:number,y:number,center:boolean,direct=false) {if(secrets?.ownsMotion){if(freeInput.value&&secrets.ownsPassenger)secrets.activate('ride',camera);return;}if(coaster?.ownsPassenger){if(freeInput.value)coaster.activate(camera);return;}if(skytube?.ownsPassenger){if(freeInput.value)skytube.activate('exit',camera,reduced.value);return;} if(portalBusy.value||guided)return;
  let hit=pick(x,y,center);
         if(!center&&touchMode.value&&!hit){for(const [dx,dy] of [[-10,0],[10,0],[0,-10],[0,10]]){hit=pick(x+dx!,y+dy!,false);if(hit&&actionable.value)break;}}
         if (!hit || !freeInput.value) return;
         const intent=interactionIntent(hit,actionable.value,direct);
         if(intent==='none')return;
+        if(hit.startsWith('secret:')){if(actionable.value&&secrets?.activate(hit.slice(7),camera)){jumping?.reset();journey.cancel();look.stop();needsRender=true;}return;}
         if(hit==='print-lab'){if(actionable.value)openPrintLab();return;}
         if(hit==='coaster'){if(actionable.value&&coaster?.activate(camera)){jumping?.reset();journey.cancel();look.stop();look.restore(0,0);needsRender=true;}return;}
         if(hit.startsWith('skytube:')){if(actionable.value&&skytube?.activate(hit.slice(8),camera,reduced.value)){jumping?.reset();journey.cancel();look.stop();needsRender=true;}return;}
@@ -345,7 +352,7 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) {if(coaste
         if ((hit==='key'||hit==='facet') && camera.position.z < -50) {if(mechanism.state==='open')enter();else mechanism.activate(performance.now());}
         else if (journey.state==='arrival' || hit==='key' || hit==='passage' || journey.state==='secondary') enter();
         else mechanism.react(performance.now()); }
-function enter() {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
+function enter() {if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;
   if(camera?.position.y>7)return;
   if(threshold?.active){threshold.returnToHall(camera);const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;return;}
   if(radioOpen.value)closeRadio();
@@ -359,7 +366,7 @@ function enter() {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
     const returning=journey.state==='secondary'; look.stop(); journey.activate(); look.orient(returning ? Math.PI : 0,.02);
   } else mechanism.activate(performance.now());
 }
-function back() {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
+function back() {if(secrets?.active){if(secrets.returnHome(camera)){jumping?.reset();look?.stop();}return;}if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;
   if(camera?.position.y>7)return;
   if(threshold?.active){enter();return;}
   if(worksTrip.value){cancelWorks();return;}
@@ -375,7 +382,7 @@ async function mouseLook() { if(worksUI.value)closeWorks(); if(radioOpen.value)c
 function applyReduced(value: boolean) { reduced.value = value; journey?.setReduced(value); }
 function onMotion(event: MediaQueryListEvent) { applyReduced(event.matches); }
 function failure() { clearTimeout(exitTimer);pendingWorks='';worksTrip.value='';guided=false;travel=undefined;if(portalBusy.value) {workspace.value=true;portalState.value='workspace-active';} failed.value = true; cancelAnimationFrame(frame); }
-function showText() {if(skytube?.ownsPassenger||coaster?.ownsPassenger)return;
+function showText() {if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.busy)return;
   if(radioOpen.value)closeRadio();
   if(portalBusy.value||guided)return;
   if(camera?.position.y<7)journey?.reset();
@@ -395,7 +402,8 @@ function animate(now: number) {
   look.update(dt, reduced.value);
   const movement = look.movement(dt,!!jumping?.airborne);
   if (movement.active && journey.moving) journey.cancel();
-  if(skytube?.ownsPassenger||coaster?.ownsPassenger) { /* capsule owns position; the existing look controller stays active */ }
+  if(skytube?.ownsPassenger||coaster?.ownsPassenger||secrets?.ownsMotion) { /* capsule owns position; the existing look controller stays active */ }
+  else if(secrets?.active)secrets.move(camera.position,movement.delta);
   else if (journey.moving) journey.update(now, dt);
   else if(!threshold?.active&&district?.contains(camera.position)){scene.updateMatrixWorld(true);district.move(camera.position,movement.delta);journey.locate();}
   else if(camera.position.y>7&&!threshold?.active){
@@ -404,7 +412,7 @@ function animate(now: number) {
     if(height===undefined)camera.position.copy(old);else camera.position.y=height+ascent.eye;
   }else { scene.updateMatrixWorld(true); threshold!.move(camera.position, movement.delta,collide); journey.locate(); if(!threshold?.active&&(inStairHall(camera.position)||inStairHall(movementStart))){const h=accessHeight(camera.position.x,camera.position.z,movementStart.y-(jumping?.offset||0));if(h===undefined)camera.position.copy(movementStart);else camera.position.y=h+ascent.eye;} }
   }
-  if(!coaster?.ownsPassenger&&!skytube?.ownsPassenger&&!journey.moving&&!guided&&movementStart.distanceToSquared(camera.position)>1e-10)skytube?.constrain(movementStart,camera.position);
+  if(!secrets?.busy&&!coaster?.ownsPassenger&&!skytube?.ownsPassenger&&!journey.moving&&!guided&&movementStart.distanceToSquared(camera.position)>1e-10)skytube?.constrain(movementStart,camera.position);
   const transitUpdate=skytube?.update(rawDt,reduced.value,camera,!!threshold?.active||!!district?.active);
   if(transitUpdate?.turn)look.rotateFrame(transitUpdate.turn);
   if(transitUpdate?.changed)needsRender=true;
@@ -413,17 +421,17 @@ function animate(now: number) {
   if(coasterUpdate?.turn)look.rotateFrame(coasterUpdate.turn);
   if(coasterUpdate?.changed)needsRender=true;
   if(coasterPassenger.value!==!!coaster?.ownsPassenger){coasterPassenger.value=!!coaster?.ownsPassenger;look.stop();if(!coasterPassenger.value){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);}jumping?.reset();}
-  if(origin?.update(dt,reduced.value,camera.position,!threshold?.active,(!!skytube?.ownsPassenger||!!coaster?.ownsPassenger)||spaceAt(camera.position)?.id==='origin'||(!!district?.contains(camera.position)&&!district.active),journey.moving||guided,(!!skytube?.ownsPassenger||!!coaster?.ownsPassenger)||camera.position.y>7||!!district?.contains(camera.position),inStairHall(camera.position))){needsRender=true;renderer.shadowMap.needsUpdate=true;}
-  if(jumping&&freeInput.value&&!guided&&!journey.moving&&!skytube?.ownsPassenger&&!coaster?.ownsPassenger){
+  if(!secrets?.active&&origin?.update(dt,reduced.value,camera.position,!threshold?.active,(!!skytube?.ownsPassenger||!!coaster?.ownsPassenger)||spaceAt(camera.position)?.id==='origin'||(!!district?.contains(camera.position)&&!district.active),journey.moving||guided,(!!skytube?.ownsPassenger||!!coaster?.ownsPassenger)||camera.position.y>7||!!district?.contains(camera.position),inStairHall(camera.position))){needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(jumping&&freeInput.value&&!guided&&!journey.moving&&!skytube?.ownsPassenger&&!coaster?.ownsPassenger&&!secrets?.ownsMotion){
     const floorEye=camera.position.y;
     camera.position.y=movementStart.y;
     jumping.update(dt,camera.position,floorEye,true);
     if(jumping.airborne)needsRender=true;
   }else if(journey.moving||guided)jumping?.reset();
   if(!threshold?.active&&spaceAt(camera.position)?.id==='origin'&&!reduced.value)needsRender=true;
-  if(!coaster?.ownsPassenger&&!skytube?.ownsPassenger&&!jumping?.airborne&&!threshold?.active&&district?.update(dt,reduced.value,camera)){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;renderer.shadowMap.needsUpdate=true;}
+  if(!secrets?.busy&&!coaster?.ownsPassenger&&!skytube?.ownsPassenger&&!jumping?.airborne&&!threshold?.active&&district?.update(dt,reduced.value,camera)){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;renderer.shadowMap.needsUpdate=true;}
   const wasExterior=threshold?.active;
-  if(threshold?.update(dt,reduced.value,camera)){
+  if(!secrets?.busy&&threshold?.update(dt,reduced.value,camera)){
     if(threshold.active!==wasExterior){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x,Math.PI);}
     needsRender=true;renderer.shadowMap.needsUpdate=true;
   }
@@ -447,10 +455,17 @@ function animate(now: number) {
   if(interactables?.update(now,candidate.value,actionable.value,!freeInput.value,reduced.value))needsRender=true;
   lighting.portal.intensity = T.MathUtils.damp(lighting.portal.intensity, pointerHover || focus.value ? 80 : 40, 7, dt);
   if(portalState.value==='entering'||portalState.value==='exiting'||guided)needsRender=true;
+  secrets?.setExteriorVisible(!threshold?.active&&!district?.active);
+  const secretUpdate=secrets?.update(dt,reduced.value,camera,document.hidden||!freeInput.value||!!threshold?.active||!!district?.active);
+  if(secretUpdate?.turn)look.rotateFrame(secretUpdate.turn);
+  if(secretUpdate?.restored){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);jumping?.reset();}
+  if(secretUpdate?.changed)needsRender=true;
+  if(secretPassenger.value!==!!secrets?.ownsPassenger){secretPassenger.value=!!secrets?.ownsPassenger;look.stop();jumping?.reset();}
+  secretBusy.value=!!secrets?.busy;
   receiver?.update(locale.value,dark.value);
   const view = [locale.value,radio.state.station,radio.state.status,radio.title,camera.position.x,camera.position.y,camera.position.z,look.yaw,look.pitch,mechanism.opening,lighting.portal.intensity,Number(terminalHover),Number(portalNear.value),architecture.wall.key.position.z,...architecture.wall.signals.map(m=>m.emissiveIntensity),...architecture.wall.panels.map(p=>p.position.z)].map(v=>typeof v==='number'?v.toFixed(5):v).join(',');
   if (Math.abs(mechanism.opening - previousOpening) > .025) { renderer.shadowMap.needsUpdate = true; previousOpening = mechanism.opening; }
-  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { threshold?.renderViews(renderer,camera);if(!threshold?.active)district?.renderViews(renderer,camera);renderer.render(scene, camera); needsRender = false; previousView = view; }
+  if (needsRender || (portalState.value!=='workspace-active' && view !== previousView)) { if(!secrets?.active){threshold?.renderViews(renderer,camera);if(!threshold?.active)district?.renderViews(renderer,camera);}renderer.render(scene, camera); needsRender = false; previousView = view; }
   if (now > nextTelemetry) {
     nextTelemetry = now + 100;
     inputReady.value=!guided&&!journey.moving&&!portalBusy.value;
@@ -506,7 +521,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene); printLab=createPrintLab(scene,architecture.solids);try{const stored=readPrints(localStorage.getItem(storageKey));printDesign.value=stored.selected;printCollection.value=stored.collection.slice(0,12);}catch{}printLab.setCollection(printCollection.value); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyNetwork(scene,architecture.solids);coaster=createSkyCoaster(scene,architecture.solids);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);intelligence=createIntelligence(scene,architecture.solids);intelligence.setLocale(locale.value);workWing=createWorkWing(scene,architecture.solids);family=createFamily(scene,architecture.solids);wayfinding=createWayfinding(scene);threshold=createImpossibleThreshold(scene,architecture.solids);interactables=createInteractables(architecture.solids);scene.updateMatrixWorld(true);jumping=createJump(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
+    architecture = buildEnvironment(scene); printLab=createPrintLab(scene,architecture.solids);try{const stored=readPrints(localStorage.getItem(storageKey));printDesign.value=stored.selected;printCollection.value=stored.collection.slice(0,12);}catch{}printLab.setCollection(printCollection.value); receiver=createReceiver(scene,architecture.solids,radio); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyNetwork(scene,architecture.solids);coaster=createSkyCoaster(scene,architecture.solids);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);intelligence=createIntelligence(scene,architecture.solids);intelligence.setLocale(locale.value);workWing=createWorkWing(scene,architecture.solids);family=createFamily(scene,architecture.solids);wayfinding=createWayfinding(scene);threshold=createImpossibleThreshold(scene,architecture.solids);secrets=createTwoSecrets(scene);interactables=createInteractables(architecture.solids);scene.updateMatrixWorld(true);jumping=createJump(architecture.solids); collide = createCollision(architecture.solids.filter(m=>!threshold!.worldSolids.includes(m))); applyTheme();
     if (innerWidth < 650) lighting.sun.shadow.mapSize.set(1024, 1024);
     journey = createJourney(camera, architecture, next => { state.value = next; if (next === 'arrival' && camera.position.distanceTo(spawn) < .1) { mechanism.close(performance.now()); } });
     journey.setReduced(reduced.value);
@@ -536,7 +551,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   radio.dispose(); receiver?.dispose(); clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  printLab?.dispose();wayfinding?.dispose();intelligence?.dispose();livingQuarters?.dispose();family?.dispose();workWing?.dispose();coaster?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  secrets?.dispose();printLab?.dispose();wayfinding?.dispose();intelligence?.dispose();livingQuarters?.dispose();family?.dispose();workWing?.dispose();coaster?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
@@ -564,7 +579,7 @@ onBeforeUnmount(() => {
       <button :aria-pressed="textMode" @click="showText">{{ c.alternative }}</button>
     </section>
     <p v-if="mouseUnavailable" class="arrival-mouse-note" role="status">{{ c.unsupported }}</p>
-    <nav v-show="!portalBusy" :inert="printOpen||mapOpen||guided||transitPassenger||!!activeEntity" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
+    <nav v-show="!portalBusy" :inert="printOpen||mapOpen||guided||transitPassenger||secretBusy||!!activeEntity" class="arrival-access" :class="{ 'arrival-text': failed || textMode }" :aria-label="c.name">
       <p v-if="failed">{{ c.fallback }}</p>
       <p v-if="failed || textMode">{{ ic.atmosphereDescription }}</p>
       <button v-if="failed || textMode" @click="goWorks('atmosphere')">{{ ic.atmosphereName }}</button>

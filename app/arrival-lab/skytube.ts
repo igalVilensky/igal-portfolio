@@ -13,11 +13,11 @@ export const skyCopy = {
  de: { call: 'Kapsel rufen', approach: 'Zur Seitentür gehen', board: 'Kapsel betreten', exit: 'Zum Bahnsteig', opening: 'Türen öffnen', boarding: 'Einsteigen', closing: 'Türen schließen', riding: 'Unterwegs', calling: 'Kapsel kommt', arriving: 'Ankunft', exiting: 'Aussteigen', unavailable: 'Kapsel unterwegs', docked: 'Kapsel bereit', destination: 'Ziel' },
  ru: { call: 'Вызвать капсулу', approach: 'Подойдите к боковой двери', board: 'Войти в капсулу', exit: 'Выйти на платформу', opening: 'Двери открываются', boarding: 'Посадка', closing: 'Двери закрываются', riding: 'В пути', calling: 'Капсула приближается', arriving: 'Прибытие', exiting: 'Выход', unavailable: 'Капсула в пути', docked: 'Капсула готова', destination: 'Направление' },
 };
-export const skyEase = (t: number) => { t = T.MathUtils.clamp(t, 0, 1); return t * t * t * (10 + t * (-15 + 6 * t)); };
+export const skyEase = (t: number) => { t = T.MathUtils.clamp(t, 0, 1); return T.MathUtils.clamp(t * t * t * (10 + t * (-15 + 6 * t)),0,1); };
 export function createSkyRoute() {
  return new T.CatmullRomCurve3([
   new T.Vector3(...skyStations.origin.point), new T.Vector3(91,8,76), new T.Vector3(130,14,92),
-  new T.Vector3(177,16,104), new T.Vector3(230,12,92), new T.Vector3(...skyStations.district.point),
+  new T.Vector3(177,16,104), new T.Vector3(230,15,96), new T.Vector3(253,9,82), new T.Vector3(...skyStations.district.point),
  ], false, 'centripetal');
 }
 const other = (station: StationId): StationId => station === 'origin' ? 'district' : 'origin';
@@ -33,10 +33,10 @@ export function scenicProgress(t:number):number {
 export function createScenicRoute() {
  // West court departure, north panorama, east cloud edge, south return.
  return new T.CatmullRomCurve3([
-  [-88,2.12,60],[-88,2.12,49],[-101,17,5],[-132,30,-65],
+  [-88,2.12,60],[-88,8,48],[-105,24,39],[-130,32,5],[-142,36,-65],
   [-110,48,-149],[-25,63,-157],[65,51,-146],[112,49,-85],
   [119,43,-10],[115,48,61],[95,37,126],[27,45,156],
-  [-52,31,158],[-120,10,112],[-100,7,82],[-88,2.12,68],
+  [-52,31,158],[-120,10,112],[-100,12,82],[-88,8,68],
  ].map(p=>new T.Vector3(p[0]!,p[1]!,p[2]!)),true,'centripetal');
 }
 

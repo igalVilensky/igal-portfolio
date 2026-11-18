@@ -1,10 +1,10 @@
 import * as T from 'three';
-import { skyEase } from './skytube';
+import { skyEase, createSkyRoute, createScenicRoute } from './skytube';
 
 /** Arc-length motion and parallel-transport frames keep rails, train and rider in sync. */
 export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  const root=new T.Group();root.name='Sky Coaster · Cloudbreaker';scene.add(root);
- const points=[[-58,1,96],[-77,1,96],[-96,15,99],[-117,43,107],[-136,47,122],[-149,29,142],[-146,5,162],[-120,3,163],[-111,4,173],[-110,4,180]];
+ const points=[[-58,1.6,96],[-67,1.6,96],[-77,9,92],[-96,20,99],[-117,43,107],[-136,47,122],[-149,29,142],[-146,5,162],[-120,3,163],[-111,4,173],[-110,4,180]];
  // A complete vertical loop, with a small lateral drift separating entry and exit.
  for(let i=1;i<=16;i++){const a=i/16*Math.PI*2;points.push([-110+i*.45,18-14*Math.cos(a),180+14*Math.sin(a)]);}
  points.push([-99,5,205],[-65,20,220],[-26,55,205],[0,70,175],
@@ -15,7 +15,7 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  for(let i=1;i<=24;i++){const a=i/24*Math.PI*2;points.push([155+i*.25,27-21*Math.cos(a),-5+21*Math.sin(a)]);}
  points.push([163,8,32],[164,28,80],[150,48,127],[120,35,170],
   [79,15,195],[30,10,190],[-5,22,171],[-29,25,151],
-  [-46,14,132],[-30,6,112],[-40,1,96],[-48,1,96]);
+  [-46,20,132],[-30,14,112],[-40,5,96],[-48,1.6,96],[-53,1.6,96]);
  const route=new T.CatmullRomCurve3(points.map(p=>new T.Vector3(p[0]!,p[1]!,p[2]!)),true,'centripetal');route.arcLengthDivisions=4000;route.updateArcLengths();
  const length=route.getLength(),samples=2400;
  const gs=new Set<T.BufferGeometry>(),ms=new Set<T.Material>();
@@ -50,13 +50,32 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  const tieG=new T.BoxGeometry(2.65,.16,.2),point=new T.Vector3();
  const tieCount=Math.ceil(length/2),ties=new T.InstancedMesh(tieG,metal,tieCount);gs.add(tieG);root.add(ties);
  const tiePose=new T.Object3D();for(let i=0;i<tieCount;i++){const u=i*2/length;route.getPointAt(u,tiePose.position);orientation(u,tiePose.quaternion);tiePose.updateMatrix();ties.setMatrixAt(i,tiePose.matrix);}
- // Piers remain outside the loop; its two side towers form a clear skyline landmark.
- // Sparse ocean pylons avoid sending supports through occupied rooms or roof paths.
- for(let d=18;d<length;d+=72){const u=d/length;route.getPointAt(u,point);if(point.x>-120&&point.x<135&&point.z>-135&&point.z<145)continue;const base=-20;box(.65,point.y-base,.65,point.x,(point.y+base)/2,point.z,metal);box(4,.3,4,point.x,base,point.z,metal);}
+ // Offset masts bear on the underside of the spine, never the vehicle centerline.
+ // Test the whole mast and remote arm against the other occupied ride corridors.
+ const supportSamples=route.getSpacedPoints(Math.ceil(length/2));
+ const tubeSamples=[createSkyRoute(),createScenicRoute()].flatMap(c=>c.getSpacedPoints(Math.ceil(c.getLength()/2)));
+ const line=new T.Line3(),closest=new T.Vector3();
+ function nearSegment(p:T.Vector3,a:T.Vector3,b:T.Vector3,r:number){line.set(a,b).closestPointToPoint(p,true,closest);return closest.distanceToSquared(p)<r*r;}
+ for(let d=18;d<length;d+=72){
+  const u=d/length;route.getPointAt(u,point);
+  if(point.x>-120&&point.x<135&&point.z>-135&&point.z<145)continue;
+  if(orientation(Math.max(0,u-5/length),new T.Quaternion()).angleTo(orientation(Math.min(1,u+5/length),new T.Quaternion()))>.15)continue;
+  orientation(u,frame);right.set(1,0,0).applyQuaternion(frame);up.set(0,1,0).applyQuaternion(frame);
+  const bearing=point.clone().addScaledVector(up,-.95);
+  for(const offset of [6,-6,9,-9,12,-12]){
+   const top=bearing.clone().addScaledVector(right,offset),base=new T.Vector3(top.x,-20,top.z);
+   if(supportSamples.some((p,i)=>nearSegment(p,base,top,4.8)||(Math.min(Math.abs(i/(supportSamples.length-1)-u),1-Math.abs(i/(supportSamples.length-1)-u))*length>20&&nearSegment(p,bearing,top,4.8))))continue;
+   if(tubeSamples.some(p=>nearSegment(p,base,top,4.3)||nearSegment(p,bearing,top,4.3)))continue;
+   box(.65,top.y-base.y,.65,top.x,(top.y+base.y)/2,top.z,metal).name='Cloudbreaker · offset bearing mast';
+   box(4,.3,4,top.x,-20,top.z,metal);
+   const arm=mesh(new T.CylinderGeometry(.14,.14,top.distanceTo(bearing),8),metal);arm.position.copy(top).add(bearing).multiplyScalar(.5);arm.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),bearing.clone().sub(top).normalize());arm.name='Cloudbreaker · underside bearing arm';
+   break;
+  }
+ }
  for(const x of [-116,-97]){box(.8,53,.8,x,9.5,180,metal);box(.18,34,.18,x,15,180,light);}
- box(20,.18,6,-58,.09,92,pale,root,true);
+ box(20,.18,4,-58,.09,92,pale,root,true);
  for(const x of [-67,-49]){box(.3,5,.3,x,2.5,90,metal,root,true);box(.15,.15,5,x,4.9,92,light);}
- box(21,.4,7,-58,5.2,92,metal);box(19,.12,.15,-58,4.92,88.6,light);
+ box(17,.4,5,-58,5.2,91,metal);box(16,.12,.15,-58,4.92,88.6,light);
  // Geometry-only station marquee avoids external assets and canvas resources.
  const sign=box(9,1,.2,-58,4.1,89,accent);sign.name='CLOUDBREAKER · boarding station';
  for(let i=0;i<5;i++)box(.18,.04,1,-58-i*.8,.21,92,light);
