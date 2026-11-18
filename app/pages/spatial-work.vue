@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { spatialRoutes } from '~/spatial-home/routes';
 import MobileProjectExplorer from '~/spatial-work/MobileProjectExplorer.vue';
 import ModuleBody from '~/spatial-work/ModuleBody.vue';
 import TopologyDetail from '~/spatial-work/TopologyDetail.vue';
@@ -126,7 +127,7 @@ useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 
 <template>
  <main class="topology-page">
   <header class="periphery">
-   <NuxtLink :to="localePath('/spatial-home')" class="signature">Igal Vilensky <span>↖ {{ text.back }}</span></NuxtLink>
+   <NuxtLink :to="localePath(spatialRoutes.home)" class="signature">Igal Vilensky <span>↖ {{ text.back }}</span></NuxtLink>
    <div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div>
   </header>
   <h1 class="sr-only">{{ text.title }}</h1>

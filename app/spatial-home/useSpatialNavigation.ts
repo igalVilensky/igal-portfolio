@@ -1,4 +1,4 @@
-import { destinations } from './content';
+import { destinations } from './routes';
 
 // One owner survives the journey from the stationary hit face to its preview.
 // A new plate, leaving the object, outside input, or Escape transfers ownership.

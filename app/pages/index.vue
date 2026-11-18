@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { spatialRoutes } from '~/spatial-home/routes';
 definePageMeta({ layout: false });
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -126,7 +127,7 @@ onBeforeUnmount(() => {
   </NuxtLink>
 
   <!-- SPATIAL -->
-  <NuxtLink class="portal spatial" :class="{ on: active === 1 }" :to="localePath('/spatial-home')" :prefetch="false"
+  <NuxtLink class="portal spatial" :class="{ on: active === 1 }" :to="localePath(spatialRoutes.home)" :prefetch="false"
     :aria-label="`${t('gateway.spatial')} — ${t('gateway.spatialDescription')}`"
     @pointerenter="pointerEnter($event, 1)" @pointermove="pointerMove($event, 1)" @focus="focusPortal(1)">
     <div class="scene" aria-hidden="true">

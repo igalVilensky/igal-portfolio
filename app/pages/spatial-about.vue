@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { spatialRoutes } from '~/spatial-home/routes';
 import ThemeToggle from '~/components/ThemeToggle.vue';
 import SelfSculpture from '~/spatial-about/SelfSculpture.client.vue';
 import { aboutSections, copy } from '~/spatial-about/copy';
@@ -71,7 +72,7 @@ useHead(() => ({ title: `${text.value.title} — Igal Vilensky`, meta: [{ name: 
 <template>
  <main class="self-page" :class="{ 'is-reading': reading, 'is-fallback': unavailable }" :data-phase="unavailable ? (reading ? 'open' : 'idle') : state.phase" :data-playing="playing" :data-upper="state.upper" :data-lower="state.lower" :data-separation="state.separation" :data-deployment="deployment" :data-yaw="state.yaw" :data-pitch="state.pitch">
   <header class="periphery">
-   <NuxtLink class="signature" :to="localePath('/spatial-home')">Igal Vilensky<span>↖ {{ text.back }}</span></NuxtLink>
+   <NuxtLink class="signature" :to="localePath(spatialRoutes.home)">Igal Vilensky<span>↖ {{ text.back }}</span></NuxtLink>
    <div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div>
   </header>
   <section ref="stage" class="self-stage" :aria-label="text.title">

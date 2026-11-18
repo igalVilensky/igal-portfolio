@@ -10,7 +10,8 @@ import {
   plateThickness,
 } from "./plateGeometry";
 import { useActiveCore } from "./useActiveCore";
-import { destinations, type SpatialCopy } from "./content";
+import type { SpatialCopy } from "./content";
+import { destinations } from "./routes";
 import type { useSpatialNavigation } from "./useSpatialNavigation";
 const props = defineProps<{
   copy: SpatialCopy;

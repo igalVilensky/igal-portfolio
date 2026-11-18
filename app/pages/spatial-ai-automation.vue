@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { spatialRoutes } from '~/spatial-home/routes';
 import ThemeToggle from '~/components/ThemeToggle.vue';
 import WorkflowCanvas from '~/spatial-ai-automation/WorkflowCanvas.client.vue';
 import { nodes,connections,copy,type Language,type Scenario } from '~/spatial-ai-automation/model';
@@ -30,7 +31,7 @@ useHead(()=>({title:`${text.value.title} — Igal Vilensky`,meta:[{name:'robots'
 </script>
 <template>
  <main class="engine-page" :data-phase="motion.phase" :data-time="motion.time.toFixed(3)" :data-active="motion.active" :data-playing="motion.playing" @keydown.esc="selected=null;edge=null">
-  <header class="periphery"><NuxtLink class="signature" :to="localePath('/spatial-home')">Igal Vilensky<span>↖ {{ text.back }}</span></NuxtLink><div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="lang in (['en','de','ru'] as const)" :key="lang" :to="switchLocalePath(lang)" :aria-current="locale===lang?'page':undefined">{{ lang.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div></header>
+  <header class="periphery"><NuxtLink class="signature" :to="localePath(spatialRoutes.home)">Igal Vilensky<span>↖ {{ text.back }}</span></NuxtLink><div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="lang in (['en','de','ru'] as const)" :key="lang" :to="switchLocalePath(lang)" :aria-current="locale===lang?'page':undefined">{{ lang.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div></header>
   <div class="heading"><p>{{ text.context }}</p><h1>{{ text.title }}</h1></div>
   <section class="workspace" :aria-label="text.title">
    <div class="toolbar"><div class="playback"><button data-action="build" @click="start('build')">{{ text.build }} <span>↗</span></button><button class="primary" data-action="run" @click="start('execute')">{{ text.run }} <span>▷</span></button><button v-if="motion.phase!=='idle'&&!motion.complete" data-action="pause" @click="pause">{{ motion.playing?text.pause:text.resume }}</button><button data-action="reset" @click="reset">{{ text.reset }}</button></div><label class="scenario"><span>{{ text.scenario }}</span><select :value="motion.scenario" @change="scenario"><option value="ready">{{ text.direct }}</option><option value="clarify">{{ text.clarify }}</option></select></label></div>

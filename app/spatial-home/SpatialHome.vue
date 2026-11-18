@@ -2,6 +2,7 @@
 import SpatialStack from './SpatialStack.vue';
 import { useSpatialNavigation } from './useSpatialNavigation';
 import { copy } from './content';
+import { spatialExits } from './routes';
 import ThemeToggle from '~/components/ThemeToggle.vue';
 // Locale changes reuse this page; leaving and returning mounts a fresh stack.
 definePageMeta({ layout: false, key: 'spatial-home' });
@@ -26,7 +27,7 @@ useHead({ title: 'Igal Vilensky — Spatial Home', meta: [{ name: 'robots', cont
       </div>
     </header>
     <SpatialStack :copy="text" :paused="paused" :navigation="navigation" />
-    <div class="spatial-motion"><nav class="gateway-links"><NuxtLink :to="localePath('/')">{{ t('gateway.back') }}</NuxtLink><NuxtLink :to="localePath('/site-directory')">{{ t('gateway.allPages') }}</NuxtLink></nav><button type="button" :aria-pressed="paused" @click="paused = !paused"><span aria-hidden="true">{{ paused ? '▷' : 'Ⅱ' }}</span> {{ paused ? text.resume : text.pause }}</button></div>
+    <div class="spatial-motion"><nav class="gateway-links"><NuxtLink :to="localePath(spatialExits.gateway)">{{ t('gateway.back') }}</NuxtLink><NuxtLink :to="localePath(spatialExits.directory)">{{ t('gateway.allPages') }}</NuxtLink></nav><button type="button" :aria-pressed="paused" @click="paused = !paused"><span aria-hidden="true">{{ paused ? '▷' : 'Ⅱ' }}</span> {{ paused ? text.resume : text.pause }}</button></div>
   </main>
 </template>
 

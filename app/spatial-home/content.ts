@@ -1,10 +1,3 @@
-export const destinations = [
-  "/case-studies",
-  "/experiments",
-  "/ask-igal",
-  "/ai-automation",
-  "/about",
-] as const;
 // Prototype-local copy stays outside production catalogs and bundles.
 export const copy = {
   en: {

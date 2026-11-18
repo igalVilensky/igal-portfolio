@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { spatialRoutes } from '~/spatial-home/routes';
 import ArchitectSimulator from '~/components/ArchitectSimulator.vue';
 import JsonToTs from '~/components/lab/JsonToTs.vue';
 import ContrastChecker from '~/components/lab/ContrastChecker.vue';
@@ -90,7 +91,7 @@ useHead(() => ({ title: `${t('spatialLab.title')} — Igal Vilensky`, meta: [{ n
 </script>
 <template>
  <main class="lab-page" :class="{ 'tool-deployed': visible }" :data-phase="phase">
-  <header class="periphery" :inert="visible"><NuxtLink class="signature" :to="localePath('/spatial-home')">Igal Vilensky<span>↖ {{ t('spatialLab.back') }}</span></NuxtLink><div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div></header>
+  <header class="periphery" :inert="visible"><NuxtLink class="signature" :to="localePath(spatialRoutes.home)">Igal Vilensky<span>↖ {{ t('spatialLab.back') }}</span></NuxtLink><div class="settings"><nav :aria-label="t('language.label')"><NuxtLink v-for="language in (['en','de','ru'] as const)" :key="language" :to="switchLocalePath(language)" :aria-current="locale === language ? 'page' : undefined">{{ language.toUpperCase() }}</NuxtLink></nav><ThemeToggle /></div></header>
   <h1 class="sr-only">{{ t('spatialLab.title') }}</h1>
   <div class="lab-stage">
    <ClientOnly><KineticCore ref="core" v-if="!unavailable" :selected="selected" :paused="paused" :spinning="spinning" @spin="spinning = $event" @extracting="phase = 'extracting'" @select="select" @unavailable="unavailable = true" /></ClientOnly>
