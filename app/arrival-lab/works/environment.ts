@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { createProjectGallery } from './project-gallery';
 import { weightedResults } from './matrix';
 import { worksCopy } from './copy';
 import { worksPalette } from './palette';
@@ -29,7 +30,8 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  box(28.5,1,40,39.75,-.5,-94,floor);
  box(11.5,1,6,19.75,-.5,-111,floor);
  box(1,23,16,15,11.5,-84);box(1,23,16,15,11.5,-104);box(1,15,4,15,15.5,-94);
- box(40,24,1,34,12,-114);box(40,24,1,34,12,-74);box(1,24,40,54,12,-94);
+ box(40,24,1,34,12,-114);box(40,24,1,34,12,-74);// East wall has a ten-metre passage, aligned with the new gallery aisle.
+ box(1,24,22,54,12,-103);box(1,24,8,54,12,-78);box(1,15,10,54,16.5,-87);
  // Passage side cheeks and a low lintel form a deliberate change in scale.
  // Lower light-well wall ends stop at the outer cheek edges; the inner faces stay at z=-92/-96.
  for(const z of [-91.6,-96.4])box(5,8,.8,12,4,z,metal);
@@ -111,14 +113,15 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
   stacks.forEach((stack,o)=>{let y=4;stack.forEach((mesh,i)=>{const h=current[i]!*([5,2,3,2,5,4][o*3+i]!)/5;mesh.scale.y=h;mesh.position.y=y+h/2;links[o]![i]!.place(new T.Vector3(blades[i]!.position.x,blades[i]!.position.y+blades[i]!.scale.y/2,-98),new T.Vector3(mesh.position.x,mesh.position.y,-103.1));y+=h+.08;});sumLabels[o]!.mesh.position.y=y+1;});return changed;
  }
  function setTheme(dark:boolean){
-  darkTheme=dark;text();
+  darkTheme=dark;projectGallery.setTheme(dark);text();
   const p=worksPalette[dark?'dark':'light'];
   for(const [m,color] of [[shell,p.shell],[floor,p.floor],[metal,p.blue],[bronze,p.yellow],[red,p.red],[green,p.green],[steel,p.steel],[inset,p.inset]] as const)m.color.set(color);
   daylight.color.set(dark?'#c5d5e8':'#fff0d6');daylight.intensity=dark?1400:6500;
   lamps[0]!.color.set(dark?'#d5dfeb':'#fff0d4');lamps[0]!.intensity=dark?440:700;
   lamps[1]!.color.set(dark?'#f4d4a5':'#ffdfac');lamps[1]!.intensity=dark?380:220;
  }
+ const projectGallery=createProjectGallery(scene,solids);
  text();update(1,true);
- return {entrance, screens:{archive:archiveLabel.mesh,matrix:matrixDetails.mesh},setTheme,setLocale(value:string){locale=value;text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
- dispose(){daylight.shadow.dispose();root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}}
+ return {projectGallery,entrance, screens:{archive:archiveLabel.mesh,matrix:matrixDetails.mesh},setTheme,setLocale(value:string){locale=value;projectGallery.setLocale(value);text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
+ dispose(){projectGallery.dispose();daylight.shadow.dispose();root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}}
 }

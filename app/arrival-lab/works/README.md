@@ -48,3 +48,23 @@ Archive and Matrix details share Arrival's existing portal state, pose capture, 
 `ProjectWorkspace.vue` reads the existing `useProjects()` registry. Archive selection lives in the scene owner so opening/closing does not reset it. Navigation and short descriptions use the existing EN/DE/RU content; longer registry descriptions/highlights retain their original English and are marked `lang="en"`. Missing images/links are omitted. Matrix's screenshot is an actual source asset, downloaded unchanged from `matrix.png` at documented commit `832d96be4d893b5acece18596c227fd2bc7095d8`, not a generated mockup. The source README was rechecked during this milestone. No product results are synthesized.
 
 Review artifacts and validation logs: `/tmp/arrival-063-immersive-projects/`. `screen-entry.test.mjs` checks transformed/tilted screen alignment independently of Nuxt. No radio ownership or player mounting changes were made.
+
+## Project rooms — Arrival 11.4
+
+The existing east wall at x=54 opens onto a gallery aisle (x=54..96,
+z=-92..-82). OpenMe is north at (70,-101), entered at (70,-92).
+Flow Forge is reserved opposite at (70,-82); Sunlit Tales is reserved north
+at (87,-92). Reserved bays are sealed and have no interior or interactions.
+
+`project-rooms.ts` owns stable metadata IDs, placement, entrance, theme and
+interaction/copy references. `project-gallery.ts` creates registry-driven wall
+openings and owns the lightweight Three geometry, lights, labels and cleanup.
+For the next room, activate its registry entry, add its distinctive room module
+under this owner and register its interactions before `createInteractables`.
+Preserve the existing Hall FlowForge installation until its migration milestone.
+`OpenMeRoom.vue` reads the existing localized portfolio project object; its sample
+endpoint-to-inbox journey performs no network submission or AI call. The scene
+uses no invented product screenshots. No OpenMe screenshot or app checkout was
+available locally; metadata and documented highlights supply the exhibit facts.
+
+Focused check: `node app/arrival-lab/works/project-rooms.test.mjs`.

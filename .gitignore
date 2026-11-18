@@ -31,3 +31,9 @@ logs
 
 # Private family design references: never add new originals to source control.
 /docs/design/design-references/family/
+
+# Local design prototypes (Claude / Codex references)
+/docs/design/design-references/**/*.html
+
+# Private family reference photos
+/docs/design/design-references/family/

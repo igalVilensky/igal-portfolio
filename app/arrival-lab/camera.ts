@@ -7,6 +7,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   escape: () => void;
   manual: () => void;
   jump: () => void;
+  lockChanged?: (locked: boolean) => void;
 }) {
   const keys = new Set<string>();
   const velocity = new T.Vector3();
@@ -21,7 +22,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     target.addEventListener(name, handler, options); removers.push(() => target.removeEventListener(name, handler, options));
   };
   function down(event: PointerEvent) {
-    if (!enabled) return;
+    if (!enabled || (event.pointerType !== 'touch' && event.button !== 0)) return;
     pointers.add(event.pointerId); if (pointers.size > 1) multiple = true;
     dragging = true; distance = 0; lastX = event.clientX; lastY = event.clientY;
     canvas.focus({ preventScroll: true });
@@ -34,8 +35,10 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
       const dx = locked ? event.movementX : event.clientX - lastX;
       const dy = locked ? event.movementY : event.clientY - lastY;
       if (dragging) distance += Math.hypot(dx, dy);
-      targetYaw -= T.MathUtils.clamp(dx, -100, 100) * (event.pointerType === 'touch' ? .003 : .0021);
-      targetPitch = T.MathUtils.clamp(targetPitch - T.MathUtils.clamp(dy, -100, 100) * .0021, -1.25, 1.35);
+      targetYaw -= dx * (event.pointerType === 'touch' ? .003 : .0022);
+      targetPitch = T.MathUtils.clamp(targetPitch - dy * (event.pointerType === 'touch' ? .0021 : .0022), -1.3, 1.3);
+      yaw=targetYaw; pitch=targetPitch;
+      camera.rotation.set(pitch,yaw,0,'YXZ');
     }
     lastX = event.clientX; lastY = event.clientY;
     if (!dragging || locked) callbacks.hover(event.clientX, event.clientY, locked);
@@ -75,15 +78,15 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   listen(canvas, 'contextmenu', (e => e.preventDefault()) as EventListener);
   listen(window, 'keydown', keyboard as EventListener);
   listen(window, 'keyup', ((e: KeyboardEvent) => { keys.delete(e.code); }) as EventListener);
-  listen(window, 'focusin', (event => { if (event.target !== canvas) reset(); }) as EventListener);
-  listen(document, 'pointerlockchange',reset as EventListener);
+  listen(window, 'focusin', (event => { if (event.target !== canvas) {reset();if(document.pointerLockElement===canvas)document.exitPointerLock();} }) as EventListener);
+  listen(document, 'pointerlockchange', (()=>{reset();callbacks.lockChanged?.(document.pointerLockElement===canvas);}) as EventListener);
   listen(window,'orientationchange',reset as EventListener);
   listen(window,'resize',reset as EventListener);
   listen(document,'fullscreenchange',reset as EventListener);
   listen(window,'blur',reset as EventListener);
   listen(document,'visibilitychange',reset as EventListener);
   return {
-    setEnabled(value: boolean) { enabled = value; reset(); },
+    setEnabled(value: boolean) { enabled = value; reset(); if(!value && document.pointerLockElement===canvas)document.exitPointerLock(); },
     analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
     reset,
     setClimbing(value:boolean){climbing=value;reset();},
@@ -102,13 +105,15 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     },
     update(dt: number, reduced = false) {
       if(climbing){targetYaw=T.MathUtils.clamp(targetYaw,-.55,.55);targetPitch=T.MathUtils.clamp(targetPitch,-.45,.75);}
-      yaw = reduced ? targetYaw : T.MathUtils.damp(yaw, targetYaw, 18, dt);
-      pitch = reduced ? targetPitch : T.MathUtils.damp(pitch, targetPitch, 18, dt);
+      yaw = targetYaw;
+      pitch = targetPitch;
       camera.rotation.set(pitch, yaw, 0, 'YXZ');
     },
     orient(nextYaw: number, nextPitch: number) { targetYaw = yaw + Math.atan2(Math.sin(nextYaw - yaw), Math.cos(nextYaw - yaw)); targetPitch = nextPitch; },
     get yaw() { return yaw; }, get pitch() { return pitch; },
+    unlock() { reset(); if(document.pointerLockElement===canvas)document.exitPointerLock(); canvas.focus({preventScroll:true}); },
     async lock() {
+      if(!enabled)return false;
       try { await canvas.requestPointerLock(); return document.pointerLockElement === canvas; } catch { canvas.focus(); return false; }
     },
     dispose() { if (document.pointerLockElement === canvas) document.exitPointerLock(); for (const remove of removers) remove(); },

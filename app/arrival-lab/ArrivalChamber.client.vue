@@ -62,7 +62,7 @@ const touchMode=ref(false), inputReady=ref(false), candidate=ref<string|false>(f
 let interactables:ReturnType<typeof createInteractables>|undefined;
 const freeInput=computed(()=>inputReady.value&&!printOpen.value&&!mapOpen.value&&!activeEntity.value&&!failed.value&&!textMode.value&&!portalBusy.value&&!worksUI.value&&!worksTrip.value&&!radioOpen.value&&!controlsOpen.value);
 const touchVisible=computed(()=>touchMode.value&&freeInput.value&&!transitPassenger.value&&!coasterPassenger.value&&!secretPassenger.value&&!guided);
-const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id.startsWith('secret:'))return secrets?.hint(id.slice(7))||'';if(id==='print-lab')return actionable.value?'Print Lab · Choose / make / print':'Approach the Print Lab station';if(id==='chamber-door')return encounterCopy.value.title+' · '+(({de:'Tür öffnen / schließen',ru:'Открыть / закрыть дверь'} as Record<string,string>)[locale.value]||'Open / close door');if(id.startsWith('entity:'))return encounterCopy.value.names[entityOrder.indexOf(id.slice(7) as EntityId)]+' · '+encounterCopy.value.talk;if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+encounterCopy.value.talk;if(id==='coaster')return coasterPassenger.value?(({de:'Aussteigen',ru:'Выйти'} as Record<string,string>)[locale.value]||'Exit carriage'):(({de:'Sky Coaster · Einsteigen',ru:'Небесные горки · Сесть'} as Record<string,string>)[locale.value]||'Cloudbreaker · Ride coaster');if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id.includes('scenic:')?'Grand Scenic Loop · '+skyText.value.board:id==='skytube:board'?'Loop District · '+skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
+const hint=computed(()=>{const id=candidate.value;if(!id)return '';if(id.startsWith('works:openme'))return actionable.value?getRoomCopy(locale.value).action:ic.value.approach;if(id.startsWith('secret:'))return secrets?.hint(id.slice(7))||'';if(id==='print-lab')return actionable.value?'Print Lab · Choose / make / print':'Approach the Print Lab station';if(id==='chamber-door')return encounterCopy.value.title+' · '+(({de:'Tür öffnen / schließen',ru:'Открыть / закрыть дверь'} as Record<string,string>)[locale.value]||'Open / close door');if(id.startsWith('entity:'))return encounterCopy.value.names[entityOrder.indexOf(id.slice(7) as EntityId)]+' · '+encounterCopy.value.talk;if(id.startsWith('npc:'))return (family?.people.find(p=>p.spec.id===id.slice(4))?.spec.name||'')+' · '+encounterCopy.value.talk;if(id==='coaster')return coasterPassenger.value?(({de:'Aussteigen',ru:'Выйти'} as Record<string,string>)[locale.value]||'Exit carriage'):(({de:'Sky Coaster · Einsteigen',ru:'Небесные горки · Сесть'} as Record<string,string>)[locale.value]||'Cloudbreaker · Ride coaster');if(id.startsWith('skytube:'))return !actionable.value?(skytube?.phase==='docked'?skyText.value.approach:skyText.value.unavailable):id==='skytube:exit'?skyText.value.exit:id.includes('scenic:')?'Grand Scenic Loop · '+skyText.value.board:id==='skytube:board'?'Loop District · '+skyText.value.board:skyText.value.call;if(id.startsWith('loop:'))return ({de:'Tür öffnen · hindurchgehen',ru:'Открыть дверь · пройти'} as Record<string,string>)[locale.value]||'Open door · walk through';if(!actionable.value)return (id==='key'||id==='facet')&&['activated','propagating','opening','closing'].includes(wallState.value)?ic.value.busy:ic.value.approach;return id.startsWith('explorer:')?(({de:'Berühren',ru:'Коснуться'} as Record<string,string>)[locale.value]||'Touch')+' · '+explorerCountryName(id.slice(9),locale.value):id==='origin-door'?ic.value.originDoor:id==='threshold'?ic.value.threshold:id==='key'||id==='facet'?wallState.value==='open'?ic.value.passage:ic.value.wall:id==='passage'?ic.value.passage:id==='terminal'?ic.value.terminal:id==='radio'?ic.value.radio:id.startsWith('atmosphere:')?ic.value.atmosphere:id==='sculpture'?ic.value.sculpture:id==='works:archive'?ic.value.archive:id==='works:matrix-details'?ic.value.details:id.startsWith('works:matrix:')?ic.value.criterion:id==='works:gallery'?ic.value.gallery:ic.value.matrix;});
 function mobileMove(x:number,z:number,sprint:boolean){if(freeInput.value)look?.analog(x,z,sprint);else look?.stop();}
 
 import { YouTubeRadio } from './audio/YouTubeRadio';
@@ -109,11 +109,17 @@ import { worksModules, worksArrival, worldPath } from './works/registry';
 import { initialWeights } from './works/matrix';
 import { worksCopy } from './works/copy';
 import WorksSurface from './works/WorksSurface.vue';
+import OpenMeRoom from './works/OpenMeRoom.vue';
+import { getRoomCopy } from './works/project-rooms';
 import ProjectWorkspace from './works/ProjectWorkspace.vue';
 import './works/works.css';
-const worksUI=ref<'destinations'|'matrix'|null>(null), worksTrip=ref('');
+const worksUI=ref<'destinations'|'matrix'|'openme'|null>(null), worksTrip=ref('');
 const workspaceKind=ref<'flowforge'|'matrix'|'archive'>('flowforge');
 const archiveSelection=ref('decision-matrix-ai');
+const openMeEndpoint=ref(0),openMeReceived=ref(false),openMeRouting=ref(false);
+function openMeRoom(index=0,route=false){journey?.cancel();look?.stop();releaseDockPointer();look?.setEnabled(false);openMeEndpoint.value=index;works?.projectGallery.select(index,route);worksUI.value='openme';needsRender=true;}
+function selectOpenMe(index:number,route:boolean){openMeEndpoint.value=index;works?.projectGallery.select(index,route);needsRender=true;}
+
 const weights=ref([...initialWeights]), selectedCriterion=ref(0);
 const wc=computed(()=>worksCopy[locale.value as keyof typeof worksCopy]||worksCopy.en);
 let expansion:ReturnType<typeof createExpansion>|undefined;
@@ -334,6 +340,7 @@ function activateWorld(x:number,y:number,center:boolean,direct=false) {if(secret
         if(hit==='origin-door'){if(actionable.value){origin?.activate();needsRender=true;}return;}
         if(hit==='threshold'){if(actionable.value){threshold?.activate(pickedSunDoor);needsRender=true;}return;}
         if(hit.startsWith('atmosphere:')){if(actionable.value){atmosphere?.activate(Number(hit.split(':')[1]));needsRender=true;}return;}
+        if(hit==='works:openme'||hit.startsWith('works:openme-endpoint-')){if(actionable.value)openMeRoom(hit==='works:openme'?0:Number(hit.split('-').at(-1)),hit!=='works:openme');return;}
         if(hit==='sculpture'){if(actionable.value){sculpture?.activate(performance.now());needsRender=true;}return;}
         if(intent==='approach'){
           // Reuse collision-safe routes instead of silently dropping a distant object click.
@@ -378,7 +385,10 @@ function back() {if(secrets?.active){if(secrets.returnHome(camera)){jumping?.res
   if (!journey) return;
   renderer.domElement.focus({ preventScroll: true }); look.stop(); journey.return();
 }
-async function mouseLook() { if(worksUI.value)closeWorks(); if(radioOpen.value)closeRadio(); if(portalBusy.value||guided)return; resumeLook.value=false; controlsOpen.value = false; mouseUnavailable.value = !(await look?.lock()); }
+const pointerLocked=ref(false);
+onMounted(()=>{const sync=()=>{pointerLocked.value=!!document.pointerLockElement;};document.addEventListener('pointerlockchange',sync);cleanups.push(()=>document.removeEventListener('pointerlockchange',sync));});
+function dragLook(){look?.unlock();pointerLocked.value=false;}
+async function mouseLook() { if(worksUI.value)closeWorks(); if(radioOpen.value)closeRadio(); if(portalBusy.value||guided)return; resumeLook.value=false; controlsOpen.value = false; mouseUnavailable.value = !(await look?.lock());pointerLocked.value=!mouseUnavailable.value; }
 function applyReduced(value: boolean) { reduced.value = value; journey?.setReduced(value); }
 function onMotion(event: MediaQueryListEvent) { applyReduced(event.matches); }
 function failure() { clearTimeout(exitTimer);pendingWorks='';worksTrip.value='';guided=false;travel=undefined;if(portalBusy.value) {workspace.value=true;portalState.value='workspace-active';} failed.value = true; cancelAnimationFrame(frame); }
@@ -447,6 +457,8 @@ function animate(now: number) {
   if(atmosphere?.update(now,dt,reduced.value,camera.position))needsRender=true;
   if(printProgress.value!==null){printElapsed+=dt;printProgress.value=Math.min(1,printElapsed/6);printLab?.update(printProgress.value,reduced.value);needsRender=true;if(printProgress.value>=1){printCollection.value.push({...printDesign.value});printLab?.setCollection(printCollection.value);printLab?.finish();printProgress.value=null;printNotice.value='Print complete! Your creation is on the display wall.';savePrintLab();renderer.shadowMap.needsUpdate=true;}}
   if(sculpture?.update(now,dt,reduced.value))needsRender=true;
+  if(works?.projectGallery.update(dt,reduced.value)){needsRender=true;}
+  openMeReceived.value=works?.projectGallery.received??false;openMeRouting.value=works?.projectGallery.routing??false;
   if(works?.update(dt,reduced.value)){needsRender=true;renderer.shadowMap.needsUpdate=true;}
   if(!portalBusy.value && !guided && document.pointerLockElement===renderer.domElement) terminalHover=pick(0,0,true)==='terminal';
   if(terminal){const distance=camera.position.distanceTo(terminal.center);portalNear.value=distance<9;terminal.update(distance,terminalHover||portalState.value==='entering');if(!portalBusy.value&&!guided)portalState.value=portalNear.value&&terminalHover?'terminal-focused':'exploring';}
@@ -565,7 +577,8 @@ onBeforeUnmount(() => {
       <button data-action="works-shortcut" :disabled="transitPassenger" :aria-label="wc.go" :title="wc.go" :aria-expanded="!!worksUI" @click="worksMenu">⋈</button>
       <button data-action="portal-approach" :disabled="transitPassenger" :aria-label="portalNear?pc.activate:pc.approach" :title="portalNear?pc.activate:pc.approach" @click="approachTerminal">▣</button>
       <button :aria-label="themeLabel" :title="themeLabel" :aria-pressed="dark" data-action="theme" @click="colorMode.preference = dark ? 'light' : 'dark'">{{ dark ? '◐' : '◑' }}</button>
-      <button :aria-label="resumeLook?pc.resume:c.mouse" :title="resumeLook?pc.resume:c.mouse" data-action="look" @click="mouseLook">⌖</button>
+      <button class="arrival-mouse-mode" v-if="!touchMode" :aria-pressed="pointerLocked" :aria-label="resumeLook?pc.resume:c.mouse" :title="resumeLook?pc.resume:c.mouse" data-action="look" @click="mouseLook">{{ pointerLocked ? 'Pointer Lock · Esc' : 'Pointer Lock' }}</button>
+      <button class="arrival-mouse-mode" v-if="!touchMode" :aria-pressed="!pointerLocked" title="Hold left mouse button and drag to look" @click="dragLook">Drag Look</button>
       <button :aria-label="c.back" :title="c.back" data-action="return" :disabled="transitPassenger" @click="back">↶</button>
       <button :aria-label="c.controls" :title="c.controls" :aria-expanded="controlsOpen" aria-controls="arrival-controls" @click="controlsOpen = !controlsOpen">?</button>
       <NuxtLink data-action="world-exit" :to="localePath('/')" :aria-label="c.exit" :title="c.exit">↗</NuxtLink>
@@ -598,7 +611,8 @@ onBeforeUnmount(() => {
     <span v-if="!portalBusy && portalNear" class="portal-reticle" aria-hidden="true">+</span>
     <div v-if="portalState==='entering'" class="portal-progress" role="status">{{ pc.entering }} <button @click="openWorkspace">{{ pc.skip }}</button></div>
     <p v-if="portalState==='exiting'" class="portal-progress" role="status">{{ pc.exiting }}</p>
-    <WorksSurface v-if="worksUI && !portalBusy" :spaces="expansionSpaces" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix" @details="activateProjectScreen('matrix')"/>
+    <WorksSurface v-if="worksUI && worksUI!=='openme' && !portalBusy" :spaces="expansionSpaces" :mode="worksUI" :locale="locale" :projects="projects" :weights="weights" :selected="selectedCriterion" @close="closeWorks" @travel="goWorks" @weight="changeWeight" @criterion="selectCriterion" @reset="resetMatrix" @details="activateProjectScreen('matrix')"/>
+    <OpenMeRoom v-if="worksUI==='openme'" :locale="locale" :project="projects.find(p=>p.id==='openme')" :initial="openMeEndpoint" :received="openMeReceived" :routing="openMeRouting" @close="closeWorks" @select="selectOpenMe"/>
     <p v-if="worksTrip" class="works-travel" role="status">{{ wc.travel }} <button data-action="works-cancel" @click="cancelWorks">{{ ac.close }}</button></p>
     <EntityConversation v-if="activeEntity" :entity="activeEntity" :locale="locale" :messages="encounter.messages.value" :pending="encounter.pending.value" :error="encounter.error.value" @close="closeEncounter" @ask="encounter.ask($event,locale)"/>
     <ProjectWorkspace v-if="workspace && workspaceKind!=='flowforge'" :kind="workspaceKind" :locale="locale" :projects="projects" v-model:selected="archiveSelection" :exiting="portalState==='exiting'" @close="closeWorkspace"/>

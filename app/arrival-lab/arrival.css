@@ -34,3 +34,5 @@
 
 .arrival-jump{position:absolute;left:calc(100% + 18px);bottom:40px;width:64px;height:64px;border-radius:50%;border:1px solid #e1e8df99;background:#203332cc;color:white;font-size:25px;pointer-events:auto;touch-action:none;user-select:none}.arrival-jump small{display:block;font-size:10px}.arrival-jump:active{background:#487d81}
 @media(max-height:500px){.arrival-jump{bottom:8px;width:58px;height:58px}}
+
+.arrival-tools button.arrival-mouse-mode{width:auto;min-width:70px;padding:0 10px;border-radius:8px;font:12px monospace;white-space:nowrap}.arrival-tools button.arrival-mouse-mode[aria-pressed=true]{border-color:#529671;box-shadow:inset 0 -2px #529671}
