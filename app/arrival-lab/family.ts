@@ -31,7 +31,7 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
   for(const p of people){p.visual=assets.create(p.spec);p.body.add(p.visual.root);p.target.visible=true;}
   assetStatus.state='ready';
  }).catch(error=>{assetStatus.state='error';assetStatus.error=String(error);console.error('Family character loading failed',error);});
- const collision=createCollision(solids.filter(m=>!m.userData.npc));
+ const collision=createCollision(solids.filter(m=>!m.userData.npc),'family');
  let conversationId:string|null=null,conversationPhase='listening';
  const probe=new T.Vector3(),delta=new T.Vector3();
  return {root,people,ready,assetStatus,converse(id:string|null,phase='listening'){conversationId=id;conversationPhase=phase;},activate(id:string){const p=people.find(p=>p.spec.id===id);if(p&&root.visible&&p.reaction<=0){p.greetTarget=null;p.reaction=2.4;p.state='reacting';}},update(now:number,dt:number,reduced:boolean,player:T.Vector3,enabled=true){root.visible=enabled;if(!enabled)return false;dt=Math.min(Math.max(dt,0),.2);

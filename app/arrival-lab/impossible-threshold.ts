@@ -90,7 +90,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
   const walker={root:person,legs,x:i<2?7+i*.85:17,z:i<2?32:28+i,range:i===3?0:i<2?4:2,phase:i<2?0:1.8};person.position.set(walker.x,0,walker.z);walkers.push(walker);
  }
  let ambientTime=0;
- const coastCollision=createCollision(coastSolids);
+ const coastCollision=createCollision(coastSolids,'coast');
 
  const exit=door(arctic,snowSolids,0,0,true);exit.root.rotation.y=Math.PI;
  // The Arctic return frame shares the same live aperture and reversible crossing.
@@ -136,7 +136,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  let selected=doors[0]!;
  let active=false,previous=new T.Vector3(),initialized=false,dark=false;
  let savedBackground:T.Scene['background'],savedFog:T.Scene['fog'],savedFar=220;
- const snowCollision=createCollision(snowSolids);
+ const snowCollision=createCollision(snowSolids,'snow');
  function appearance(){if(active){if(sunWorld){scene.background=new T.Color('#b4def1');scene.fog=new T.Fog('#c5e5ee',150,1100);return;}scene.background=new T.Color(dark?'#647e98':'#cbdde8');scene.fog=new T.FogExp2(dark?'#92a7ba':'#dde7ed',.0018);sun.intensity=dark?.5:2.1;fill.intensity=dark?1.15:2.3;} }
  function switchWorld(camera:T.PerspectiveCamera){
   selected.state='crossing';active=!active;
@@ -156,10 +156,14 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  const targets=[new T.WebGLRenderTarget(768,768),new T.WebGLRenderTarget(768,768)];
  targets.forEach(t=>{t.texture.colorSpace=T.SRGBColorSpace;});
  const portalCamera=new T.PerspectiveCamera(),primedViews=new Set<number>();
+ const viewFrustum=new T.Frustum(),viewProjection=new T.Matrix4();
  function renderViews(renderer:T.WebGLRenderer,camera:T.PerspectiveCamera){
+  camera.updateMatrixWorld();viewFrustum.setFromProjectionMatrix(viewProjection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
   const candidates=active?[{door:sunWorld?sunExit:exit,index:sunWorld?1:0,x:0,z:0}]:[{door:entry,index:0,x:-12,z:-69.5},{door:sunEntry,index:1,x:12,z:-69.5}];
   for(const item of candidates){
    if(doors[item.index]!.progress<=0||Math.hypot(camera.position.x-item.x,camera.position.z-item.z)>22)continue;
+   item.door.aperture.updateWorldMatrix(true,false);
+   if(!viewFrustum.intersectsObject(item.door.aperture))continue;
    const target=targets[item.index]!,height=Math.max(256,Math.round(768/camera.aspect));if(target.height!==height)target.setSize(768,height);
    const visibility=scene.children.map(o=>[o,o.visible] as const),background=scene.background,fog=scene.fog,renderTarget=renderer.getRenderTarget(),clip=renderer.clippingPlanes;
    const shadowAuto=renderer.shadowMap.autoUpdate,shadowNeeds=renderer.shadowMap.needsUpdate;

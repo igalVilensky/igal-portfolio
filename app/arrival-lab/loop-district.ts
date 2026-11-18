@@ -133,15 +133,19 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  for(const child of [...root.children])if(child!==island&&child!==vault&&!bridgeObjects.has(child)&&child!==departure.root)island.add(child);
  scene.updateMatrixWorld(true);
  own.forEach(o=>{if(o.position.y===.575)o.userData.safetyBarrier=true;});
- const indoorCollision=createCollision(indoor), exteriorCollision=createCollision(own);
+ const indoorCollision=createCollision(indoor,'district-interior'), exteriorCollision=createCollision(own,'district-exterior');
  let active=false,previous=new T.Vector3(),initialized=false;
  const local=new T.Vector3(),before=new T.Vector3(),turn=new T.Matrix4().makeRotationY(Math.PI);
  function height(p:T.Vector3){if(active)return 0;const x=p.x-districtOffset;if(x>=196.1&&x<=199.9&&p.z>=48.3&&p.z<=59)return T.MathUtils.clamp((59-p.z)*.4,0,3.6);if(x>=158&&x<=170&&p.z>=29.3&&p.z<=43.3&&p.y>4)return 4.15;return 0;}
  const viewCamera=new T.PerspectiveCamera();
+ const viewFrustum=new T.Frustum(),viewProjection=new T.Matrix4();
  function renderViews(renderer:T.WebGLRenderer,camera:T.PerspectiveCamera){
+  camera.updateMatrixWorld();viewFrustum.setFromProjectionMatrix(viewProjection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
   for(const pair of pairs)for(let i=0;i<2;i++){
    const source=pair[i]!,destination=pair[1-i]!,view=views.get(source)!;
    if(source.progress<=0||source.environment==='loop-vault'!==active||camera.position.distanceTo(source.root.getWorldPosition(new T.Vector3()))>20)continue;
+   view.mesh.updateWorldMatrix(true,false);
+   if(!viewFrustum.intersectsObject(view.mesh))continue;
    const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());
    viewCamera.copy(camera);viewCamera.position.applyMatrix4(mapping);viewCamera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));viewCamera.updateProjectionMatrix();
    const height=Math.max(256,Math.round(640/camera.aspect));if(view.target.height!==height)view.target.setSize(640,height);
@@ -159,7 +163,7 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  activate(id:string){const d=doors.find(d=>d.id===id);if(d)d.opened=true;},
  move(p:T.Vector3,delta:T.Vector3){const old=p.clone(),level=height(p);if(active)indoorCollision(p,delta);else exteriorCollision(p,delta);p.y=old.y;const next=height(p);p.y=(Math.abs(next-level)<.65?next:level)+1.65;},
  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;if(active&&camera.position.x<300){active=false;vault.visible=false;changed=true;}for(const d of doors){const next=Math.min(1,d.progress+(d.opened?(reduced?1:dt*1.7):0));if(next!==d.progress)changed=true;d.progress=next;d.pivot.rotation.y=-next*Math.PI*.55;}
- scene.updateMatrixWorld(true);
+ root.updateWorldMatrix(true,true);
  if(initialized)for(const pair of pairs)for(let i=0;i<2;i++){
   const source=pair[i]!,destination=pair[1-i]!;if(source.progress<.99||source.environment==='loop-vault'!==active)continue;
   local.copy(camera.position);source.root.worldToLocal(local);before.copy(previous);source.root.worldToLocal(before);
