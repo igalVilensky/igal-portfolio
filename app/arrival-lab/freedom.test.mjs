@@ -21,13 +21,13 @@ test('jump has one apex, rejects airborne repeats, lands and supports raised sol
  assert.equal(raised.airborne,false);assert.ok(Math.abs(p.y-2.35)<1e-6);raised.update(.02,p,1.65,true);assert.ok(Math.abs(p.y-2.35)<1e-6);
  p.x=4;for(let i=0;i<50;i++)raised.update(.02,p,1.65,true);assert.equal(p.y,1.65);
 });
-test('coaster completes repeated physical circuits, gates exit, preserves look and releases control',()=>{
+test('coaster completes repeated physical circuits, gates exit, inverts the rider and releases control',()=>{
  const scene=new T.Scene(),solids=[],ride=createSkyCoaster(scene,solids),camera=new T.PerspectiveCamera();
  for(let round=0;round<3;round++){
   camera.position.set(-58,1.65,92);assert.ok(ride.activate(camera));assert.equal(ride.activate(camera),false);
-  const q=camera.quaternion.clone();let high=0;
-  for(let i=0;i<Math.ceil((ride.duration+3)/.05);i++){ride.update(.05,false,camera);high=Math.max(high,camera.position.y);}
-  assert.equal(ride.phase,'docked');assert.ok(high>24);assert.ok(camera.quaternion.equals(q));assert.ok(ride.car.position.distanceTo(ride.route.getPointAt(0))<1e-7);
+  let high=0,inverted=false,maxStep=0;const previous=ride.car.quaternion.clone();
+  for(let i=0;i<Math.ceil((ride.duration+3)/.05);i++){ride.update(.05,false,camera);high=Math.max(high,camera.position.y);inverted ||= new T.Vector3(0,1,0).applyQuaternion(camera.quaternion).y<-.8;maxStep=Math.max(maxStep,previous.angleTo(ride.car.quaternion));previous.copy(ride.car.quaternion);}
+  assert.equal(ride.phase,'docked');assert.ok(high>46);assert.ok(inverted);assert.ok(maxStep<.65,`orientation step ${maxStep}`);assert.ok(ride.car.position.distanceTo(ride.route.getPointAt(0))<1e-7);
   assert.ok(ride.activate(camera));for(let i=0;i<30;i++)ride.update(.05,false,camera);
   assert.equal(ride.ownsPassenger,false);assert.ok(camera.position.distanceTo(new T.Vector3(-58,1.65,92))<1e-7);
  }
