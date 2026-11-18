@@ -10,7 +10,7 @@ await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'n
 for(const name of ['skytube','collision','geography']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {createSkyTube,skyEase,createSkyRoute}=await import(join(dir,'skytube.mjs'));
 after(()=>rm(dir,{recursive:true,force:true}));
-function setup(){const scene=new T.Scene(),solids=[],tube=createSkyTube(scene,solids),camera=new T.PerspectiveCamera();scene.updateMatrixWorld(true);return {scene,solids,tube,camera};}
+function setup(scenic=false){const scene=new T.Scene(),solids=[],tube=createSkyTube(scene,solids,scenic),camera=new T.PerspectiveCamera();scene.updateMatrixWorld(true);return {scene,solids,tube,camera};}
 function board(tube,camera,reduced=false){camera.position.copy(tube.vehicle.localToWorld(new T.Vector3(-3.55,1.65,0)));camera.position.y=1.65;assert.ok(tube.activate('board',camera,reduced));}
 function advance(tube,camera,seconds,step=.1,reduced=false){for(let t=0;t<seconds;t+=step)tube.update(Math.min(step,seconds-t),reduced,camera);}
 test('route is bounded, raised and smooth; profile starts and stops gently',()=>{
@@ -59,8 +59,8 @@ test('the capsule clears both existing island parapets throughout the real route
  for(let t=0;t<tube.duration;t+=.05){tube.update(.05,false,camera);assert.ok(!intersectsSurface(originEdge),`Origin parapet at ${tube.progress}`);assert.ok(!intersectsSurface(districtEdge),`District parapet at ${tube.progress}`);}
  tube.dispose();
 });
-test('closed capsule geometry remains within the tube cross-section along the complete ride',()=>{
- const {tube,camera}=setup();board(tube,camera);advance(tube,camera,3.45);
+for(const scenic of [false,true])test(`closed ${scenic?'scenic':'district'} capsule geometry remains within the tube cross-section along the complete ride`,()=>{
+ const {tube,camera}=setup(scenic);board(tube,camera);advance(tube,camera,3.45);
  for(let t=0;t<tube.duration;t+=.5){tube.update(.5,false,camera);tube.vehicle.traverse(mesh=>{if(!mesh.isMesh)return;const p=mesh.geometry.getAttribute('position');for(let i=0;i<p.count;i+=2){const point=new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(mesh.matrixWorld);let lo=Math.max(0,tube.progress-5/tube.length),hi=Math.min(1,tube.progress+5/tube.length);for(let n=0;n<16;n++){const a=lo+(hi-lo)/3,b=hi-(hi-lo)/3;if(tube.route.getPointAt(a).distanceToSquared(point)<tube.route.getPointAt(b).distanceToSquared(point))hi=b;else lo=a;}const u=(lo+hi)/2;if(u*tube.length>7&&(1-u)*tube.length>7)assert.ok(tube.route.getPointAt(u).distanceTo(point)<3.22,`capsule intersects glass at route ${tube.progress}`);}});}
  tube.dispose();
 });

@@ -10,11 +10,12 @@ export const secretPlaces = {
  dock: new T.Vector3(27, 4, 148),
 };
 export type SecretWorld = 'observatory' | 'moon' | 'crystal' | 'jungle';
-export function createTwoSecrets(scene:T.Scene) {
+export function createTwoSecrets(scene:T.Scene,allSolids:T.Mesh[]=[]) {
  const exterior=new T.Group();exterior.name='The two secrets · Origin discoveries';scene.add(exterior);
  const chamber=new T.Group();chamber.name="Nataniel's Universe · optical chamber";chamber.position.copy(secretPlaces.chamber);chamber.visible=false;scene.add(chamber);
  const geometries=new Set<T.BufferGeometry>(),materials=new Set<T.Material>(),textures=new Set<T.Texture>();
- const targets:T.Mesh[]=[];
+ const targets:T.Mesh[]=[],ownedSolids:T.Mesh[]=[];
+ function solid(o:T.Mesh){o.userData.noCollision=false;o.userData.room='two-secrets';ownedSolids.push(o);allSolids.push(o);return o;}
  function mat(color:string,glow=0,opacity=1){const m=new T.MeshStandardMaterial({color,emissive:color,emissiveIntensity:glow,roughness:.42,metalness:.25,transparent:opacity<1,opacity,depthWrite:opacity===1});materials.add(m);return m;}
  const ink=mat('#080d28'),metal=mat('#34486b'),gold=mat('#ffd697',1),cyan=mat('#7de9ff',1.6),violet=mat('#bb8eff',1.4),pink=mat('#ffb6df',1.1),white=mat('#d9f1ff',.25),green=mat('#73ffbb',1.1);
  function mesh(g:T.BufferGeometry,m:T.Material,parent:T.Object3D,x=0,y=0,z=0,action?:string){geometries.add(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);o.userData.noCollision=true;parent.add(o);if(action){o.userData.secret=action;targets.push(o);}return o;}
@@ -39,8 +40,8 @@ export function createTwoSecrets(scene:T.Scene) {
  const beacon=ring(entrance,.18,gold,0,1.8,-.06,.025,'enter');
  // Quiet cloud-shell instrument in an existing safe plateau corner, before its parapet.
  const callRoot=new T.Group();callRoot.position.set(26,0,124);exterior.add(callRoot);
- mesh(new T.CylinderGeometry(1.2,1.5,.3,40),metal,callRoot,0,.15,0);
- box(callRoot,.45,1.1,.45,0,.8,0,metal);
+ solid(mesh(new T.CylinderGeometry(1.2,1.5,.3,40),metal,callRoot,0,.15,0));
+ solid(box(callRoot,.45,1.1,.45,0,.8,0,metal));
  for(let i=0;i<5;i++)orb(callRoot,(i-2)*.25,1.5+Math.sin(i*.8)*.16,0,.4,.3,.32,white,'call');
  const callHalo=ring(callRoot,.8,gold,0,1.45,0,.045,'call');callHalo.rotation.x=Math.PI/2;
  label(callRoot,"ADRIEL'S CLOUD WHALE",0,2.4,0,5);
@@ -87,13 +88,17 @@ export function createTwoSecrets(scene:T.Scene) {
  label(moon,'JUMP ON THE THREE LIGHTS',0,3.8,-8,6);
  const dust=new T.Points(starsG,starsM);dust.scale.setScalar(.22);dust.position.y=5;moon.add(dust);
  const crystal=worlds.crystal,crystalObjects:T.Mesh[]=[],crystalMat=mat('#6964bf',.45),crystalCore=new T.Group();crystal.add(crystalCore);
- for(let i=0;i<18;i++){const a=i*2.399,r=5.8+i%3,h=1.5+(i%5)*.8;const o=mesh(new T.ConeGeometry(.5,h,5),crystalMat,crystal,Math.cos(a)*r,h/2,Math.sin(a)*r);o.rotation.z=Math.sin(i)*.25;}
+ mesh(new T.CylinderGeometry(10.7,11,.14,72),mat('#24284f',.18),crystal,0,-.05,0);
+ const crystalObstacles:{x:number;z:number;r:number}[]=[];
+ for(let i=0;i<18;i++){const a=i*2.399,r=5.8+i%3,h=1.5+(i%5)*.8;const o=mesh(new T.ConeGeometry(.5,h,5),crystalMat,crystal,Math.cos(a)*r,h/2,Math.sin(a)*r);o.rotation.z=Math.sin(i)*.25;crystalObstacles.push({x:o.position.x,z:o.position.z,r:.8});}
  for(let i=0;i<3;i++){const a=i*Math.PI*2/3;const o=mesh(new T.OctahedronGeometry(.8),violet,crystal,Math.cos(a)*4,1.3,Math.sin(a)*4,'crystal:'+i);crystalObjects.push(o);ring(crystal,.95,violet,o.position.x,.1,o.position.z).rotation.x=-Math.PI/2;}
  const poly=mesh(new T.IcosahedronGeometry(2.3,0),new T.MeshBasicMaterial({color:'#b4faff',wireframe:true,transparent:true,opacity:0}),crystalCore,0,4,0);materials.add(poly.material);
  const core=orb(crystalCore,0,4,0,.35,.35,.35,gold);core.scale.setScalar(.01);
  label(crystal,'TOUCH THE THREE RESONATING CRYSTALS',0,3.8,-8,7);
  const jungle=worlds.jungle,leafMat=mat('#155e50',.18),stemMat=mat('#24554d'),petalMat=mat('#ffb3d6',1.1);
- for(let i=0;i<20;i++){const a=i*2.399,r=6.5+(i%3)*.9,h=2+i%4;const g=new T.Group();g.position.set(Math.cos(a)*r,0,Math.sin(a)*r);jungle.add(g);mesh(new T.CylinderGeometry(.06,.15,h,8),stemMat,g,0,h/2,0);for(let j=0;j<3;j++){const leaf=orb(g,Math.cos(j*2.1)*.6,h-j*.6,Math.sin(j*2.1)*.6,1.2,.16,.55,leafMat);leaf.rotation.z=.3+j*.5;leaf.rotation.y=j*2.1;orb(g,leaf.position.x,h-j*.6+.15,leaf.position.z,.07,.07,.07,green);}}
+ mesh(new T.CylinderGeometry(10.7,11,.14,72),mat('#103d32',.12),jungle,0,-.05,0);
+ const jungleObstacles:{x:number;z:number;r:number}[]=[{x:0,z:-2,r:1}];
+ for(let i=0;i<20;i++){const a=i*2.399,r=6.5+(i%3)*.9,h=2+i%4;const g=new T.Group();g.position.set(Math.cos(a)*r,0,Math.sin(a)*r);jungle.add(g);jungleObstacles.push({x:g.position.x,z:g.position.z,r:.5});mesh(new T.CylinderGeometry(.06,.15,h,8),stemMat,g,0,h/2,0);for(let j=0;j<3;j++){const leaf=orb(g,Math.cos(j*2.1)*.6,h-j*.6,Math.sin(j*2.1)*.6,1.2,.16,.55,leafMat);leaf.rotation.z=.3+j*.5;leaf.rotation.y=j*2.1;orb(g,leaf.position.x,h-j*.6+.15,leaf.position.z,.07,.07,.07,green);}}
  const bloom=new T.Group();jungle.add(bloom);bloom.position.set(0,0,-2);
  mesh(new T.CylinderGeometry(.13,.24,2,12),stemMat,bloom,0,1,0);
  const petals:T.Group[]=[];
@@ -101,6 +106,11 @@ export function createTwoSecrets(scene:T.Scene) {
  orb(bloom,0,2,0,.5,.5,.5,gold);
  label(jungle,'THE GARDEN WAKES WHEN YOU COME CLOSE',0,4.4,-8,7);
 
+ // A small, temporary cloud bank makes the call legible before the creature emerges.
+ const callingMist=new T.Group();callingMist.name='Cloud Whale · shimmering emergence';exterior.add(callingMist);callingMist.visible=false;
+ const mistMaterial=mat('#d9f4f7',.5,.3);
+ for(let i=0;i<7;i++){const a=i*2.399;orb(callingMist,27+Math.cos(a)*12,-11+i%2,164+Math.sin(a)*14,8,2.3,9,mistMaterial);}
+ const callingWave=ring(callingMist,11,mat('#b3f5ef',1.2,.5),27,-7,166,.09);callingWave.rotation.x=-Math.PI/2;
  // A rounded creature, with independent fin/tail joints, eyes and a cloud-white belly.
  const whale=new T.Group();whale.name="Adriel's Cloud Whale";exterior.add(whale);whale.visible=false;
  const skin=mat('#8ecbdc',.25),belly=mat('#ecf5ec',.25),eyeMat=mat('#132644'),blush=mat('#efb8c7',.2);
@@ -176,7 +186,7 @@ export function createTwoSecrets(scene:T.Scene) {
   },
   returnHome(camera:T.PerspectiveCamera){if(active&&!transition)return world==='observatory'?leave(camera):begin(()=>transform('observatory',camera));return false;},
   move(p:T.Vector3,delta:T.Vector3){p.add(delta);const local=p.clone().sub(secretPlaces.chamber),r=Math.hypot(local.x,local.z),limit=10.1;if(r>limit){p.x=local.x*limit/r;p.z=local.z*limit/r;}
-   const obstacles: {x:number;z:number;r:number}[]=world==='observatory'?[{x:0,z:0,r:2.1}]:world==='crystal'?crystalObjects.map(o=>({x:o.position.x,z:o.position.z,r:1.15})):world==='jungle'?[{x:0,z:-2,r:1}]:[];
+   const obstacles: {x:number;z:number;r:number}[]=world==='observatory'?[{x:0,z:0,r:2.1}]:world==='crystal'?[...crystalObstacles,...crystalObjects.map(o=>({x:o.position.x,z:o.position.z,r:1.15}))]:world==='jungle'?jungleObstacles:[];
    for(const o of obstacles){const dx=p.x-o.x,dz=p.z-o.z,d=Math.hypot(dx,dz);if(d<o.r){p.x=o.x+(d?dx/d:1)*o.r;p.z=o.z+(d?dz/d:0)*o.r;}}
    p.y=secretPlaces.chamber.y+1.65;},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,paused=false){
@@ -197,9 +207,9 @@ export function createTwoSecrets(scene:T.Scene) {
     }
    }
    if(whalePhase!=='sleeping'){
-    whaleTime+=dt;let u=0;
+    whaleTime+=dt;let u=0;callingMist.visible=whalePhase==='calling';callingWave.scale.setScalar(.6+(whaleTime%3)/3*.7);mistMaterial.opacity=.18+.1*Math.sin(whaleTime*1.5);
     if(whalePhase==='calling'){
-     const t=skyEase(whaleTime/12);whale.position.lerpVectors(new T.Vector3(45,-28,196),secretPlaces.dock,t);whale.rotation.y=.15*(1-t);if(whaleTime>=12){whalePhase='ready';whaleTime=0;}
+     const t=skyEase(whaleTime/12);whale.position.lerpVectors(new T.Vector3(45,-137,196),secretPlaces.dock,t);whale.rotation.y=.15*(1-t);if(whaleTime>=12){whalePhase='ready';whaleTime=0;}
     }else if(whalePhase==='boarding'){
      whale.position.copy(secretPlaces.dock);const seatPoint=whale.localToWorld(new T.Vector3(0,4.3,-1));camera.position.lerpVectors(rideStart,seatPoint,skyEase(whaleTime/2.5));camera.quaternion.slerpQuaternions(boardingLook,new T.Quaternion(),skyEase(whaleTime/2.5));restored=true;if(whaleTime>=2.5){whalePhase='riding';whaleTime=0;}
     }else if(whalePhase==='riding'){
@@ -218,6 +228,6 @@ export function createTwoSecrets(scene:T.Scene) {
    }
    return {changed:active||whalePhase!=='sleeping'||!!transition||camera.position.distanceTo(secretPlaces.entrance)<20||camera.position.distanceTo(secretPlaces.call)<20,turn,restored};
   },
-  dispose(){if(active)restoreWorld();exterior.removeFromParent();chamber.removeFromParent();veil.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());targets.length=0;},
+  dispose(){if(active)restoreWorld();exterior.removeFromParent();chamber.removeFromParent();veil.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());targets.length=0;for(const o of ownedSolids){const i=allSolids.indexOf(o);if(i>=0)allSolids.splice(i,1);}},
  };
 }
