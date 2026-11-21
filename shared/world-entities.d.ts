@@ -1,4 +1,4 @@
-export type EntityId='archivist'|'engineer'|'wanderer'|'igal'|'anastasia'|'amelia'|'nataniel'|'adriel';
+export type EntityId='ask-igal'|'igal'|'anastasia'|'amelia'|'nataniel'|'adriel';
 export const entityIds:EntityId[];
 export function resolveEntity(value:unknown):EntityId|undefined;
 export function isFamily(id:string):boolean;

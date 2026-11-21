@@ -28,6 +28,11 @@ export function createWall(scene: T.Scene) {
     }
     box(.25,10,2,side*7.3,5,-.75);
   }
+  // Articulated bearing housings ride with each leaf; recessed feet expose the rails.
+  for(const [i,side] of [-1,1].entries())for(const y of [1.1,4.6,8.1]){
+    box(.48,.7,.85,side*2.48,y,-.38,frame,carriages[i]);
+    box(.20,.38,.12,side*2.48,y,.52,channel,carriages[i]);
+  }
   wallNodes.forEach(n => {
     const side=n.side, y=n.row*1.38, parent=carriages[side<0?0:1]!;
     const pts = [[.035,y+.035],[2.98,n.row===0?.035:y+.56],[2.98,y+1.89],[.035,y+1.36]].map(([x,y])=>new T.Vector2(side*x!,y!));

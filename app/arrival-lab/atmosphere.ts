@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { atmosphereCopy, weatherModes } from './atmosphere-copy';
 import { atmosphereSpace } from './spaces';
 import { matterVertexShader, matterFragmentShader } from './atmosphere-materials';
 /** Finite procedural matter; shared scene, no postprocessing or independent clock. */
@@ -7,7 +8,7 @@ export function createAtmosphere(scene: T.Scene, solids: T.Mesh[]) {
     root.name = 'living-atmosphere';
     scene.add(root);
     const geometries: T.BufferGeometry[] = [], materials: T.Material[] = [];
-    const stone = new T.MeshStandardMaterial({ color: '#b8c7c3', roughness: .86 });
+    const stone = new T.MeshStandardMaterial({ color: '#344249', roughness: .86 });
     const frame = new T.MeshStandardMaterial({ color: '#536d70', metalness: .25, roughness: .55 });
     const inlay = new T.MeshBasicMaterial({ color: '#dfbe82' });
     materials.push(stone, frame, inlay);
@@ -61,7 +62,10 @@ export function createAtmosphere(scene: T.Scene, solids: T.Mesh[]) {
         plaque.rotation.y = -Math.PI / 2;
         root.add(plaque);
     }
-    function setLocale(locale: string) { if (!canvas || !ctx)
+    const controlLabels:{canvas:HTMLCanvasElement;texture:T.CanvasTexture;index:number}[]=[];
+    function setLocale(locale: string) {
+        const c=atmosphereCopy[locale==='de'||locale==='ru'?locale:'en'];
+        for(const label of controlLabels){const cx=label.canvas.getContext('2d')!;cx.fillStyle='#243338';cx.fillRect(0,0,512,128);cx.fillStyle='#e5dfc8';cx.font='40px sans-serif';cx.textAlign='center';cx.fillText(c.states[label.index]!,256,80);label.texture.needsUpdate=true;} if (!canvas || !ctx)
         return; ctx.fillStyle = '#344b50'; ctx.fillRect(0, 0, 768, 128); ctx.fillStyle = '#e9dec4'; ctx.font = '34px sans-serif'; ctx.fillText(atmosphereSpace.names[locale as 'en'] || atmosphereSpace.names.en, 24, 78); texture!.needsUpdate = true; }
     setLocale('en');
     const light = new T.PointLight('#bce9dd', 110, 33, 1.3);
@@ -98,7 +102,7 @@ export function createAtmosphere(scene: T.Scene, solids: T.Mesh[]) {
             group.add(mesh);
             solids.push(mesh);
         }
-        return { group, mat, lobes, home: new T.Vector3().fromArray(home), energy: 0, delay: 0 };
+        return { group, mat, lobes, home: new T.Vector3().fromArray(home) };
     });
     const count = mobile ? 96 : 200, positions = new Float32Array(count * 3), base = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -118,65 +122,65 @@ export function createAtmosphere(scene: T.Scene, solids: T.Mesh[]) {
     const pm = new T.ShaderMaterial({ transparent: true, depthWrite: false, uniforms: { tint: { value: new T.Color('#9bd4c0') } }, vertexShader: `attribute float seed;varying float strength;void main(){strength=.55+seed*.45;vec4 p=modelViewMatrix*vec4(position,1.);gl_PointSize=min(8.,(28.+seed*20.)/max(1.,-p.z));gl_Position=projectionMatrix*p;}`, fragmentShader: `uniform vec3 tint;varying float strength;void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;gl_FragColor=vec4(tint,(1.-d*d)*.65*strength);}` });
     materials.push(pm);
     root.add(new T.Points(pg, pm));
-    const offset = new T.Vector3();
-    let clock = 0;
+    const controls:T.MeshStandardMaterial[]=[];
+    for(let i=0;i<4;i++){
+        const x=-18+i*4,z=33;
+        box(.7,1,.7,x,.5,z,frame);
+        const material=new T.MeshStandardMaterial({color:weatherModes[i]!.color,emissive:weatherModes[i]!.color,emissiveIntensity:.25,metalness:.5,roughness:.4});materials.push(material);controls.push(material);
+        const g=new T.OctahedronGeometry(.43);geometries.push(g);const selector=new T.Mesh(g,material);selector.position.set(x,1.4,z);selector.userData={atmosphere:i,noCollision:true};root.add(selector);solids.push(selector);
+        if(typeof document!=='undefined'){
+            const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;
+            const tex=new T.CanvasTexture(canvas);tex.colorSpace=T.SRGBColorSpace;
+            const g=new T.PlaneGeometry(2.5,.625),m=new T.MeshBasicMaterial({map:tex,side:T.DoubleSide});geometries.push(g);materials.push(m);
+            const plaque=new T.Mesh(g,m);plaque.position.set(x,2.2,z);plaque.rotation.y=Math.PI;root.add(plaque);controlLabels.push({canvas,texture:tex,index:i});
+        }
+    }
+    // Elevated mineral frames define the experimental volume without blocking circulation.
+    for(const x of [-19,-2]){box(.3,7,.4,x,3.5,46,frame);box(.05,6,.06,x,3.5,45.76,inlay);}
+    box(17,.3,.4,-10.5,7,46,frame);
+    const bands:T.Mesh[]=[];
+    const bandGeometry=new T.TorusGeometry(4,.045,4,64);geometries.push(bandGeometry);
+    const bandMaterial=new T.MeshBasicMaterial({color:'#86dfbb',transparent:true,opacity:0,depthWrite:false});materials.push(bandMaterial);
+    for(let i=0;i<3;i++){const band=new T.Mesh(bandGeometry,bandMaterial);band.position.set(-10,7+i*.6,44);band.rotation.set(Math.PI/2,.15*i,.18*i);root.add(band);bands.push(band);}
+    const boltGeometry=new T.BufferGeometry().setFromPoints([new T.Vector3(-11,7,44),new T.Vector3(-10,6,44),new T.Vector3(-10.5,5.5,44),new T.Vector3(-9.8,4.5,44)]);geometries.push(boltGeometry);
+    const boltMaterial=new T.LineBasicMaterial({color:'#d4e7ff'});materials.push(boltMaterial);const bolt=new T.Line(boltGeometry,boltMaterial);root.add(bolt);bolt.visible=false;
+    let clock=0,mode=0,gather=0,orbit=0,lift=0,energy=.05,stormAge=0;
+    const tint=new T.Color(weatherModes[0].color),targetColor=new T.Color();
+    setLocale('en');
     return {
         setLocale,
-        activate(index: number) { forms.forEach((f, i) => { if (i === index) {
-            f.energy = 1;
-            f.delay = 0;
-        }
-        else
-            f.delay = .35 + Math.abs(i - index) * .28; }); },
-        update(_now: number, delta: number, reduced: boolean, player: T.Vector3) {
-            const dt = Math.min(.05, Math.max(0, delta));
-            if (!reduced)
-                clock += dt;
-            for (let i = 0; i < forms.length; i++) {
-                const f = forms[i]!;
-                if (f.delay > 0) {
-                    f.delay -= dt;
-                    if (f.delay <= 0)
-                        f.energy = Math.max(f.energy, .48);
-                }
-                f.energy *= Math.exp(-(reduced ? 7 : 1.25) * dt);
-                offset.subVectors(f.home, player);
-                offset.y = 0;
-                const distance = offset.length();
-                const near = T.MathUtils.smoothstep(6 - distance, 0, 4);
-                if (distance > .001)
-                    offset.multiplyScalar(near * 1.3 / distance);
-                else
-                    offset.set(0, 0, 0);
-                const damping = 1 - Math.exp(-4 * dt);
-                f.group.position.x = T.MathUtils.lerp(f.group.position.x, f.home.x + offset.x + f.energy * .9, damping);
-                f.group.position.z = T.MathUtils.lerp(f.group.position.z, f.home.z + offset.z + f.energy * .7, damping);
-                f.group.position.y = f.home.y + (reduced ? 0 : Math.sin(clock * (.24 + i * .07) + i) * .22) + f.energy * .3;
-                for (let j = 0; j < f.lobes.length; j++) {
-                    const l = f.lobes[j]!;
-                    l.mesh.position.copy(l.home).multiplyScalar(1 + f.energy * .85);
-                    l.mesh.position.y += Math.sin(j * 2.3) * f.energy * .7;
-                }
-                f.group.scale.setScalar(1 + f.energy * .35 + near * .09);
-                f.mat.uniforms.time!.value = clock * (.8 + i * .17);
-                f.mat.uniforms.energy!.value = f.energy + near * .3;
+        get mode(){return mode;},
+        activate(index:number){if(Number.isInteger(index)&&index>=0&&index<4){if(index!==mode)stormAge=0;mode=index;}},
+        update(_now:number,delta:number,reduced:boolean,player:T.Vector3){
+            const dt=Math.min(.05,Math.max(0,delta)),blend=1-Math.exp(-dt*3),target=weatherModes[mode]!;
+            if(!reduced)clock+=dt;
+            gather=T.MathUtils.lerp(gather,target.gather,blend);orbit=T.MathUtils.lerp(orbit,target.orbit,blend);lift=T.MathUtils.lerp(lift,target.lift,blend);energy=T.MathUtils.lerp(energy,target.energy,blend);
+            targetColor.set(target.color);tint.lerp(targetColor,blend);light.color.copy(tint);light.intensity=90+energy*35;warm.intensity=T.MathUtils.lerp(warm.intensity,mode===0?45:12,blend);
+            if(mode===1)stormAge+=dt;else stormAge=0;
+            // Local geometry only: a single brief discharge no more than once per eight seconds.
+            bolt.visible=!reduced&&mode===1&&stormAge>2&&stormAge%8<.12;
+            for(let i=0;i<forms.length;i++){
+                const f=forms[i]!,angle=(reduced?i*2.094:clock*.35+i*2.094);
+                const x=T.MathUtils.lerp(f.home.x,-10+(f.home.x+10)*.35,gather),z=T.MathUtils.lerp(f.home.z,44+(f.home.z-44)*.35,gather);
+                f.group.position.set(T.MathUtils.lerp(x,-10+Math.cos(angle)*5,orbit),f.home.y+lift+(reduced?0:Math.sin(clock*.4+i)*.2),T.MathUtils.lerp(z,44+Math.sin(angle)*5,orbit));
+                f.group.rotation.y=reduced?0:clock*(.03+orbit*.18);
+                f.group.scale.set(1+gather*.3,1+orbit*.5,1+gather*.3);
+                f.mat.uniforms.time!.value=clock;f.mat.uniforms.energy!.value=energy;f.mat.uniforms.tint!.value.copy(tint);
             }
-            for (let i = 0; i < count; i++) {
-                const k = i * 3, f = forms[i % 3]!, a = i * 2.39996, e = f.energy;
-                positions[k] = base[k]! + Math.cos(a) * e * 2 + (reduced ? 0 : Math.sin(clock * .21 + i) * .22);
-                positions[k + 1] = base[k + 1]! + e * Math.sin(i) * 1.5;
-                positions[k + 2] = base[k + 2]! + Math.sin(a) * e * 2;
-                const dx = positions[k]! - player.x, dz = positions[k + 2]! - player.z, d = Math.hypot(dx, dz);
-                if (d < 2.8 && d > .001) {
-                    const push = (1 - d / 2.8) * 1.1;
-                    positions[k]! += dx / d * push;
-                    positions[k + 2]! += dz / d * push;
-                }
+            bandMaterial.opacity=T.MathUtils.lerp(bandMaterial.opacity,mode===2||mode===3?.8:0,blend);
+            bands.forEach((band,i)=>{band.visible=bandMaterial.opacity>.005;band.scale.set(1+i*.15,mode===2?.45+i*.12:1,1);band.rotation.z=reduced?i*.2:Math.sin(clock*.3+i)*.2;});
+            bandMaterial.color.copy(tint);
+            controls.forEach((m,i)=>m.emissiveIntensity=i===mode?1.2:.2);
+            for(let i=0;i<count;i++){
+                const k=i*3,a=i*2.39996+(reduced?0:clock*.4*orbit),r=2+(i%19)/19*5;
+                positions[k]=T.MathUtils.lerp(base[k]!,-10+Math.cos(a)*r,orbit);
+                positions[k+1]=base[k+1]!+lift+Math.sin(i)*orbit*1.5;
+                positions[k+2]=T.MathUtils.lerp(base[k+2]!,44+Math.sin(a)*r,orbit);
             }
-            pg.attributes.position!.needsUpdate = true;
-            return player.x > -29 && player.z > 24;
+            pm.uniforms.tint!.value.copy(tint);pg.attributes.position!.needsUpdate=true;
+            return player.x>-29&&player.x<4&&player.z>24&&player.z<56;
         },
-        setTheme(dark: boolean) { stone.color.set(dark ? '#344b50' : '#b8c7c3'); frame.color.set(dark ? '#647c7c' : '#536d70'); light.intensity = dark ? 90 : 140; forms.forEach(f => { f.mat.uniforms.dark!.value = dark ? 1 : 0; }); },
-        dispose() { texture?.dispose(); root.removeFromParent(); geometries.forEach(g => g.dispose()); materials.forEach(m => m.dispose()); },
+        setTheme(dark:boolean){stone.color.set(dark?'#26333b':'#344249');frame.color.set(dark?'#647c7c':'#536d70');forms.forEach(f=>f.mat.uniforms.dark!.value=dark?1:0);},
+        dispose(){texture?.dispose();controlLabels.forEach(l=>l.texture.dispose());root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());},
     };
 }

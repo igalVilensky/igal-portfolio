@@ -33,7 +33,7 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  box(.7,h,d,x0,h/2,cz,m,s.id);
  // Experiments and AI own the lower shared walls. Retain Journey's taller enclosure above them.
  box(.7,h-14,8,x1,14+(h-14)/2,12,m,s.id);box(.7,h-9,8,x1,9+(h-9)/2,26,m,s.id);
- // Real six-metre doorway to the Intelligence Chamber; lintel retains the shell.
+ // Real six-metre doorway to the compact Journey rest bay; lintel retains the shell.
  for(const [a,b] of [[x0,-95],[-89,x1]])box(b!-a!,h,.7,(a!+b!)/2,h/2,z0,m,s.id);
  box(6,h-7,.7,-92,7+(h-7)/2,z0,m,s.id);box(w,h,.7,cx,h/2,z1,m,s.id);
  // Broad rising roof leaves an expansive west-facing focal wall.

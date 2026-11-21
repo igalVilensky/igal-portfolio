@@ -1,3 +1,4 @@
+import { localPortfolioAnswer } from "../../shared/ask-igal.js";
 import { familyAnswer } from "../../shared/family-knowledge.js";
 import { resolveEntity, entityInstruction, entityKnowledge, familyBoundary } from "../../shared/world-entities.js";
 import sourceLabelsData from "../../content/source-labels.json";
@@ -1443,7 +1444,14 @@ export default defineEventHandler(async (event): Promise<PortfolioAgentResponse>
   if (body?.entityId !== undefined && !entityId) {
     throw createError({ statusCode: 400, statusMessage: "Unknown entity" });
   }
-  if (entityId) {
+  if (entityId === 'ask-igal') {
+      const items = retrieveKnowledge(question, conversation, locale).filter(item => !item.visibility || item.visibility === 'public').filter(item => ['profile','project','experience','skill','faq'].includes(item.type));
+      const local = localPortfolioAnswer(question, locale, localizedProjectsData.projects);
+      const key = process.env.GROQ_API_KEY;
+      const answer = key && items.length ? await callGroq(key, question, conversation, items, locale, mode, entityId) : null;
+      return answer || local;
+    }
+    if (entityId) {
     const factual = familyAnswer(entityId, question, locale);
     if (factual) return { status: "answered", answer: factual, confidence: "high", sources: [], suggestedQuestions: [], actions: [] };
     const boundary = familyBoundary(entityId, question, locale);
