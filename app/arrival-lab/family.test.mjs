@@ -1,6 +1,7 @@
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
 import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import ts from 'typescript';import * as T from 'three';
-function module(file){const out={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(file,import.meta.url),'utf8').replaceAll('import.meta.dev','false'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name==='three'?T:name.includes('RoundedBoxGeometry')?{RoundedBoxGeometry}:module(name.endsWith('.js')?name:name+'.ts'),out);return out;}
+function module(file){const out={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(file,import.meta.url),'utf8').replaceAll('import.meta.dev','false'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name==='three'?T:name.includes('RoundedBoxGeometry')?{RoundedBoxGeometry}:name.includes('BufferGeometryUtils')?{mergeGeometries}:module(name.endsWith('.js')?name:name+'.ts'),out);return out;}
 const out=module('./family.ts'),nav=module('./family-navigation.ts');
 test('identities have calibrated heights and bounded repeatable reactions',()=>{const family=out.createFamily(new T.Scene());assert.deepEqual(family.people.map(p=>p.spec.height),[1.65,1.65,1.65,1.2,1.025]);for(const p of family.people){const box=new T.Box3().setFromObject(p.person);assert(Math.abs(box.max.y-box.min.y-p.spec.height)<.001);family.activate(p.spec.id);family.activate(p.spec.id);assert.equal(p.reaction,2.4);}family.dispose();});
 test('all destinations are connected and roaming leaves home, pauses and survives inactive scenes',()=>{for(let a=0;a<nav.familyNodes.length;a++)for(let b=0;b<nav.familyNodes.length;b++)if(a!==b)assert(nav.familyRoute(a,b).length);const family=out.createFamily(new T.Scene());const start=family.people.map(p=>p.person.position.clone());const moved=new Set();for(let n=0;n<2400;n++){family.update(n*50,.05,true,new T.Vector3(0,1.65,0));family.people.forEach((p,i)=>{if(p.person.position.distanceTo(start[i])>1)moved.add(i);});}assert.equal(moved.size,5);const p=family.people[0],before=p.person.position.clone();family.update(130000,.05,false,new T.Vector3(),false);assert.equal(family.root.visible,false);assert(p.person.position.equals(before));family.update(130050,.05,false,new T.Vector3(),true);assert.equal(family.root.visible,true);family.dispose();});
@@ -18,7 +19,7 @@ test('NPC travel covers the same distance at 5 and 20 frames per second',()=>{
  for(let n=0;n<5;n++)slow.update(n*200,.2,true,new T.Vector3());
  for(let n=0;n<20;n++)fast.update(n*50,.05,true,new T.Vector3());
  assert(slow.people[0].person.position.distanceTo(fast.people[0].person.position)<.001);
- assert(Math.abs(slow.people[0].person.position.z-6.9)<.001);
+ assert(Math.abs(slow.people[0].person.position.z-(6+.9*(1-(1-Math.exp(-5))/5)))<.001);
  slow.dispose();fast.dispose();
 });
 
@@ -112,4 +113,45 @@ test('outdoor roaming edges clear the Origin landscape and welcoming portico',()
    assert(Math.hypot(p.x-end[0],p.z-end[1])<.01,`${from} -> ${to}: ${p.toArray()}`);
   }
  }finally{origin.dispose();}
+});
+
+test('siblings gather, run a shared circuit, pause and resume wider exploration deterministically',()=>{
+ const family=out.createFamily(new T.Scene()),player=new T.Vector3(-100,1.65,-100),runs=new Set(),visited=new Set();let pauses=0;
+ try{
+  for(let n=0;n<10000;n++){
+   family.update(n*100,.1,false,player);
+   for(const p of family.people.slice(3)){
+    if(p.pace>1.5&&p.state==='walking')runs.add(p.spec.id);
+    if(p.wait>0)pauses++;
+    if(p.node===28||p.node===42)visited.add(p.spec.id);
+    assert(Number.isFinite(p.person.position.x)&&Number.isFinite(p.person.rotation.y));
+   }
+  }
+  assert.equal(runs.size,2);assert(pauses>0);assert.equal(visited.size,2,'both children also explore beyond home');
+  const child=family.people[3],before=child.person.position.clone();family.converse(child.spec.id,'responding');
+  for(let n=0;n<30;n++)family.update(1000000+n*100,.1,false,player);
+  assert(child.person.position.equals(before));assert.equal(child.reaction,0,'conversation uses its own gesture, not a looping greeting');
+ }finally{family.dispose();}
+});
+
+test('nearby adults face each other for a bounded conversational pause',()=>{
+ const family=out.createFamily(new T.Scene()),player=new T.Vector3(-100,1.65,-100);
+ try{
+  for(const [i,node] of [[0,48],[1,49]]){const p=family.people[i],[x,z]=nav.familyNodes[node];p.person.position.set(x,0,z);p.node=p.destination=node;p.wait=20;p.activity='observing';}
+  let chatting=false;
+  for(let n=0;n<60;n++){family.update(n*100,.1,false,player);if(family.people[0].state==='chatting')chatting=true;}
+  assert(chatting);assert(family.people[0].person.rotation.y>.5);assert(family.people[1].person.rotation.y<-.5);
+ }finally{family.dispose();}
+});
+
+test('winter dressing batches shared decorations, keeps nine candle flames, and disposes resources and collision entries',()=>{
+ const scene=new T.Scene(),parent=new T.Group();scene.add(parent);const solids=[];
+ const winter=module('./winter-home.ts').createWinterHome(parent,solids);
+ const geometries=new Set(),materials=new Set();let draws=0,flameVertices=0;
+ winter.root.traverse(o=>{if(o.isMesh){draws++;geometries.add(o.geometry);materials.add(o.material);if(!o.isInstancedMesh&&o.material.emissiveIntensity===1.1&&o.material.color.getHexString()==='ffd28a')flameVertices+=o.geometry.attributes.position.count;}});
+ assert(draws<20,'decorations remain batched');
+ const sphere=new T.SphereGeometry(1,10,7);assert.equal(flameVertices,9*sphere.index.count);sphere.dispose();
+ assert.equal(solids.length,3);assert.equal(winter.root.getObjectByName('Hanukkah · nine-light hanukkiah').type,'Group');
+ let released=0;for(const g of geometries)g.addEventListener('dispose',()=>released++);for(const m of materials)m.addEventListener('dispose',()=>released++);
+ winter.dispose();assert.equal(released,geometries.size+materials.size);assert.equal(parent.children.length,0);assert.equal(solids.length,0);
 });

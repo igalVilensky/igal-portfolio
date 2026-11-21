@@ -15,12 +15,30 @@ and skin maps, and preserves the original license. The selected assets total abo
 `character-assets.ts` clones skeletons with **independent inverse bind matrices**,
 changes mesh and joint proportions together, rebinds skinning and fits each complete
 model to its identity's metre height. Children have shorter relative legs and torsos,
-narrower shoulders and relatively larger heads. Mesh vertex colours provide shirts,
+narrower shoulders, shorter arm reach, softer jaws and relatively larger heads.
+The three-year-old has a stronger head/body contrast than the seven-year-old.
+Portrait-guided hair shaping keeps Nataniel tousled and Adriel shorter and neater. Mesh vertex colours provide shirts,
 trousers, shoes and skin; these are close-fitting garments, not separately tailored outfits.
 Hair and beard are authored meshes from the same licensed pack. Facial structure remains
 largely the base model's; this is approximate stylized identity, not a reconstructed face.
-Three.js AnimationMixer blends locally authored idle, walk and greeting clips. Navigation,
-turning, interaction identities and world visibility remain owned by `family.ts`.
+Three.js AnimationMixer blends idle, walk and run continuously. One-shot additive
+upper-body greetings have a lift/hold/release envelope; conversational gestures use
+a separate additive layer. Greeting never replaces the leg animation. Gait speed
+follows actual collision-resolved displacement, including slower turns. Seated
+poses still use cached, bounded fits against the skinned lower-body surface.
+Navigation, interaction identities and world visibility remain owned by `family.ts`.
+
+Family routines use the existing circulation graph plus four home gathering nodes.
+The siblings periodically meet for a short shared running circuit, then return to
+independent exploration. Conversations interrupt play and hold navigation safely.
+Adults can face nearby family during short pauses. There is no separate AI loop.
+
+`winter-home.ts` adds static Hanukkah and Christmas dressing to the existing home.
+The hanukkiah has eight equal candles and a raised central shamash. Tree lights and
+overhead bulbs are instanced; other small decorations are merged by material.
+Only the tree base/trunk and console join collision. Snow stays on exterior roofs.
+The home owns seasonal resource disposal; no extra shadow lights or particle loops
+are introduced. Seasonal dressing is always present, rather than date-controlled.
 
 ## Public portraits
 

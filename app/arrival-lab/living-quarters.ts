@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { createWinterHome } from './winter-home';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 /** Metres; east of Little Explorer, separate from the professional west wing. */
@@ -117,5 +118,6 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
    });
   return status;
  });
- return {root,portraits,setTheme(dark:boolean){stone.color.set(dark?'#70685e':'#e4d8c5');floor.color.set(dark?'#675d50':'#c9baa0');lights.forEach(l=>l.intensity=dark?40:55);},dispose(){disposed=true;textures.forEach(t=>t.dispose());root.removeFromParent();geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ const winter=createWinterHome(root,solids);
+ return {root,portraits,winter,setTheme(dark:boolean){stone.color.set(dark?'#70685e':'#e4d8c5');floor.color.set(dark?'#675d50':'#c9baa0');lights.forEach(l=>l.intensity=dark?40:55);},dispose(){disposed=true;winter.dispose();textures.forEach(t=>t.dispose());root.removeFromParent();geometry.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

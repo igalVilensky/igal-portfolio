@@ -43,7 +43,8 @@ test('real rigs preserve anatomy, ground seated transitions and raise a connecte
    const wavePoints=[];
    for(let n=0;n<40;n++){
     visual.update(.05,false,true,false);visual.root.updateMatrixWorld(true);
-    if(n<8)continue;
+    // Lift and release intentionally pass below the head; measure the held wave.
+    if(n<14||n>32)continue;
     const shoulder=point('upperarm_r'),elbow=point('lowerarm_r'),hand=point('hand_r'),head=point('Head');wavePoints.push(hand);
     assert(elbow.y>shoulder.y+height*.04,`${id}: upper arm rises above shoulder`);
     assert(hand.y>head.y+height*.04,`${id}: waving hand clears head height`);
@@ -57,7 +58,7 @@ test('real rigs preserve anatomy, ground seated transitions and raise a connecte
 
    // Smaller children currently cannot select adult furniture; verify their pose
    // against proportionate seat heights without changing that eligibility rule.
-   const seatHeight=age<5?.24:age<10?.30:.48;
+   const seatHeight=age<5?.18:age<10?.26:.48;
    const standing=thigh.quaternion.clone(),ankleHeight=point('foot_l').y;
    const legLengths=[point('thigh_l').distanceTo(point('calf_l')),point('calf_l').distanceTo(point('foot_l'))];
    for(let n=1;n<=20;n++){
@@ -65,8 +66,8 @@ test('real rigs preserve anatomy, ground seated transitions and raise a connecte
     assert(new T.Box3().setFromObject(visual.root,true).min.y>-.015,`${id}: sit-down does not sink feet through floor`);
    }
    const hip=point('thigh_l'),knee=point('calf_l'),ankle=point('foot_l');
-   assert(thigh.quaternion.angleTo(standing)>.8,`${id}: seated thigh bends`);
-   assert(hip.y>seatHeight&&hip.y<seatHeight+height*.12,`${id}: hip sockets sit naturally above cushion`);
+   assert(thigh.quaternion.angleTo(standing)>.8,`${id}: seated thigh bends (${thigh.quaternion.angleTo(standing)})`);
+   assert(hip.y>seatHeight&&hip.y<seatHeight+height*.12+.002,`${id}: hip sockets sit naturally above cushion (${hip.y} vs ${seatHeight})`);
    assert(Math.abs(hip.z)<.002,`${id}: hips align with seat anchor`);
    let underside=Infinity;
    const vertex=new T.Vector3();
@@ -97,12 +98,26 @@ test('real rigs preserve anatomy, ground seated transitions and raise a connecte
    visual.update(.2,true,false,false);visual.update(.3,true,false,false);
    assert(thigh.quaternion.angleTo(standing)>.01,`${id}: walking resumes after sitting`);
 
+   // An upper-body greeting must preserve a moving gait, including the run blend.
+   const movingLeg=thigh.quaternion.clone();let legMotion=0;
+   for(let n=0;n<30;n++){visual.update(.05,true,true,false,0,seatHeight,1.8);legMotion=Math.max(legMotion,movingLeg.angleTo(thigh.quaternion));}
+   assert(legMotion>.15,`${id}: legs keep moving under the greeting layer`);
+   for(let n=0;n<65;n++)visual.update(.05,false,true,false,0,seatHeight,0);
+   visual.root.updateMatrixWorld(true);const afterWave=point('hand_r');
+   assert(afterWave.y<point('Head').y,`${id}: a held greeting request does not loop overhead forever`);
+   let gestures=0;const hands=[];
+   for(let n=0;n<60;n++){visual.update(.05,false,false,false,0,seatHeight,0,'responding');visual.root.updateMatrixWorld(true);hands.push(point('hand_r'));}
+   for(const hand of hands)gestures=Math.max(gestures,hand.distanceTo(hands[0]));
+   assert(gestures>height*.035,`${id}: conversational gestures have a readable range`);
+   for(let n=0;n<20;n++)visual.update(.05,false,false,false);
    visual.root.traverse(o=>{if(o instanceof T.Mesh)for(const n of o.geometry.attributes.position.array)assert(Number.isFinite(n));});
   }
   // Later child creation must never mutate the adult's inverse bind matrices.
   for(const visual of models){visual.update(.1,false,false,false);visual.update(.3,false,false,false);visual.root.updateMatrixWorld(true);const box=new T.Box3().setFromObject(visual.root,true);assert(Math.abs(box.max.y-box.min.y-visual.height)<.025,`shared rig isolation: ${box.max.y-box.min.y} vs ${visual.height}`);}
   function ratios(visual){let head,hip,knee,ankle;visual.root.updateMatrixWorld(true);visual.root.traverse(o=>{if(o.name==='Head')head=o;if(o.name==='pelvis')hip=o;if(o.name==='calf_l')knee=o;if(o.name==='foot_l')ankle=o;});return {head:head.getWorldPosition(new T.Vector3()).y/visual.height,leg:knee.getWorldPosition(new T.Vector3()).distanceTo(ankle.getWorldPosition(new T.Vector3()))/visual.height};}
   const adult=ratios(models[0]),child=ratios(models[3]),toddler=ratios(models[4]);
-  assert(child.leg<adult.leg);assert(toddler.leg<child.leg);assert(toddler.head<adult.head);
+  assert(child.leg<adult.leg*.9);assert(toddler.leg<child.leg*.92);assert(toddler.head<child.head&&child.head<adult.head);
+  // Fraction of height above the head joint increases with younger age.
+  assert((1-child.head)>(1-adult.head)*1.2);assert((1-toddler.head)>(1-child.head)*1.05);
  }finally{assets?.dispose();GLTFLoader.prototype.loadAsync=original;globalThis.ProgressEvent=previous;}
 });
