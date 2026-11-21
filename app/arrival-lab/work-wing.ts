@@ -46,6 +46,6 @@ export function createWorkWing(scene:T.Scene,solids:T.Mesh[]){
  // Journey doubles as a quiet project library and the architectural stair hall.
  table(-90,25,4);box(5,2.8,.5,-90,1.4,29.3,ink);for(let i=0;i<12;i++)box(.22,1.1,.35,-92+i*.35,1.9,28.95,i%2?oak:stone,false);
  sign('ROOF TERRACE  ↑',-64,2.6,11.5,0,4);
- function update(dt:number,p:T.Vector3,reduced:boolean,npcs:T.Vector3[]=[]){let changed=false;for(const d of doors){const target=[p,...npcs].some(p=>Math.hypot(p.x-d.x,p.z-d.z)<10)?1:0;const next=reduced?target:T.MathUtils.damp(d.progress,target,5,dt);if(Math.abs(next-d.progress)>.0001)changed=true;d.progress=next;for(const {leaf,side} of d.leaves)leaf.position.x=side*(d.width/4-.1+d.progress*(d.width/2-.3));}return changed;}
+ function update(dt:number,p:T.Vector3,reduced:boolean,npcs:T.Vector3[]=[]){let changed=false;for(const d of doors){const nearby=(point:T.Vector3)=>(point.x-d.x)**2+(point.z-d.z)**2<100;const target=nearby(p)||npcs.some(nearby)?1:0;const next=reduced?target:T.MathUtils.damp(d.progress,target,5,dt);if(Math.abs(next-d.progress)>.0001)changed=true;d.progress=next;for(const {leaf,side} of d.leaves)leaf.position.x=side*(d.width/4-.1+d.progress*(d.width/2-.3));}return changed;}
  return {root,update,setTheme(dark:boolean){stone.color.set(dark?'#82938e':'#e0ddd1');light.emissiveIntensity=dark?1:.6;},dispose(){root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}};
 }

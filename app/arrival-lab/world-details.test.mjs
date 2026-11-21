@@ -17,7 +17,7 @@ async function prepare(name){
  await mkdir(dirname(join(dir,name)),{recursive:true});
  await writeFile(join(dir,name+'.mjs'),code.replace(/from ['"](\.\/[^'"]+)['"]/g,"from '$1.mjs'"));
 }
-for(const name of ['lagoon','sky-coaster','expansion','living-quarters','two-secrets','lagoon-model','creation-yard','carryables','print-model','impossible-threshold'])await prepare(name);
+for(const name of ['atmosphere','skytube','lagoon','sky-coaster','expansion','living-quarters','two-secrets','lagoon-model','creation-yard','carryables','print-model','impossible-threshold'])await prepare(name);
 const load=name=>import(join(dir,name+'.mjs'));
 const savedDocument=globalThis.document,savedStorage=globalThis.localStorage;
 const canvas=()=>({width:0,height:0,getContext:()=>({fillRect(){},fillText(){},clearRect(){}})});
@@ -101,4 +101,29 @@ test('marine lanes clear the actual coaster bearing supports',async()=>{
  const scene=new T.Scene(),solids=[],lagoon=createLagoon(scene,solids),coaster=createSkyCoaster(scene,solids);
  try{lagoon.registerSupports(coaster.root);for(let i=0;i<5;i++)for(let t=0;t<80;t+=.2){const p=marineRoute(i,t);for(const b of lagoon.supportBounds)assert(b.distanceToPoint(new T.Vector3(p.x,p.y,p.z))>2.8,JSON.stringify({p,min:b.min,max:b.max}));}}
  finally{lagoon.dispose();coaster.dispose();globalThis.document=savedDocument;}
+});
+
+test('hidden lagoon and atmosphere skip presentation buffers and resume without rebuilding',async()=>{
+ const {createLagoon}=await load('lagoon'),{createAtmosphere}=await load('atmosphere');
+ const previousMedia=globalThis.matchMedia;globalThis.matchMedia=()=>({matches:false});
+ globalThis.document={createElement:canvas};
+ const scene=new T.Scene(),lagoon=createLagoon(scene,[]),engine=createAtmosphere(scene,[]),camera=new T.PerspectiveCamera();camera.position.set(-170,2,65);
+ try{
+  lagoon.update(.1,false,camera);const fish=scene.getObjectByName('Lagoon · schooling fish'),version=fish.instanceMatrix.version;
+  assert.equal(lagoon.update(.1,false,camera,false),false);assert.equal(fish.instanceMatrix.version,version);
+  lagoon.update(.1,false,camera,true);assert(fish.instanceMatrix.version>version);
+  let particles;scene.getObjectByName('living-atmosphere').traverse(o=>{if(o instanceof T.Points)particles=o;});assert(particles);
+  const particleVersion=particles.geometry.attributes.position.version;engine.activate(2);
+  for(let i=0;i<20;i++)assert.equal(engine.update(i*50,.05,false,camera.position,false),false);
+  assert.equal(engine.mode,2);assert.equal(particles.geometry.attributes.position.version,particleVersion);
+  engine.update(1100,.05,false,camera.position,true);assert(particles.geometry.attributes.position.version>particleVersion);
+ }finally{lagoon.dispose();engine.dispose();globalThis.document=savedDocument;globalThis.matchMedia=previousMedia;}
+});
+test('ride owners release instancing resources on disposal',async()=>{
+ const {createSkyCoaster}=await load('sky-coaster'),{createSkyNetwork}=await load('skytube');
+ for(const create of [createSkyCoaster,createSkyNetwork]){
+  const scene=new T.Scene(),ride=create(scene,[]);let owned=0,released=0;
+  scene.traverse(o=>{if(o instanceof T.InstancedMesh){owned++;o.addEventListener('dispose',()=>released++);}});
+  assert(owned>0);ride.dispose();assert.equal(released,owned);
+ }
 });

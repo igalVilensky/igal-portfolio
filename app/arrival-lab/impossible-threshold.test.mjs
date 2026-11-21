@@ -9,7 +9,7 @@ function load(name,dependencies={}) {
  const exports={};new Function('require','exports',code)(id=>id==='three'?T:dependencies[id],exports);return exports;
 }
 const collision=load('collision');
-const {createImpossibleThreshold}=load('impossible-threshold',{'./collision':collision});
+const {createImpossibleThreshold}=load('impossible-threshold',{'./collision':collision,'./portal-render-state':load('portal-render-state')});
 test('closed door blocks; opening alone never switches; real crossing returns without retrigger',()=>{
  const scene=new T.Scene(),hall=new T.Group();scene.add(hall);const solids=[];
  const world=createImpossibleThreshold(scene,solids),camera=new T.PerspectiveCamera(65,1,.08,220);
@@ -65,7 +65,7 @@ test('roof is owned by the existing hall visibility switch and restored after wo
 });
 test('live doorway views preserve scene visibility, clipping, render targets and viewer camera',()=>{
  const scene=new T.Scene(),hall=new T.Group();scene.add(hall);const world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera(65,1.6,.08,4000);camera.position.set(12,1.65,-66);world.update(0,true,camera);world.activate(true);world.update(0,true,camera);const p=camera.position.clone(),q=camera.quaternion.clone(),visibility=scene.children.map(o=>o.visible),clipping=[],calls=[];let target=null;
- const renderer={clippingPlanes:clipping,shadowMap:{autoUpdate:false,needsUpdate:true},getRenderTarget:()=>target,setRenderTarget:t=>target=t,render:(s,c)=>calls.push({p:c.position.clone(),hall:hall.visible,planes:renderer.clippingPlanes.length,clip:renderer.clippingPlanes[0]?.clone()})};world.renderViews(renderer,camera);assert.equal(calls.length,1);camera.rotateY(Math.PI);world.renderViews(renderer,camera);assert.equal(calls.length,1,'offscreen aperture adds no render pass');camera.quaternion.copy(q);assert.equal(calls[0].hall,false);assert.equal(calls[0].planes,1);assert(Math.abs(calls[0].p.z+3.5)<.001);assert.deepEqual(scene.children.map(o=>o.visible),visibility);assert.equal(renderer.clippingPlanes,clipping);assert.equal(target,null);assert(camera.position.equals(p));assert(camera.quaternion.equals(q));assert.equal(renderer.shadowMap.needsUpdate,true);
+ const renderer={clippingPlanes:clipping,shadowMap:{autoUpdate:false,needsUpdate:true},getActiveCubeFace:()=>0,getActiveMipmapLevel:()=>0,getRenderTarget:()=>target,setRenderTarget:t=>target=t,render:(s,c)=>calls.push({p:c.position.clone(),hall:hall.visible,planes:renderer.clippingPlanes.length,clip:renderer.clippingPlanes[0]?.clone()})};world.renderViews(renderer,camera);assert.equal(calls.length,1);camera.rotateY(Math.PI);world.renderViews(renderer,camera);assert.equal(calls.length,1,'offscreen aperture adds no render pass');camera.quaternion.copy(q);assert.equal(calls[0].hall,false);assert.equal(calls[0].planes,1);assert(Math.abs(calls[0].p.z+3.5)<.001);assert.deepEqual(scene.children.map(o=>o.visible),visibility);assert.equal(renderer.clippingPlanes,clipping);assert.equal(target,null);assert(camera.position.equals(p));assert(camera.quaternion.equals(q));assert.equal(renderer.shadowMap.needsUpdate,true);
  camera.position.z=-69.6;world.update(.01,true,camera);assert(world.active);camera.position.set(0,1.65,3);camera.lookAt(0,1.65,0);world.renderViews(renderer,camera);assert.equal(calls.length,2);assert.equal(calls[1].hall,true);assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-66))>0,'return aperture keeps the Arrival side of the wall');assert(calls[1].clip.distanceToPoint(new T.Vector3(12,1.65,-75))<0,'return aperture clips the deep back side');world.dispose();
 });
 
@@ -79,5 +79,14 @@ test('North cabin entrance is traversable both ways while glazing remains solid'
   player.set(13.75,1.65,74);move(player,new T.Vector3(0,0,4));assert(player.z<75.5,'window cannot be walked through');
   const lamp=scene.getObjectsByProperty('type','PointLight').find(o=>o.castShadow);
   assert(lamp,'interior has a shadow casting light');assert(lamp.getWorldPosition(new T.Vector3()).z>75.5);
+ }finally{world.dispose();}
+});
+
+test('synchronizing a nonwalking owner prevents stale-segment portal crossings',()=>{
+ const scene=new T.Scene(),world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera();
+ try{
+  camera.position.set(-12,1.65,-68.6);world.update(.01,true,camera);world.activate();world.update(1,true,camera);
+  camera.position.z=-70.6;world.syncPosition(camera.position);world.update(.01,true,camera);assert.equal(world.active,false);
+  camera.position.z=-68.6;world.update(.01,true,camera);camera.position.z=-70.6;world.update(.01,true,camera);assert.equal(world.active,true);
  }finally{world.dispose();}
 });

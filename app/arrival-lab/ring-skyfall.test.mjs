@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';import {join} from 'node:path';
 import ts from 'typescript';import * as T from 'three';
 const temp=await mkdtemp(join(tmpdir(),'ring-skyfall-'));after(()=>rm(temp,{recursive:true,force:true}));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(temp,'node_modules'),'dir');
-for(const name of ['star-geography','ring-skyfall','orbital-sculpture','child-character','winter-home','sky-coaster','skytube','collision','geography','origin','camera']){
+for(const name of ['npc-passenger','star-geography','ring-skyfall','orbital-sculpture','child-character','winter-home','sky-coaster','skytube','collision','geography','origin','camera']){
  const code=ts.transpileModule(await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'");await writeFile(join(temp,name+'.mjs'),code);
 }
 const {createRingSkyfall,skyfall,brakeSeconds}=await import(join(temp,'ring-skyfall.mjs'));

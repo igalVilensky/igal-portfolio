@@ -9,7 +9,7 @@ const dir=await mkdtemp(join(tmpdir(),'origin-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
 for(const name of ['star-geography','atmosphere-copy','origin','collision','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials']){
  const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
- await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
+ await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
 }
 const {createOrigin,originHeight}=await import(join(dir,'origin.mjs'));
 const {buildEnvironment}=await import(join(dir,'environment.mjs'));

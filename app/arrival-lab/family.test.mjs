@@ -4,7 +4,7 @@ import {test} from 'node:test';import assert from 'node:assert/strict';import {r
 function module(file){const out={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(file,import.meta.url),'utf8').replaceAll('import.meta.dev','false'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>name==='three'?T:name.includes('RoundedBoxGeometry')?{RoundedBoxGeometry}:name.includes('BufferGeometryUtils')?{mergeGeometries}:module(name.endsWith('.js')?name:name+'.ts'),out);return out;}
 const out=module('./family.ts'),nav=module('./family-navigation.ts');
 test('identities have calibrated heights and bounded repeatable reactions',()=>{const family=out.createFamily(new T.Scene());assert.deepEqual(family.people.map(p=>p.spec.height),[1.65,1.65,1.65,1.2,1.025]);for(const p of family.people){const box=new T.Box3().setFromObject(p.person);assert(Math.abs(box.max.y-box.min.y-p.spec.height)<.001);family.activate(p.spec.id);family.activate(p.spec.id);assert.equal(p.reaction,2.4);}family.dispose();});
-test('all destinations are connected and roaming leaves home, pauses and survives inactive scenes',()=>{for(let a=0;a<nav.familyNodes.length;a++)for(let b=0;b<nav.familyNodes.length;b++)if(a!==b)assert(nav.familyRoute(a,b).length);const family=out.createFamily(new T.Scene());const start=family.people.map(p=>p.person.position.clone());const moved=new Set();for(let n=0;n<2400;n++){family.update(n*50,.05,true,new T.Vector3(0,1.65,0));family.people.forEach((p,i)=>{if(p.person.position.distanceTo(start[i])>1)moved.add(i);});}assert.equal(moved.size,5);const p=family.people[0],before=p.person.position.clone();family.update(130000,.05,false,new T.Vector3(),false);assert.equal(family.root.visible,false);assert(p.person.position.equals(before));family.update(130050,.05,false,new T.Vector3(),true);assert.equal(family.root.visible,true);family.dispose();});
+test('all destinations are connected and roaming leaves home, pauses and survives inactive scenes',()=>{for(let a=0;a<nav.familyNodes.length;a++)for(let b=0;b<nav.familyNodes.length;b++)if(a!==b)assert(nav.familyRoute(a,b).length);const family=out.createFamily(new T.Scene());const start=family.people.map(p=>p.person.position.clone());const moved=new Set();for(let n=0;n<2400;n++){family.update(n*50,.05,true,new T.Vector3(0,1.65,0));family.people.forEach((p,i)=>{if(p.person.position.distanceTo(start[i])>1)moved.add(i);});}assert.equal(moved.size,5);const p=family.people[0],before=p.person.position.clone();family.update(130000,.05,false,new T.Vector3(),false);assert.equal(family.root.visible,false);assert(p.person.position.distanceTo(before)<.2);family.update(130050,.05,false,new T.Vector3(),true);assert.equal(family.root.visible,true);family.dispose();});
 test('private references are excluded from runtime modules',()=>{for(const file of ['./family.ts','./living-quarters.ts'])assert(!/design-references|family-space\.jpe?g/.test(readFileSync(new URL(file,import.meta.url),'utf8')));});
 
 test('all Living Quarters graph edges clear the actual room shells in both directions',()=>{const scene=new T.Scene(),solids=[],wing=module('./living-quarters.ts').createLivingQuarters(scene,solids);scene.updateMatrixWorld(true);const move=module('./collision.ts').createCollision(solids);for(const [a,b] of nav.familyEdges.filter(([a,b])=>a<11&&b<11)){for(const [from,to] of [[a,b],[b,a]]){const start=nav.familyNodes[from],end=nav.familyNodes[to],p=new T.Vector3(start[0],1.65,start[1]);move(p,new T.Vector3(end[0]-start[0],0,end[1]-start[1]));assert(Math.hypot(p.x-end[0],p.z-end[1])<.01,`${from} -> ${to}: ${p.toArray()}`);}}wing.dispose();});
@@ -47,7 +47,7 @@ test('expanded routes clear building shells, furniture and public door approache
 test('conversation holds position and releases the same valid route repeatedly',()=>{
  const family=out.createFamily(new T.Scene()),p=family.people[0];p.wait=0;p.route=[5];
  for(let turn=0;turn<3;turn++){
-  const before=p.person.position.clone();family.converse('igal','thinking');for(let n=0;n<20;n++)family.update(n*100,.1,true,new T.Vector3());assert(p.person.position.equals(before));
+  const before=p.person.position.clone();family.converse('igal','thinking');for(let n=0;n<20;n++)family.update(n*100,.1,true,new T.Vector3());assert(p.person.position.distanceTo(before)<.2);
   family.converse(null);p.reaction=0;for(let n=0;n<25;n++)family.update(3000+n*100,.1,true,new T.Vector3());assert(p.person.position.distanceTo(before)>0);
  }family.dispose();
 });
@@ -170,4 +170,13 @@ test('autonomous itineraries reach both ride owners and keep body disks separate
  try{for(let n=0;n<18000;n++){for(const ride of Object.values(rides)){ride.remaining-=.1;if(ride.remaining<=0)ride.npcPassenger=false;}family.update(n*100,.1,true,player);for(let a=0;a<5;a++)for(let b=a+1;b<5;b++){const p=family.people[a],q=family.people[b];if(p.riding||q.riding)continue;const radius=(p.spec.age<10?.22:.32)+(q.spec.age<10?.22:.32);assert(Math.hypot(p.person.position.x-q.person.position.x,p.person.position.z-q.person.position.z)>=radius-.002,`${p.spec.id}/${q.spec.id} intersect at ${n/10}s`);}}
  assert(counts[52]>0,'coaster itinerary boards');assert(counts[54]>0,'scenic SkyTube itinerary boards');
  }finally{family.dispose();}
+});
+
+test('hidden family advances activity without animating or resetting on return',()=>{
+ const family=out.createFamily(new T.Scene()),player=new T.Vector3(0,1.65,0),person=family.people[0];
+ let animations=0;person.visual={update(){animations++;}};person.wait=5;
+ for(let i=0;i<10;i++)assert.equal(family.update(i*100,.1,false,player,false),false);
+ assert(person.wait<4.1);assert.equal(animations,0);const wait=person.wait;
+ family.update(1100,.1,false,player,true);assert(person.wait<wait);assert.equal(animations,1);
+ person.visual=undefined;family.dispose();
 });

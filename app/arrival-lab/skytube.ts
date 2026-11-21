@@ -197,7 +197,7 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
   constrain(start:T.Vector3,end:T.Vector3){const y=end.y,p=start.clone();collision(p,end.clone().sub(start));end.x=p.x;end.z=p.z;end.y=y;},
   setLocale,
   setTheme(dark:boolean){stone.color.set(dark?'#8a9cac':'#e5e4d7');metal.color.set(dark?'#6b95a5':'#43616b');accent.color.set(dark?'#80b8c2':'#5dabb0');glass.opacity=dark?.11:.14;tubeGlass.opacity=dark?.045:.065;glow.emissiveIntensity=dark?.85:.3;},
-  dispose(){npc.dispose();passenger=false;labels.forEach(l=>l.texture.dispose());root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
+  dispose(){root.traverse(o=>{if(o instanceof T.InstancedMesh)o.dispose();});npc.dispose();passenger=false;labels.forEach(l=>l.texture.dispose());root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
  };
 }
 

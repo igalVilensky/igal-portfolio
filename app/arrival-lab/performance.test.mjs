@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import * as T from 'three';
-const load=(name,require)=>{const exports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(`./${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(require,exports);return exports;};
+const load=(name,require)=>{const exports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(`./${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(require,exports);return exports;};
 const collision=load('collision',()=>T),{createArrivalDiagnostics}=load('performance',()=>collision);
 test('exclusive phases partition CPU; all passes have correct denominators; reset drops old samples',()=>{
  let target=null,t=0;

@@ -13,8 +13,11 @@ Metric interpretation
 - Phase rows are exclusive CPU milliseconds per completed handler (including zeros).
   Their averages sum to handler CPU average; their p95 values must NOT be summed.
   p95 is unavailable below 20 samples. `movement` includes player collision/jumping;
-  `npc` includes intelligence/family/work-wing/explorer simulation. `world` includes
-  transport and portal setup. `other` includes remaining application/telemetry work.
+  `npc` includes intelligence/family/work-wing/explorer simulation. `transport`
+  includes Horizon Express, SkyTube, coaster and ring/skyfall updates. `water`
+  measures lagoon presentation; `atmosphere` measures the Atmosphere Engine;
+  `installations` includes printing, interiors and interactive installations.
+  `world` includes remaining world logic and portal setup. `other` includes remaining application/telemetry work.
 - `matrices` observes scene-wide updates and the Loop District root, including calls
   inside rendering. Other subsystem-local matrix work stays in its owning phase.
 - `renderSubmission` is synchronous renderer CPU time, exclusive of observed matrix
@@ -25,7 +28,8 @@ Metric interpretation
   The third table breaks these same totals down by collision owner (player, family,
   coast/snow and district); it is not additional CPU cost.
 - Collision candidates, rays and mesh-raycast dispatches count actual work; dispatches
-  are not triangle-intersection counts. Broad-phase meshes counts meshes scanned.
+  are not triangle-intersection counts. Broad-phase meshes counts bounds tested after static X/Z grid selection,
+  including all dynamic meshes. Triangle narrow-phase behavior is unchanged.
 - Pass/query counts and outside-handler render CPU are window totals; Hz uses actual
   window duration. Draw calls/triangles divide all window passes by completed handlers.
   Three's default per-render info reset is retained. Resource counts are renderer-known

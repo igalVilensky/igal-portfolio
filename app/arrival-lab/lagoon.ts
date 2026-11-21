@@ -192,9 +192,9 @@ export function createLagoon(scene:T.Scene,solids:T.Mesh[]){
 
  return {root,setLocale,supportBounds,
  registerSupports(transport:T.Object3D){transport.updateMatrixWorld(true);transport.traverse(o=>{if(o instanceof T.Mesh&&o.name==='Cloudbreaker · offset bearing mast'&&inExpansion(o.position.x,o.position.z)){o.userData.room='coaster-support';o.userData.noCollision=false;if(!solids.includes(o))solids.push(o);supportBounds.push(new T.Box3().setFromObject(o));}});},
- update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){
-  const near=camera.position.distanceToSquared(nearby)<160**2;
-  const underwater=inBasin(camera.position.x,camera.position.z)&&!inTunnel(camera.position.x,camera.position.y,camera.position.z);
+ update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,present=true){
+  const near=present&&camera.position.distanceToSquared(nearby)<160**2;
+  const underwater=present&&inBasin(camera.position.x,camera.position.z)&&!inTunnel(camera.position.x,camera.position.y,camera.position.z);
   const target=underwater?T.MathUtils.smoothstep(lagoon.water-camera.position.y,0,.7)*.24:0;
   submersion.value=T.MathUtils.damp(submersion.value,target/.24,6,dt);
   const before=veilMat.opacity;veilMat.opacity=T.MathUtils.damp(before,target,6,dt);veil.visible=veilMat.opacity>.001;

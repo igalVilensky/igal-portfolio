@@ -1,3 +1,4 @@
+import {capturePortalRenderState} from './portal-render-state';
 import * as T from 'three';
 import { createCollision } from './collision';
 
@@ -184,8 +185,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
    item.door.aperture.updateWorldMatrix(true,false);
    if(!viewFrustum.intersectsObject(item.door.aperture))continue;
    const target=targets[item.index]!,height=Math.max(256,Math.round(768/camera.aspect));if(target.height!==height)target.setSize(768,height);
-   const visibility=scene.children.map(o=>[o,o.visible] as const),background=scene.background,fog=scene.fog,renderTarget=renderer.getRenderTarget(),clip=renderer.clippingPlanes;
-   const shadowAuto=renderer.shadowMap.autoUpdate,shadowNeeds=renderer.shadowMap.needsUpdate;
+   const restore=capturePortalRenderState(renderer,scene,[entry,sunEntry,exit,sunExit].map(d=>d.aperture));
    portalCamera.copy(camera);portalCamera.position.set(active?-camera.position.x+(sunWorld?12:-12):-(camera.position.x-item.x),camera.position.y,active?-camera.position.z-69.5:-(camera.position.z+69.5));
    portalCamera.quaternion.premultiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.PI));portalCamera.far=active?savedFar:9000;portalCamera.updateProjectionMatrix();
    try{
@@ -196,12 +196,11 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
     renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=!primedViews.has(item.index);renderer.setRenderTarget(target);renderer.render(scene,portalCamera);primedViews.add(item.index);
     item.door.viewMaterial.uniforms.view!.value=target.texture;
    }finally{
-    visibility.forEach(([o,v])=>o.visible=v);for(const d of [entry,sunEntry,exit,sunExit])d.aperture.visible=true;
-    scene.background=background;scene.fog=fog;renderer.clippingPlanes=clip;renderer.setRenderTarget(renderTarget);renderer.shadowMap.autoUpdate=shadowAuto;renderer.shadowMap.needsUpdate=shadowNeeds;
+    restore();
    }
   }
  }
- return {renderViews,setLocale,get lightWalkProgress(){return lightWalk.size;},get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
+ return {syncPosition(position:T.Vector3){previous.copy(position);initialized=true;},renderViews,setLocale,get lightWalkProgress(){return lightWalk.size;},get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
   activate(sun=false){if(!active){sunWorld=sun;selected=doors[sun?1:0]!;}if(selected.state==='closed')selected.state='opening';},
   move(position:T.Vector3,delta:T.Vector3,hallCollision:ReturnType<typeof createCollision>){(active?(sunWorld?coastCollision:snowCollision):hallCollision)(position,delta);if(active){ground.position.x=position.x;ground.position.z=position.z;}},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;

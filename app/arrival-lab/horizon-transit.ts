@@ -17,7 +17,7 @@ export function createHorizonTransit(){
  function recover(camera:T.Camera){camera.position.copy(horizonExits[source]);phase='docked';age=0;u=source;}
  return {route,get phase(){return phase;},get ownsPassenger(){return owns();},get source(){return source;},get progress(){return u;},
  board(station:0|1,camera:T.Camera,allowed:boolean){if(disposed||owns()||!allowed||camera.position.distanceTo(horizonExits[station])>7)return false;source=station;age=0;u=source;phase='boarding';return true;},
- cancel(camera:T.Camera){if(phase!=='boarding')return false;recover(camera);return true;},
+ cancel(_camera:T.Camera){if(phase!=='boarding')return false;phase='docked';age=0;u=source;return true;},
  recover,setPaused(value:boolean){paused=value;},
  update(dt:number,camera:T.Camera){
   if(disposed||!owns()||paused)return;

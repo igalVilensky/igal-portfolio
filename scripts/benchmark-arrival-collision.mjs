@@ -10,7 +10,7 @@ import * as T from 'three';
 const root=new URL('../',import.meta.url),dir=await mkdtemp(join(tmpdir(),'arrival-collision-bench-'));
 try {
  await symlink(fileURLToPath(new URL('node_modules',root)),join(dir,'node_modules'),'dir');
- for(const name of ['geography','threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){
+ for(const name of ['star-geography','portal-render-state','geography','threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){
   const source=await readFile(new URL(`app/arrival-lab/${name}.ts`,root),'utf8');
   await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
  }
@@ -24,7 +24,7 @@ try {
  T.Mesh.prototype.raycast=function(...args){dispatches++;return original.apply(this,args);};
  try {
   for(const [version,source] of sources){
-   const exports={};new Function('require','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(()=>T,exports);
+   const exports={};new Function('require','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(()=>T,exports);
    const move=exports.createCollision(solids),position=new T.Vector3(),delta=new T.Vector3(),durations=[];
    let final;
    // First trial warms bounds/JIT. Alternate axes/directions on the real bridge.

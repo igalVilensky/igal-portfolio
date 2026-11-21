@@ -2,8 +2,8 @@ import type * as T from 'three';
 import { collisionMetrics, collisionOwners } from './collision';
 
 export const arrivalMetrics = { enabled: false, picks: 0 };
-export type CpuPhase = 'movement' | 'npc' | 'interaction' | 'world' | 'matrices' | 'renderSubmission' | 'other';
-const phases: CpuPhase[] = ['movement','npc','interaction','world','matrices','renderSubmission','other'];
+export type CpuPhase = 'movement' | 'npc' | 'transport' | 'water' | 'atmosphere' | 'installations' | 'interaction' | 'world' | 'matrices' | 'renderSubmission' | 'other';
+const phases: CpuPhase[] = ['movement','npc','transport','water','atmosphere','installations','interaction','world','matrices','renderSubmission','other'];
 const stats = (values: number[]) => {
   if (!values.length) return { samples: 0, avgMs: null, p95Ms: null };
   const sorted = [...values].sort((a,b)=>a-b);

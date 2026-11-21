@@ -15,11 +15,24 @@ export type CharacterVisual = {
 export async function loadCharacterAssets() {
  const loader=new GLTFLoader(),base='/arrival-lab/characters/';
  const names=['base-male','base-female','Hair_SimpleParted','Hair_Buns','Hair_Long','Hair_Beard'];
- const loaded=await Promise.all(names.map(name=>loader.loadAsync(base+name+'.gltf')));
+ // Wait for every request before releasing partial success: late completions are owned too.
+ const results=await Promise.allSettled(names.map(name=>loader.loadAsync(base+name+'.gltf')));
+ const failure=results.find(result=>result.status==='rejected');
+ if(failure){
+  const geometries=new Set<T.BufferGeometry>(),materials=new Set<T.Material>(),textures=new Set<T.Texture>(),skeletons=new Set<T.Skeleton>();
+  for(const result of results)if(result.status==='fulfilled')result.value.scene.traverse(o=>{
+   if(o instanceof T.SkinnedMesh)skeletons.add(o.skeleton);
+   if(o instanceof T.Mesh){geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){materials.add(m);for(const value of Object.values(m))if(value instanceof T.Texture)textures.add(value);}}
+  });
+  skeletons.forEach(s=>s.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());
+  throw failure.reason;
+ }
+ const loaded=results.map(result=>(result as PromiseFulfilledResult<Awaited<ReturnType<typeof loader.loadAsync>>>).value);
  const sources=new Map(names.map((name,i)=>[name,loaded[i]!.scene]));
  const skeletons=new Set<T.Skeleton>();
  const geometries=new Set<T.BufferGeometry>(),materials=new Set<T.Material>(),textures=new Set<T.Texture>();
- for(const source of sources.values())source.traverse(o=>{if(o instanceof T.Mesh){geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){materials.add(m);for(const v of Object.values(m))if(v instanceof T.Texture)textures.add(v);}}});
+ for(const source of sources.values())source.traverse(o=>{if(o instanceof T.SkinnedMesh)skeletons.add(o.skeleton);if(o instanceof T.Mesh){geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){materials.add(m);for(const v of Object.values(m))if(v instanceof T.Texture)textures.add(v);}}});
+ const mixers:T.AnimationMixer[]=[];
  const children:ReturnType<typeof createChildCharacter>[]=[];
  let disposed=false;
  return {
@@ -164,6 +177,7 @@ export async function loadCharacterAssets() {
     return new T.AnimationClip(name,duration,tracks);
    };
    const mixer=new T.AnimationMixer(model),idleClip=clip('idle',4.8,'idle');
+   mixers.push(mixer);
    const idle=mixer.clipAction(idleClip),walk=mixer.clipAction(clip('walk',toddler?.62:child?.70:spec.id==='amelia'?.98:spec.id==='anastasia'?1.10:1.04,'walk')),run=mixer.clipAction(clip('run',toddler?.48:.58,'run'));
    const waveClip=T.AnimationUtils.makeClipAdditive(clip('greeting',2.4,'greet'),0,idleClip);
    const talkClip=T.AnimationUtils.makeClipAdditive(clip('conversation',3.6,'talk'),0,idleClip);
@@ -274,6 +288,6 @@ export async function loadCharacterAssets() {
     model.position.y+=restSupport-lowestSupport();
    }};
   },
-  dispose(){disposed=true;children.forEach(child=>child.dispose());skeletons.forEach(skeleton=>skeleton.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
+  dispose(){if(disposed)return;disposed=true;mixers.forEach(m=>{m.stopAllAction();m.uncacheRoot(m.getRoot());});children.forEach(child=>child.dispose());skeletons.forEach(skeleton=>skeleton.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
  };
 }

@@ -12,6 +12,17 @@ export function createCollision(solids: T.Mesh[], owner = 'unlabeled') {
   // Cache static expansion bounds; moving Living Wall meshes remain live raycast targets.
   solids[0]?.parent?.updateMatrixWorld(true);
   const staticBounds = new Map(barriers.filter(m => m.userData.room).map(m => [m, new T.Box3().setFromObject(m)]));
+  // Static X/Z grid only narrows candidates; original bounds and triangle rays remain authoritative.
+  const cellSize=16,grid=new Map<number,Map<number,T.Mesh[]>>(),dynamic=barriers.filter(mesh=>!staticBounds.has(mesh));
+  for(const [mesh,bounds] of staticBounds){
+    for(let x=Math.floor(bounds.min.x/cellSize);x<=Math.floor(bounds.max.x/cellSize);x++){
+      let column=grid.get(x);if(!column){column=new Map();grid.set(x,column);}
+      for(let z=Math.floor(bounds.min.z/cellSize);z<=Math.floor(bounds.max.z/cellSize);z++){
+        let cell=column.get(z);if(!cell){cell=[];column.set(z,cell);}cell.push(mesh);
+      }
+    }
+  }
+  const selected=new Set<T.Mesh>();
   const dynamicBounds = new T.Box3(), safetySweep = new T.Box3();
   const sweep = new T.Box3(), end = new T.Vector3(), step = new T.Vector3(), origin = new T.Vector3(), low = new T.Vector3();
   const candidates: T.Mesh[] = [], safety: T.Mesh[] = [], hits: T.Intersection[] = [];
@@ -38,7 +49,13 @@ export function createCollision(solids: T.Mesh[], owner = 'unlabeled') {
     const broadStarted = collisionMetrics.enabled ? performance.now() : 0;
     safetySweep.copy(sweep);safetySweep.min.y=safetySweep.max.y=.5;
     let dynamicCandidates=0;
-    for(const mesh of barriers){
+    selected.clear();
+    const minX=Math.floor(sweep.min.x/cellSize),maxX=Math.floor(sweep.max.x/cellSize),minZ=Math.floor(sweep.min.z/cellSize),maxZ=Math.floor(sweep.max.z/cellSize);
+    // Long guided sweeps must not scan a huge empty grid rectangle.
+    if((maxX-minX+1)*(maxZ-minZ+1)>staticBounds.size){for(const mesh of staticBounds.keys())selected.add(mesh);}
+    else for(let x=minX;x<=maxX;x++)for(let z=minZ;z<=maxZ;z++)for(const mesh of grid.get(x)?.get(z)??[])selected.add(mesh);
+    for(const mesh of dynamic)selected.add(mesh);
+    for(const mesh of selected){
       let bounds=staticBounds.get(mesh);
       // Unknown/moving rigid meshes use their CURRENT world transform, never a cached pose.
       // Deformed, instanced and custom-raycast meshes retain the conservative fallback.
@@ -52,7 +69,7 @@ export function createCollision(solids: T.Mesh[], owner = 'unlabeled') {
       }
     }
     if(collisionMetrics.enabled){
-      collisionMetrics.broadPhaseMs+=performance.now()-broadStarted;collisionMetrics.broadPhaseMeshes+=barriers.length;
+      collisionMetrics.broadPhaseMs+=performance.now()-broadStarted;collisionMetrics.broadPhaseMeshes+=selected.size;
       collisionMetrics.candidates+=candidates.length;collisionMetrics.dynamicCandidates+=dynamicCandidates;
       collisionMetrics.maxCandidates=Math.max(collisionMetrics.maxCandidates,candidates.length);
     }

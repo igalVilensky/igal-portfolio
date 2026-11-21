@@ -120,3 +120,9 @@ test('real rigs preserve anatomy, ground seated transitions and raise a connecte
 
  }finally{assets?.dispose();GLTFLoader.prototype.loadAsync=original;globalThis.ProgressEvent=previous;}
 });
+test('failed asset batches dispose shared resources once, including late successes',async()=>{
+ const original=GLTFLoader.prototype.loadAsync,geometry=new T.BoxGeometry(),texture=new T.Texture(),material=new T.MeshBasicMaterial({map:texture});
+ const counts={geometry:0,material:0,texture:0};geometry.addEventListener('dispose',()=>counts.geometry++);material.addEventListener('dispose',()=>counts.material++);texture.addEventListener('dispose',()=>counts.texture++);
+ GLTFLoader.prototype.loadAsync=async function(path){if(path.includes('base-female'))throw Error('missing model');await Promise.resolve();const scene=new T.Group();scene.add(new T.Mesh(geometry,material));return {scene};};
+ try{await assert.rejects(loadCharacterAssets(),/missing model/);assert.deepEqual(counts,{geometry:1,material:1,texture:1});}finally{GLTFLoader.prototype.loadAsync=original;}
+});

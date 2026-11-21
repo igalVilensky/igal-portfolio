@@ -124,6 +124,6 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
    return {changed:true,turn:0};
   },
   setTheme(dark:boolean){pale.color.set(dark?'#9daebe':'#e9dfcc');},
-  dispose(){npc.dispose();root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
+  dispose(){root.traverse(o=>{if(o instanceof T.InstancedMesh)o.dispose();});npc.dispose();root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
  };
 }

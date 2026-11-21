@@ -151,12 +151,14 @@ export function createAtmosphere(scene: T.Scene, solids: T.Mesh[]) {
         setLocale,
         get mode(){return mode;},
         activate(index:number){if(Number.isInteger(index)&&index>=0&&index<4){if(index!==mode)stormAge=0;mode=index;}},
-        update(_now:number,delta:number,reduced:boolean,player:T.Vector3){
+        update(_now:number,delta:number,reduced:boolean,player:T.Vector3,present=true){
             const dt=Math.min(.05,Math.max(0,delta)),blend=1-Math.exp(-dt*3),target=weatherModes[mode]!;
             if(!reduced)clock+=dt;
             gather=T.MathUtils.lerp(gather,target.gather,blend);orbit=T.MathUtils.lerp(orbit,target.orbit,blend);lift=T.MathUtils.lerp(lift,target.lift,blend);energy=T.MathUtils.lerp(energy,target.energy,blend);
             targetColor.set(target.color);tint.lerp(targetColor,blend);light.color.copy(tint);light.intensity=90+energy*35;warm.intensity=T.MathUtils.lerp(warm.intensity,mode===0?45:12,blend);
             if(mode===1)stormAge+=dt;else stormAge=0;
+            // Logical mode, clock and weather blending continue while presentation is hidden.
+            if(!present)return false;
             // Local geometry only: a single brief discharge no more than once per eight seconds.
             bolt.visible=!reduced&&mode===1&&stormAge>2&&stormAge%8<.12;
             for(let i=0;i<forms.length;i++){

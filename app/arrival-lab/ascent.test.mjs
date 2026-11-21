@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import ts from 'typescript';
 import * as T from 'three';
-const exports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL('./ascent.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(()=>T,exports);
+const exports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL('./ascent.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(()=>T,exports);
 const {createClimb,roofHeight,stairHeight,createAscent,ascent}=exports;
 function tick(c,p,axis,seconds,dt=1/60){for(let t=0;t<seconds;t+=dt)c.update(dt,axis,p);}
 test('three reversible climbs have continuous positions, clamp endpoints and restore walking',()=>{
@@ -27,14 +27,14 @@ test('roof uses a single root and bounded shared geometry, theme preserves state
  const scene=new T.Scene(),solids=[],roof=createAscent(scene,solids);assert.equal(roof.root.parent,scene);assert(solids.length<150);const p=roof.root.children[0].position.clone();roof.setTheme(true);assert(roof.root.children[0].position.equals(p));assert(solids.some(s=>s.userData.noCollision));roof.dispose();assert.equal(roof.root.parent,null);
 });
 test('existing collision sweeps keep three rooftop round trips on visible connected surfaces',()=>{
- const collisionExports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL('./collision.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(()=>T,collisionExports);
+ const collisionExports={};new Function('require','exports',ts.transpileModule(readFileSync(new URL('./collision.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(()=>T,collisionExports);
  const scene=new T.Scene(),solids=[],roof=createAscent(scene,solids);scene.updateMatrixWorld(true);const collide=collisionExports.createCollision(solids),p=new T.Vector3(-54.8,12.05,19.5);
  function moveTo(x,z){for(let i=0;i<2000&&Math.hypot(p.x-x,p.z-z)>.02;i++){const delta=new T.Vector3(x-p.x,0,z-p.z).clampLength(0,.12);collide(p,delta);const h=roofHeight(p.x,p.z);assert.notEqual(h,undefined);p.y=h+1.65;}assert(Math.hypot(p.x-x,p.z-z)<.03,`stuck at ${p.toArray()}`);}
  for(let n=0;n<3;n++){moveTo(-40,19.5);moveTo(-40,44);moveTo(-36,55);assert.equal(p.y,16.05);moveTo(-40,44);moveTo(-40,19.5);moveTo(-54.8,19.5);assert.equal(p.y,12.05);}
  moveTo(-40,54);collide(p,new T.Vector3(0,0,10));assert(p.z<57&&p.z>56,'visible terrace edge stops the visitor');roof.dispose();
 });
 test('former ladder well is sealed while staircase has continuous endpoints',()=>{
- const compile=(name,require)=>{const out={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(`./${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(require,out);return out;};
+ const compile=(name,require)=>{const out={};new Function('require','exports',ts.transpileModule(readFileSync(new URL(`./${name}.ts`,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(require,out);return out;};
  const spaces=compile('spaces',()=>T),expansion=compile('expansion',id=>id==='three'?T:spaces),previous=globalThis.document;
  globalThis.document={createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})})};
  try{const scene=new T.Scene(),solids=[],rooms=expansion.createExpansion(scene,solids),roof=createAscent(scene,solids);scene.updateMatrixWorld(true);

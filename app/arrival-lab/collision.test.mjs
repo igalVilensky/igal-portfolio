@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import * as T from 'three';
 const exports = {};
-new Function('require','exports',ts.transpileModule(readFileSync(new URL('./collision.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText)(()=>T,exports);
+new Function('require','exports',ts.transpileModule(readFileSync(new URL('./collision.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(()=>T,exports);
 const {createCollision}=exports;
 function wall(scene,x,z,w=1,d=8){const mesh=new T.Mesh(new T.BoxGeometry(w,4,d),new T.MeshBasicMaterial());mesh.position.set(x,2,z);scene.add(mesh);return mesh;}
 test('sliding sweep preserves tangential movement without tunnelling',()=>{
@@ -49,4 +49,12 @@ test('owner counters partition query totals and count mesh dispatches rather tha
   assert.equal(metrics.collisionQueries,2);assert.equal(metrics.zeroQueries,1);assert.equal(metrics.raycasts,18);assert.equal(metrics.meshRaycastDispatches,0);
   assert.equal(owners.get('visitor').queries,2);assert.equal(owners.get('visitor').raycasts,18);assert.equal(owners.get('visitor').cpuMs,metrics.collisionMs);
  }finally{metrics.enabled=false;owners.clear();}
+});
+test('static grid preserves triangle collision while pruning remote room meshes',()=>{
+ const scene=new T.Scene(),meshes=[];
+ for(let i=0;i<100;i++){const m=wall(scene,i===0?2:100+i*20,0);m.userData.room='static';meshes.push(m);}
+ const move=createCollision(meshes),position=new T.Vector3(0,1.65,0);
+ exports.collisionMetrics.enabled=true;exports.collisionMetrics.broadPhaseMeshes=0;
+ try{move(position,new T.Vector3(4,0,0));assert(position.x>1.17&&position.x<1.19);assert(exports.collisionMetrics.broadPhaseMeshes<5);}
+ finally{exports.collisionMetrics.enabled=false;for(const m of meshes){m.geometry.dispose();m.material.dispose();}}
 });

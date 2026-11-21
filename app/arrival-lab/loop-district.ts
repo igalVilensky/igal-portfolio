@@ -1,3 +1,4 @@
+import {capturePortalRenderState} from './portal-render-state';
 import * as T from 'three';
 import { createCollision } from './collision';
 import { createThresholdView } from './threshold-view';
@@ -149,16 +150,16 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
    const mapping=new T.Matrix4().copy(destination.root.matrixWorld).multiply(turn).multiply(source.root.matrixWorld.clone().invert());
    viewCamera.copy(camera);viewCamera.position.applyMatrix4(mapping);viewCamera.quaternion.premultiply(new T.Quaternion().setFromRotationMatrix(mapping));viewCamera.updateProjectionMatrix();
    const height=Math.max(256,Math.round(640/camera.aspect));if(view.target.height!==height)view.target.setSize(640,height);
-   const visibility=scene.children.map(o=>[o,o.visible] as const),wasVault=vault.visible,clip=renderer.clippingPlanes,target=renderer.getRenderTarget(),shadows=renderer.shadowMap.needsUpdate;
+   const restore=capturePortalRenderState(renderer,scene,[vault,...Array.from(views.values(),v=>v.mesh)]);
    try{
     if(destination.environment==='loop-vault')scene.children.forEach(o=>o.visible=o===root);
     vault.visible=destination.environment==='loop-vault';views.forEach(v=>v.mesh.visible=false);
-    renderer.clippingPlanes=[new T.Plane(new T.Vector3(0,0,1),-.01).applyMatrix4(destination.root.matrixWorld)];renderer.shadowMap.needsUpdate=false;
+    renderer.clippingPlanes=[new T.Plane(new T.Vector3(0,0,1),-.01).applyMatrix4(destination.root.matrixWorld)];renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=false;
     renderer.setRenderTarget(view.target);renderer.render(scene,viewCamera);
-   }finally{visibility.forEach(([o,v])=>o.visible=v);vault.visible=wasVault;views.forEach(v=>v.mesh.visible=true);renderer.clippingPlanes=clip;renderer.setRenderTarget(target);renderer.shadowMap.needsUpdate=shadows;}
+   }finally{restore();}
   }
  }
- return {renderViews,root,vault,doors,pairs,get active(){return active;},get environment(){return active?'loop-vault':'loop-district';},
+ return {syncPosition(position:T.Vector3){previous.copy(position);initialized=true;},renderViews,root,vault,doors,pairs,get active(){return active;},get environment(){return active?'loop-vault':'loop-district';},
  contains(p:T.Vector3){return active||(p.x>79&&p.x<146+districtOffset&&p.z>=44.8&&p.z<=51.2)||(p.x>=146+districtOffset&&p.x<=210+districtOffset&&p.z>=25&&p.z<=81);},
  activate(id:string){const d=doors.find(d=>d.id===id);if(d)d.opened=true;},
  move(p:T.Vector3,delta:T.Vector3){const old=p.clone(),level=height(p);if(active)indoorCollision(p,delta);else exteriorCollision(p,delta);p.y=old.y;const next=height(p);p.y=(Math.abs(next-level)<.65?next:level)+1.65;},
