@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {flightCopy} from './flight-copy';
 import { islandDestinations } from './wayfinding';
 import { expansionCopy } from './lagoon-copy';
 const {locale}=useI18n();
@@ -20,7 +21,7 @@ onMounted(()=>closeButton.value?.focus());
    <ellipse cx="-170" cy="65" rx="41" ry="39" fill="#73c6c0" stroke="#4d9394"/><rect x="-190" y="112" width="48" height="40" rx="4" fill="#a6c9af"/><path d="M-112 62H-134 M-166 101V114" stroke="#a4b4a3" stroke-width="5"/><path d="M-180 30V100" stroke="#e6efd6" stroke-width="2"/>
    <polygon :points="points" fill="#d9d8bd" stroke="#7e988d" stroke-width="2"/>
    <path d="M-24 -100H24V24H-24Z M-62 10H-24 M24 19H100 M12 26V115 M-35 40V90 M35 35V90 M35 62H70" fill="none" stroke="#a4b4a3" stroke-width="6"/>
-   <g v-for="d in islandDestinations" :key="d.id"><circle :cx="d.x" :cy="d.z" r="2.5" fill="#4b6a66"/><text :x="d.x" :y="d.z+(d.id==='israel'?14:-7)" text-anchor="middle">{{d.id==='living-lagoon'?aquatic.lagoon:d.id==='creation-yard'?aquatic.yard:d.name}}</text></g>
+   <g v-for="d in islandDestinations" :key="d.id"><circle :cx="d.x" :cy="d.z" r="2.5" fill="#4b6a66"/><text :x="d.x" :y="d.z+(d.id==='israel'?14:-7)" text-anchor="middle">{{d.id==='sky-explorer'?flightCopy[locale==='de'||locale==='ru'?locale:'en'].name:d.id==='living-lagoon'?aquatic.lagoon:d.id==='creation-yard'?aquatic.yard:d.name}}</text></g>
    <circle :cx="player.x" :cy="player.z" r="5" fill="#c45e35" stroke="#fff9df" stroke-width="2"/>
    <text x="-118" y="-125">↑ Hall / memory doors</text>
   </svg>
@@ -38,7 +39,7 @@ onMounted(()=>closeButton.value?.focus());
    <text x="214" y="43">← Island bridge</text><text x="249" y="83">SkyTube</text>
    <circle cx="265" cy="74" r="1.5" fill="#4b6a66"/><circle :cx="position.x" :cy="position.z" r="2" fill="#c45e35" stroke="#fff9df" stroke-width=".7"/>
   </svg>
-  <template v-if="!local && environment!=='loop' && environment!=='vault'"><p>{{aquatic.guide}}</p><div class="map-expansion"><button @click="$emit('travel','living-lagoon')">{{aquatic.lagoon}}</button><button @click="$emit('travel','creation-yard')">{{aquatic.yard}}</button></div></template>
+  <template v-if="!local && environment!=='loop' && environment!=='vault'"><p>{{aquatic.guide}}</p><div class="map-expansion"><button @click="$emit('travel','sky-explorer')">{{flightCopy[locale==='de'||locale==='ru'?locale:'en'].name}}</button><button @click="$emit('travel','living-lagoon')">{{aquatic.lagoon}}</button><button @click="$emit('travel','creation-yard')">{{aquatic.yard}}</button></div></template>
   <p class="island-map-key"><span>●</span> You are here · Schematic, distances approximate</p>
   <p>North and Israel are entered through the memory doors inside Arrival. Loop is reached by SkyTube.</p>
  </section>

@@ -16,7 +16,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   let analogX=0, analogZ=0, sprint=false;
   const reset=()=>{keys.clear();velocity.set(0,0,0);analogX=analogZ=0;sprint=false;verticalAnalog=0;dragging=false;pointers.clear();multiple=false;};
   let yaw = .0574, pitch = .0855, targetYaw = yaw, targetPitch = pitch;
-  let enabled = true, climbing=false, swimming=false, verticalAnalog=0;
+  let enabled = true, climbing=false, swimming=false, flying=false, verticalAnalog=0;
   let dragging = false, distance = 0, lastX = 0, lastY = 0, multiple = false;
   const pointers = new Set<number>();
   const removers: (() => void)[] = [];
@@ -72,7 +72,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
     const step = steps[event.key];
     if (step) { event.preventDefault(); targetYaw += step[0]; targetPitch = T.MathUtils.clamp(targetPitch + step[1], -1.25, 1.35); }
-    if(swimming&&['Space','KeyC'].includes(event.code)){keys.add(event.code);event.preventDefault();return;}
+    if((swimming||flying)&&['Space','KeyC'].includes(event.code)){keys.add(event.code);event.preventDefault();return;}
     if(event.code==='Space'){event.preventDefault();if(!event.repeat&&!climbing)callbacks.jump();return;}
     if (!event.repeat && (event.code === 'KeyE' || event.key === 'Enter')) { event.preventDefault(); callbacks.activate(0, 0, true, false); }
   }
@@ -96,6 +96,8 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     setEnabled(value: boolean) { enabled = value; reset(); if(!value && document.pointerLockElement===canvas)document.exitPointerLock(); },
     analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
     reset,
+    setFlying(value:boolean){if(flying===value)return;flying=value;reset();},
+    flightIntent(){const x=analogX||Number(keys.has('KeyD'))-Number(keys.has('KeyA')),z=analogZ||Number(keys.has('KeyS'))-Number(keys.has('KeyW'));return {x:x*Math.cos(yaw)+z*Math.sin(yaw),z:z*Math.cos(yaw)-x*Math.sin(yaw),vertical:verticalAnalog||Number(keys.has('Space'))-Number(keys.has('KeyC')),boost:sprint||keys.has('ShiftLeft')||keys.has('ShiftRight')};},
     setSwimming(value:boolean){if(swimming===value)return;swimming=value;keys.delete('Space');keys.delete('KeyC');verticalAnalog=0;},
     swimAxis(){return swimming?(verticalAnalog||Number(keys.has('Space'))-Number(keys.has('KeyC'))):0;},
     swimAnalog(value:number){verticalAnalog=enabled?value:0;},
