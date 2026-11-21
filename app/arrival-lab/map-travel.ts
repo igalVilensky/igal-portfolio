@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {onHorizon} from './star-geography';
 import {roofHeight} from './ascent';
 import {originBoundary,originHeight} from './origin';
 import {worldSpaces} from './spaces';
@@ -14,6 +15,7 @@ export function planMapRoute(from:T.Vector3,to:T.Vector3,clear:(path:T.Vector3[]
  const add=(x:number,z:number)=>{let index=nodes.findIndex(n=>n.x===x&&n.z===z);if(index<0){index=nodes.length;nodes.push(new T.Vector3(x,1.65,z));}return index;};
  // Additional entrances use the same authored circulation graph, following inspected aisles.
  const aisles=[
+ [[12,62],[12,115],[0,140],[-4,140]],
  [[-57,19],[-62,19],[-62,21.8],[-90.5,21.8],[-90.5,11],[-92,11],[-92,6]],
  [[-32,27],[-35,27],[-35,29],[-20,29]],
  [[5,19],[0,-64],[0,-76],[0,-94],[22,-94],[22,-87],[32,-87],[32,-82]],
@@ -66,6 +68,7 @@ export function walkingRouteClear(path:T.Vector3[],move:(p:T.Vector3,d:T.Vector3
 /** Ground-only map travel never treats open cloud space or water as a walkway. */
 export function onMapGround(p:T.Vector3){
  if(!p.toArray().every(Number.isFinite)||inBasin(p.x,p.z))return false;
+ if(onHorizon(p.x,p.z)&&Math.abs(p.y-1.65)<.2)return true;
  if(Math.abs(p.y-1.65)>.2){const roof=roofHeight(p.x,p.z);return roof!==undefined&&Math.abs(p.y-roof-1.65)<.25||originHeight(p.x,p.z)>0&&Math.abs(p.y-originHeight(p.x,p.z)-1.65)<.25;}
  if(p.x>=-134&&p.x<=-106&&p.z>=59&&p.z<=65)return true;
  if(p.x>=-183.2&&p.x<=-152&&p.z>=99&&p.z<=114)return true;

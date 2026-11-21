@@ -7,7 +7,7 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'origin-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['origin','collision','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials']){
+for(const name of ['star-geography','atmosphere-copy','origin','collision','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials']){
  const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
  await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
 }
@@ -25,7 +25,7 @@ test('actual hall wall and moving door allow three reversible sprint sweeps only
  for(let i=0;i<3;i++){p.set(12,1.65,17);move(p,new T.Vector3(0,0,20));assert.ok(Math.abs(p.z-37)<.001,'no wall behind the open door');move(p,new T.Vector3(0,0,-20));assert.ok(Math.abs(p.z-17)<.001,'same opening returns inside');}
  p.set(22,1.65,17);move(p,new T.Vector3(0,0,20));assert.ok(p.z<24,'surrounding south wall stays solid');
  p.set(35,1.65,62);move(p,new T.Vector3(-23,0,0));assert.ok(Math.abs(p.x-12)<.001,'crosscourt stays clear between path walls');
- p.set(0,1.65,120);move(p,new T.Vector3(0,0,40));assert.ok(p.z<132&&p.z>130,'parapet stops sprint at visible edge');
+ p.set(0,1.65,180);move(p,new T.Vector3(0,0,40));assert.ok(p.z<197&&p.z>193,'parapet stops sprint at visible edge');
  origin.dispose();atmosphere.dispose();hall.dispose();assert.equal(origin.root.parent,null);
 });
 test('belvedere is continuously grounded and theme preserves entrance, camera and root identity',()=>{

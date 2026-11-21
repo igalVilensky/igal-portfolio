@@ -8,7 +8,7 @@ import * as T from 'three';
 const temp=await mkdtemp(join(tmpdir(),'arrival-lagoon-'));
 after(()=>rm(temp,{recursive:true,force:true}));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(temp,'node_modules'),'dir');
-for(const name of ['lagoon-model','lagoon-copy','lagoon','builder-model','creation-yard','collision','origin','sky-coaster','skytube','geography','camera','spaces','print-lab','print-model']){
+for(const name of ['star-geography','lagoon-model','lagoon-copy','lagoon','builder-model','creation-yard','collision','origin','sky-coaster','skytube','geography','camera','spaces','print-lab','print-model']){
  const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');
  const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'");
  await writeFile(join(temp,`${name}.mjs`),js);

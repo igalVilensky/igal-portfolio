@@ -1,7 +1,8 @@
 import * as T from 'three';
+import {starBoundary} from './star-geography';
 
 /** Metres in Arrival's coordinates. The south entrance never changes environments. */
-export const originBoundary = [[-112,-125],[62,-125],[84,-82],[84,105],[54,132],[-65,132],[-112,78]] as const;
+export const originBoundary = starBoundary;
 export function originHeight(x:number,z:number) { return x>=38&&x<=70&&z>=60&&z<=112 ? Math.min(4,(z-60)/5) : 0; }
 export function createOrigin(scene:T.Scene,solids:T.Mesh[]) {
  const root=new T.Group();root.name='The Origin';scene.add(root);
@@ -15,9 +16,16 @@ export function createOrigin(scene:T.Scene,solids:T.Mesh[]) {
  slab(originBoundary.map(([x,z])=>[x*.975,z*.975]),6,-4,basalt);
  slab(originBoundary.map(([x,z])=>[x*.88,z*.88]),5,-10,stone);
  const keel=mesh(new T.CylinderGeometry(80,32,30,7,1),basalt,-8,-29,0);keel.rotation.y=.15;keel.scale.z=1.4;
- // The enclosed Living Quarters replaces the x=84 edge rail for z=0..26; its perimeter owns protection there.
- // Edge protection is coincident with the visible retaining edge, including angled corners.
- originBoundary.forEach((a,i)=>{const b=originBoundary[(i+1)%originBoundary.length]!;if(a[0]===84&&b[0]===84){for(const [z,d] of [[-41,82],[35.25,18.5],[78.25,53.5]] as const)box(.45,.85,d,84,.425,z,pale,true);return;}if(a[0]===-112&&b[0]===-112){box(.45,.85,184,-112,.425,-33,pale,true);box(.45,.85,13,-112,.425,71.5,pale,true);return;}const length=Math.hypot(b[0]-a[0],b[1]-a[1]);const o=box(length,.85,.45,(a[0]+b[0])/2,.425,(a[1]+b[1])/2,pale,true);o.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0]);});
+ // Subdivide only at existing bridge portals; no rail crosses either approach.
+ originBoundary.forEach((a,i)=>{const b=originBoundary[(i+1)%originBoundary.length]!;
+  const length=Math.hypot(b[0]-a[0],b[1]-a[1]),cuts=[0,1];
+  for(const z of [44,52,58,66]){const t=(z-a[1])/(b[1]-a[1]);if(t>0&&t<1)cuts.push(t);}
+  cuts.sort((x,y)=>x-y);
+  for(let j=1;j<cuts.length;j++){const t0=cuts[j-1]!,t1=cuts[j]!,t=(t0+t1)/2,x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;
+   if(x>84&&z>=44&&z<=52||x< -108&&z>=58&&z<=66)continue;
+   const o=box(length*(t1-t0),.85,.45,x,.425,z,pale,true);o.rotation.y=-Math.atan2(b[1]-a[1],b[0]-a[0]);
+  }
+ });
  root.traverse(o=>{if(o instanceof T.Mesh&&o.userData.room==='origin'&&!o.userData.noCollision)o.userData.safetyBarrier=true;});
  // South portico: deep jambs, recessed bronze doors, cantilevered canopy.
  for(const side of [-1,1]){box(1.4,14,6,12+side*5.7,7,26,pale,true);box(1,24,2.5,side*19,12,25.5,pale,true);}

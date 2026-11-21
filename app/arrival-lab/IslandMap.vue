@@ -1,31 +1,42 @@
 <script setup lang="ts">
 import {MapPin,Navigation,Plus,Minus,X,Route,DoorOpen,Layers} from 'lucide-vue-next';
 import {originBoundary} from './origin';
-import {mapDestinations,mapRooms,projectWorld,selectMapDestination} from './world-map';
+import {mapDestinations,mapRooms,projectWorld,selectMapDestination,starAtlasBounds,horizonAtlasBounds} from './world-map';
+import {horizonBoundary} from './star-geography';
+import {createHorizonRoute} from './horizon-transit';
+import {horizonCopy} from './horizon-copy';
 import {navigationCopy} from './navigation-copy';
 const props=defineProps<{position:{x:number;z:number;yaw?:number};environment:string;notice?:string;device?:{x:number;z:number}}>();
 const emit=defineEmits<{close:[];travel:[id:string]}>();
 const {locale}=useI18n();
 const language=computed(()=>locale.value==='de'||locale.value==='ru'?locale.value:'en');
 const c=computed(()=>navigationCopy[language.value]);
+const overview=ref(props.position.x>400);
+const bounds=computed(()=>overview.value?horizonAtlasBounds:starAtlasBounds);
+const hc=computed(()=>horizonCopy[language.value]);
+const viewBox=computed(()=>`${bounds.value.minX} ${bounds.value.minZ} ${bounds.value.maxX-bounds.value.minX} ${bounds.value.maxZ-bounds.value.minZ}`);
+const remoteOutline=horizonBoundary.map(p=>p.join(',')).join(' ');
+const routeLine=createHorizonRoute().getSpacedPoints(80).map(p=>`${p.x},${p.z}`).join(' ');
+const visibleDestinations=computed(()=>mapDestinations.filter(d=>overview.value||d.point[0]<400));
 const selected=ref(''),zoom=ref(1.5),viewport=ref<HTMLElement>(),panel=ref<HTMLElement>(),closeButton=ref<HTMLButtonElement>();
 const destination=computed(()=>selectMapDestination(selected.value));
 const local=computed(()=>['antipayuta','sun-world','vault','secret'].includes(props.environment));
-const player=computed(()=>projectWorld(props.position.x,props.position.z));
+const player=computed(()=>projectWorld(props.position.x,props.position.z,bounds.value));
 const outline=originBoundary.map(([x,z])=>`${x},${z}`).join(' ');
-const marker=(d:typeof mapDestinations[number])=>projectWorld(d.id==='sky-explorer'&&props.device?props.device.x:d.point[0],d.id==='sky-explorer'&&props.device?props.device.z:d.point[2]);
+const marker=(d:typeof mapDestinations[number])=>projectWorld(d.id==='sky-explorer'&&props.device?props.device.x:d.point[0],d.id==='sky-explorer'&&props.device?props.device.z:d.point[2],bounds.value);
 function trap(e:KeyboardEvent){if(e.key==='Escape'){e.preventDefault();emit('close');return;}if(e.key!=='Tab')return;const nodes=panel.value?.querySelectorAll<HTMLElement>('button:not(:disabled),[tabindex="0"]');if(!nodes?.length)return;const first=nodes[0]!,last=nodes[nodes.length-1]!;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
 onMounted(()=>{closeButton.value?.focus();if(viewport.value&&!local.value){viewport.value.scrollLeft=Math.max(0,player.value.x/100*viewport.value.scrollWidth-viewport.value.clientWidth/2);viewport.value.scrollTop=Math.max(0,player.value.y/100*viewport.value.scrollHeight-viewport.value.clientHeight/2);}});
 </script>
 <template>
  <section ref="panel" class="island-map" role="dialog" aria-modal="true" aria-labelledby="island-map-title" @keydown.stop="trap" @pointerdown.stop>
   <header><div><p>ARRIVAL</p><h2 id="island-map-title">{{c.map}}</h2></div><button ref="closeButton" :aria-label="c.close" :title="c.close" @click="emit('close')"><X aria-hidden="true"/></button></header>
-  <div class="atlas-toolbar"><span>{{c.mainland}}</span><div><button :disabled="zoom<=1" :aria-label="c.zoomOut" @click="zoom=Math.max(1,zoom-.5)"><Minus aria-hidden="true"/></button><button :disabled="zoom>=4" :aria-label="c.zoomIn" @click="zoom=Math.min(4,zoom+.5)"><Plus aria-hidden="true"/></button></div></div>
+  <div class="atlas-toolbar"><span>{{overview?hc.outpost:hc.star}}</span><button @click="overview=!overview">{{overview?hc.star:hc.outpost}}</button><div><button :disabled="zoom<=1" :aria-label="c.zoomOut" @click="zoom=Math.max(1,zoom-.5)"><Minus aria-hidden="true"/></button><button :disabled="zoom>=4" :aria-label="c.zoomIn" @click="zoom=Math.min(4,zoom+.5)"><Plus aria-hidden="true"/></button></div></div>
   <div ref="viewport" class="atlas-viewport" tabindex="0" :aria-label="c.map">
    <div class="atlas-sheet" :style="{width:`${zoom*100}%`,height:`${zoom*420}px`}">
-    <svg viewBox="-220 -135 505 295" preserveAspectRatio="none" aria-hidden="true">
+    <svg :viewBox="viewBox" preserveAspectRatio="none" aria-hidden="true">
      <defs><pattern id="atlas-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#b4ccc4" stroke-width=".25"/></pattern></defs>
-     <rect x="-220" y="-135" width="505" height="295" fill="url(#atlas-grid)"/>
+     <rect :x="bounds.minX" :y="bounds.minZ" :width="bounds.maxX-bounds.minX" :height="bounds.maxZ-bounds.minZ" fill="url(#atlas-grid)"/>
+     <polyline :points="routeLine" fill="none" stroke="#997249" stroke-width="2" stroke-dasharray="6 5"/><polygon :points="remoteOutline" fill="#d9d8bd" stroke="#82998e" stroke-width="1"/>
      <polygon :points="outline" fill="#d9d8bd" stroke="#82998e" stroke-width="1"/>
      <ellipse cx="-170" cy="65" rx="41" ry="39" fill="#78b8b3" stroke="#4c8986"/>
      <rect x="-190" y="104" width="48" height="48" rx="3" fill="#a7c2aa" stroke="#6b8b77"/>
@@ -34,12 +45,12 @@ onMounted(()=>{closeButton.value?.focus();if(viewport.value&&!local.value){viewp
      <g fill="#eae6d5" stroke="#84958b" stroke-width=".5"><rect v-for="s in mapRooms.filter(d=>!['origin','loop-district','living-lagoon','creation-yard','skybridge'].includes(d.id))" :key="s.id" :x="s.bounds[0]" :y="s.bounds[2]" :width="s.bounds[1]-s.bounds[0]" :height="s.bounds[3]-s.bounds[2]" rx="1"/></g>
      <path d="M0 -95V19H-92 M12 19V62H-104 M20 19H96 M12 62H65V50H210 M-32 19V29H-20V33" stroke="#718d83" stroke-width="1.2" fill="none" stroke-dasharray="3 2"/>
     </svg>
-    <button v-for="d in mapDestinations" :key="d.id" class="atlas-marker" :class="{selected:selected===d.id,major:['arrival','living-lagoon','living-quarters','loop-district','creation-yard','living-works'].includes(d.id)}" :style="{left:`${marker(d).x}%`,top:`${marker(d).y}%`}" :aria-label="d.names[language]" :aria-pressed="selected===d.id" :title="d.names[language]" @click="selected=d.id"><DoorOpen v-if="d.kind==='door'" aria-hidden="true"/><Layers v-else-if="d.kind==='project'" aria-hidden="true"/><Navigation v-else-if="d.kind==='station'" aria-hidden="true"/><MapPin v-else aria-hidden="true"/><span>{{d.names[language]}}</span></button>
+    <button v-for="d in visibleDestinations" :key="d.id" class="atlas-marker" :class="{selected:selected===d.id,major:['arrival','living-lagoon','living-quarters','loop-district','creation-yard','living-works'].includes(d.id)}" :style="{left:`${marker(d).x}%`,top:`${marker(d).y}%`}" :aria-label="d.names[language]" :aria-pressed="selected===d.id" :title="d.names[language]" @click="selected=d.id"><DoorOpen v-if="d.kind==='door'" aria-hidden="true"/><Layers v-else-if="d.kind==='project'" aria-hidden="true"/><Navigation v-else-if="d.kind==='station'" aria-hidden="true"/><MapPin v-else aria-hidden="true"/><span>{{d.names[language]}}</span></button>
     <div v-if="!local" class="atlas-player" :style="{left:`${player.x}%`,top:`${player.y}%`,transform:`translate(-50%,-50%) rotate(${-(position.yaw||0)*180/Math.PI}deg)`}" :aria-label="c.you" role="img"><Navigation aria-hidden="true"/></div>
    </div>
   </div>
   <div v-if="local" class="atlas-local"><strong>{{environment==='antipayuta'?c.north:environment==='sun-world'?c.israel:environment==='vault'?c.vault:c.local}}</strong><p>{{c.local}} · X {{position.x.toFixed(1)}} / Z {{position.z.toFixed(1)}}</p><svg :viewBox="environment==='antipayuta'?'-25 -12 70 115':environment==='sun-world'?'-20 -8 55 55':environment==='vault'?'375 410 50 65':`${position.x-20} ${position.z-12} 40 24`" role="img" :aria-label="c.you"><rect v-if="environment==='vault'" x="383" y="420" width="34" height="46" fill="#54706a"/><rect v-if="environment==='antipayuta'" x="10" y="75.5" width="6" height="5" fill="#b9956e"/><path v-if="environment==='sun-world'" d="M0 0V12H9V32H20M-13 37H24" fill="none" stroke="#b3c5b4" stroke-width="2"/><circle :cx="position.x" :cy="position.z" r="1" fill="#d47c4e"/><path :d="`M${position.x} ${position.z}v-4`" stroke="#fff"/></svg></div>
-  <footer aria-live="polite"><template v-if="destination"><h3>{{destination.names[language]}}</h3><p>{{destination.kind==='door'?c.remote:c.description}}</p><button class="atlas-travel" @click="emit('travel',destination.id)"><Route aria-hidden="true"/>{{c.travel}}</button></template><p v-else>{{c.choose}}</p><p v-if="notice" role="status">{{notice}}</p><small>{{c.you}} · {{c.description}}</small></footer>
+  <footer aria-live="polite"><template v-if="destination"><h3>{{destination.names[language]}}</h3><p>{{destination.id.startsWith('horizon')?hc.connection:destination.kind==='door'?c.remote:c.description}}</p><button class="atlas-travel" @click="emit('travel',destination.id)"><Route aria-hidden="true"/>{{c.travel}}</button></template><p v-else>{{c.choose}}</p><p v-if="notice" role="status">{{notice}}</p><small>{{c.you}} · {{c.description}}</small></footer>
  </section>
 </template>
 <style scoped>

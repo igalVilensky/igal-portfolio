@@ -7,7 +7,7 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'loop-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['geography','threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
+for(const name of ['star-geography','geography','threshold-view','loop-district','collision','origin','environment','wall-geometry','connectivity','atmosphere','spaces','atmosphere-materials','expansion']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {buildEnvironment}=await import(join(dir,'environment.mjs'));
 const {createExpansion}=await import(join(dir,'expansion.mjs'));
 const {worldSpaces,spaceAt}=await import(join(dir,'spaces.mjs'));

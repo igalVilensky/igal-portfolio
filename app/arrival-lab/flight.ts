@@ -1,5 +1,5 @@
 import * as T from 'three';
-export const flightSettings={speed:14,boost:24,vertical:6,response:4,brake:6,ceiling:180,minX:-235,maxX:310,minZ:-150,maxZ:290,eye:1.65,radius:.38};
+export const flightSettings={speed:14,boost:24,vertical:6,response:4,brake:6,ceiling:180,minX:-235,maxX:1020,minZ:-800,maxZ:330,eye:1.65,radius:.38};
 export const flightStation=new T.Vector3(-8,1.65,91);
 export type FlightPhase='docked'|'dropped'|'equipped'|'taking-off'|'flying'|'hovering'|'descending'|'landing';
 export type FlightInput={x:number;z:number;vertical:number;boost:boolean};
