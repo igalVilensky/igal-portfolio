@@ -15,7 +15,7 @@ export function readPrints(raw: string | null): { selected: PrintDesign; collect
  catch { return { selected: {...defaultDesign}, collection: [] }; }
 }
 export function figurine(d: PrintDesign) {
- const root = new T.Group();
+ const root = new T.Group();root.userData.printDesign={...d};
  const primary = new T.MeshStandardMaterial({color:d.color, roughness:.4});
  const cream = new T.MeshStandardMaterial({color:'#fff2d8',roughness:.5});
  const ink = new T.MeshStandardMaterial({color:'#253850',roughness:.4});

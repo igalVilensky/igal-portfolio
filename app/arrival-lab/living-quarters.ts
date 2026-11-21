@@ -19,7 +19,11 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
  // A six metre real passage through the east wall of Little Explorer.
  box(5,1,6,62.5,-.5,19,floor);for(const z of [15.8,22.2])box(5,5,.4,62.5,2.5,z,oak);box(5,.3,6,62.5,5.2,19);
  box(38,1,14,84,-.5,19,floor);box(38,.3,14,84,6.2,19);
- box(.4,6,4,65,3,14);box(.4,6,4,65,3,24);box(.4,6,14,103,3,19);
+ box(.4,6,4,65,3,14);box(.4,6,4,65,3,24);// East atrium observation window: thick sill, head and two domestic piers.
+ box(.4,1.15,14,103,.575,19);box(.4,2,14,103,5,19);
+ for(const z of [13,25])box(.4,2.85,2,103,2.575,z);
+ for(const z of [14,24])box(.56,2.85,.14,103,2.575,z,bronze);
+ for(const y of [1.15,4])box(.64,.14,10,103,y,19,oak);
  for(const [x,w,z] of [[75.5,1,12],[88.5,1,12],[83,4,26]])box(w!,5,.4,x!,2.5,z!);
  // Atrium focal point: a planted mineral basin under a luminous oculus.
  box(3,.45,2,84,.225,16,oak);box(2.6,.06,1.6,84,.48,16,mat('#68785e'));
@@ -32,7 +36,16 @@ export function createLivingQuarters(scene:T.Scene,solids:T.Mesh[]){
   const north=r.z<19,boundary=north?12:26,outer=north?0:38,m=mat(r.color);
   box(r.width,1,r.depth,r.x,-.5,r.z,floor);
   box(r.width,5,.4,r.x,2.5,outer,m);
-  for(const side of [-1,1])box(.4,5,r.depth,r.x+side*r.width/2,2.5,r.z,m);
+  for(const side of [-1,1]){
+   const x=r.x+side*r.width/2;
+   if(side===1&&(r.id==='amelia'||r.id==='adriel')){
+    // Domestic side windows leave the portrait wall and furniture axis intact.
+    box(.4,1.2,r.depth,x,.6,r.z,m);box(.4,1.6,r.depth,x,4.2,r.z,m);
+    for(const end of [-1,1])box(.4,2.2,(r.depth-3.2)/2,x,2.3,r.z+end*(r.depth+3.2)/4,m);
+    for(const z of [r.z-1.6,r.z+1.6])box(.54,2.2,.12,x,2.3,z,oak);
+    for(const y of [1.2,3.4])box(.62,.12,3.2,x,y,r.z,oak);
+   }else box(.4,5,r.depth,x,2.5,r.z,m);
+  }
   // Wide, deep reveals; no door leaf or identifying wall text.
   for(const side of [-1,1])box((r.width-3)/2,5,.4,r.x+side*(r.width+3)/4,2.5,boundary,m);
   box(3,1.8,.4,r.x,4.1,boundary,m);box(r.width,.3,r.depth,r.x,5.2,r.z);

@@ -81,6 +81,25 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  for(const x of [6,12])build(.15,3,.15,x,1.5,30,wood);
  for(let i=0;i<8;i++)build(6.4,.12,.16,9,3,28+i*.5,wood,false);
  for(const x of [-7,18]){build(.08,2.6,.08,x,1.3,34,blue);for(let i=0;i<6;i++)build(.45,.1,2.5,x-1.125+i*.45,2.65,34,i%2?blue:cloth,false);}
+ // Courtyard light walk: three reachable inlaid stones focus a mosaic beneath the pergola.
+ const lightWalk=new Set<number>(),walkPads:T.Mesh[]=[],mosaic:T.Mesh[]=[];
+ for(let i=0;i<3;i++){
+  const pad=build(1.15,.045,1.15,6+i*3,.035,33,material('#d5ae72'),false);(pad.material as T.MeshStandardMaterial).emissive.set('#73c9dd');walkPads.push(pad);
+  for(let j=0;j<4;j++)build(.12,.018,.12,6+i*3+(j%2-.5)*.35,.067,33+(Math.floor(j/2)-.5)*.35,blue,false);
+ }
+ const mosaicMaterials=['#258c9b','#d3a455'].map(color=>material(color));
+ for(let i=0;i<24;i++){
+  const a=i*Math.PI*2/24,r=1.2+(i%2)*.45;
+  const tile=build(.28,.025,.28,9+Math.cos(a)*r,.045,30+Math.sin(a)*r,mosaicMaterials[i%2]!,false);(tile.material as T.MeshStandardMaterial).emissive.copy((tile.material as T.MeshStandardMaterial).color);tile.rotation.y=a;mosaic.push(tile);
+ }
+ const resetStone=build(1,.04,1,15,.035,35,coral,false);
+ let onReset=false,mosaicProgress=0;
+ const activityCanvas=typeof document==='undefined'?null:document.createElement('canvas');if(activityCanvas){activityCanvas.width=1024;activityCanvas.height=256;}
+ const activityTexture=activityCanvas?new T.CanvasTexture(activityCanvas):new T.Texture();activityTexture.colorSpace=T.SRGBColorSpace;
+ const activityMaterial=new T.MeshBasicMaterial({map:activityTexture});materials.push(activityMaterial);
+ const activityBoard=build(5,.95,.08,9,1.85,27.7,activityMaterial,false);activityBoard.name='Courtyard · light walk instructions';
+ function setLocale(locale:string){const ctx=activityCanvas?.getContext('2d');if(!ctx)return;const lines=({en:['COURTYARD LIGHT WALK','Walk across the three blue-inlaid stones','Reveal the mosaic · coral stone resets'],de:['LICHTWEG IM INNENHOF','Über die drei blau eingelegten Steine gehen','Mosaik enthüllen · Korallstein setzt zurück'],ru:['СВЕТОВАЯ ДОРОЖКА ДВОРИКА','Пройдите по трём камням с синим узором','Откройте мозаику · коралловый камень — сброс']} as const)[locale==='de'||locale==='ru'?locale:'en'];ctx.fillStyle='#284e58';ctx.fillRect(0,0,1024,256);ctx.fillStyle='#fff0d2';ctx.textAlign='center';ctx.font='32px sans-serif';lines.forEach((line,i)=>ctx.fillText(line,512,60+i*66));activityTexture.needsUpdate=true;}
+ setLocale('en');
  const walkers:Array<{root:T.Group;legs:T.Mesh[];x:number;z:number;range:number;phase:number}>=[];
  for(let i=0;i<4;i++){
   const person=new T.Group();coast.add(person);const legs:T.Mesh[]=[];
@@ -182,11 +201,24 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
    }
   }
  }
- return {renderViews,get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
+ return {renderViews,setLocale,get lightWalkProgress(){return lightWalk.size;},get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
   activate(sun=false){if(!active){sunWorld=sun;selected=doors[sun?1:0]!;}if(selected.state==='closed')selected.state='opening';},
   move(position:T.Vector3,delta:T.Vector3,hallCollision:ReturnType<typeof createCollision>){(active?(sunWorld?coastCollision:snowCollision):hallCollision)(position,delta);if(active){ground.position.x=position.x;ground.position.z=position.z;}},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;
-   if(active&&sunWorld&&!reduced){ambientTime+=dt;for(const p of walkers){const phase=ambientTime*.13+p.phase,travel=Math.sin(phase);p.root.position.set(p.x+travel*p.range,0,p.z);p.root.rotation.y=Math.cos(phase)>0?Math.PI/2:-Math.PI/2;for(const [i,leg] of p.legs.entries())leg.rotation.x=p.range?Math.sin(ambientTime*3+i*Math.PI)*.25*Math.abs(Math.cos(phase)):0;}changed=true;}
+   if(active&&sunWorld){
+    walkPads.forEach((pad,i)=>{if(Math.hypot(camera.position.x-pad.position.x,camera.position.z-pad.position.z)<.9)lightWalk.add(i);(pad.material as T.MeshStandardMaterial).emissiveIntensity=lightWalk.has(i)?1.1:.12;});
+    const reset=Math.hypot(camera.position.x-resetStone.position.x,camera.position.z-resetStone.position.z)<.8;
+    if(reset&&!onReset)lightWalk.clear();onReset=reset;
+    mosaicProgress=T.MathUtils.damp(mosaicProgress,lightWalk.size===3?1:lightWalk.size*.12,3,dt);
+    mosaic.forEach((tile,i)=>{const m=tile.material as T.MeshStandardMaterial;m.emissiveIntensity=.08+mosaicProgress*(i%2?1.8:1.1);tile.scale.y=1+mosaicProgress*3;});
+    if(!reduced){ambientTime+=dt;walkers.forEach((p,index)=>{const phase=ambientTime*.13+p.phase;
+     // The pair meet under the pergola and pause together before returning to the promenade.
+     const travel=index<2?Math.max(0,Math.sin(phase)):Math.sin(phase),moving=index<2?Math.sin(phase)>0:p.range>0;
+     p.root.position.set(p.x+travel*p.range,index===3?-.35:0,index===3?26:p.z);if(index===3)p.root.position.x=9;
+     p.root.rotation.y=index<2&&!moving?(index===0?Math.PI/2:-Math.PI/2):Math.cos(phase)>0?Math.PI/2:-Math.PI/2;
+     for(const [i,leg] of p.legs.entries())leg.rotation.x=index===3?-Math.PI/2:moving?Math.sin(ambientTime*3+i*Math.PI)*.25*Math.abs(Math.cos(phase)):0;
+    });}changed=true;
+   }
 for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.min(1,doorway.progress+(reduced?1:dt/1.05));if(doorway.progress===1)doorway.state='open';changed=true;}}
    entry.pivot.rotation.y=exit.pivot.rotation.y=-doors[0]!.progress*Math.PI*.56;
    sunEntry.pivot.rotation.y=sunExit.pivot.rotation.y=-doors[1]!.progress*Math.PI*.56;
@@ -197,6 +229,6 @@ for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.
   },
   returnToHall(camera:T.PerspectiveCamera){if(active){camera.position.set(0,1.65,-1.01);switchWorld(camera);camera.position.copy(thresholdAnchor);if(sunWorld)camera.position.x=12;previous.copy(camera.position);}},
   setTheme(value:boolean){primedViews.clear();dark=value;if(active){savedBackground=scene.background;savedFog=scene.fog;}stone.color.set(dark?'#434b57':'#d8d2c6');wood.color.set(dark?'#58616a':'#777a74');appearance();},
-  dispose(){targets.forEach(t=>t.dispose());hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  dispose(){activityTexture.dispose();targets.forEach(t=>t.dispose());hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };
 }

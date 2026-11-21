@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {pieceTypes,pieceColors,pieceLimit,type PieceType} from './builder-model';
 import {expansionCopy} from './lagoon-copy';
-const props=defineProps<{locale:string;count:number;saved:boolean;valid:boolean;selected:boolean;type:PieceType;color:string;canUndo:boolean;selecting:boolean;moving:boolean}>();
+const props=defineProps<{locale:string;editBlocked:boolean;count:number;saved:boolean;valid:boolean;selected:boolean;type:PieceType;color:string;canUndo:boolean;selecting:boolean;moving:boolean}>();
 const emit=defineEmits<{close:[];cancel:[];aim:[];select:[];choose:[type:PieceType];color:[color:string];rotate:[];move:[];remove:[];undo:[];reset:[];place:[]}>();
 const c=computed(()=>expansionCopy[props.locale==='de'||props.locale==='ru'?props.locale:'en']);
 const confirming=ref(false);
@@ -14,9 +14,9 @@ const icons={cube:'▣',block:'▬',cylinder:'▥',sphere:'●',ramp:'◩',platf
 
   <div class="creation-shapes"><button v-for="p in pieceTypes" :key="p" :aria-pressed="type===p&&!selected" @click="emit('choose',p)"><b aria-hidden="true">{{icons[p]}}</b>{{c.shapes[p]}}</button></div>
   <div class="creation-colors"><button v-for="(v,i) in pieceColors" :key="v" :style="{background:v}" :aria-label="c.colors[i]" :title="c.colors[i]" :aria-pressed="color===v" @click="emit('color',v)"/></div>
-  <p role="status">{{moving?c.move:selecting?selectLabel:selected?c.selected:c.newPiece}} · {{count}} / {{pieceLimit}} {{c.count}} · {{saved?c.saved:c.unsaved}}</p>
-  <p class="creation-status" role="status">{{count>=pieceLimit&&!selected?c.limit:valid?c.ready:c.invalid}}</p>
-  <div class="creation-actions"><button :aria-pressed="selecting" @click="emit('select')">{{selectLabel}}</button><button :disabled="!valid" @click="emit('place')">{{c.place}}</button><button @click="emit('rotate')">{{c.rotate}}</button><button :disabled="!selected" @click="emit('move')">{{c.move}}</button><button :disabled="!selected" @click="emit('remove')">{{c.remove}}</button><button :disabled="!canUndo" @click="emit('undo')">{{c.undo}}</button><button @click="confirming=true">{{c.reset}}</button></div>
+  <p role="status">{{moving?c.move:selected?c.selected:selecting?selectLabel:c.newPiece}} · {{count}} / {{pieceLimit}} {{c.count}} · {{saved?c.saved:c.unsaved}}</p>
+  <p class="creation-status" role="status">{{editBlocked?({en:'Not enough space to rotate this piece',de:'Nicht genug Platz, um dieses Bauteil zu drehen',ru:'Недостаточно места для поворота детали'} as Record<string,string>)[locale]:selected&&!moving?c.rotate+' · '+c.move+' · '+c.remove:selecting?selectLabel:count>=pieceLimit&&!moving?c.limit:valid?c.ready:c.invalid}}</p>
+  <div class="creation-actions"><button :aria-pressed="selecting" @click="emit('select')">{{selectLabel}}</button><button :disabled="!valid" @click="emit('place')">{{c.place}}</button><button @click="emit('rotate')">{{c.rotate}}</button><button :disabled="!selected" @click="emit('move')">{{c.move}}</button><button :disabled="!selected" @click="emit('remove')">{{c.remove}} · Del</button><button :disabled="!canUndo" @click="emit('undo')">{{c.undo}}</button><button @click="confirming=true">{{c.reset}}</button></div>
   <div v-if="confirming" role="alertdialog" :aria-label="c.confirm"><p>{{c.confirm}}</p><button @click="emit('reset');confirming=false">{{c.resetConfirm}}</button><button @click="confirming=false">{{c.cancel}}</button></div>
  </section>
 </template>

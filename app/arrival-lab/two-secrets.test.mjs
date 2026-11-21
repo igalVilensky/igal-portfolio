@@ -7,7 +7,7 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'arrival-secrets-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['two-secrets','skytube','collision','geography'])await writeFile(join(dir,name+'.mjs'),ts.transpileModule(await readFile(new URL(name+'.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
+for(const name of ['npc-passenger','two-secrets','skytube','collision','geography'])await writeFile(join(dir,name+'.mjs'),ts.transpileModule(await readFile(new URL(name+'.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));
 const {createTwoSecrets,secretPlaces}=await import(join(dir,'two-secrets.mjs'));
 after(()=>rm(dir,{recursive:true,force:true}));
 const advance=(s,c,t)=>{for(let elapsed=0;elapsed<t;elapsed+=.05)s.update(.05,false,c);};

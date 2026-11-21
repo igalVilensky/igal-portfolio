@@ -49,7 +49,15 @@ export function createExpansion(scene:T.Scene,solids:T.Mesh[]){
  // AI owns the x=-38 partition shared with Commons.
  if(s.id!=='commons')box(.7,h,d,x0,h/2,cz,m,s.id);
  if(s.id==='commons'){box(.7,h,5,x1,h/2,24.5,m,s.id);box(.7,h,3,x1,h/2,32.5,m,s.id);box(.7,1,4,x1,5.5,29,m,s.id);}else box(.7,h,d,x1,h/2,cz,m,s.id);
- const end=s.id==='experiments'?z0:z1;box(w,h,.7,cx,h/2,end,m,s.id);
+ const end=s.id==='experiments'?z0:z1;
+ if(s.id==='ai-tools'){
+  // Panoramic opening faces the real lagoon / western island. Solid sill and lintel
+  // are the collision owner too; no opaque panel remains behind the reveal.
+  const opening=w-6,bottom=1.15,top=4.5;
+  box(w,bottom,.7,cx,bottom/2,end,m,s.id);box(w,h-top,.7,cx,top+(h-top)/2,end,m,s.id);
+  for(const side of [-1,1]){box(3,top-bottom,.7,cx+side*(w/2-1.5),(top+bottom)/2,end,m,s.id);box(.14,top-bottom,.84,cx+side*opening/2,(top+bottom)/2,end,bronze,s.id);}
+  for(const y of [bottom,top])box(opening,.14,.88,cx,y,end,bronze,s.id);
+ }else box(w,h,.7,cx,h/2,end,m,s.id);
  if(s.id==='experiments'){
  // Offset folded roof: low entry, rising north bay. The orbital toy occupies the open central bay.
  for(let n=0;n<4;n++){const roof=box(w,.65,d/4+.15,cx,10.5+n*.85,z1-d/8-n*d/4,stone,s.id);roof.rotation.x=.12;}

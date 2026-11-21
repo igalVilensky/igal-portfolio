@@ -10,6 +10,14 @@ export const secretPlaces = {
  dock: new T.Vector3(27, 4, 148),
 };
 export type SecretWorld = 'observatory' | 'moon' | 'crystal' | 'jungle';
+/** Three indexed orbital planes resolve into a persistent observation state. */
+export function createCelestialAlignment(){
+ const planes=[0,0,0];let phase:'tuning'|'revealing'|'observing'='tuning',progress=0;
+ return {planes,get phase(){return phase;},get progress(){return progress;},
+ turn(index:number){if(phase!=='tuning'||!Number.isInteger(index)||index<0||index>2)return false;planes[index]=(planes[index]!+1)%4;if(planes.every((v,i)=>v===i+1))phase='revealing';return true;},
+ update(dt:number){if(phase==='revealing'){progress=Math.min(1,progress+Math.max(0,Math.min(.1,dt))/3);if(progress>=1)phase='observing';}},
+ reset(){planes.fill(0);phase='tuning';progress=0;}};
+}
 export function createTwoSecrets(scene:T.Scene,allSolids:T.Mesh[]=[]) {
  const exterior=new T.Group();exterior.name='The two secrets · Origin discoveries';scene.add(exterior);
  const chamber=new T.Group();chamber.name="Nataniel's Universe · optical chamber";chamber.position.copy(secretPlaces.chamber);chamber.visible=false;scene.add(chamber);
@@ -37,6 +45,24 @@ export function createTwoSecrets(scene:T.Scene,allSolids:T.Mesh[]=[]) {
  mesh(new T.CircleGeometry(1.3,64),apertureMat,entrance,0,1.8,0,'enter');
  for(let i=0;i<7;i++){const a=i*2.399;orb(entrance,Math.cos(a)*(.25+i*.13),1.8+Math.sin(a)*(.25+i*.13),-.04,.055,.055,.055,gold,'enter');}
  label(entrance,'THE SECRET UNIVERSE',0,3.8,0,4);
+ // A rooftop instrument separate from the Ring Portal: indexed planes focus a star lens.
+ const alignment=createCelestialAlignment(),lens=new T.Group();entrance.add(lens);lens.position.set(0,3.4,-1.6);
+ const lensCore=mesh(new T.IcosahedronGeometry(.48,1),gold,lens,0,0,0,'align:reset');
+ const unfolded=Array.from({length:6},(_,i)=>{const o=mesh(new T.OctahedronGeometry(.3),i%2?cyan:gold,lens);o.visible=false;return o;});
+ const lensPlanes=[0,1,2].map(i=>{const o=ring(lens,1+i*.28,[cyan,violet,green][i]!,0,0,0,.045);orb(o,1+i*.28,0,0,.1,.1,.1,gold);return o;});
+ for(let i=0;i<3;i++){
+  const x=(i-1)*2.1;
+  mesh(new T.CylinderGeometry(.44,.55,.7,16),metal,entrance,x,.35,-2.8);
+  const control=orb(entrance,x,1,-2.8,.32,.18,.32,[cyan,violet,green][i]!,'align:'+i);
+  control.name='Celestial Observatory · indexed orbital control';
+ }
+ // Low reset lens stays reachable even while the suspended core unfolds.
+ orb(entrance,0,1.05,-1.5,.25,.25,.25,gold,'align:reset');
+ const starLensGeo=new T.BufferGeometry(),starLensPositions:number[]=[];
+ for(let i=0;i<96;i++){const a=i*2.399,r=2+(i%13)*.26;starLensPositions.push(Math.cos(a)*r,3+(i%9)*.45,Math.sin(a)*r-1.6);}
+ starLensGeo.setAttribute('position',new T.Float32BufferAttribute(starLensPositions,3));geometries.add(starLensGeo);
+ const starLensMat=new T.PointsMaterial({color:'#d5f8ff',size:.065,transparent:true,opacity:0,depthWrite:false,fog:false});materials.add(starLensMat);
+ const starLens=new T.Points(starLensGeo,starLensMat);entrance.add(starLens);
  const beacon=ring(entrance,.18,gold,0,1.8,-.06,.025,'enter');
  // Quiet cloud-shell instrument in an existing safe plateau corner, before its parapet.
  const callRoot=new T.Group();callRoot.position.set(26,0,124);exterior.add(callRoot);
@@ -161,17 +187,21 @@ export function createTwoSecrets(scene:T.Scene,allSolids:T.Mesh[]=[]) {
  function leave(camera:T.PerspectiveCamera){return begin(()=>{active=false;restoreWorld();camera.position.copy(savedPosition);camera.quaternion.copy(savedLook);});}
  function visible(o:T.Object3D){let node:T.Object3D|null=o;while(node){if(!node.visible)return false;node=node.parent;}return true;}
  return {
-  exterior,chamber,targets,whale,route,
+  exterior,chamber,targets,whale,route,alignment,
   get active(){return active;},get world(){return world;},get ownsPassenger(){return passenger;},get ownsMotion(){return passenger||!!transition;},get whalePhase(){return whalePhase;},get transitioning(){return !!transition;},
   get floorEye(){return secretPlaces.chamber.y+1.65;},
   get busy(){return active||passenger||!!transition;},
   get discoveries(){return {moon:moonDone.size,crystal:crystalDone.size,jungle:bloomProgress};},
   setExteriorVisible(value:boolean){exterior.visible=value&&!active;},
-  hint(action:string){return ({enter:'Enter the secret universe',wake:'Wake the universe',moon:'Enter the Moon',crystal:'Enter the Crystal Planet',jungle:'Enter the Jungle Planet',home:world==='observatory'?'Return to the rooftop':'Return to the observatory',call:whalePhase==='sleeping'?'Call the Cloud Whale':whalePhase==='calling'?'Watch the clouds…':'Ride with the Cloud Whale',ride:passenger?'Return to the garden':'Ride with the Cloud Whale'} as Record<string,string>)[action]||'Touch the resonating crystal';},
+  hint(action:string,locale='en'){
+   const c=({en:{turn:'Celestial Observatory · turn orbital plane',reset:'Reset the star lens',tuning:'Focus each plane: 1 · 2 · 3',revealing:'Alignment achieved · the star lens unfolds',observing:'Observation mode · explore the constellation'},de:{turn:'Himmelsobservatorium · Bahnebene drehen',reset:'Sternlinse zurücksetzen',tuning:'Ebenen fokussieren: 1 · 2 · 3',revealing:'Ausrichtung erreicht · die Sternlinse öffnet sich',observing:'Beobachtungsmodus · Sternbild erkunden'},ru:{turn:'Небесная обсерватория · повернуть плоскость',reset:'Сбросить звёздную линзу',tuning:'Настройте плоскости: 1 · 2 · 3',revealing:'Совмещение достигнуто · линза раскрывается',observing:'Режим наблюдения · изучите созвездие'}} as const)[locale==='de'||locale==='ru'?locale:'en'];
+   if(action.startsWith('align:'))return action==='align:reset'?c.reset+' · '+c[alignment.phase]:c.turn+' '+(Number(action.slice(6))+1)+' · '+alignment.planes.join(' / ')+' · '+c[alignment.phase];
+   return ({enter:'Enter the secret universe',wake:'Wake the universe',moon:'Enter the Moon',crystal:'Enter the Crystal Planet',jungle:'Enter the Jungle Planet',home:world==='observatory'?'Return to the rooftop':'Return to the observatory',call:whalePhase==='sleeping'?'Call the Cloud Whale':whalePhase==='calling'?'Watch the clouds…':'Ride with the Cloud Whale',ride:passenger?'Return to the garden':'Ride with the Cloud Whale'} as Record<string,string>)[action]||'Touch the resonating crystal';},
   pick(ray:T.Raycaster){return ray.intersectObjects(targets,false).find(h=>visible(h.object));},
-  canActivate(action:string,p:T.Vector3){if(transition)return false;if(action==='enter')return !active&&!passenger&&p.distanceTo(secretPlaces.entrance)<4.5;if(action==='home')return active;if(action==='call'||action==='ride')return !active&&(passenger?whalePhase==='landed':p.distanceTo(secretPlaces.call)<6&&(whalePhase==='sleeping'||whalePhase==='ready'));return active&&(action==='wake'||awakening>.75);},
+  canActivate(action:string,p:T.Vector3){if(transition)return false;if(action.startsWith('align:'))return !active&&!passenger&&p.distanceTo(secretPlaces.entrance)<6;if(action==='enter')return !active&&!passenger&&p.distanceTo(secretPlaces.entrance)<4.5;if(action==='home')return active;if(action==='call'||action==='ride')return !active&&(passenger?whalePhase==='landed':p.distanceTo(secretPlaces.call)<6&&(whalePhase==='sleeping'||whalePhase==='ready'));return active&&(action==='wake'||awakening>.75);},
   activate(action:string,camera:T.PerspectiveCamera){
    if(!this.canActivate(action,camera.position))return false;
+   if(action.startsWith('align:')){if(action==='align:reset'){alignment.reset();return true;}return alignment.turn(Number(action.slice(6)));}
    if(action==='enter')return begin(()=>{savedPosition.copy(camera.position);savedLook.copy(camera.quaternion);savedFog=scene.fog;savedBackground=scene.background;scene.children.forEach(o=>visibility.set(o,o.visible));active=true;transform('observatory',camera);camera.lookAt(secretPlaces.chamber.clone().add(new T.Vector3(0,2,0)));isolate();});
    if(action==='home')return world==='observatory'?leave(camera):begin(()=>transform('observatory',camera));
    if(action==='wake'){awakening=Math.max(.01,awakening);return true;}
@@ -191,6 +221,11 @@ export function createTwoSecrets(scene:T.Scene,allSolids:T.Mesh[]=[]) {
    p.y=secretPlaces.chamber.y+1.65;},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,paused=false){
    let turn=0,restored=false;if(active)isolate();if(paused)return {changed:false,turn,restored};dt=Math.min(Math.max(0,dt),.1);time+=dt;
+   alignment.update(dt);
+   lensPlanes.forEach((o,i)=>{const target=alignment.planes[i]!*Math.PI/2-(i+1)*Math.PI/2;o.rotation.set(i===0?target:0,i===1?target:0,i===2?target:0);o.scale.setScalar(1+alignment.progress*(.3+i*.12));});
+   unfolded.forEach((o,i)=>{const a=i*Math.PI/3;o.visible=alignment.progress>0;o.position.set(Math.cos(a)*alignment.progress*1.7,Math.sin(a)*alignment.progress*1.7,0);o.scale.setScalar(alignment.progress);});
+   lensCore.scale.setScalar(1+alignment.progress*1.4);lensCore.rotation.y=reduced?0:time*.12;
+   starLens.visible=alignment.progress>0;starLensMat.opacity=alignment.progress*.9;
    beacon.rotation.z=time*.2;callHalo.scale.setScalar(1+Math.sin(time*1.7)*.08);
    if(transition){transition.time+=dt;const t=Math.min(1,transition.time/(reduced?.65:1.6));veil.visible=true;veil.position.copy(camera.position);veilMat.opacity=Math.sin(Math.PI*t);if(t>=.5&&!transition.switched){transition.switched=true;transition.apply();restored=true;veil.position.copy(camera.position);}if(t>=1){transition=null;veil.visible=false;}}
    if(active){isolate();const local=camera.position.clone().sub(secretPlaces.chamber);

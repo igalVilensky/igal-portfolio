@@ -1,6 +1,6 @@
 import * as T from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { lagoon, inBasin, inTunnel, tunnelFloor, lagoonFloor, inExpansion } from './lagoon-model';
+import { lagoon, inBasin, inTunnel, tunnelFloor, lagoonFloor, inExpansion, marineRoute, marinePositionValid } from './lagoon-model';
 import { expansionCopy } from './lagoon-copy';
 
 /** Shared-scene aquatic sanctuary. Decorative instances never enter collision/pick lists. */
@@ -131,6 +131,34 @@ export function createLagoon(scene:T.Scene,solids:T.Mesh[]){
  const fishTime={value:0},baseCompile=fishMaterial.onBeforeCompile;
  fishMaterial.onBeforeCompile=function(shader,renderer){baseCompile.call(this,shader,renderer);shader.uniforms.fishTime=fishTime;shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nuniform float fishTime;').replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed.z += sin(fishTime*6. + instanceMatrix[3].z)*.12*smoothstep(.25,.85,-position.x);');};
  const fish=new T.InstancedMesh(fishGeo,fishMaterial,48);fish.name='Lagoon · schooling fish';fish.instanceMatrix.setUsage(T.DynamicDrawUsage);for(let i=0;i<48;i++)fish.setColorAt(i,new T.Color(i<24?'#f3cd6a':'#86d9e1'));root.add(fish);
+ // Five larger companions share body/fin geometry; only joints animate.
+ const raySkin=mat('#537f91',{side:T.DoubleSide}),sharkSkin=mat('#8faeb7',{side:T.DoubleSide}),belly=mat('#d6e8d9');
+ const rayBody=own(new T.SphereGeometry(1,16,10));rayBody.scale(.95,.18,.62);
+ const sharkBody=own(new T.SphereGeometry(1,16,10));sharkBody.scale(1.2,.32,.36);
+ const wingGeo=own(new T.BufferGeometry());wingGeo.setAttribute('position',new T.Float32BufferAttribute([
+ .85,0,0,-.8,0,0,-.55,.06,.85, .85,0,0,-.55,.06,.85,.25,.08,1.05,
+ .25,.08,1.05,-.55,.06,.85,-.35,-.02,1.65
+ ],3));wingGeo.computeVertexNormals();
+ const finGeo=own(new T.BufferGeometry());finGeo.setAttribute('position',new T.Float32BufferAttribute([.3,0,0,-.5,0,0,-.3,.7,0],3));finGeo.computeVertexNormals();
+ const caudalGeo=own(new T.BufferGeometry());caudalGeo.setAttribute('position',new T.Float32BufferAttribute([0,0,0,-.75,.65,0,-.4,0,0,-.4,0,0,-.75,-.5,0,0,0,0],3));caudalGeo.computeVertexNormals();
+ const eyeGeo=own(new T.SphereGeometry(.055,8,6)),eyeMaterial=mat('#243f4b');
+ const tailGeo=own(new T.ConeGeometry(.065,2.1,7));tailGeo.rotateZ(-Math.PI/2);tailGeo.translate(-1.7,0,0);
+ const companions=Array.from({length:5},(_,i)=>{
+  const group=new T.Group();group.name=i<3?'Lagoon · gliding ray':'Lagoon · small peaceful shark';root.add(group);
+  const add=(g:T.BufferGeometry,m:T.Material,parent:T.Object3D=group)=>{const o=new T.Mesh(g,m);parent.add(o);return o;};
+  add(i<3?rayBody:sharkBody,i<3?raySkin:sharkSkin);
+  for(const side of [-1,1]){const eye=add(eyeGeo,eyeMaterial);eye.position.set(i<3?.65:.92,.13,side*(i<3?.24:.25));}
+  const underside=add(i<3?rayBody:sharkBody,belly);underside.scale.set(.85,.55,.88);underside.position.y=-.12;
+  const joints:T.Group[]=[];
+  if(i<3){add(tailGeo,raySkin);for(const side of [-1,1]){const joint=new T.Group();joint.scale.z=side;group.add(joint);add(wingGeo,raySkin,joint);joints.push(joint);}}
+  else{
+   const dorsal=add(finGeo,sharkSkin);dorsal.position.set(-.1,.22,0);
+   for(const side of [-1,1]){const fin=add(finGeo,sharkSkin);fin.rotation.x=side*Math.PI/2;fin.position.set(.15,-.13,side*.22);fin.scale.set(1,.85,1);}
+   const tail=new T.Group();tail.position.x=-1.05;group.add(tail);add(caudalGeo,sharkSkin,tail);joints.push(tail);
+  }
+  return {group,joints};
+ });
+ const marinePoint=new T.Vector3();
  const waterMaterial=new T.ShaderMaterial({transparent:true,side:T.DoubleSide,depthWrite:false,uniforms:{time:{value:0},night:{value:0}},vertexShader:`varying vec3 world;varying vec3 norm;uniform float time;void main(){vec4 w=modelMatrix*vec4(position,1.);w.y+=sin(w.x*.7+time)*.015+cos(w.z*.9-time*.7)*.01;world=w.xyz;norm=normalize(vec3(-.0105*cos(w.x*.7+time),1.,.009*sin(w.z*.9-time*.7)));gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`varying vec3 world;varying vec3 norm;uniform float time;uniform float night;void main(){float tx=(world.x+180.)/2.6;float tf=-7.*min(clamp((world.z-30.)/15.,0.,1.),clamp((100.-world.z)/15.,0.,1.));if(abs(tx)<1.&&world.z>30.&&world.z<100.&&tf+4.8*sqrt(1.-tx*tx)>world.y)discard;vec3 view=normalize(cameraPosition-world);float f=pow(1.-abs(dot(view,norm)),3.);float ripple=sin(world.x*2.+world.z*1.1+time)*.5+.5;vec3 color=mix(vec3(.06,.58,.57),vec3(.39,.83,.76),f*.7+ripple*.12);color*=1.-night*.4;gl_FragColor=vec4(color,.28+f*.37);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}`});materials.add(waterMaterial);
  const water=mesh(new T.CircleGeometry(1,64),waterMaterial,-170,lagoon.water,65);water.rotation.x=-Math.PI/2;water.scale.set(32,27,1);water.renderOrder=3;
  // Scoped underwater veil: only visible inside this volume, never mutates scene fog.
@@ -183,6 +211,13 @@ export function createLagoon(scene:T.Scene,solids:T.Mesh[]){
    dummy.position.set((east?-151:-186)+Math.cos(a)*rx,-3-(i%6)*.65+Math.sin(a*2+i)*.12,64+Math.sin(a)*rz);
    dummy.rotation.set(0,Math.atan2(-dz,dx),Math.sin(a+i)*.035);dummy.scale.setScalar(.65+(i%4)*.1);dummy.updateMatrix();fish.setMatrixAt(i,dummy.matrix);
   }fish.instanceMatrix.needsUpdate=true;
+  companions.forEach(({group,joints},i)=>{
+   const distance=group.position.distanceTo(camera.position),response=distance<4?1-distance/4:0;
+   const p=marineRoute(i,time,response);marinePoint.set(p.x,p.y,p.z);
+   if(marinePositionValid(p)&&!supportBounds.some(b=>b.distanceToPoint(marinePoint)<2))group.position.copy(marinePoint);
+   group.rotation.y=p.yaw;
+   joints.forEach((joint,j)=>{if(i<3)joint.rotation.x=(j===0?1:-1)*Math.sin(time*1.6+i)*.24;else joint.rotation.y=Math.sin(time*4+i)*.18;});
+  });
   pearl.rotation.y=reduced?0:time*.1;
   return !reduced||Math.abs(before-veilMat.opacity)>.0001;
  },setTheme(night:boolean){waterMaterial.uniforms.night!.value=night?1:0;},

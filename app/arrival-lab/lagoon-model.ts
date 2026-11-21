@@ -49,3 +49,15 @@ export function createSwimming(){
  }
  };
 }
+
+/** Clear upper-water lanes east of the tube, above reef and arch crowns.
+ * A bounded depth response lets animals yield to swimmers without leaving water. */
+export function marineRoute(index:number,time:number,near=0){
+ const speed=index<3?.095:-.12,a=time*speed+index*2.1;
+ const rx=index<3?4:3,rz=index<3?12:9;
+ return {x:-167+Math.cos(a)*rx,y:-3.3-(index%3)*.65-Math.max(0,Math.min(1,near))*.35,z:65+Math.sin(a)*rz,
+ yaw:Math.atan2(-Math.cos(a)*rz*speed,-Math.sin(a)*rx*speed)};
+}
+export function marinePositionValid(p:{x:number;y:number;z:number},radius=1.8){
+ return inBasin(p.x,p.z,radius)&&p.y+radius<lagoon.water&&p.y-radius>lagoonFloor(p.x,p.z)&&Math.abs(p.x+180)>2.8+radius;
+}
