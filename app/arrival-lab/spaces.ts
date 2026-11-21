@@ -30,8 +30,8 @@ export const worldSpaces:readonly WorldSpace[]=[
  {id:'light-well',names:{en:'Light well',de:'Lichthof',ru:'Световой колодец'},bounds:[-10,10,-106,-72],position:[0,0,-90],rotation:0,height:46,connections:['arrival','living-works'],anchor:[0,1.65,-88],entry:[0,1.65,-72],lookAt:[0,20,-105],identity:'vertical light',status:'active',mounts:[]},
  {id:'living-works',names:{en:'Living Works',de:'Lebendige Werke',ru:'Живые проекты'},bounds:[15,54,-114,-74],position:[34,0,-94],rotation:0,height:24,connections:['light-well'],anchor:[22,1.65,-87],entry:[15,1.65,-94],lookAt:[32,5,-101],identity:'Sunlit Primaries',status:'active',mounts:[]},...expansionSpaces,
  {id:'loop-vault',names:{en:'Impossible House',de:'Unmögliches Haus',ru:'Невозможный дом'},bounds:[383,417,420,466],position:[400,0,443],rotation:0,height:23,connections:['loop-district'],anchor:[400,1.65,424],entry:[400,1.65,421],lookAt:[400,13,447],identity:'luminous oversized vault',status:'active',mounts:[]},
- {id:'loop-district',names:{en:'The Loop District',de:'Das Loop-Viertel',ru:'Квартал петель'},bounds:[146,210,25.5,80.5],position:[178,0,53],rotation:0,height:12,connections:['skybridge','journey','loop-vault'],anchor:[174,1.65,58],entry:[149,1.65,48],lookAt:[177,3,59],identity:'impossible mineral neighborhood',status:'active',mounts:[]},
- {id:'skybridge',names:{en:'Skybridge',de:'Himmelsbrücke',ru:'Небесный мост'},bounds:[84,146,44.5,51.5],position:[114,0,48],rotation:0,height:2,connections:['origin','loop-district'],anchor:[114,1.65,48],entry:[84,1.65,48],lookAt:[164,3,43],identity:'open mineral and metal crossing',status:'active',mounts:[]},
+ {id:'loop-district',names:{en:'The Loop District',de:'Das Loop-Viertel',ru:'Квартал петель'},bounds:[210,274,25.5,80.5],position:[242,0,53],rotation:0,height:12,connections:['skybridge','journey','loop-vault'],anchor:[238,1.65,58],entry:[213,1.65,48],lookAt:[241,3,59],identity:'impossible mineral neighborhood',status:'active',mounts:[]},
+ {id:'skybridge',names:{en:'Skybridge',de:'Himmelsbrücke',ru:'Небесный мост'},bounds:[84,210,44.5,51.5],position:[147,0,48],rotation:0,height:2,connections:['origin','loop-district'],anchor:[147,1.65,48],entry:[84,1.65,48],lookAt:[228,3,43],identity:'open mineral and metal crossing',status:'active',mounts:[]},
  {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival','skybridge','print-lab','living-lagoon'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
 export function spaceAt(p:T.Vector3){return worldSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);}
 /** Route via the circulation centreline; works/light-well routing remains in its existing owner. */
@@ -44,7 +44,7 @@ export function expansionLeg(p:T.Vector3):T.Vector3[]{
 
  if(spaceAt(p)?.id==='intelligence-chamber')return [p.clone(),new T.Vector3(-92,1.65,p.z),new T.Vector3(-92,1.65,19),new T.Vector3(-60,1.65,19),new T.Vector3(-20,1.65,19)];
  if(spaceAt(p)?.id==='skybridge')return [p.clone(),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
- if(spaceAt(p)?.id==='loop-district')return [p.clone(),new T.Vector3(p.x,1.65,58),new T.Vector3(151,1.65,58),new T.Vector3(151,1.65,48),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
+ if(spaceAt(p)?.id==='loop-district')return [p.clone(),new T.Vector3(p.x,1.65,58),new T.Vector3(215,1.65,58),new T.Vector3(215,1.65,48),new T.Vector3(76,1.65,48),new T.Vector3(76,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='print-lab')return [p.clone(),new T.Vector3(-60,1.65,61),new T.Vector3(-60,1.65,62),new T.Vector3(12,1.65,62),new T.Vector3(12,1.65,17)];
  if(spaceAt(p)?.id==='origin'){
   const points=[p.clone()];

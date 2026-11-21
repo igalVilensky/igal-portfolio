@@ -14,7 +14,7 @@ const link=(url:string)=>url.startsWith('/')?localePath(url):url;
 onMounted(()=>root.value?.focus({preventScroll:true}));
 function keyboard(e:KeyboardEvent){
  if(e.key==='Escape'){e.stopPropagation();e.preventDefault();if(!e.repeat)emit('close');return;}
- if(e.key!=='Tab'||document.querySelector('[data-radio-player]')?.getClientRects().length)return;
+ if(e.key!=='Tab')return;
  const nodes=root.value?.querySelectorAll<HTMLElement>('button,a[href]');if(!nodes?.length)return;
  const first=nodes[0]!,last=nodes[nodes.length-1]!;
  if(e.shiftKey&&(document.activeElement===first||document.activeElement===root.value)){e.preventDefault();last.focus();}

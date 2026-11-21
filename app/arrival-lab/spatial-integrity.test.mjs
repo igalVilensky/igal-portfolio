@@ -70,7 +70,7 @@ test('Shift sprint eases to 2.25x walking speed, decelerates, and clears on blur
  }finally{look.dispose();globalThis.window=oldWindow;globalThis.document=oldDocument;}
 });
 
-test('radio can pause and resume the existing journey without a camera jump',()=>{
+test('visibility pauses and resumes the existing journey without a camera jump',()=>{
  const clock=globalThis.performance;let now=1000;globalThis.performance={now:()=>now};
  try{
  const camera=new T.PerspectiveCamera();camera.position.set(5,1.65,17);
@@ -144,7 +144,7 @@ test('interactable affordances reuse real targets, keep reduced motion static, a
 
 test('direct clicks retain guided interaction outside range while contextual use stays nearby',async()=>{
  const {interactionIntent}=await import(join(temp,'interactions.mjs'));
- for(const id of ['key','facet','terminal','radio','works:gallery','works:archive','works:matrix-details','works:matrix:0']){
+ for(const id of ['key','facet','terminal','works:gallery','works:archive','works:matrix-details','works:matrix:0']){
   assert.equal(interactionIntent(id,false,true),'approach',id+' distant object click');
   assert.equal(interactionIntent(id,false,false),'none',id+' out-of-range contextual use');
   assert.equal(interactionIntent(id,true,true),'activate',id+' nearby object click');

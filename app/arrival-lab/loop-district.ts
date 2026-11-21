@@ -95,7 +95,7 @@ export function createLoopDistrict(scene:T.Scene, solids:T.Mesh[]) {
  for(const x of [158.2,169.8])box(.22,1.2,14,x,4.75,36,blue);
  box(12,1.2,.22,164,4.75,43,blue);
  for(const x of [160,168])box(3.8,1.2,.22,x,4.75,32,blue);
- // Oversized remote interior, hidden until entered; no duplicate render loop or radio.
+ // Oversized remote interior, hidden until entered; no duplicate render loop.
  box(34,.2,46,400,-.1,443,stone,false,vault);
  for(const x of [383,417])box(.5,23,46,x,11.5,443,plaster,true,vault);
  box(34,23,.5,400,11.5,466,plaster,true,vault);

@@ -9,10 +9,7 @@ export const familyNodes = [
 ] as const;
 export const familyEdges = [[0,5],[1,6],[2,7],[3,8],[4,9],[5,8],[8,6],[6,9],[9,7],[5,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],[17,18],[18,19],[19,20],[20,21],[19,22],[22,23],[20,24],[24,25],[20,26],[26,27],[12,28],[5,29],[7,30],[23,34],[34,35],[35,31],[1,32],[2,33],[16,36],[16,37],[37,38],[38,42],[39,40],[40,41],[41,42],[42,43],[43,44],[44,45],[45,46],[46,41],[39,47],[6,48],[48,49],[49,9],[8,50],[50,48],[9,51],[51,49]] as const;
 export function familyRoute(from:number,to:number){
- const queue=[from],previous=new Map<number,number>([[from,-1]]);
- for(let i=0;i<queue.length;i++){const current=queue[i]!;if(current===to)break;for(const [a,b] of familyEdges){const next=a===current?b:b===current?a:undefined;if(next!==undefined&&!previous.has(next)){previous.set(next,current);queue.push(next);}}}
- if(!previous.has(to))return [];
- const route:number[]=[];for(let n=to;n!==from;n=previous.get(n)!){route.unshift(n);}return route;
+ return circulationRoute(from,to,familyEdges);
 }
 
 export type ActivitySpot={node:number;room:string;activity:'observing'|'sitting';facing:number;stay:number;owner?:string;seatHeight?:number;seatAnchor?:readonly [number,number,number];capacity:number};
@@ -40,3 +37,10 @@ export const familySpots:ActivitySpot[]=[
  {node:33,room:'amelia',owner:'amelia',activity:'sitting',facing:Math.PI/2,seatHeight:.48,seatAnchor:[92.47,.48,7],stay:38,capacity:1},
  ...[39,40,42,43,44,45,46,47].map((node,i)=>({node,room:'origin',activity:'observing' as const,facing:i*.8,stay:18+i*3,capacity:1})),
 ];
+/** Shared bounded breadth-first search for the established circulation graphs. */
+export function circulationRoute(from:number,to:number,edges:readonly (readonly number[])[]){
+ const queue=[from],previous=new Map<number,number>([[from,-1]]);
+ for(let i=0;i<queue.length;i++){const current=queue[i]!;if(current===to)break;for(const [a,b] of edges){const next=a===current?b:b===current?a:undefined;if(next!==undefined&&!previous.has(next)){previous.set(next,current);queue.push(next);}}}
+ if(!previous.has(to))return [];
+ const route:number[]=[];for(let n=to;n!==from;n=previous.get(n)!){route.unshift(n);}return route;
+}

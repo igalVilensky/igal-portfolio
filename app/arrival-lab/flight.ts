@@ -1,7 +1,7 @@
 import * as T from 'three';
 export const flightSettings={speed:14,boost:24,vertical:6,response:4,brake:6,ceiling:180,minX:-235,maxX:310,minZ:-150,maxZ:290,eye:1.65,radius:.38};
 export const flightStation=new T.Vector3(-8,1.65,91);
-export type FlightPhase='docked'|'equipped'|'taking-off'|'flying'|'hovering'|'descending'|'landing';
+export type FlightPhase='docked'|'dropped'|'equipped'|'taking-off'|'flying'|'hovering'|'descending'|'landing';
 export type FlightInput={x:number;z:number;vertical:number;boost:boolean};
 export function flightAllowed(s:{skyfall:boolean;passenger:boolean;guided:boolean;otherWorld:boolean;ui:boolean;water:boolean}){return !Object.values(s).some(Boolean);}
 /** Movement ownership audit (Arrival 11.12): camera.ts owns orientation/input only;
@@ -14,17 +14,18 @@ export function flightAllowed(s:{skyfall:boolean;passenger:boolean;guided:boolea
  */
 /** Only this controller translates while airborne. Ground equipment deliberately survives touchdown. */
 export function createFlight(move:(p:T.Vector3,d:T.Vector3)=>void,support:(p:T.Vector3)=>number|undefined){
- let phase:FlightPhase='docked',launch=0,unsafe=false;const velocity=new T.Vector3(),lastSafe=flightStation.clone(),before=new T.Vector3(),target=new T.Vector3(),delta=new T.Vector3();
- const airborne=()=>phase!=='docked'&&phase!=='equipped';
+ let phase:FlightPhase='docked',launch=0,unsafe=false;const devicePosition=flightStation.clone().add(new T.Vector3(0,0,-1.2)),current=flightStation.clone(),velocity=new T.Vector3(),lastSafe=flightStation.clone(),before=new T.Vector3(),target=new T.Vector3(),delta=new T.Vector3();
+ const airborne=()=>phase!=='docked'&&phase!=='dropped'&&phase!=='equipped';
  return {
- get phase(){return phase;},get equipped(){return phase!=='docked';},get airborne(){return airborne();},get speed(){return velocity.length();},get unsafe(){return unsafe;},
- equip(p:T.Vector3,allowed:boolean){if(!allowed||phase!=='docked'||p.distanceTo(flightStation)>4)return false;phase='equipped';lastSafe.copy(p);return true;},
- unequip(){if(phase!=='equipped')return false;phase='docked';velocity.setScalar(0);return true;},
+ get phase(){return phase;},get equipped(){return phase!=='docked'&&phase!=='dropped';},get devicePosition(){return devicePosition;},get airborne(){return airborne();},get speed(){return velocity.length();},get unsafe(){return unsafe;},
+ equip(p:T.Vector3,allowed:boolean){if(!allowed||(phase!=='docked'&&phase!=='dropped')||p.distanceTo(devicePosition)>3)return false;phase='equipped';current.copy(p);lastSafe.copy(p);return true;},
+ unequip(p:T.Vector3=current,allowed=true){const floor=support(p);if(!allowed||phase!=='equipped'||floor===undefined||!Number.isFinite(p.y)||Math.abs(p.y-floor)>.15)return false;devicePosition.copy(p);devicePosition.y=floor;phase='dropped';velocity.setScalar(0);unsafe=false;return true;},
+ ground(p:T.Vector3){current.copy(p);if(phase!=='equipped')return;const floor=support(p);if(floor!==undefined&&Math.abs(p.y-floor)<.15)lastSafe.copy(p);},
  takeoff(){if(phase!=='equipped')return false;phase='taking-off';launch=.65;return true;},
  pause(){velocity.setScalar(0);},
  recover(p:T.Vector3){p.copy(lastSafe);velocity.setScalar(0);phase='equipped';unsafe=false;},
  update(dt:number,p:T.Vector3,input:FlightInput,enabled:boolean){
- if(!airborne())return;
+ current.copy(p);if(!airborne())return;
  if(![p.x,p.y,p.z].every(Number.isFinite)||p.y<.5||p.y>flightSettings.ceiling+5||p.x<flightSettings.minX-5||p.x>flightSettings.maxX+5||p.z<flightSettings.minZ-5||p.z>flightSettings.maxZ+5){this.recover(p);return;}
  if(!enabled){this.pause();return;}dt=Math.min(.05,Math.max(0,dt));
  launch=Math.max(0,launch-dt);const vertical=launch>0?1:input.vertical;
