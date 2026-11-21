@@ -6,6 +6,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   hover: (x: number, y: number, locked: boolean) => void;
   target?: (x:number,y:number,locked:boolean)=>void;
   escape: () => void;
+  cancelMotion?:()=>boolean;
   manual: () => void;
   jump: () => void;
   lockChanged?: (locked: boolean) => void;
@@ -59,6 +60,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (!enabled) return;
     if (event.key === 'Escape') {
       event.preventDefault();
+      if(callbacks.cancelMotion?.())return;
       if (document.pointerLockElement === canvas) document.exitPointerLock(); else callbacks.escape(); return;
     }
     // Page focus is movement-ready; focused UI owns its own keyboard input.

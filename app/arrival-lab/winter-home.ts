@@ -14,22 +14,30 @@ export function createWinterHome(parent:T.Group,solids:T.Mesh[]){
  // Christmas corner: layered, slightly irregular bough silhouettes and a modest ornament palette.
  const tree=new T.Group();tree.name='Christmas · family tree';tree.position.set(100.4,0,23.5);root.add(tree);
  const parts:T.BufferGeometry[]=[];
- for(let tier=0;tier<5;tier++){
-  const g=new T.ConeGeometry(1.12-tier*.18,1.35-tier*.10,12);g.rotateY(tier*.47);g.translate(0,.85+tier*.52,0);parts.push(g);
+ const core=new T.ConeGeometry(.75,2.9,20,6);core.translate(0,1.85,0);parts.push(core);
+ for(let tier=0;tier<7;tier++)for(let branch=0;branch<9;branch++){
+  const angle=branch/9*Math.PI*2+tier*.41,radius=1.02-tier*.125;
+  const g=new T.ConeGeometry(.29-tier*.02,.88-tier*.045,8,2);g.rotateZ(-.78);g.rotateY(-angle);
+  g.translate(Math.cos(angle)*radius*.68,.58+tier*.39,Math.sin(angle)*radius*.68);parts.push(g);
  }
  const boughs=mergeGeometries(parts)!;parts.forEach(g=>g.dispose());const foliage=add(boughs,pine,0,0,0);tree.add(foliage);
  const trunk=add(cylinder,wood,100.4,.28,23.5,.18,.56,.18);solid(trunk);
  solid(box(1.85,.4,1.85,100.4,.2,23.5,wood));
- const ornaments=new T.InstancedMesh(ball,brass,24),bulbs=new T.InstancedMesh(ball,glow,104),pose=new T.Object3D();
+ const bulbGlow=glow.clone();materials.add(bulbGlow);const twinkleTime={value:0};
+ bulbGlow.onBeforeCompile=shader=>{shader.uniforms.twinkleTime=twinkleTime;shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying float bulbPhase;').replace('#include <begin_vertex>','#include <begin_vertex>\nbulbPhase=instanceMatrix[3].x*2.7+instanceMatrix[3].y*3.1+instanceMatrix[3].z;');shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float twinkleTime; varying float bulbPhase;').replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance*=.80+.20*sin(twinkleTime*.9+bulbPhase);');};
+ const ornaments=new T.InstancedMesh(ball,brass,36),bulbs=new T.InstancedMesh(ball,bulbGlow,126),pose=new T.Object3D();
  ornaments.name='Christmas · ornaments';root.add(ornaments,bulbs);let bulb=0;
- for(let i=0;i<24;i++){
+ for(let i=0;i<36;i++){
   const y=.65+(i%6)*.40,a=i*2.4,r=1.1-(y-.65)*.27;
   pose.position.set(100.4+Math.cos(a)*r,y,23.5+Math.sin(a)*r);pose.scale.setScalar(.075);pose.updateMatrix();ornaments.setMatrixAt(i,pose.matrix);
   ornaments.setColorAt(i,new T.Color(i%3===0?'#9f5159':i%3===1?'#efdfb2':'#8fa9bb'));
  }
+ const garland:T.Vector3[]=[];
+ for(let i=0;i<128;i++){const y=.52+i*.0215,a=i*.275,r=1.07-(y-.52)*.29;garland.push(new T.Vector3(100.4+Math.cos(a)*r,y,23.5+Math.sin(a)*r));}
+ add(new T.TubeGeometry(new T.CatmullRomCurve3(garland),180,.018,5,false),brass,0,0,0);
  // One instanced batch for tree and overhead warm lights; no extra real-time lights.
- for(let i=0;i<42;i++){
-  const y=.55+i*.065,a=i*.83,r=1.16-(y-.55)*.32;
+ for(let i=0;i<64;i++){
+  const y=.52+i*.043,a=i*.55,r=1.07-(y-.52)*.29;
   pose.position.set(100.4+Math.cos(a)*r,y,23.5+Math.sin(a)*r);pose.scale.setScalar(.035);pose.updateMatrix();bulbs.setMatrixAt(bulb++,pose.matrix);
  }
  for(const z of [13.2,25]){
@@ -72,5 +80,6 @@ export function createWinterHome(parent:T.Group,solids:T.Mesh[]){
   if(parts.length){const merged=mergeGeometries(parts);if(merged){const batch=add(merged,m,0,0,0);batch.name='Winter · static decoration';meshes.forEach(o=>o.removeFromParent());}}
   parts.forEach(g=>g.dispose());
  }
- return {root,dispose(){root.traverse(o=>{if(o instanceof T.InstancedMesh)o.dispose();});root.removeFromParent();for(const o of colliders){const i=solids.indexOf(o);if(i>=0)solids.splice(i,1);}geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ let time=0;
+ return {root,update(dt:number,reduced:boolean){if(reduced){twinkleTime.value=0;return false;}time+=Math.min(.2,Math.max(0,dt));twinkleTime.value=time;return true;},dispose(){root.traverse(o=>{if(o instanceof T.InstancedMesh)o.dispose();});root.removeFromParent();for(const o of colliders){const i=solids.indexOf(o);if(i>=0)solids.splice(i,1);}geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

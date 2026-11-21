@@ -181,22 +181,18 @@ test('shared expansion partitions have one surface owner',async()=>{
  }finally{expansion.dispose();}
 });
 
-test('orbital toy preserves its centre, settles after boost, and respects reduced motion',async()=>{
+test('orbital rings charge independently, align and keep their common centre',async()=>{
  const {createOrbitalSculpture}=await import(join(temp,'orbital-sculpture.mjs'));
  const localScene=new T.Scene(),solids=[],toy=createOrbitalSculpture(localScene,solids);
  try{
   const rings=solids.filter(m=>m.geometry.type==='TorusGeometry');assert.equal(rings.length,4);
   toy.update(0,.016,true);const pose=rings.map(m=>m.parent.quaternion.clone());
-  assert.equal(toy.update(1000,.016,true),false);
-  rings.forEach((m,i)=>assert.ok(m.parent.quaternion.equals(pose[i])));
-  toy.activate(1000);assert.equal(toy.update(1000,.016,true),true);
-  assert.equal(toy.update(2000,.016,true),false);
-  const angle=()=>rings[0].parent.rotation.x;
-  toy.update(8000,.016,false);const idleStart=angle();toy.update(8016,.016,false);const idle=angle()-idleStart;
-  toy.activate(8016);toy.update(11266,.016,false);const fastStart=angle();toy.update(11282,.016,false);assert.ok(angle()-fastStart>idle*4);
-  toy.update(16000,.016,false);const settled=angle();toy.update(16016,.016,false);assert.ok(Math.abs(angle()-settled-idle)<1e-8);
-  const centres=rings.map(m=>m.getWorldPosition(new T.Vector3()));centres.forEach(p=>assert.ok(p.distanceTo(new T.Vector3(-49,4.65,0))<1e-8));
- }finally{toy.dispose();assert.equal(localScene.children.length,0);}
+  toy.update(1000,.016,true);rings.forEach((m,i)=>assert.ok(m.parent.quaternion.equals(pose[i])));
+  for(let i=0;i<4;i++)assert.equal(toy.activate(1000+i*400,i),true);
+  for(let i=0;i<70;i++)toy.update(3000+i*50,.05,true);
+  assert.equal(toy.sequence.phase,'open');
+  rings.forEach(m=>assert.ok(m.getWorldPosition(new T.Vector3()).distanceTo(new T.Vector3(-49,4.65,0))<1e-8));
+ }finally{toy.dispose();assert.equal(localScene.children.length,0);assert.equal(solids.length,0);}
 });
 
 

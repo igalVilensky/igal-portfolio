@@ -1,5 +1,6 @@
 import { familyKnowledge } from '../../shared/family-knowledge.js';
 import * as T from 'three';
+import { createChildCharacter } from './child-character';
 import { familyNodes, familyRoute, familySpots } from './family-navigation';
 import { createCollision } from './collision';
 import type { CharacterVisual } from './character-assets';
@@ -15,20 +16,22 @@ export const familyMembers=[
 export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
  const root=new T.Group();root.name='Family · inhabitants';scene.add(root);
  const geometries:T.BufferGeometry[]=[],materials:T.Material[]=[];
+ const childVisuals:ReturnType<typeof createChildCharacter>[]=[];
  const people=familyMembers.map((spec,index)=>{
   const person=new T.Group();person.name=spec.name;person.userData={npc:spec.id,age:spec.age};person.position.set(spec.x,0,spec.z);root.add(person);
   const body=new T.Group();person.add(body);
   const geometry=new T.BoxGeometry(.62,spec.height,.42);geometries.push(geometry);
   const material=new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});materials.push(material);
   const target=new T.Mesh(geometry,material);target.position.y=spec.height/2;target.userData={npc:spec.id,noCollision:true};target.visible=typeof window==='undefined';person.add(target);solids.push(target);
-  return {spec:{...spec,homeRoom:spec.id,model:'quaternius-humanoid',animationSet:'skeletal',ageCategory:spec.age<5?'toddler':spec.age<10?'child':spec.age<18?'teen':'adult',reaction:'wave',navigation:'arrival-ground-floor'},person,body,target,visual:undefined as CharacterVisual|undefined,phase:index*1.7,near:false,node:index,route:[] as number[],wait:5+index*4,reaction:0,blocked:0,cycle:0,state:'idle',destination:index,activity:'observing',facing:0,seatHeight:0,seatAnchor:undefined as readonly [number,number,number]|undefined,pace:1,seatBlend:0,proximityCooldown:0,greetTarget:null as T.Vector3|null,speed:0,visualPace:0,playStep:0,lookTime:0,socialTime:0};
+  const childVisual=spec.age<10?createChildCharacter(spec):undefined;if(childVisual){body.add(childVisual.root);childVisuals.push(childVisual);target.visible=true;}
+  return {spec:{...spec,homeRoom:spec.id,model:spec.age<10?'purpose-built-child':'quaternius-humanoid',animationSet:spec.age<10?'articulated-child':'skeletal',ageCategory:spec.age<5?'toddler':spec.age<10?'child':spec.age<18?'teen':'adult',reaction:'wave',navigation:'arrival-ground-floor'},person,body,target,visual:childVisual as CharacterVisual|undefined,phase:index*1.7,near:false,node:index,route:[] as number[],wait:5+index*4,reaction:0,blocked:0,cycle:0,state:'idle',destination:index,activity:'observing',facing:0,seatHeight:0,seatAnchor:undefined as readonly [number,number,number]|undefined,pace:1,seatBlend:0,proximityCooldown:0,greetTarget:null as T.Vector3|null,speed:0,visualPace:0,playStep:0,lookTime:0,socialTime:0};
  });
  let disposed=false,assets:Awaited<ReturnType<typeof import('./character-assets')['loadCharacterAssets']>>|undefined;
  const assetStatus={state:'loading' as 'loading'|'ready'|'error',error:''};
  const ready=typeof window==='undefined'?Promise.resolve():import('./character-assets').then(async module=>{
   assets=await module.loadCharacterAssets();
   if(disposed){assets.dispose();return;}
-  for(const p of people){p.visual=assets.create(p.spec);p.body.add(p.visual.root);p.target.visible=true;}
+  for(const p of people){if(p.visual)continue;p.visual=assets.create(p.spec);p.body.add(p.visual.root);p.target.visible=true;}
   assetStatus.state='ready';
  }).catch(error=>{assetStatus.state='error';assetStatus.error=String(error);console.error('Family character loading failed',error);});
  const collision=createCollision(solids.filter(m=>!m.userData.npc),'family');
@@ -127,5 +130,5 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
    if(walking&&p.proximityCooldown<=0&&!(p.spec.age<10&&playPhase==='playing')){const other=people.find(other=>other!==p&&other.person.position.distanceTo(p.person.position)<1.5&&conversationId!==other.spec.id);if(other){p.greetTarget=other.person.position;other.greetTarget=p.person.position;p.reaction=2.4;p.proximityCooldown=18;other.reaction=2.4;other.proximityCooldown=18;p.state='greeting';other.state='greeting';}}
    p.visual?.update(dt,walking,p.reaction>0,reduced,p.seatBlend,p.seatHeight,walking?Math.max(.15,p.visualPace):0,conversationId===p.spec.id?conversationPhase:p.state==='chatting'?'responding':p.state);
   }return true;
- },dispose(){disposed=true;assets?.dispose();for(const p of people){p.visual?.mixer.stopAllAction();if(p.visual)p.visual.mixer.uncacheRoot(p.visual.mixer.getRoot());}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ },dispose(){disposed=true;assets?.dispose();childVisuals.forEach(v=>v.dispose());for(const p of people){p.visual?.mixer.stopAllAction();if(p.visual)p.visual.mixer.uncacheRoot(p.visual.mixer.getRoot());}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

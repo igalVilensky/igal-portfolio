@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { createChildCharacter } from './child-character';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 
@@ -19,10 +20,12 @@ export async function loadCharacterAssets() {
  const skeletons=new Set<T.Skeleton>();
  const geometries=new Set<T.BufferGeometry>(),materials=new Set<T.Material>(),textures=new Set<T.Texture>();
  for(const source of sources.values())source.traverse(o=>{if(o instanceof T.Mesh){geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){materials.add(m);for(const v of Object.values(m))if(v instanceof T.Texture)textures.add(v);}}});
+ const children:ReturnType<typeof createChildCharacter>[]=[];
  let disposed=false;
  return {
   create(spec:CharacterIdentity):CharacterVisual {
    if(disposed)throw new Error('Character assets disposed');
+   if(spec.age<10){const visual=createChildCharacter(spec);children.push(visual);return visual;}
    const female=spec.id==='anastasia'||spec.id==='amelia',child=spec.age<10,toddler=spec.age<5;
    const root=new T.Group(),model=clone(sources.get(female?'base-female':'base-male')!);root.name=spec.id+' · rigged character';root.add(model);
    model.traverse(o=>{if(o instanceof T.SkinnedMesh){o.skeleton.boneInverses=o.skeleton.boneInverses.map(matrix=>matrix.clone());skeletons.add(o.skeleton);}});
@@ -263,6 +266,6 @@ export async function loadCharacterAssets() {
     model.position.y+=restSupport-lowestSupport();
    }};
   },
-  dispose(){disposed=true;skeletons.forEach(skeleton=>skeleton.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
+  dispose(){disposed=true;children.forEach(child=>child.dispose());skeletons.forEach(skeleton=>skeleton.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
  };
 }

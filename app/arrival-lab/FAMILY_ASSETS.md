@@ -12,30 +12,34 @@ To reproduce the compact asset selection, pass the official archive to
 The script keeps geometry, rigs, UVs and the small iris texture, removes large normal
 and skin maps, and preserves the original license. The selected assets total about 2.1 MB.
 
-`character-assets.ts` clones skeletons with **independent inverse bind matrices**,
-changes mesh and joint proportions together, rebinds skinning and fits each complete
-model to its identity's metre height. Children have shorter relative legs and torsos,
-narrower shoulders, shorter arm reach, softer jaws and relatively larger heads.
-The three-year-old has a stronger head/body contrast than the seven-year-old.
-Portrait-guided hair shaping keeps Nataniel tousled and Adriel shorter and neater. Mesh vertex colours provide shirts,
-trousers, shoes and skin; these are close-fitting garments, not separately tailored outfits.
-Hair and beard are authored meshes from the same licensed pack. Facial structure remains
-largely the base model's; this is approximate stylized identity, not a reconstructed face.
-Three.js AnimationMixer blends idle, walk and run continuously. One-shot additive
-upper-body greetings have a lift/hold/release envelope; conversational gestures use
-a separate additive layer. Greeting never replaces the leg animation. Gait speed
-follows actual collision-resolved displacement, including slower turns. Seated
-poses still use cached, bounded fits against the skinned lower-body surface.
-Navigation, interaction identities and world visibility remain owned by `family.ts`.
+`character-assets.ts` keeps the licensed skeletal models for Igal, Anastasia and
+Amelia, with independent inverse bind matrices, calibrated heights, blended gait
+and additive upper-body gestures. Their likeness remains approximate and stylized.
+
+Nataniel and Adriel now use `child-character.ts`: purpose-built rounded faces,
+small eyes and noses, soft sweaters, child-length limbs, and separately authored
+hair caps/fringes. They do not use deformed adult faces or superhero anatomy.
+Adriel has a larger relative head, shorter limbs and a wider toddler stance;
+Nataniel has longer school-age proportions, a striped sweater and tousled hair.
+The models keep the approved identity heights. Their walk, run, wave and small
+conversation gestures use the existing family update loop. Feet are grounded
+using reused bounds; face details and hair are batched within the moving head.
+Children are available immediately, while adult assets continue loading.
+
+Navigation, interaction identities, social routines and world visibility remain
+owned by `family.ts`. Adults retain cached seated poses. The children continue to
+avoid adult-height seats; no new child seating locations have been introduced.
 
 Family routines use the existing circulation graph plus four home gathering nodes.
 The siblings periodically meet for a short shared running circuit, then return to
 independent exploration. Conversations interrupt play and hold navigation safely.
 Adults can face nearby family during short pauses. There is no separate AI loop.
 
-`winter-home.ts` adds static Hanukkah and Christmas dressing to the existing home.
+`winter-home.ts` adds Hanukkah and Christmas dressing to the existing home.
 The hanukkiah has eight equal candles and a raised central shamash. Tree lights and
-overhead bulbs are instanced; other small decorations are merged by material.
+overhead bulbs are instanced, with slow shader-based twinkling. The tree uses
+clustered boughs, a continuous spiral garland and a restrained ornament palette.
+Other small decorations are merged by material. Reduced motion freezes twinkling.
 Only the tree base/trunk and console join collision. Snow stays on exterior roofs.
 The home owns seasonal resource disposal; no extra shadow lights or particle loops
 are introduced. Seasonal dressing is always present, rather than date-controlled.
