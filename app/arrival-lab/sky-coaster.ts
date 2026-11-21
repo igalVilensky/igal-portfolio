@@ -8,7 +8,7 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  // A complete vertical loop, with a small lateral drift separating entry and exit.
  for(let i=1;i<=16;i++){const a=i/16*Math.PI*2;points.push([-110+i*.45,18-14*Math.cos(a),180+14*Math.sin(a)]);}
  points.push([-99,5,205],[-65,20,220],[-26,55,205],[0,70,175],
-  [-60,62,155],[-135,40,100],[-158,12,25],[-160,10,-68],
+  [-60,62,155],[-135,25,100],[-158,12,25],[-160,10,-68],
   [-137,36,-145],[-80,65,-175],[-15,76,-145],[0,65,-80],
   [0,58,-20],[40,52,20],[76,35,-15],[147,8,-38],[155,6,-5]);
  // Second real vertical loop over the eastern cloud ocean, clear of the scenic tube.
@@ -64,6 +64,8 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
   const bearing=point.clone().addScaledVector(up,-.95);
   for(const offset of [6,-6,9,-9,12,-12]){
    const top=bearing.clone().addScaledVector(right,offset),base=new T.Vector3(top.x,-20,top.z);
+   // Keep bearing foundations outside the lagoon, its promenade and the build surface.
+   if(((top.x+170)/43)**2+((top.z-65)/41)**2<1||(top.x>-192&&top.x<-140&&top.z>98&&top.z<154))continue;
    if(supportSamples.some((p,i)=>nearSegment(p,base,top,4.8)||(Math.min(Math.abs(i/(supportSamples.length-1)-u),1-Math.abs(i/(supportSamples.length-1)-u))*length>20&&nearSegment(p,bearing,top,4.8))))continue;
    if(tubeSamples.some(p=>nearSegment(p,base,top,4.3)||nearSegment(p,bearing,top,4.3)))continue;
    box(.65,top.y-base.y,.65,top.x,(top.y+base.y)/2,top.z,metal).name='Cloudbreaker · offset bearing mast';

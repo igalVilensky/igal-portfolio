@@ -3,6 +3,8 @@ import * as T from 'three';
 /** Shared destination records can later carry discovery/unlock state. Portal worlds
  * use their hall entrance on the island map, never their unrelated local coordinates. */
 export const islandDestinations = [
+ {id:'living-lagoon',name:'The Living Lagoon',x:-170,z:65},
+ {id:'creation-yard',name:'The Creation Yard',x:-166,z:132},
  {id:'print-lab',name:'Print Lab',x:-66,z:58},
  {id:'arrival',name:'Arrival',x:5,z:8},
  {id:'home',name:'Vilensky home',x:82,z:19},

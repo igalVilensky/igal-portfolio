@@ -4,6 +4,7 @@ import * as T from 'three';
 export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElement, callbacks: {
   activate: (x: number, y: number, locked: boolean, direct: boolean) => void;
   hover: (x: number, y: number, locked: boolean) => void;
+  target?: (x:number,y:number,locked:boolean)=>void;
   escape: () => void;
   manual: () => void;
   jump: () => void;
@@ -12,9 +13,9 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   const keys = new Set<string>();
   const velocity = new T.Vector3();
   let analogX=0, analogZ=0, sprint=false;
-  const reset=()=>{keys.clear();velocity.set(0,0,0);analogX=analogZ=0;sprint=false;dragging=false;pointers.clear();multiple=false;};
+  const reset=()=>{keys.clear();velocity.set(0,0,0);analogX=analogZ=0;sprint=false;verticalAnalog=0;dragging=false;pointers.clear();multiple=false;};
   let yaw = .0574, pitch = .0855, targetYaw = yaw, targetPitch = pitch;
-  let enabled = true, climbing=false;
+  let enabled = true, climbing=false, swimming=false, verticalAnalog=0;
   let dragging = false, distance = 0, lastX = 0, lastY = 0, multiple = false;
   const pointers = new Set<number>();
   const removers: (() => void)[] = [];
@@ -25,6 +26,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     if (!enabled || (event.pointerType !== 'touch' && event.button !== 0)) return;
     pointers.add(event.pointerId); if (pointers.size > 1) multiple = true;
     dragging = true; distance = 0; lastX = event.clientX; lastY = event.clientY;
+    callbacks.target?.(event.clientX,event.clientY,document.pointerLockElement===canvas);
     canvas.focus({ preventScroll: true });
     if (document.pointerLockElement !== canvas) canvas.setPointerCapture(event.pointerId);
   }
@@ -41,6 +43,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
       camera.rotation.set(pitch,yaw,0,'YXZ');
     }
     lastX = event.clientX; lastY = event.clientY;
+    callbacks.target?.(event.clientX,event.clientY,locked);
     if (!dragging || locked) callbacks.hover(event.clientX, event.clientY, locked);
   }
   function up(event: PointerEvent) {
@@ -55,6 +58,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
   function keyboard(event: KeyboardEvent) {
     if (!enabled) return;
     if (event.key === 'Escape') {
+      event.preventDefault();
       if (document.pointerLockElement === canvas) document.exitPointerLock(); else callbacks.escape(); return;
     }
     // Page focus is movement-ready; focused UI owns its own keyboard input.
@@ -66,6 +70,7 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     const steps: Record<string, [number, number]> = { ArrowLeft: [.12, 0], ArrowRight: [-.12, 0], ArrowUp: [0, .09], ArrowDown: [0, -.09] };
     const step = steps[event.key];
     if (step) { event.preventDefault(); targetYaw += step[0]; targetPitch = T.MathUtils.clamp(targetPitch + step[1], -1.25, 1.35); }
+    if(swimming&&['Space','KeyC'].includes(event.code)){keys.add(event.code);event.preventDefault();return;}
     if(event.code==='Space'){event.preventDefault();if(!event.repeat&&!climbing)callbacks.jump();return;}
     if (!event.repeat && (event.code === 'KeyE' || event.key === 'Enter')) { event.preventDefault(); callbacks.activate(0, 0, true, false); }
   }
@@ -89,6 +94,9 @@ export function createLook(camera: T.PerspectiveCamera, canvas: HTMLCanvasElemen
     setEnabled(value: boolean) { enabled = value; reset(); if(!value && document.pointerLockElement===canvas)document.exitPointerLock(); },
     analog(x:number,z:number,fast=false) { if(!enabled)return;analogX=x;analogZ=z;sprint=fast;if(x||z)callbacks.manual();else velocity.set(0,0,0); },
     reset,
+    setSwimming(value:boolean){if(swimming===value)return;swimming=value;keys.delete('Space');keys.delete('KeyC');verticalAnalog=0;},
+    swimAxis(){return swimming?(verticalAnalog||Number(keys.has('Space'))-Number(keys.has('KeyC'))):0;},
+    swimAnalog(value:number){verticalAnalog=enabled?value:0;},
     setClimbing(value:boolean){climbing=value;reset();},
     climbAxis(){return -analogZ+Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'));},
     // Transport momentum with the doorway's rigid turn without clearing held keys/touch intent.
