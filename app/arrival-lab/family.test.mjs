@@ -48,7 +48,7 @@ test('conversation holds position and releases the same valid route repeatedly',
  const family=out.createFamily(new T.Scene()),p=family.people[0];p.wait=0;p.route=[5];
  for(let turn=0;turn<3;turn++){
   const before=p.person.position.clone();family.converse('igal','thinking');for(let n=0;n<20;n++)family.update(n*100,.1,true,new T.Vector3());assert(p.person.position.equals(before));
-  family.converse(null);p.reaction=0;family.update(3000,.1,true,new T.Vector3());assert(p.person.position.distanceTo(before)>0);
+  family.converse(null);p.reaction=0;for(let n=0;n<25;n++)family.update(3000+n*100,.1,true,new T.Vector3());assert(p.person.position.distanceTo(before)>0);
  }family.dispose();
 });
 
@@ -154,4 +154,20 @@ test('winter dressing batches shared decorations, keeps nine candle flames, and 
  assert.equal(solids.length,3);assert.equal(winter.root.getObjectByName('Hanukkah · nine-light hanukkiah').type,'Group');
  let released=0;for(const g of geometries)g.addEventListener('dispose',()=>released++);for(const m of materials)m.addEventListener('dispose',()=>released++);
  winter.dispose();assert.equal(released,geometries.size+materials.size);assert.equal(parent.children.length,0);assert.equal(solids.length,0);
+});
+
+test('new attraction approaches clear the actual Print Lab, stations and train barriers',()=>{
+ const old=globalThis.document;globalThis.document={createElement:()=>({getContext:()=>new Proxy({},{get:()=>()=>{}})})};
+ const scene=new T.Scene(),solids=[];let origin,print,tube,coaster;
+ try{origin=module('./origin.ts').createOrigin(scene,solids);print=module('./print-lab.ts').createPrintLab(scene,solids);tube=module('./skytube.ts').createSkyTube(scene,solids,true);coaster=module('./sky-coaster.ts').createSkyCoaster(scene,solids);scene.updateMatrixWorld(true);const move=module('./collision.ts').createCollision(solids);
+  for(const [a,b] of nav.familyEdges.filter(([a,b])=>a>=52||b>=52))for(const [from,to] of [[a,b],[b,a]]){const start=nav.familyNodes[from],end=nav.familyNodes[to],p=new T.Vector3(start[0],1.65,start[1]);move(p,new T.Vector3(end[0]-start[0],0,end[1]-start[1]));assert(Math.hypot(p.x-end[0],p.z-end[1])<.01,`${from} -> ${to}: ${p.toArray()}`);}
+ }finally{origin?.dispose();print?.dispose();tube?.dispose();coaster?.dispose();globalThis.document=old;}
+});
+
+test('autonomous itineraries reach both ride owners and keep body disks separate',()=>{
+ const counts={52:0,54:0},rides={};for(const node of [52,54])rides[node]={npcPassenger:false,remaining:0,boardNpc(){if(this.npcPassenger)return false;this.npcPassenger=true;this.remaining=4;counts[node]++;return true;}};
+ const family=out.createFamily(new T.Scene(),[],rides),player=new T.Vector3(-300,1.65,-300);
+ try{for(let n=0;n<18000;n++){for(const ride of Object.values(rides)){ride.remaining-=.1;if(ride.remaining<=0)ride.npcPassenger=false;}family.update(n*100,.1,true,player);for(let a=0;a<5;a++)for(let b=a+1;b<5;b++){const p=family.people[a],q=family.people[b];if(p.riding||q.riding)continue;const radius=(p.spec.age<10?.22:.32)+(q.spec.age<10?.22:.32);assert(Math.hypot(p.person.position.x-q.person.position.x,p.person.position.z-q.person.position.z)>=radius-.002,`${p.spec.id}/${q.spec.id} intersect at ${n/10}s`);}}
+ assert(counts[52]>0,'coaster itinerary boards');assert(counts[54]>0,'scenic SkyTube itinerary boards');
+ }finally{family.dispose();}
 });

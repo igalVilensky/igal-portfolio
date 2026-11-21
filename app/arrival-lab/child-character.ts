@@ -67,10 +67,10 @@ export function createChildCharacter(spec:CharacterIdentity):CharacterVisual & {
  return {root,mixer,height:h,update(dt,walking,greeting,reduced,seated=0,_seatHeight=0,pace=1,activity='observing'){
   dt=Math.min(.2,Math.max(0,dt));time+=dt;mixer.update(dt);
   gait=T.MathUtils.damp(gait,walking?1:0,10,dt);seat=T.MathUtils.damp(seat,seated,8,dt);talk=T.MathUtils.damp(talk,activity==='responding'?1:0,8,dt);
-  phase+=dt*(toddler?9.5:8.2)*Math.max(.15,pace);if(greeting&&!waving)waveTime=0;waving=greeting;waveTime+=dt;
+  const runPace=T.MathUtils.smoothstep(pace,1.25,1.8);const stride=2*legLength*scale*Math.sin(.30+runPace*.22)/.6;phase+=dt*(pace*.75)/stride*Math.PI*2;if(greeting&&!waving)waveTime=0;waving=greeting;waveTime+=dt;
   const wave=T.MathUtils.smoothstep(waveTime,0,.45)*(1-T.MathUtils.smoothstep(waveTime,1.75,2.4))*(reduced?.45:1);
   const run=T.MathUtils.smoothstep(pace,1.25,1.8),s=Math.sin(phase);
-  for(const leg of legs){leg.thigh.rotation.x=s*leg.side*(.33+run*.23)*gait-seat*1.05;leg.knee.rotation.x=Math.max(0,-s*leg.side)*(.50+run*.30)*gait+seat*1.1;}
+  for(const leg of legs){const step=(phase/(Math.PI*2)+(leg.side<0?.5:0))%1,sweep=step<.6?1-2*step/.6:-Math.cos((step-.6)/.4*Math.PI);leg.thigh.rotation.x=Math.asin(sweep*Math.sin(.30+run*.22))*gait-seat*1.05;leg.knee.rotation.x=Math.sin(Math.PI*T.MathUtils.clamp((step-.6)/.4,0,1))*(.50+run*.30)*gait+seat*1.1;}
   for(const arm of arms){arm.upper.rotation.set(-s*arm.side*(.28+run*.20)*gait,0,arm.side*(.10+(toddler?.06:0)));arm.elbow.rotation.set(-.12-run*.45*gait,0,0);
    if(arm.side<0){arm.upper.rotation.z-=wave*2.25;arm.upper.rotation.x-=wave*.14;arm.elbow.rotation.z=-wave*(.55+Math.sin(waveTime*10)*.18);arm.elbow.rotation.x-=talk*(.25+Math.sin(time*2.2)*.2);}
   }

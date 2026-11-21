@@ -132,8 +132,11 @@ export async function loadCharacterAssets() {
       let x=0,z=0,y=0;
       if(bone.startsWith('upperarm')){z=-side*(child?1.25:1.35);x=gait?s*side*(run?.48:.26):s*(child?.025:.012);}
       if(bone.startsWith('lowerarm'))x=run?-.85:-.16-(gait?Math.max(0,s*side)*.16:0);
-      if(bone.startsWith('thigh')&&gait)x=s*side*(run?.72:.43);
-      if(bone.startsWith('calf')&&gait)x=Math.max(0,-s*side)*(run?1.05:.68);
+      // Constant-speed stance sweep; the return step eases through toe-off and landing.
+      const step=(t+(side<0?.5:0))%1;
+      const sweep=step<.6?1-2*step/.6:-Math.cos((step-.6)/.4*Math.PI);
+      if(bone.startsWith('thigh')&&gait)x=Math.asin(sweep*Math.sin(run?.60:.31));
+      if(bone.startsWith('calf')&&gait)x=Math.sin(Math.PI*T.MathUtils.clamp((step-.6)/.4,0,1))*(run?1.05:.58);
       if(bone.startsWith('foot')&&gait)x=-Math.max(0,-s*side)*.14;
       if(bone==='pelvis'&&gait){y=s*.045;z=Math.cos(phase)*.018;}
       if(bone==='pelvis'&&kind==='idle'&&child)z=s*.012;
@@ -250,7 +253,12 @@ export async function loadCharacterAssets() {
     greet.setEffectiveWeight(waveWeight);
     wasGreeting=greeting;
     idle.timeScale=reduced?0:1;greet.timeScale=reduced?.65:1;talk.timeScale=reduced?.5:1;
-    walk.timeScale=Math.max(.15,pace);run.timeScale=Math.max(.5,pace/1.65);
+    // pace is measured displacement / .9 m/s. Calibrate cycles to leg reach,
+    // after final scaling, rather than assuming every rig has the same stride.
+    const velocity=pace*.9,legLength=legs[0]!.upper.length()+legs[0]!.lower.length();
+    const stride=2*legLength*Math.sin(.31)/.6,runStride=2*legLength*Math.sin(.60)/.6;
+    walk.timeScale=Math.max(.01,velocity/stride*walk.getClip().duration);
+    run.timeScale=Math.max(.01,velocity/runStride*run.getClip().duration);
     for(const pose of seatedBones)pose.bone.quaternion.copy(pose.animated);
     mixer.update(dt);
     for(const pose of seatedBones)pose.animated.copy(pose.bone.quaternion);

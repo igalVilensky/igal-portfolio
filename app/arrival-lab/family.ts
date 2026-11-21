@@ -1,7 +1,8 @@
 import { familyKnowledge } from '../../shared/family-knowledge.js';
 import * as T from 'three';
 import { createChildCharacter } from './child-character';
-import { familyNodes, familyRoute, familySpots } from './family-navigation';
+import { familyNodes, familyRoute, familySpots, familyGroundHeight } from './family-navigation';
+import { createFamilyLife, separatedStep } from './family-life';
 import { createCollision } from './collision';
 import type { CharacterVisual } from './character-assets';
 
@@ -13,7 +14,7 @@ export const familyMembers=[
  {id:'nataniel',name:'Nataniel',x:73,z:32,hair:'#ad9065',shirt:'#8c4154',pants:'#536578',style:'tousled',skin:'#f0c7ac'},
  {id:'adriel',name:'Adriel',x:94,z:32,hair:'#b99962',shirt:'#985359',pants:'#737e9a',style:'tousled',skin:'#f0c6ab'},
 ] .map(spec=>({...spec,age:familyKnowledge[spec.id]!.age,height:familyKnowledge[spec.id]!.height}));
-export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
+export function createFamily(scene:T.Scene,solids:T.Mesh[]=[],rides:Partial<Record<number,{boardNpc:(person:T.Object3D)=>boolean;npcPassenger:boolean}>>={}){
  const root=new T.Group();root.name='Family · inhabitants';scene.add(root);
  const geometries:T.BufferGeometry[]=[],materials:T.Material[]=[];
  const childVisuals:ReturnType<typeof createChildCharacter>[]=[];
@@ -24,7 +25,7 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
   const material=new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});materials.push(material);
   const target=new T.Mesh(geometry,material);target.position.y=spec.height/2;target.userData={npc:spec.id,noCollision:true};target.visible=typeof window==='undefined';person.add(target);solids.push(target);
   const childVisual=spec.age<10?createChildCharacter(spec):undefined;if(childVisual){body.add(childVisual.root);childVisuals.push(childVisual);target.visible=true;}
-  return {spec:{...spec,homeRoom:spec.id,model:spec.age<10?'purpose-built-child':'quaternius-humanoid',animationSet:spec.age<10?'articulated-child':'skeletal',ageCategory:spec.age<5?'toddler':spec.age<10?'child':spec.age<18?'teen':'adult',reaction:'wave',navigation:'arrival-ground-floor'},person,body,target,visual:childVisual as CharacterVisual|undefined,phase:index*1.7,near:false,node:index,route:[] as number[],wait:5+index*4,reaction:0,blocked:0,cycle:0,state:'idle',destination:index,activity:'observing',facing:0,seatHeight:0,seatAnchor:undefined as readonly [number,number,number]|undefined,pace:1,seatBlend:0,proximityCooldown:0,greetTarget:null as T.Vector3|null,speed:0,visualPace:0,playStep:0,lookTime:0,socialTime:0};
+  return {spec:{...spec,homeRoom:spec.id,model:spec.age<10?'purpose-built-child':'quaternius-humanoid',animationSet:spec.age<10?'articulated-child':'skeletal',ageCategory:spec.age<5?'toddler':spec.age<10?'child':spec.age<18?'teen':'adult',reaction:'wave',navigation:'arrival-ground-floor'},person,body,target,visual:childVisual as CharacterVisual|undefined,phase:index*1.7,near:false,node:index,route:[] as number[],wait:5+index*4,reaction:0,blocked:0,cycle:0,state:'idle',destination:index,activity:'observing',facing:0,seatHeight:0,seatAnchor:undefined as readonly [number,number,number]|undefined,pace:1,seatBlend:0,proximityCooldown:0,greetTarget:null as T.Vector3|null,speed:0,visualPace:0,playStep:0,lookTime:0,socialTime:0,riding:false,rideCooldown:0};
  });
  let disposed=false,assets:Awaited<ReturnType<typeof import('./character-assets')['loadCharacterAssets']>>|undefined;
  const assetStatus={state:'loading' as 'loading'|'ready'|'error',error:''};
@@ -37,27 +38,51 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
  const collision=createCollision(solids.filter(m=>!m.userData.npc),'family');
  let conversationId:string|null=null,conversationPhase='listening';
  const probe=new T.Vector3(),delta=new T.Vector3();
- let clock=0,nextPlay=32,playPhase:'rest'|'gathering'|'playing'='rest',playUntil=0;
+ const life=createFamilyLife();let decision=0;
+ let nextSocial=65,socialPair=0;
+ let clock=0,nextPlay=32,playPhase:'rest'|'gathering'|'playing'|'regrouping'='rest',playUntil=0;
  const siblings=people.filter(p=>p.spec.age<10);
  function sendTo(p:typeof people[number],node:number){p.destination=node;p.wait=0;p.activity='observing';p.route=[p.node,...familyRoute(p.node,node)];}
 
- return {root,people,ready,assetStatus,converse(id:string|null,phase='listening'){conversationId=id;conversationPhase=phase;},activate(id:string){const p=people.find(p=>p.spec.id===id);if(p&&root.visible&&p.reaction<=0){p.greetTarget=null;p.reaction=2.4;p.state='reacting';}},update(now:number,dt:number,reduced:boolean,player:T.Vector3,enabled=true){root.visible=enabled;if(!enabled)return false;dt=Math.min(Math.max(dt,0),.2);clock+=dt;
-  // A small deterministic family routine, sharing the same audited navigation graph.
-  if(playPhase==='rest'&&clock>=nextPlay&&!siblings.some(p=>conversationId===p.spec.id)){
-   playPhase='gathering';playUntil=clock+240;siblings.forEach((p,i)=>{p.playStep=i*2;sendTo(p,i?51:50);});
+ return {root,people,ready,assetStatus,life,converse(id:string|null,phase='listening'){conversationId=id;conversationPhase=phase;if(id)life.cancel(id);},activate(id:string){const p=people.find(p=>p.spec.id===id);if(p&&root.visible&&p.reaction<=0){p.greetTarget=null;p.reaction=2.4;p.state='reacting';}},update(now:number,dt:number,reduced:boolean,player:T.Vector3,enabled=true){root.visible=enabled;if(!enabled)return false;dt=Math.min(Math.max(dt,0),.2);clock+=dt;
+  decision-=dt;
+  life.update(dt,m=>{const a=people.find(p=>p.spec.id===m.a)!,b=people.find(p=>p.spec.id===m.b)!;return !a.route.length&&!b.route.length&&(m.kind==='play'?[48,6].includes(a.node)&&[48,6].includes(b.node):a.person.position.distanceTo(b.person.position)<4.5);});
+  if(decision<=0){decision=.75;
+   const available=people.filter(p=>!p.riding&&p.spec.id!==conversationId&&!life.owns(p.spec.id)&&p.seatBlend<.02&&p.wait>3&&p.activity!=='sitting');
+   for(const a of available){const b=available.find(b=>b!==a&&a.person.position.distanceTo(b.person.position)<5);if(b){life.reserve(a.spec.id,b.spec.id,'conversation');break;}}
   }
-  if(playPhase==='gathering'&&siblings.every(p=>!p.route.length&&[50,51].includes(p.node))){playPhase='playing';playUntil=clock+28;siblings.forEach(p=>p.wait=0);}
-  if(playPhase!=='rest'&&(clock>playUntil||siblings.some(p=>conversationId===p.spec.id))){playPhase='rest';nextPlay=clock+260;siblings.forEach(p=>p.pace=1);}
+  if(clock>=nextSocial){nextSocial=clock+100;const adults=people.slice(0,3),a=adults[socialPair++%3]!,b=adults[socialPair%3]!;
+   if([a,b].every(p=>!p.route.length&&p.wait>3&&!p.riding&&p.spec.id!==conversationId&&p.seatBlend<.02)&&life.reserve(a.spec.id,b.spec.id,'conversation')){sendTo(a,48);sendTo(b,6);}
+  }
+  // A small deterministic family routine, sharing the same audited navigation graph.
+  if(playPhase==='rest'&&clock>=nextPlay&&!siblings.some(p=>conversationId===p.spec.id)&&life.reserve('nataniel','adriel','play')){
+   playPhase='gathering';playUntil=clock+240;siblings.forEach((p,i)=>{p.playStep=0;sendTo(p,i?6:48);});
+  }
+  if(playPhase==='gathering'&&siblings.every(p=>!p.route.length&&[48,6].includes(p.node))){playPhase='playing';playUntil=clock+30.4;siblings.forEach(p=>{p.wait=2.4;p.reaction=2.4;p.greetTarget=siblings.find(q=>q!==p)!.person.position;});}
+  if(playPhase==='playing'&&clock>playUntil&&!siblings.some(p=>conversationId===p.spec.id)){playPhase='regrouping';playUntil=clock+120;siblings.forEach((p,i)=>{p.pace=1;sendTo(p,i?6:48);});}
+  if(playPhase!=='rest'&&((playPhase==='regrouping'&&siblings.every(p=>!p.route.length&&[48,6].includes(p.node)))||clock>playUntil||siblings.some(p=>conversationId===p.spec.id))){playPhase='rest';nextPlay=clock+260;life.cancel('nataniel');siblings.forEach((p,i)=>{p.pace=1;sendTo(p,i?42:28);p.wait=3;if(!conversationId){p.reaction=2.4;p.greetTarget=siblings.find(q=>q!==p)!.person.position;}});}
 
   for(const p of people){
+   p.rideCooldown=Math.max(0,p.rideCooldown-dt);
+   if(p.riding){const ride=rides[p.node];if(ride?.npcPassenger){p.state='riding';p.seatBlend=T.MathUtils.damp(p.seatBlend,p.node===52?1:0,5,dt);p.visual?.update(dt,false,false,reduced,p.seatBlend,.85,0,'observing');continue;}p.riding=false;p.wait=5;p.rideCooldown=300;}
+   if(rides[p.node]&&!p.route.length&&p.seatBlend<.02&&conversationId!==p.spec.id&&p.person.position.distanceTo(player)>6&&p.rideCooldown<=0&&rides[p.node]!.boardNpc(p.person)){life.cancel(p.spec.id);p.seatAnchor=undefined;p.riding=true;continue;}
+   const meeting=life.owns(p.spec.id);const partner=meeting?people.find(q=>q.spec.id===(meeting.a===p.spec.id?meeting.b:meeting.a)):undefined;
+   if(p.spec.age<10&&playPhase==='regrouping'&&!p.route.length)p.wait=Math.max(p.wait,1);
+   if(meeting?.kind==='conversation'&&meeting.stage==='approach'&&!p.route.length)p.wait=Math.max(p.wait,1);
    const distance=p.person.position.distanceTo(player);p.near=distance<3.5&&player.y<4;
    let walking=false;
    if(conversationId===p.spec.id){p.state=conversationPhase;p.reaction=0;}
+   else if(meeting&&partner&&meeting.kind==='conversation'&&meeting.stage!=='approach'){
+    p.facing=Math.atan2(partner.person.position.x-p.person.position.x,partner.person.position.z-p.person.position.z);
+    p.person.rotation.y+=Math.atan2(Math.sin(p.facing-p.person.rotation.y),Math.cos(p.facing-p.person.rotation.y))*(1-Math.exp(-dt*3));
+    p.state=meeting.stage==='greet'?'greeting':meeting.stage==='exchange'&&((meeting.turn===0)===(meeting.a===p.spec.id))?'chatting':'listening';
+    p.wait=Math.max(p.wait,3);
+   }
    else if(p.reaction>0){p.reaction=Math.max(0,p.reaction-dt);p.state='reacting';}
-   else if(p.near&&p.proximityCooldown<=0){p.greetTarget=null;p.reaction=2.4;p.proximityCooldown=14;p.state='greeting';}
+   else if(p.near&&p.proximityCooldown<=0){p.greetTarget=null;p.reaction=2.4;p.proximityCooldown=40+people.indexOf(p)*3;p.state='greeting';}
    else if(p.wait>0){
     const angle=Math.atan2(Math.sin(p.facing-p.person.rotation.y),Math.cos(p.facing-p.person.rotation.y));
-    p.state=p.activity==='sitting'&&Math.abs(angle)>.08?'aligning':p.activity==='observing'&&p.socialTime>0?'chatting':p.activity;
+    p.state=p.activity==='sitting'&&Math.abs(angle)>.08?'aligning':p.activity;
     if(p.state!=='aligning')p.wait-=dt;
     if(p.seatBlend<.02)p.person.rotation.y+=angle*(1-Math.exp(-dt*2));
    }
@@ -75,32 +100,38 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
      });
      const seat=p.cycle===1||(p.cycle+index)%3===1?nearbySeats[0]:undefined;
      const child=p.spec.age<10,playing=child&&playPhase==='playing';
-     const itinerary=child?[50,28,51,42,6,39]:[48,49,36,42,23,39,44,28];
+     const itinerary=child?[50,28,51,42,6,39]:[48,49,52,42,54,45,44,28];
      const preferred=itinerary[(Math.floor(p.cycle/2)+index)%itinerary.length]!;
-     const playNodes=[50,48,49,51,49,48];
-     const node=playNodes[p.playStep++%playNodes.length]!;
+     const playNodes=[48,49,51,49,48,50];
+     const leader=siblings[0]!;const following=playing&&p===siblings[1];
+     const node=playNodes[(following?Math.max(0,leader.playStep-1):p.playStep++)%playNodes.length]!;
      const spot=(playing?familySpots.find(s=>s.node===node):undefined)||
-      (child&&playPhase==='gathering'?familySpots.find(s=>s.node===(index===3?50:51)):undefined)||
+      (child&&playPhase==='gathering'?familySpots.find(s=>s.node===(index===3?48:6)):undefined)||
       (p.cycle%6===0?available.find(s=>s.node===index):undefined)||seat||available.find(s=>s.node===preferred)||available[(p.cycle*7+index*3)%available.length];
      if(spot){p.destination=spot.node;p.activity=spot.activity;p.facing=spot.facing;p.seatHeight=spot.seatHeight||0;p.seatAnchor=spot.seatAnchor;p.pace=playing?(p.spec.age<5?1.65:1.9):p.cycle%5===0?1.12:1;p.route=familyRoute(p.node,spot.node);if(!p.route.length)p.wait=playing?.5:spot.stay;}
 
     }
     const next=p.route[0];if(next!==undefined){const [x,z]=familyNodes[next]!;delta.set(x-p.person.position.x,0,z-p.person.position.z);const distance=delta.length();
-     if(distance<.07){p.person.position.set(x,0,z);p.node=next;p.route.shift();p.blocked=0;if(!p.route.length)p.wait=p.spec.age<10&&playPhase==='playing'?.6:(familySpots.find(s=>s.node===p.destination)?.stay||12)*(.8+(p.cycle%5)*.1);}
+     if(distance<.005&&separatedStep(p.person.position.x,p.person.position.z,delta.x,delta.z,p.spec.age<10?.22:.32,people.filter(q=>q!==p&&!q.riding).map(q=>({x:q.person.position.x,z:q.person.position.z,radius:q.spec.age<10?.22:.32})))===1){p.person.position.set(x,familyGroundHeight(x,z),z);p.node=next;p.route.shift();p.blocked=0;if(!p.route.length)p.wait=p.spec.age<10&&playPhase==='playing'?.6:(familySpots.find(s=>s.node===p.destination)?.stay||12)*(.8+(p.cycle%5)*.1);}
      else {
-      const base=p.spec.age<5?.72:p.spec.age<10?.88:.9;
+      const base=p.spec.age<5?.72:p.spec.age<10?.88:p.spec.id==='anastasia'?.86:p.spec.id==='amelia'?.96:.9;
       const targetSpeed=Math.min(base*p.pace,p.route.length===1?Math.sqrt(3.6*distance):Infinity);
       // Exact integral of exponential acceleration keeps displacement frame-rate independent.
       const travelled=targetSpeed*dt+(p.speed-targetSpeed)*(1-Math.exp(-5*dt))/5;
       p.speed=T.MathUtils.damp(p.speed,targetSpeed,5,dt);
       const heading=Math.atan2(delta.x,delta.z),turn=Math.atan2(Math.sin(heading-p.person.rotation.y),Math.cos(heading-p.person.rotation.y));
-      const turnPace=Math.max(.18,Math.cos(turn));
+      const turnPace=Math.max(0,Math.cos(turn));
       delta.multiplyScalar(Math.min(distance,travelled*turnPace)/distance);
       // Shared swept collision prevents wall/furniture penetration; wait and retry a blocked edge.
-      probe.copy(p.person.position);probe.y=1.65;collision(probe,delta);
-      if(Math.hypot(probe.x-p.person.position.x,probe.z-p.person.position.z)<.001){p.blocked+=dt;if(p.blocked>2){p.route=[p.node];p.destination=p.node;p.activity='observing';p.wait=3;p.blocked=0;}}
-      else {p.visualPace=Math.hypot(probe.x-p.person.position.x,probe.z-p.person.position.z)/Math.max(.001,dt)/(p.spec.age<10?.75:.9);p.person.position.set(probe.x,0,probe.z);walking=true;p.blocked=0;}
-      const target=Math.atan2(delta.x,delta.z);p.person.rotation.y+=Math.atan2(Math.sin(target-p.person.rotation.y),Math.cos(target-p.person.rotation.y))*(1-Math.exp(-dt*5));
+      probe.copy(p.person.position);probe.y=1.65;
+      const bodies=people.filter(q=>q!==p&&!q.riding).map(q=>({x:q.person.position.x,z:q.person.position.z,radius:q.spec.age<10?.22:.32}));
+      let fraction=separatedStep(probe.x,probe.z,delta.x,delta.z,p.spec.age<10?.22:.32,bodies);
+      // A stable right-hand sidestep frees head-on paths without accumulated forces.
+      if(fraction<.1){const side=delta.clone().set(-delta.z,0,delta.x).normalize().multiplyScalar(Math.min(.035,dt*.35));fraction=separatedStep(probe.x,probe.z,side.x,side.z,p.spec.age<10?.22:.32,bodies);delta.copy(side);}
+      delta.multiplyScalar(fraction);collision(probe,delta);
+      if(Math.hypot(probe.x-p.person.position.x,probe.z-p.person.position.z)<.001){p.blocked+=dt;if(p.blocked>2){p.route=[p.node,...familyRoute(p.node,p.destination)];p.wait=1+people.indexOf(p)*.3;p.blocked=0;}}
+      else {p.visualPace=Math.hypot(probe.x-p.person.position.x,probe.z-p.person.position.z)/Math.max(.001,dt)/(p.spec.age<10?.75:.9);p.person.position.set(probe.x,familyGroundHeight(probe.x,probe.z),probe.z);walking=true;p.blocked=0;}
+      const target=heading;p.person.rotation.y+=Math.atan2(Math.sin(target-p.person.rotation.y),Math.cos(target-p.person.rotation.y))*(1-Math.exp(-dt*5));
      }
     }p.state=walking?(p.destination===people.indexOf(p)?'returning-home':'walking'):'idle';
    }
@@ -110,9 +141,7 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
    // Quiet observation: turn the gaze occasionally rather than rotate continuously.
    p.lookTime+=dt;p.socialTime=Math.max(0,p.socialTime-dt);
    if(!walking&&p.activity!=='sitting'&&p.wait>0&&p.reaction<=0&&p.seatBlend<.02&&conversationId!==p.spec.id&&p.lookTime>4){
-    const companion=people.find(q=>q!==p&&q.person.position.distanceToSquared(p.person.position)<=20.25&&q.wait>0);
-    if(companion){p.facing=Math.atan2(companion.person.position.x-p.person.position.x,companion.person.position.z-p.person.position.z);p.state='chatting';p.socialTime=3.6;}
-    else if(p.activity!=='sitting')p.facing+=Math.sin(p.cycle+p.phase)*.22;
+    if(!meeting)p.facing+=Math.sin(p.cycle+p.phase)*.22;
     p.lookTime=0;
    }
    p.proximityCooldown=Math.max(0,p.proximityCooldown-dt);
@@ -127,8 +156,7 @@ export function createFamily(scene:T.Scene,solids:T.Mesh[]=[]){
     delta.set(p.seatAnchor[0]-p.person.position.x,0,p.seatAnchor[2]-p.person.position.z).applyAxisAngle(T.Object3D.DEFAULT_UP,-p.person.rotation.y);
     p.body.position.copy(delta).multiplyScalar(p.seatBlend);
    }
-   if(walking&&p.proximityCooldown<=0&&!(p.spec.age<10&&playPhase==='playing')){const other=people.find(other=>other!==p&&other.person.position.distanceTo(p.person.position)<1.5&&conversationId!==other.spec.id);if(other){p.greetTarget=other.person.position;other.greetTarget=p.person.position;p.reaction=2.4;p.proximityCooldown=18;other.reaction=2.4;other.proximityCooldown=18;p.state='greeting';other.state='greeting';}}
-   p.visual?.update(dt,walking,p.reaction>0,reduced,p.seatBlend,p.seatHeight,walking?Math.max(.15,p.visualPace):0,conversationId===p.spec.id?conversationPhase:p.state==='chatting'?'responding':p.state);
+   p.visual?.update(dt,walking,p.reaction>0||p.state==='greeting',reduced,p.seatBlend,p.seatHeight,walking?Math.max(.15,p.visualPace):0,conversationId===p.spec.id?conversationPhase:p.state==='chatting'?'responding':p.state);
   }return true;
- },dispose(){disposed=true;assets?.dispose();childVisuals.forEach(v=>v.dispose());for(const p of people){p.visual?.mixer.stopAllAction();if(p.visual)p.visual.mixer.uncacheRoot(p.visual.mixer.getRoot());}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ },dispose(){disposed=true;life.clear();assets?.dispose();childVisuals.forEach(v=>v.dispose());for(const p of people){p.visual?.mixer.stopAllAction();if(p.visual)p.visual.mixer.uncacheRoot(p.visual.mixer.getRoot());}for(const p of people){const i=solids.indexOf(p.target);if(i>=0)solids.splice(i,1);}root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

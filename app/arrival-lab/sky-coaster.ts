@@ -1,3 +1,4 @@
+import { createNpcPassenger } from './npc-passenger';
 import * as T from 'three';
 import { skyEase, createSkyRoute, createScenicRoute } from './skytube';
 
@@ -93,6 +94,7 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  }
  for(const x of [-1.16,1.16]){box(.13,.5,4.7,x,.95,0,metal,car);box(.08,.08,4.8,x,1.22,0,light,car);for(const z of [-1.8,1.8]){const wheel=mesh(new T.CylinderGeometry(.3,.3,.25,10),metal,car);wheel.rotation.z=Math.PI/2;wheel.position.set(x,-.05,z);}}
  car.traverse(o=>{if(o instanceof T.Mesh){o.userData.coaster=true;solids.push(o);}});
+ const npc=createNpcPassenger();
  let phase:'docked'|'boarding'|'riding'|'arriving'|'exiting'='docked',passenger=false,elapsed=0,distance=0,paused=false;
  const start=new T.Vector3(),anchor=new T.Vector3(),exit=new T.Vector3(-58,1.65,92),startLook=new T.Quaternion(),exitLook=new T.Quaternion();
  const times=[0];let total=0,runningSpeed=3;
@@ -104,22 +106,24 @@ export function createSkyCoaster(scene:T.Scene,solids:T.Mesh[]) {
  pose();
  return {
   root,route,car,length,duration:total,
+  boardNpc(person:T.Object3D){if(passenger||npc.active||phase!=='docked'||person.position.distanceTo(new T.Vector3(-58,0,92))>1)return false;if(!npc.board(person,car,new T.Vector3(-.52,0,1.15),new T.Vector3(-58,.18,92),Math.PI))return false;phase='boarding';elapsed=0;return true;},
+  get npcPassenger(){return npc.active;},
   get ownsPassenger(){return passenger;},get phase(){return phase;},
-  canBoard(p:T.Vector3){return !passenger&&phase==='docked'&&p.distanceTo(exit)<4.5;},
+  canBoard(p:T.Vector3){return !npc.active&&!passenger&&phase==='docked'&&p.distanceTo(exit)<4.5;},
   activate(camera:T.PerspectiveCamera){if(passenger){if(phase!=='docked')return false;phase='exiting';elapsed=0;start.copy(camera.position);startLook.copy(camera.quaternion);exitLook.setFromEuler(new T.Euler(0,Math.PI,0));return true;}if(!this.canBoard(camera.position))return false;passenger=true;phase='boarding';elapsed=0;start.copy(camera.position);startLook.copy(camera.quaternion);return true;},
   setPaused(value:boolean){paused=value;},
-  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,localLook?:T.Quaternion){if(localLook)passengerLook.copy(localLook);if(paused||!passenger||!Number.isFinite(dt)||dt<0)return {changed:false,turn:0};elapsed+=dt;
-   if(phase==='boarding'){car.localToWorld(anchor.set(0,1.85,-1.25));const blend=skyEase(elapsed/1.5);camera.position.lerpVectors(start,anchor,blend);camera.quaternion.slerpQuaternions(startLook,car.quaternion,blend);if(elapsed>=1.5){phase='riding';elapsed=0;}}
+  update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,localLook?:T.Quaternion){if(localLook)passengerLook.copy(localLook);if(paused||(!passenger&&!npc.active)||!Number.isFinite(dt)||dt<0)return {changed:false,turn:0};elapsed+=dt;npc.update(dt);
+   if(phase==='boarding'){car.localToWorld(anchor.set(0,1.85,-1.25));const blend=skyEase(elapsed/1.5);if(passenger){camera.position.lerpVectors(start,anchor,blend);camera.quaternion.slerpQuaternions(startLook,car.quaternion,blend);}if(elapsed>=1.5){phase='riding';elapsed=0;}}
    else if(phase==='riding'){
     const time=Math.min(total,elapsed/(reduced?1.65:1));let lo=0,hi=samples;while(lo+1<hi){const mid=(lo+hi)>>1;if(times[mid]!<=time)lo=mid;else hi=mid;}
     distance=length*(lo+T.MathUtils.clamp((time-times[lo]!)/(times[lo+1]!-times[lo]!),0,1))/samples;
-    if(time>=total){distance=0;phase='arriving';elapsed=0;}pose();rider(camera);
-   }else if(phase==='arriving'){rider(camera);if(elapsed>=.7){phase='docked';elapsed=0;}}
+    if(time>=total){distance=0;phase='arriving';elapsed=0;}pose();if(passenger)rider(camera);
+   }else if(phase==='arriving'){if(passenger)rider(camera);if(elapsed>=.7){npc.release();phase='docked';elapsed=0;}}
    else if(phase==='exiting'){const blend=skyEase(elapsed/1.3);camera.position.lerpVectors(start,exit,blend);camera.quaternion.slerpQuaternions(startLook,exitLook,blend);if(elapsed>=1.3){camera.position.copy(exit);passenger=false;phase='docked';elapsed=0;}}
-   else rider(camera);
+   else if(passenger)rider(camera);
    return {changed:true,turn:0};
   },
   setTheme(dark:boolean){pale.color.set(dark?'#9daebe':'#e9dfcc');},
-  dispose(){root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
+  dispose(){npc.dispose();root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
  };
 }

@@ -1,3 +1,4 @@
+import { createNpcPassenger } from './npc-passenger';
 import * as T from 'three';
 import { districtOffset } from './geography';
 import { createCollision } from './collision';
@@ -118,6 +119,7 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
  const collision=createCollision(solids);
  let phase:TransitPhase='docked',docked:StationId='origin',destination:StationId='district',u=0,elapsed=0,door=0;
  let openingStart=0,closingStart=1;
+ const npc=createNpcPassenger();
  let passenger=false,paused=false,pendingCall:StationId|null=null,travelDuration=duration,reducedTrip=false,lastYaw=poses.origin.yaw;
  const boardStart=new T.Vector3(),exitStart=new T.Vector3(),anchor=new T.Vector3(),cabin=new T.Vector3();
  const labels:{canvas:HTMLCanvasElement;ctx:CanvasRenderingContext2D;texture:T.CanvasTexture;material:T.MeshBasicMaterial;id:StationId}[]=[];
@@ -138,12 +140,14 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
  function localPoint(x:number,y:number,z:number,target:T.Vector3){return vehicle.localToWorld(target.set(x,y,z));}
  function setPhase(next:TransitPhase){if(next==='closing')closingStart=door;if(next==='opening')openingStart=door;phase=next;elapsed=0;}
  function phaseDuration(){return phase==='opening'||phase==='arriving'?.8:phase==='boarding'?1.8:phase==='closing'?.85:phase==='exiting'?1.6:phase==='riding'||phase==='calling'?travelDuration:Infinity;}
- function canBoard(position:T.Vector3){const p=vehicle.worldToLocal(position.clone());return phase==='docked'&&!passenger&&p.x< -1.6&&p.x> -5.3&&Math.abs(p.z)<3.1&&Math.abs(p.y-1.65)<.6;}
+ function canBoard(position:T.Vector3){const p=vehicle.worldToLocal(position.clone());return phase==='docked'&&!passenger&&!npc.active&&p.x< -1.6&&p.x> -5.3&&Math.abs(p.z)<3.1&&Math.abs(p.y-1.65)<.6;}
  pose();setLocale('en');
  return {
   root,vehicle,route,stations:stationRoots,duration,length,
+  get npcPassenger(){return npc.active;},
+  boardNpc(person:T.Object3D){if(!scenic||passenger||npc.active||phase!=='docked')return false;const landing=vehicle.localToWorld(new T.Vector3(-3.55,0,0));landing.y=0;if(person.position.distanceTo(landing)>1)return false;if(!npc.board(person,vehicle,new T.Vector3(0,0,0),landing))return false;destination='origin';u=0;reducedTrip=false;setPhase('opening');return true;},
   get phase(){return phase;},get ownsPassenger(){return passenger;},get station(){return docked;},get destination(){return destination;},get progress(){return u;},get doorProgress(){return door;},
-  canActivate(action:string,position:T.Vector3){if(action==='exit')return passenger&&phase==='docked';if(action==='board')return canBoard(position);if(action.startsWith('call:'))return !passenger&&phase==='docked';return false;},
+  canActivate(action:string,position:T.Vector3){if(action==='exit')return passenger&&phase==='docked';if(action==='board')return canBoard(position);if(action.startsWith('call:'))return !passenger&&!npc.active&&phase==='docked';return false;},
   activate(action:string,camera:T.PerspectiveCamera,reduced=false){
    if(!this.canActivate(action,camera.position))return false;
    if(action==='board'){destination=scenic?'origin':other(docked);if(scenic)u=0;passenger=true;boardStart.copy(camera.position);lastYaw=vehicle.rotation.y;reducedTrip=reduced;setPhase('opening');return true;}
@@ -155,6 +159,7 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
   setPaused(value:boolean){paused=value;},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera,environmentPaused=false){
    if(paused||environmentPaused||!Number.isFinite(dt)||dt<0)return {changed:false,turn:0};
+   npc.update(phase==='opening'?0:dt);
    const before=phase,oldU=u,oldDoor=door;let remaining=dt,transitions=0;
    while(remaining>1e-8&&phase!=='docked'&&transitions<12){
     const limit=phaseDuration(),step=Math.min(remaining,Math.max(0,limit-elapsed));elapsed+=step;remaining-=step;
@@ -170,7 +175,7 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
      destination=scenic?'origin':pendingCall||other(docked);travelDuration=duration*(reducedTrip?1.35:1);door=0;
      setPhase(pendingCall?'calling':'riding');pendingCall=null;
     }else if(phase==='riding'||phase==='calling'){u=scenic?0:destination==='district'?1:0;docked=destination;setPhase('arriving');}
-    else if(phase==='arriving'){door=1;setPhase('docked');}
+    else if(phase==='arriving'){door=1;npc.release();setPhase('docked');}
     else if(phase==='exiting'){passenger=false;setPhase('docked');}
    }
    const yaw=pose();let turn=0;
@@ -192,7 +197,7 @@ export function createSkyTube(scene: T.Scene, allSolids: T.Mesh[], scenic=false)
   constrain(start:T.Vector3,end:T.Vector3){const y=end.y,p=start.clone();collision(p,end.clone().sub(start));end.x=p.x;end.z=p.z;end.y=y;},
   setLocale,
   setTheme(dark:boolean){stone.color.set(dark?'#8a9cac':'#e5e4d7');metal.color.set(dark?'#6b95a5':'#43616b');accent.color.set(dark?'#80b8c2':'#5dabb0');glass.opacity=dark?.11:.14;tubeGlass.opacity=dark?.045:.065;glow.emissiveIntensity=dark?.85:.3;},
-  dispose(){passenger=false;labels.forEach(l=>l.texture.dispose());root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
+  dispose(){npc.dispose();passenger=false;labels.forEach(l=>l.texture.dispose());root.removeFromParent();gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());},
  };
 }
 

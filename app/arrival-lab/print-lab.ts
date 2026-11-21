@@ -1,6 +1,7 @@
 import * as T from 'three';
 import { figurine, disposeObject, type PrintDesign } from './print-model';
-export function createPrintLab(scene:T.Scene,solids:T.Mesh[]){
+import type { createCarryables } from './carryables';
+export function createPrintLab(scene:T.Scene,solids:T.Mesh[],carry?:ReturnType<typeof createCarryables>){
  const root=new T.Group();root.name='Print Lab';scene.add(root);
  const cream=new T.MeshStandardMaterial({color:'#f2e5cf',roughness:.65});
  const ink=new T.MeshStandardMaterial({color:'#293d58',roughness:.4});
@@ -31,8 +32,8 @@ export function createPrintLab(scene:T.Scene,solids:T.Mesh[]){
  box(5,.85,2,-61,.5,57,pink);sign('IDEA BENCH',-61,1.6,58.05,3);
  // Every print gets a numbered position; later rows expand upwards.
  const exhibits=new T.Group();root.add(exhibits);let printing:T.Group|undefined;
- function setCollection(items:PrintDesign[]){for(const child of [...exhibits.children])disposeObject(child);items.forEach((d,i)=>{const col=i%6,row=Math.floor(i/6);const y=.9+row*2.3;const plinth=new T.Mesh(new T.BoxGeometry(1.9,.16,1.8),cream.clone());plinth.position.set(-74.5,y,49.8+col*3);exhibits.add(plinth);const toy=figurine(d);toy.position.set(-74.5,y+.09,49.8+col*3);toy.rotation.y=Math.PI/2;toy.scale.setScalar(.8);exhibits.add(toy);});}
- for(let i=0;i<3;i++){const toy=figurine({type:(['rocket','robot','planet'] as const)[i]!,base:'sphere',addon:'ears',color:['#fa795f','#66d8cb','#ffd36b'][i]!});toy.position.set(-69+i*2,1.1,66.5);root.add(toy);box(1.7,1,1.8,-69+i*2,.5,66.5,ink);}
+ function setCollection(items:PrintDesign[]){for(const child of [...exhibits.children]){carry?.unregister(child);const index=solids.indexOf(child as T.Mesh);if(index>=0)solids.splice(index,1);disposeObject(child);}items.forEach((d,i)=>{const col=i%6,row=Math.floor(i/6);const y=.9+row*2.3;const plinth=new T.Mesh(new T.BoxGeometry(1.9,.16,1.8),cream.clone());plinth.position.set(-74.5,y,49.8+col*3);plinth.userData.room='print-lab';exhibits.add(plinth);solids.push(plinth);const toy=figurine(d);toy.position.set(-74.5,y+.09,49.8+col*3);toy.rotation.y=Math.PI/2;toy.scale.setScalar(.8);exhibits.add(toy);carry?.register(toy);});}
+ for(let i=0;i<3;i++){const toy=figurine({type:(['rocket','robot','planet'] as const)[i]!,base:'sphere',addon:'ears',color:['#fa795f','#66d8cb','#ffd36b'][i]!});toy.position.set(-69+i*2,1.1,66.5);root.add(toy);carry?.register(toy);box(1.7,1,1.8,-69+i*2,.5,66.5,ink);}
  function preview(d:PrintDesign){if(printing)disposeObject(printing);printing=figurine(d);printing.position.set(-66,1.15,52);root.add(printing);}
  return {setCollection,preview,update(progress:number|null,reduced:boolean){if(progress===null){head.position.set(-66,3.7,52);return false;}if(printing){printing.scale.y=Math.max(.001,progress);printing.visible=progress>0;}head.position.set(-66+(reduced?0:Math.sin(progress*80)*1.3),1.4+progress*2,52+(reduced?0:Math.cos(progress*65)*.65));mint.emissiveIntensity=.8;return true;},finish(){if(printing){disposeObject(printing);printing=undefined;}mint.emissiveIntensity=.3;},dispose(){disposeObject(root);textures.forEach(t=>t.dispose());}};
 }

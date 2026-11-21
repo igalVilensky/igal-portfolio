@@ -7,7 +7,7 @@ import ts from 'typescript';
 import * as T from 'three';
 const dir=await mkdtemp(join(tmpdir(),'skytube-test-'));
 await symlink(new URL('../../node_modules',import.meta.url).pathname,join(dir,'node_modules'),'dir');
-for(const name of ['skytube','collision','geography']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
+for(const name of ['skytube','collision','geography','npc-passenger']){const source=await readFile(new URL(`./${name}.ts`,import.meta.url),'utf8');await writeFile(join(dir,name+'.mjs'),ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/(from ['"])(\.\/[^'"]+)(['"])/g,'$1$2.mjs$3'));}
 const {createSkyTube,skyEase,createSkyRoute}=await import(join(dir,'skytube.mjs'));
 after(()=>rm(dir,{recursive:true,force:true}));
 function setup(scenic=false){const scene=new T.Scene(),solids=[],tube=createSkyTube(scene,solids,scenic),camera=new T.PerspectiveCamera();scene.updateMatrixWorld(true);return {scene,solids,tube,camera};}
@@ -73,3 +73,5 @@ test('the actual visible open-door frame and cabin remain valid repeat-boarding 
  const {tube,camera,scene,solids}=setup();board(tube,camera);advance(tube,camera,tube.duration+5);tube.activate('exit',camera);advance(tube,camera,2);scene.updateMatrixWorld(true);
  const target=tube.vehicle.localToWorld(new T.Vector3(-1.91,1.53,-1.85));const ray=new T.Raycaster(camera.position,target.sub(camera.position).normalize());const hit=ray.intersectObjects(solids,false)[0];assert.equal(hit.object.userData.skytube,'board');assert.ok(hit.distance<6.5);assert.ok(tube.canActivate('board',camera.position));tube.dispose();
 });
+
+test('scenic NPC round trip preserves player camera and returns ground ownership',()=>{const {scene,tube,camera}=setup(true),person=new T.Group();scene.add(person);person.position.copy(tube.vehicle.localToWorld(new T.Vector3(-3.55,0,0)));person.position.y=0;scene.updateMatrixWorld(true);camera.position.set(8,2,7);const position=camera.position.clone(),orientation=camera.quaternion.clone();assert(tube.boardNpc(person));assert.equal(tube.ownsPassenger,false);assert.equal(tube.activate('board',camera),false);advance(tube,camera,tube.duration+12);assert.equal(tube.npcPassenger,false);assert.equal(person.parent,scene);assert.equal(person.position.y,0);assert(camera.position.equals(position));assert(camera.quaternion.equals(orientation));tube.dispose();});
