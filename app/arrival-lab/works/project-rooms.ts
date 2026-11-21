@@ -3,7 +3,7 @@
 export const projectRooms = [
  { id:'openme', title:'OpenMe', metadataId:'openme', center:[70,0,-101], entrance:[70,0,-92], width:16, depth:18, side:'north', status:'active', accent:'#22c55e', interactions:['endpoint','details'], copyKey:'openme' },
  { id:'flowforge', title:'Flow Forge', metadataId:'flowforge', center:[70,0,-73], entrance:[70,0,-82], width:16, depth:18, side:'south', status:'reserved', accent:'#d6aa58', interactions:[], copyKey:'reserved' },
- { id:'sunlit-tales', title:'Sunlit Tales', metadataId:'sunlit-tales', center:[87,0,-101], entrance:[87,0,-92], width:16, depth:18, side:'north', status:'reserved', accent:'#dba676', interactions:[], copyKey:'reserved' },
+ { id:'sunlit-tales', title:'Sunlit Tales', metadataId:'sunlit-tales', center:[87,0,-101], entrance:[87,0,-92], width:16, depth:18, side:'north', status:'active', accent:'#dba676', interactions:['reading','publishing','quiz'], copyKey:'reserved' },
 ] as const;
 export const roomCopy = {
  en:{gallery:'PROJECT ROOMS →',reserved:'Reserved · future room',back:'← Living Works',action:'Explore endpoints',details:'Project / engineering',intro:'A profile becomes an interaction menu.',demo:'Illustrative local journey · no submission or AI call',choose:'Choose a public endpoint',endpoints:['Collaborate','Ask me','Feedback','Offer help'],boundary:'Boundaries',boundaryText:'Owners define the ways people can approach them. This exhibit uses sample content.',send:'Route sample to inbox',inbox:'Owner inbox',received:'Sample received through',summary:'AI-assisted summaries are a documented MVP feature. No summary is generated in this exhibit.',reset:'Return to profile',close:'Return to room',role:'Builder and full-stack developer for a SaaS MVP with AI-assisted workflow features.'},

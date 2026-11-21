@@ -25,5 +25,5 @@ export function illuminate(scene: T.Scene) {
     grazes.forEach(l=>{l.color.set(dark?'#80bfe6':'#fff1d8');l.intensity=dark?240:100;});
   }
   setTheme(false);
-  return { portal, sun, setTheme, dispose() { sun.shadow.dispose(); } };
+  return { portal, sun, fill, bounce, setTheme, dispose() { sun.shadow.dispose(); } };
 }

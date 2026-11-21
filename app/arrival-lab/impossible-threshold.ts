@@ -1,5 +1,7 @@
 import {capturePortalRenderState} from './portal-render-state';
 import * as T from 'three';
+import {createArcticWildlife} from './arctic-wildlife';
+import {createCoastalDistrict} from './coastal-district';
 import { createCollision } from './collision';
 
 export type ThresholdState = 'closed' | 'opening' | 'open' | 'crossing';
@@ -45,8 +47,8 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  const sky=new T.HemisphereLight('#d5eeff','#bc8956',2.4);coast.add(sky);
  const sunlight=new T.DirectionalLight('#fff0c4',3.1);sunlight.position.set(-18,32,12);sunlight.castShadow=true;
  sunlight.shadow.mapSize.set(1024,1024);Object.assign(sunlight.shadow.camera,{left:-35,right:35,top:35,bottom:-35,far:100});sunlight.shadow.bias=-.001;sunlight.shadow.normalBias=.04;coast.add(sunlight,sunlight.target);
- const build=(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material,solid=true)=>{const mesh=box(coast,solid?coastSolids:[],w,h,d,x,y,z,m);mesh.castShadow=true;return mesh;};
- build(38,.3,45,5,-.17,20,paving);
+ const build=(w:number,h:number,d:number,x:number,y:number,z:number,m:T.Material,solid=true)=>{const mesh=box(coast,solid?coastSolids:[],w,h,d,x,y,z,m);mesh.castShadow=true;if(solid)mesh.userData.room='coastal-architecture';return mesh;};
+ build(108,.3,45,40,-.17,20,paving);
  build(12,4,.4,-7,2,-.5,plaster);build(23,4,.4,12.5,2,-.5,plaster);
  // Entry court, right turn, then a narrow lane out onto the promenade.
  build(.5,6,15,-3,3,8,plaster);build(.5,6,11,3,3,6,plaster);
@@ -70,7 +72,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  for(let i=0;i<18;i++)build(80+i*22,.012,.12+(i%3)*.09,Math.sin(i*2.4)*35,-.588,56+i*i*1.7,waterLight,false);
  build(38,.18,5,5,-.05,35,plaster);
  build(38,.65,.3,5,.325,37.4,plaster);
- build(.4,3,40,-13,1.5,20,plaster);build(.4,3,40,24,1.5,20,plaster);
+ build(.4,3,40,-13,1.5,20,plaster);
  const diskGeo=new T.SphereGeometry(18,24,12);geometries.push(diskGeo);const disk=new T.Mesh(diskGeo,sunGlow);disk.position.set(-180,110,700);coast.add(disk);
  // Coastal street details: pale limestone, olive crowns, pergola and striped sunshades.
  const leaf=material('#71835a'),sand=material('#e5d2a6'),cloth=material('#f6faf1');
@@ -95,7 +97,7 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
  }
  const resetStone=build(1,.04,1,15,.035,35,coral,false);
  let onReset=false,mosaicProgress=0;
- const activityCanvas=typeof document==='undefined'?null:document.createElement('canvas');if(activityCanvas){activityCanvas.width=1024;activityCanvas.height=256;}
+ const activityCanvas=typeof document==='undefined'||typeof document.createElement!=='function'?null:document.createElement('canvas');if(activityCanvas){activityCanvas.width=1024;activityCanvas.height=256;}
  const activityTexture=activityCanvas?new T.CanvasTexture(activityCanvas):new T.Texture();activityTexture.colorSpace=T.SRGBColorSpace;
  const activityMaterial=new T.MeshBasicMaterial({map:activityTexture});materials.push(activityMaterial);
  const activityBoard=build(5,.95,.08,9,1.85,27.7,activityMaterial,false);activityBoard.name='Courtyard · light walk instructions';
@@ -109,7 +111,10 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
   for(const side of [-1,1])legs.push(box(person,[],.13,.7,.16,side*.12,.37,0,wood));
   const walker={root:person,legs,x:i<2?7+i*.85:17,z:i<2?32:28+i,range:i===3?0:i<2?4:2,phase:i<2?0:1.8};person.position.set(walker.x,0,walker.z);walkers.push(walker);
  }
- let ambientTime=0;
+ let ambientTime=0,coastHour=12,coastDay=1;
+ const coastalDistrict=createCoastalDistrict(coast,coastSolids);
+ const wildlife=createArcticWildlife(arctic);
+ coast.updateMatrixWorld(true);
  const coastCollision=createCollision(coastSolids,'coast');
 
  const exit=door(arctic,snowSolids,0,0,true);exit.root.rotation.y=Math.PI;
@@ -200,11 +205,16 @@ export function createImpossibleThreshold(scene:T.Scene, solids:T.Mesh[]) {
    }
   }
  }
- return {syncPosition(position:T.Vector3){previous.copy(position);initialized=true;},renderViews,setLocale,get lightWalkProgress(){return lightWalk.size;},get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
+ return {setTime(hour:number){if(Number.isFinite(hour))coastHour=hour;},chooseScoop(i:number){coastalDistrict.chooseScoop(i);},syncPosition(position:T.Vector3){previous.copy(position);initialized=true;},renderViews,setLocale,get lightWalkProgress(){return lightWalk.size;},get active(){return active;},get environment(){return active?(sunWorld?'sun-world':'antipayuta'):'hall';},get state(){return selected.state;},hallSolids,worldSolids:[...snowSolids,...coastSolids],snowSolids,
   activate(sun=false){if(!active){sunWorld=sun;selected=doors[sun?1:0]!;}if(selected.state==='closed')selected.state='opening';},
   move(position:T.Vector3,delta:T.Vector3,hallCollision:ReturnType<typeof createCollision>){(active?(sunWorld?coastCollision:snowCollision):hallCollision)(position,delta);if(active){ground.position.x=position.x;ground.position.z=position.z;}},
   update(dt:number,reduced:boolean,camera:T.PerspectiveCamera){let changed=false;
+   if(coastalDistrict.update(dt,reduced,active&&sunWorld))changed=true;
+   if(wildlife.update(dt,reduced,camera.position,active&&!sunWorld))changed=true;
    if(active&&sunWorld){
+    coastDay=T.MathUtils.damp(coastDay,Math.max(.08,Math.min(1,Math.sin((coastHour-6)/24*Math.PI*2)+.15)),1.5,dt);
+    sky.intensity=.75+coastDay*1.65;sunlight.intensity=.35+coastDay*2.75;sunlight.position.set(Math.cos((coastHour-6)/24*Math.PI*2)*40,20+coastDay*20,12);disk.visible=coastDay>.35;coastalDistrict.setDay(coastDay);
+    const c=new T.Color().setRGB(.07+coastDay*.64,.12+coastDay*.75,.23+coastDay*.71);scene.background=c;scene.fog=new T.Fog(c,150,1100);
     walkPads.forEach((pad,i)=>{if(Math.hypot(camera.position.x-pad.position.x,camera.position.z-pad.position.z)<.9)lightWalk.add(i);(pad.material as T.MeshStandardMaterial).emissiveIntensity=lightWalk.has(i)?1.1:.12;});
     const reset=Math.hypot(camera.position.x-resetStone.position.x,camera.position.z-resetStone.position.z)<.8;
     if(reset&&!onReset)lightWalk.clear();onReset=reset;
@@ -228,6 +238,6 @@ for(const doorway of doors){if(doorway.state==='opening'){doorway.progress=Math.
   },
   returnToHall(camera:T.PerspectiveCamera){if(active){camera.position.set(0,1.65,-1.01);switchWorld(camera);camera.position.copy(thresholdAnchor);if(sunWorld)camera.position.x=12;previous.copy(camera.position);}},
   setTheme(value:boolean){primedViews.clear();dark=value;if(active){savedBackground=scene.background;savedFog=scene.fog;}stone.color.set(dark?'#434b57':'#d8d2c6');wood.color.set(dark?'#58616a':'#777a74');appearance();},
-  dispose(){activityTexture.dispose();targets.forEach(t=>t.dispose());hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  dispose(){coastalDistrict.dispose();wildlife.dispose();sunlight.shadow.dispose();glow.shadow.dispose();activityTexture.dispose();targets.forEach(t=>t.dispose());hall.removeFromParent();arctic.removeFromParent();coast.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };
 }

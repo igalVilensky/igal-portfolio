@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {createSunlitRoom} from './sunlit-room';
 import { createProjectGallery } from './project-gallery';
 import { weightedResults } from './matrix';
 import { worksCopy } from './copy';
@@ -37,20 +38,8 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  for(const z of [-91.6,-96.4])box(5,8,.8,12,4,z,metal);
  box(7,.8,5,12,8,-94,metal);
  box(40,1.2,13,34,23,-80);box(40,1.2,13,34,21,-108);
- // Three chamfered portal frames run across the annex, perpendicular to entry.
- // They bear against the perimeter, leaving the entire central walking field open.
- const frameShape=new T.Shape();
- const outline=[[-112.8,0],[-112.8,16],[-109,20.3],[-79,20.3],[-75.2,16],[-75.2,0],[-76.6,0],[-76.6,15.5],[-79.7,18.8],[-108.3,18.8],[-111.4,15.5],[-111.4,0]];
- outline.forEach(([z,y],i)=>i?frameShape.lineTo(z!,y!):frameShape.moveTo(z!,y!));frameShape.closePath();
- const frameGeometry=new T.ExtrudeGeometry(frameShape,{depth:1.15,steps:1,bevelEnabled:true,bevelSegments:1,bevelSize:.08,bevelThickness:.08});geometries.push(frameGeometry);
- for(const x of [20,35,53]){
-  const frame=new T.Mesh(frameGeometry,metal);frame.rotation.y=-Math.PI/2;frame.position.x=x;frame.castShadow=true;frame.receiveShadow=true;root.add(frame);solids.push(frame);
-  box(1.15,2.1,1.1,x-.575,21.35,-80,steel);
-  for(const z of [-112,-76])box(2.4,.35,2.5,x,.175,z,steel);
- }
- // The red fascia is the deep edge of the south roof, carried by the blue frames.
- box(38,3.1,1.3,34,19.4,-102.1,red);
- box(38,.16,1.48,34,21.03,-102.1,shell);
+ // Perimeter ribs frame the open daylight bay without industrial entry portals.
+ for(const x of [20,35,53])for(const z of [-113.3,-74.7])box(.25,20,.22,x,10,z,bronze);
  // Open roof bay remains genuinely open. Green fixed solar fins share a perimeter carrier.
  box(.65,.65,14,52.5,22.6,-94,steel);
  for(const z of [-99,-95,-91,-87]){
@@ -68,18 +57,15 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  const titleLabel=label(9,2,22,13,-113.4);
  // Matrix installation: three weighted input blades feed two stacked sums.
  box(16,.3,8,32,.15,-101,inset,'matrix');
- beam(new T.Vector3(24,1,-104),new T.Vector3(24,17,-104),.45,metal);
- beam(new T.Vector3(40,1,-104),new T.Vector3(40,17,-104),.45,metal);
- beam(new T.Vector3(24,17,-104),new T.Vector3(40,17,-104),.55,bronze);
- const blades=[26,32,38].map((x,i)=>{box(2.8,.35,2.4,x,.3,-98,bronze,'matrix');box(.45,3.5,.6,x,2,-98,metal,'matrix');const blade=box(1.3,1,.55,x,3,-98,criterionMaterials[i],'matrix');const shape=new T.Shape([new T.Vector2(-.65,-.5),new T.Vector2(.65,-.5),new T.Vector2(.65,.15),new T.Vector2(-.25,.5),new T.Vector2(-.65,.5)]);const geometry=new T.ExtrudeGeometry(shape,{depth:.55,bevelEnabled:false});geometries.push(geometry);blade.geometry=geometry;blade.userData.criterion=i;return blade;});
+ const blades=[26,32,38].map((x,i)=>{const node=box(1,1,1,x,3,-98,criterionMaterials[i],'matrix');const g=new T.OctahedronGeometry(.7,1);geometries.push(g);node.geometry=g;node.userData.criterion=i;node.userData.noCollision=true;return node;});
  const criterionLabels=[26,32,38].map(x=>label(3.4,.8,x,1.25,-96.9));
- for(const x of [29,35])box(1.2,3.5,1.2,x,2,-104,metal,'matrix');
+ 
  const stacks=[29,35].map(x=>[0,1,2].map(i=>{const mesh=box(2.4,1,1.7,x,3,-104,criterionMaterials[i],'matrix');const geometry=new T.CylinderGeometry(1.15,1.15,1,32);geometries.push(geometry);mesh.geometry=geometry;return mesh;}));
  const links=stacks.map((_,o)=>blades.map((_,i)=>beam(new T.Vector3(),new T.Vector3(1,1,1),.09,criterionMaterials[i]!)));
  const sumLabels=[29,35].map(x=>label(4,1,x,11,-102.9));
  const legend=label(5.5,.65,32,14.7,-103.6);legend.mesh.userData.works='matrix';solids.push(legend.mesh);
  // Low, narrow control rail leaves the blades and contribution bridges exposed.
- box(8.6,.65,.45,28,.85,-92.8,inset,'matrix');
+ box(8.6,.14,.45,28,.85,-92.8,bronze,'matrix');
  for(const x of [24.5,31.5])box(.3,.7,.8,x,.35,-92.8,metal,'matrix');
  const operatorLabel=label(7.8,.6,28,.9,-92.55);operatorLabel.mesh.userData.works='matrix';solids.push(operatorLabel.mesh);
  const matrixPartsStart=solids.length;
@@ -109,7 +95,7 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
  let target=[3,3,3],current=[3,3,3],selected=0,locale='en',changing=true;
  function text(){const c=worksCopy[locale as keyof typeof worksCopy]||worksCopy.en;titleLabel.draw(c.name,c.boundary);operatorLabel.draw('Decision Matrix AI',c.inspect+' →');matrixDetails.draw('Decision Matrix AI',c.project+' →');entryLabel.draw(c.name,'→ '+c.open);legend.draw('Decision Matrix AI',c.focus);archiveLabel.draw(c.archive,c.archiveHint);criterionLabels.forEach((l,i)=>l.draw(`${i+1} / ${c.criteria[i]}`,`${c.weight} ${target[i]} × ${c.score} A:${[5,2,3][i]} B:${[2,5,4][i]}`));const r=weightedResults(target);sumLabels.forEach((l,i)=>l.draw(`${c.option} ${i?'B':'A'} / ${r[i]!.total}`,`${r[i]!.percent}% · ${c.total}`));}
  function update(dt:number,reduced:boolean){if(!changing)return false;let changed=false;current=current.map((v,i)=>{const n=reduced?target[i]!:T.MathUtils.damp(v,target[i]!,7,dt);if(Math.abs(n-v)>.0001)changed=true;return Math.abs(n-target[i]!)<.0001?target[i]!:n;});changing=current.some((v,i)=>v!==target[i]);
-  blades.forEach((b,i)=>{b.scale.y=1+current[i]!;b.position.y=4+b.scale.y/2;});
+  blades.forEach((b,i)=>{b.scale.setScalar(.65+current[i]!*.22);b.position.y=3+current[i]!*.7;});
   stacks.forEach((stack,o)=>{let y=4;stack.forEach((mesh,i)=>{const h=current[i]!*([5,2,3,2,5,4][o*3+i]!)/5;mesh.scale.y=h;mesh.position.y=y+h/2;links[o]![i]!.place(new T.Vector3(blades[i]!.position.x,blades[i]!.position.y+blades[i]!.scale.y/2,-98),new T.Vector3(mesh.position.x,mesh.position.y,-103.1));y+=h+.08;});sumLabels[o]!.mesh.position.y=y+1;});return changed;
  }
  function setTheme(dark:boolean){
@@ -121,7 +107,8 @@ export function createWorks(scene:T.Scene,solids:T.Mesh[]){
   lamps[1]!.color.set(dark?'#f4d4a5':'#ffdfac');lamps[1]!.intensity=dark?380:220;
  }
  const projectGallery=createProjectGallery(scene,solids);
+ const sunlit=createSunlitRoom(scene,solids);
  text();update(1,true);
- return {projectGallery,entrance, screens:{archive:archiveLabel.mesh,matrix:matrixDetails.mesh},setTheme,setLocale(value:string){locale=value;projectGallery.setLocale(value);text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
- dispose(){projectGallery.dispose();daylight.shadow.dispose();root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}}
+ return {projectGallery,sunlit,entrance, screens:{archive:archiveLabel.mesh,matrix:matrixDetails.mesh},setTheme,setLocale(value:string){locale=value;sunlit.setLocale(value);projectGallery.setLocale(value);text();},setWeights(values:number[],criterion=selected){target=[...values];changing=true;selected=criterion;criterionMaterials.forEach((m,i)=>{m.emissive.set(i===selected?'#a58b58':'#000000');m.emissiveIntensity=i===selected?.2:0;});text();},update,
+ dispose(){sunlit.dispose();projectGallery.dispose();daylight.shadow.dispose();root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}}
 }

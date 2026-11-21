@@ -37,7 +37,7 @@ test('Works cheeks meet opening edges without coplanar overlap; passage clears t
  assert.ok(Math.abs(bounds[0].max.z+96)<1e-6);assert.ok(Math.abs(bounds[1].min.z+92)<1e-6);
  const lowerWalls=architecture.solids.filter(m=>m.position.x===11&&m.geometry.parameters?.height===8);
  for(const cheek of bounds)for(const wall of lowerWalls){const b=new T.Box3().setFromObject(wall);assert.ok(Math.min(cheek.max.z,b.max.z)-Math.max(cheek.min.z,b.min.z)<1e-6,'Cheeks replace lower wall ends');}
- const slabs=architecture.solids.filter(m=>m.geometry.type==='BoxGeometry'&&m.position.y<0&&Math.abs(m.position.y+m.geometry.parameters.height/2)<1e-6);
+ const slabs=architecture.solids.filter(m=>m.position.x<54&&m.geometry.type==='BoxGeometry'&&m.position.y<0&&Math.abs(m.position.y+m.geometry.parameters.height/2)<1e-6);
  assert.equal(slabs.length,3);
  const slabBounds=slabs.map(m=>new T.Box3().setFromObject(m));
  for(let i=0;i<slabBounds.length;i++)for(let j=i+1;j<slabBounds.length;j++){

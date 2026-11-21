@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import ts from 'typescript';
 import * as T from 'three';
-function load(name,dependencies={}) {
- const source=readFileSync(new URL(`./${name}.ts`,import.meta.url),'utf8');
+function load(name,dependencies={},base=import.meta.url) {
+ const url=new URL(name+'.ts',name.startsWith('.')?base:new URL('.',base));const source=readFileSync(url,'utf8');
  const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
- const exports={};new Function('require','exports',code)(id=>id==='three'?T:dependencies[id],exports);return exports;
+ const exports={};new Function('require','exports',code)(id=>id==='three'?T:dependencies[id]||load(id,{},url),exports);return exports;
 }
 const collision=load('collision');
 const {createImpossibleThreshold}=load('impossible-threshold',{'./collision':collision,'./portal-render-state':load('portal-render-state')});
@@ -89,4 +89,11 @@ test('synchronizing a nonwalking owner prevents stale-segment portal crossings',
   camera.position.z=-70.6;world.syncPosition(camera.position);world.update(.01,true,camera);assert.equal(world.active,false);
   camera.position.z=-68.6;world.update(.01,true,camera);camera.position.z=-70.6;world.update(.01,true,camera);assert.equal(world.active,true);
  }finally{world.dispose();}
+});
+
+test('expanded Tel Aviv streets reach shops, cross lanes and sea walk without the former x=24 wall',()=>{
+ const scene=new T.Scene(),world=createImpossibleThreshold(scene,[]),camera=new T.PerspectiveCamera();
+ camera.position.set(12,1.65,-69);world.update(0,true,camera);world.activate(true);world.update(0,true,camera);camera.position.z=-70.6;world.update(.01,true,camera);
+ const move=(x,z)=>{scene.updateMatrixWorld(true);world.move(camera.position,new T.Vector3(x-camera.position.x,0,z-camera.position.z),()=>{});assert(Math.hypot(camera.position.x-x,camera.position.z-z)<.03,`street blocked at ${camera.position.toArray()} expected ${x},${z}`);};
+ try{move(0,12.3);move(12.7,12.3);move(12.7,33);move(88,33);move(88,12.3);move(27,12.3);move(27,14.5);move(88,14.5);move(88,36);move(12.7,36);world.chooseScoop(2);const travel=load('map-travel');for(const [x,z] of [[35,12.3],[88,12.3],[58,17],[88,36]]){const start=new T.Vector3(x,1.65,z);const path=travel.planEnvironmentExit(start,'sun-world',p=>travel.walkingRouteClear(p,(p,d)=>world.move(p,d,()=>{})));assert(path,`return route from ${x},${z}`);}}finally{world.dispose();}
 });

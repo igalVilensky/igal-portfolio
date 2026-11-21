@@ -84,6 +84,7 @@ export function planEnvironmentExit(from:T.Vector3,environment:string,clear:(pat
  const end=environment==='vault'?v(400,419.8):v(0,-.2);
  const candidates:T.Vector3[][]=[[from.clone(),end]];
  if(environment==='sun-world')candidates.push([from.clone(),v(12.7,from.z),v(12.7,12),v(0,12),end],[from.clone(),v(12.7,26),v(12.7,12),v(0,12),end]);
+ if(environment==='sun-world'&&from.x>24)for(const x of [27,43,58,73,88])candidates.push([from.clone(),v(x,from.z),v(x,33),v(12.7,33),v(12.7,12),v(0,12),end]);
  if(environment==='antipayuta')candidates.push([from.clone(),v(11.4,from.z),v(11.4,74),v(0,3),end]);
  if(environment==='vault')for(const x of [396,404])candidates.push([from.clone(),v(x,from.z),v(x,423),v(400,423),end]);
  return candidates.find(clear);

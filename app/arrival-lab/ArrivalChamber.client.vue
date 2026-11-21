@@ -1,4 +1,22 @@
 <script setup lang="ts">
+import {destinationCopy} from './destination-state';
+const destinationText=computed(()=>destinationCopy[locale.value==='de'||locale.value==='ru'?locale.value:'en']);
+const nearbyExperience=ref(''),experienceRevision=ref(0),scoop=ref(-1);
+const weaverSnapshot=computed(()=>{experienceRevision.value;const w=horizon?.weaver.state;return {awake:w?.awake||false,alignments:w?.alignments||[0,0,0],matched:w?.matched||0,charge:w?.charge||0,event:w?.event||0};});
+const fragmentSnapshot=computed(()=>{experienceRevision.value;return [0,1,2].map(i=>works?.sunlit.state.has(i)||false);});
+const fragmentNear=ref(-1);
+function destinationAction(action:string,index=0){releaseDockPointer();if(action==='wake')horizon?.weaver.state.wake();if(action==='rotate')horizon?.weaver.state.rotate(index);if(action==='charge')horizon?.weaver.state.energize();if(action==='reset')horizon?.weaver.state.reset();if(action==='scoop'){scoop.value=index;threshold?.chooseScoop(index);}if(action==='fragment'&&fragmentNear.value===index)works?.sunlit.state.reveal(index);if(action==='reading-reset')works?.sunlit.state.reset();experienceRevision.value++;needsRender=true;}
+import {createOutdoorSky} from './outdoor-sky';
+import {createArchitecturalRichness} from './architectural-richness';
+import {climateCopy, type Weather, type Period} from './world-climate';
+let outdoor:ReturnType<typeof createOutdoorSky>|undefined,richness:ReturnType<typeof createArchitecturalRichness>|undefined;
+const climateStatus=ref('');
+let lastClimateShadow=0;
+const selectedWeather=ref<Weather>('auto'),selectedPeriod=ref<Period>('auto'),clockPaused=ref(false),windIntensity=ref(.35);
+const climateText=computed(()=>climateCopy[locale.value==='de'||locale.value==='ru'?locale.value:'en']);
+const weatherOptions:Weather[]=['auto','clear','cloudy','rain','storm','snow'];
+const timeOptions:Period[]=['auto','morning','midday','sunset','night'];
+function updateClimate(){if(!outdoor)return;outdoor.state.setWeather(selectedWeather.value);outdoor.state.setPeriod(selectedPeriod.value);outdoor.state.setPaused(clockPaused.value);outdoor.state.setWind(windIntensity.value);if(renderer)renderer.shadowMap.needsUpdate=true;needsRender=true;}
 import {createHorizonScene} from './horizon-scene';
 import {horizonCanBoard,horizonExits} from './horizon-transit';
 import {onHorizon,containsGround,starBoundary} from './star-geography';
@@ -563,7 +581,7 @@ function animate(now: number) {
   diagnostics?.phase('transport');
   const horizonResult=horizon?.transit.update(rawDt,camera);
   if(horizonResult==='recovered')horizonNotice.value=horizonText.value.recovery;
-  if(horizon){horizon.update();horizonPhase.value=horizon.transit.phase;if(horizonPassenger.value!==horizon.transit.ownsPassenger){horizonPassenger.value=horizon.transit.ownsPassenger;look.stop();jumping?.reset();}if(horizon.transit.ownsPassenger||horizonResult)needsRender=true;}
+  if(horizon){horizon.update();if(horizon.weaver.update(dt,reduced.value,onHorizon(camera.position.x,camera.position.z)&&!threshold?.active&&!district?.active&&!secrets?.active))needsRender=true;horizonPhase.value=horizon.transit.phase;if(horizonPassenger.value!==horizon.transit.ownsPassenger){horizonPassenger.value=horizon.transit.ownsPassenger;look.stop();jumping?.reset();}if(horizon.transit.ownsPassenger||horizonResult)needsRender=true;}
   const transitUpdate=skytube?.update(rawDt,reduced.value,camera,!!threshold?.active||!!district?.active);
   if(transitUpdate?.turn)look.rotateFrame(transitUpdate.turn);
   if(transitUpdate?.changed)needsRender=true;
@@ -589,6 +607,7 @@ function animate(now: number) {
   if(!walkingOwnsTraversal){threshold?.syncPosition(camera.position);district?.syncPosition(camera.position);}
   if(walkingOwnsTraversal&&!mapTrip.value&&!secrets?.busy&&!jumping?.airborne&&!threshold?.active&&district?.update(dt,reduced.value,camera)){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x);needsRender=true;renderer.shadowMap.needsUpdate=true;}
   const wasExterior=threshold?.active;
+  if(outdoor)threshold?.setTime(outdoor.state.hour);
   if(walkingOwnsTraversal&&!mapTrip.value&&!secrets?.busy&&threshold?.update(dt,reduced.value,camera)){
     if(threshold.active!==wasExterior){const e=new T.Euler().setFromQuaternion(camera.quaternion,'YXZ');look.restore(e.y,e.x,Math.PI);}
     needsRender=true;renderer.shadowMap.needsUpdate=true;
@@ -612,6 +631,14 @@ function animate(now: number) {
   diagnostics?.phase('water');
   if(lagoonWorld?.update(dt,reduced.value,camera,!threshold?.active&&!district?.active&&!secrets?.active))needsRender=true;
   diagnostics?.phase('atmosphere');
+  const plainWorld=!threshold?.active&&!district?.active&&!secrets?.active;
+  nearbyExperience.value=freeInput.value&&!flight?.equipped&&!horizon?.transit.ownsPassenger&&!guided?(plainWorld&&onHorizon(camera.position.x,camera.position.z)?'weaver':threshold?.environment==='sun-world'&&Math.hypot(camera.position.x-35,camera.position.z-12.5)<4?'ice':threshold?.environment==='antipayuta'&&Math.hypot(camera.position.x+21,camera.position.z-46)<16?'north':plainWorld&&camera.position.x>79&&camera.position.x<95&&camera.position.z<-92&&camera.position.z>-110?'sunlit':''):'';
+  if(nearbyExperience.value==='weaver'||nearbyExperience.value==='sunlit')experienceRevision.value++;
+  fragmentNear.value=plainWorld?(works?.sunlit.positions.findIndex(p=>Math.hypot(camera.position.x-p.x,camera.position.z-p.z)<3)??-1):-1;
+  if(works?.sunlit.update(dt,reduced.value,camera.position,plainWorld))needsRender=true;
+
+  if(outdoor?.update(dt,camera.position,!threshold?.active&&!district?.active&&!secrets?.active,reduced.value)){if(now-lastClimateShadow>2000){renderer.shadowMap.needsUpdate=true;lastClimateShadow=now;}climateStatus.value=climateText.value.modes[weatherOptions.indexOf(outdoor.state.actual)]+' · '+Math.floor(outdoor.state.hour).toString().padStart(2,'0')+':'+Math.floor(outdoor.state.hour%1*60).toString().padStart(2,'0');richness?.update(1-Math.max(0,Math.sin((outdoor.state.hour-6)/24*Math.PI*2)));needsRender=true;}
+
   if(atmosphere?.update(now,dt,reduced.value,camera.position,!threshold?.active&&!district?.active&&!secrets?.active))needsRender=true;
   diagnostics?.phase('installations');
   if(printProgress.value!==null){printElapsed+=dt;printProgress.value=Math.min(1,printElapsed/6);printLab?.update(printProgress.value,reduced.value);needsRender=true;if(printProgress.value>=1){printCollection.value.push({...printDesign.value});printLab?.setCollection(printCollection.value);printLab?.finish();printProgress.value=null;printNotice.value='Print complete! Your creation is on the display wall.';savePrintLab();renderer.shadowMap.needsUpdate=true;}}
@@ -684,7 +711,7 @@ onMounted(() => {
     const canvas = renderer.domElement; canvas.tabIndex = 0; canvas.setAttribute('role', 'application'); canvas.setAttribute('aria-label', c.value.canvas);
     host.value!.appendChild(canvas);
     camera = new T.PerspectiveCamera(innerWidth < 650 ? 72 : 65, 1, .08, 4000); camera.position.copy(spawn);
-    architecture = buildEnvironment(scene);lagoonWorld=createLagoon(scene,architecture.solids);lagoonWorld.setLocale(locale.value);builder=createCreationYard(scene); carry=createCarryables(architecture.solids);printLab=createPrintLab(scene,architecture.solids,carry);try{const stored=readPrints(localStorage.getItem(storageKey));printDesign.value=stored.selected;printCollection.value=stored.collection.slice(0,12);}catch{}printLab.setCollection(printCollection.value); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyNetwork(scene,architecture.solids);coaster=createSkyCoaster(scene,architecture.solids);lagoonWorld.registerSupports(coaster.root);swimming.setObstacles(lagoonWorld.supportBounds);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);intelligence=createIntelligence(scene,architecture.solids);workWing=createWorkWing(scene,architecture.solids);family=createFamily(scene,architecture.solids,{52:coaster,54:skytube.scenic});horizon=createHorizonScene(scene,architecture.solids);horizon.setLocale(locale.value);threshold=createImpossibleThreshold(scene,architecture.solids);threshold.setLocale(locale.value);secrets=createTwoSecrets(scene,architecture.solids);scene.updateMatrixWorld(true);
+    architecture = buildEnvironment(scene);lagoonWorld=createLagoon(scene,architecture.solids);lagoonWorld.setLocale(locale.value);builder=createCreationYard(scene); carry=createCarryables(architecture.solids);printLab=createPrintLab(scene,architecture.solids,carry);try{const stored=readPrints(localStorage.getItem(storageKey));printDesign.value=stored.selected;printCollection.value=stored.collection.slice(0,12);}catch{}printLab.setCollection(printCollection.value); expansion=createExpansion(scene,architecture.solids);expansion.setLocale(locale.value);atmosphere=createAtmosphere(scene,architecture.solids);atmosphere.setLocale(locale.value);sculpture=createOrbitalSculpture(scene,architecture.solids);hallGallery=createHallGallery(scene,architecture.solids,()=>{needsRender=true;});works=createWorks(scene,architecture.solids);works.setLocale(locale.value);mechanism=createMechanism(architecture.wall); lighting = illuminate(scene); terminal=createTerminal(scene,architecture.solids);origin=createOrigin(scene,architecture.solids);rooftop=createAscent(scene,architecture.solids);district=createLoopDistrict(scene,architecture.solids);skytube=createSkyNetwork(scene,architecture.solids);coaster=createSkyCoaster(scene,architecture.solids);lagoonWorld.registerSupports(coaster.root);swimming.setObstacles(lagoonWorld.supportBounds);skytube.setLocale(locale.value);explorer=createLittleExplorer(scene,architecture.solids);explorer.setLocale(locale.value);livingQuarters=createLivingQuarters(scene,architecture.solids);intelligence=createIntelligence(scene,architecture.solids);workWing=createWorkWing(scene,architecture.solids);family=createFamily(scene,architecture.solids,{52:coaster,54:skytube.scenic});horizon=createHorizonScene(scene,architecture.solids);horizon.setLocale(locale.value);richness=createArchitecturalRichness(scene);outdoor=createOutdoorSky(scene,architecture.solids,lighting.sun,lighting.fill,lighting.bounce);threshold=createImpossibleThreshold(scene,architecture.solids);threshold.setLocale(locale.value);secrets=createTwoSecrets(scene,architecture.solids);scene.updateMatrixWorld(true);
     flightScene=createFlightScene(scene,camera,architecture.solids);interactables=createInteractables(architecture.solids);flightScene.setLocale(flightText.value.name);
     const aerialBodies=architecture.solids.filter(m=>!m.userData.flightDevice&&!m.userData.horizonVehicle);coaster.root.traverse(o=>{if(o instanceof T.Mesh&&o.geometry.type!=='TubeGeometry'&&!aerialBodies.includes(o))aerialBodies.push(o);});
     const aerial=createFlightCollision(aerialBodies,(x,z)=>{
@@ -745,7 +772,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   flightScene?.dispose();diagnostics?.dispose();  clearTimeout(exitTimer); cancelAnimationFrame(frame); observer?.disconnect(); look?.dispose(); for (const cleanup of cleanups) cleanup();
-  horizon?.dispose();horizon=undefined;carry?.dispose();builder?.dispose();lagoonWorld?.dispose();secrets?.dispose();printLab?.dispose();intelligence?.dispose();livingQuarters?.dispose();family?.dispose();workWing?.dispose();coaster?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
+  outdoor?.dispose();richness?.dispose();horizon?.dispose();horizon=undefined;carry?.dispose();builder?.dispose();lagoonWorld?.dispose();secrets?.dispose();printLab?.dispose();intelligence?.dispose();livingQuarters?.dispose();family?.dispose();workWing?.dispose();coaster?.dispose();skytube?.dispose();district?.dispose();rooftop?.dispose();explorer?.dispose();interactables?.dispose();threshold?.dispose();origin?.dispose();atmosphere?.dispose();sculpture?.dispose();hallGallery?.dispose();expansion?.dispose();works?.dispose();terminal?.dispose(); architecture?.dispose(); lighting?.dispose(); renderer?.dispose(); renderer?.domElement.remove();
 });
 </script>
 <template>
@@ -753,6 +780,16 @@ onBeforeUnmount(() => {
     <div v-show="!failed && !textMode" ref="host" :inert="printOpen || mapOpen || portalBusy || guided || !!worksUI || !!worksTrip || !!activeEntity" class="arrival-canvas"/>
     <span v-if="buildOpen && pointerLocked" class="portal-reticle" aria-hidden="true">+</span>
     <section v-if="horizonPassenger || horizonNotice" class="ring-status" role="status" aria-live="polite"><p>{{horizonPassenger ? horizonText.express+' · '+(horizonPhase==='boarding'?horizonText.board:horizonPhase==='launching'?horizonText.launch:horizonPhase==='cruising'?horizonText.cruise:horizonPhase==='approaching'?horizonText.arrive:horizonPhase==='docking'?horizonText.dock:horizonText.exit) : horizonNotice}}</p><button v-if="horizonPhase==='boarding'" @click="cancelHorizon">{{horizonText.cancel}} · Esc</button><button v-else-if="!horizonPassenger" @click="horizonNotice=''">{{navCopy.close}}</button></section>
+    <section v-if="nearbyExperience" class="destination-panel" @pointerdown.stop="releaseDockPointer" @focusin="releaseDockPointer" @keydown.stop>
+      <template v-if="nearbyExperience==='weaver'">
+        <strong>{{destinationText.weaver}}</strong><p>{{destinationText.target}} · 1 / 3 / 2</p>
+        <button v-if="!weaverSnapshot.awake" @click="destinationAction('wake')">{{destinationText.wake}}</button>
+        <template v-else><div v-for="(value,i) in weaverSnapshot.alignments" :key="i"><button :disabled="weaverSnapshot.charge>0" @click="destinationAction('rotate',i)">{{destinationText.align}} {{i+1}} · {{value}}</button></div><progress :value="weaverSnapshot.matched" max="3" :aria-label="destinationText.target"/><button :disabled="weaverSnapshot.matched!==3 || weaverSnapshot.charge>0" @click="destinationAction('charge')">{{destinationText.charge}} · {{Math.round(weaverSnapshot.charge*100)}}%</button><p v-if="weaverSnapshot.event>0" role="status">{{destinationText.event}}</p><button @click="destinationAction('reset')">{{destinationText.reset}}</button></template>
+      </template>
+      <template v-else-if="nearbyExperience==='ice'"><strong>{{destinationText.ice}}</strong><p>{{destinationText.taste}}</p><button v-for="(flavor,i) in destinationText.flavors" :key="flavor" :aria-pressed="scoop===i" @click="destinationAction('scoop',i)">{{flavor}}</button><p v-if="scoop>=0" role="status">{{destinationText.flavors[scoop]}} · {{destinationText.served}}</p></template>
+      <template v-else-if="nearbyExperience==='north'"><strong>{{destinationText.north}}</strong></template>
+      <template v-else><strong>{{destinationText.sunlit}}</strong><p>{{destinationText.demo}}</p><button v-for="(fragment,i) in destinationText.fragments" :key="fragment" :disabled="fragmentNear!==i || fragmentSnapshot[i]" @click="destinationAction('fragment',i)">{{fragmentSnapshot[i]?'✓ ':''}}{{fragment}}</button><p v-for="(detail,i) in destinationText.details" v-show="fragmentSnapshot[i]" :key="detail">{{detail}}</p><p>{{fragmentSnapshot.filter(Boolean).length}} / 3 · {{destinationText.next}}</p><p v-if="fragmentSnapshot.every(Boolean)" role="status">{{destinationText.reveal}}</p><a v-if="fragmentSnapshot.every(Boolean)" :href="projects.find(p=>p.id==='sunlit-tales')?.liveUrl || undefined" target="_blank" rel="noopener noreferrer">{{destinationText.project}}</a><button @click="destinationAction('reading-reset')">{{destinationText.reset}}</button></template>
+    </section>
     <CreationYardPanel v-if="buildOpen" :locale="locale" v-bind="buildUI" @close="closeBuilder" @cancel="cancelBuildAction" @aim="mouseLook" @select="builderAction('select')" @choose="choosePiece" @color="chooseColor" @place="builderAction('place')" @rotate="builderAction('rotate')" @move="builderAction('move')" @remove="builderAction('remove')" @undo="builderAction('undo')" @reset="builderAction('reset')"/>
     <section v-if="flightEquipped" :inert="mapOpen || controlsOpen || !!activeEntity || printOpen || buildOpen" class="flight-status" role="status"><strong>{{flightText.name}} · {{flightText.states[flightPhase]}}</strong><p>{{flightAltitude}} m · {{flightSpeed}} m/s</p><p>{{flightText.controls}}</p><p v-if="flightUnsafe">{{flightText.unsafe}}</p><p v-if="flightNotice">{{flightNotice}}</p><button v-if="flightPhase==='equipped'" @click="requestJump();renderer.domElement.focus()">{{flightText.takeoff}}</button><button v-if="flightPhase==='equipped'" @click="flightAction">{{navCopy.drop}}</button><button @click="recoverFlight">{{flightText.recover}}</button></section>
     <div v-if="ringPhase==='launching'||ringPhase==='reveal'" class="skyfall-flash" :class="{'is-reveal':ringPhase==='reveal'}" aria-hidden="true"/>
@@ -771,6 +808,13 @@ onBeforeUnmount(() => {
     <section v-if="controlsOpen && !portalBusy" id="arrival-controls" class="arrival-controls" role="dialog" :aria-label="navCopy.settings" @keydown.esc.stop.prevent="closeSettings">
       <header><strong>{{navCopy.settings}}</strong><button :aria-label="navCopy.close" @click="closeSettings"><X aria-hidden="true"/></button></header>
       <p>{{navCopy.keys}}</p>
+      <fieldset class="climate-settings"><legend>{{climateText.title}}</legend>
+        <label>{{climateText.weather}}<select v-model="selectedWeather" @change="updateClimate"><option v-for="(value,i) in weatherOptions" :key="value" :value="value">{{climateText.modes[i]}}</option></select></label>
+        <label>{{climateText.time}}<select v-model="selectedPeriod" @change="updateClimate"><option v-for="(value,i) in timeOptions" :key="value" :value="value">{{climateText.periods[i]}}</option></select></label>
+        <label><input v-model="clockPaused" type="checkbox" @change="updateClimate">{{climateText.pause}}</label>
+        <label>{{climateText.wind}}<input v-model.number="windIntensity" type="range" min="0" max="1" step=".05" @input="updateClimate"></label>
+        <p role="status">{{climateStatus}}</p><p>{{climateText.local}}</p>
+      </fieldset>
       <label><input v-model="reduced" type="checkbox">{{ c.reduce }}</label>
       <button :aria-pressed="textMode" @click="showText">{{ c.alternative }}</button>
       <button :aria-label="themeLabel" :title="themeLabel" :aria-pressed="dark" @click="colorMode.preference=dark?'light':'dark'"><Sun v-if="dark" aria-hidden="true"/><Moon v-else aria-hidden="true"/>{{themeLabel}}</button>
@@ -806,5 +850,9 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.destination-panel{position:absolute;right:1rem;top:1rem;z-index:11;width:min(22rem,calc(100vw - 2rem));max-height:50vh;overflow:auto;padding:1rem;background:#243942ed;color:#f5e7cd;border:1px solid #b9a27b;border-radius:12px;pointer-events:auto;font-size:1rem}.destination-panel button,.destination-panel a{display:inline-block;min-height:44px;padding:.5rem;margin:.2rem;background:#36535b;color:inherit;border:1px solid #9ab2ae;border-radius:6px}.destination-panel button:disabled{opacity:.5}.destination-panel p{margin:.5rem 0}.destination-panel progress{width:100%}@media(max-width:650px){.destination-panel{max-height:35vh;font-size:.875rem}}
+
+.climate-settings{display:grid;gap:.6rem;margin:.6rem 0;padding:.7rem;border:1px solid #819b9c}.climate-settings label{display:flex;justify-content:space-between;gap:.7rem;align-items:center}.climate-settings select{min-height:44px;padding:.4rem;background:#223942;color:#f3ead7;border:1px solid #819b9c;border-radius:6px;font-size:1rem}.climate-settings p{font-size:.875rem}.arrival-controls{max-height:85vh;overflow:auto}
+
 .flight-status{position:absolute;top:1rem;left:1rem;z-index:12;max-width:min(26rem,75vw);padding:.8rem 1rem;border:1px solid #72c6be;border-radius:14px;background:#16343de8;color:#e1fff7;font:14px/1.4 sans-serif;pointer-events:auto}.flight-status p{margin:.35rem 0}.flight-status button{min-height:44px;padding:.4rem .7rem;margin:.2rem;border:1px solid #72c6be;border-radius:8px;background:#244e58;color:inherit}@media(max-width:650px){.flight-status{max-width:65vw;font-size:12px}.flight-status p:nth-child(3){display:none}}
 </style>
