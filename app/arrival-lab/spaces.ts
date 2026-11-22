@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {towerCopy,towerEntrance} from './sky-tower-model';
 export type Point = readonly [number, number, number];
 export interface WorldSpace {
  id:string; names:Record<'en'|'de'|'ru',string>; bounds:readonly [number,number,number,number];
@@ -20,6 +21,7 @@ export const lagoonSpaces:readonly WorldSpace[]=[
  {id:'creation-yard',names:{en:'The Creation Yard',de:'Der Kreativhof',ru:'Двор творчества'},bounds:[-190,-142,104,152],position:[-166,0,132],rotation:0,height:9,connections:['living-lagoon'],anchor:[-166,1.65,113],entry:[-166,1.65,110],lookAt:[-166,2,132],identity:'mint architectural workshop and modular building playground',status:'active',mounts:[]}
 ];
 export const worldSpaces:readonly WorldSpace[]=[
+ {id:'sky-tower',names:{en:towerCopy.en.name,de:towerCopy.de.name,ru:towerCopy.ru.name},bounds:[46,74,-241,-204],position:[60,0,-225],rotation:0,height:108,connections:['origin'],anchor:towerEntrance,entry:towerEntrance,lookAt:[65,5,-225],identity:'vertical stone, bronze and glass landmark',status:'active',mounts:[]},
  ...lagoonSpaces,
  intelligenceSpace,
  {id:'print-lab',names:{en:'Print Lab',de:'Drucklabor',ru:'Лаборатория печати'},bounds:[-76,-56,48,68],position:[-66,0,58],rotation:0,height:6,connections:['origin'],anchor:[-60,1.65,61],entry:[-56,1.65,61],lookAt:[-66,2,52],identity:'playful mint and lilac maker pavilion',status:'active',mounts:[]},
@@ -32,7 +34,7 @@ export const worldSpaces:readonly WorldSpace[]=[
  {id:'loop-vault',names:{en:'Impossible House',de:'Unmögliches Haus',ru:'Невозможный дом'},bounds:[383,417,420,466],position:[400,0,443],rotation:0,height:23,connections:['loop-district'],anchor:[400,1.65,424],entry:[400,1.65,421],lookAt:[400,13,447],identity:'luminous oversized vault',status:'active',mounts:[]},
  {id:'loop-district',names:{en:'The Loop District',de:'Das Loop-Viertel',ru:'Квартал петель'},bounds:[210,274,25.5,80.5],position:[242,0,53],rotation:0,height:12,connections:['skybridge','journey','loop-vault'],anchor:[238,1.65,58],entry:[213,1.65,48],lookAt:[241,3,59],identity:'impossible mineral neighborhood',status:'active',mounts:[]},
  {id:'skybridge',names:{en:'Skybridge',de:'Himmelsbrücke',ru:'Небесный мост'},bounds:[84,210,44.5,51.5],position:[147,0,48],rotation:0,height:2,connections:['origin','loop-district'],anchor:[147,1.65,48],entry:[84,1.65,48],lookAt:[228,3,43],identity:'open mineral and metal crossing',status:'active',mounts:[]},
- {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival','skybridge','print-lab','living-lagoon'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
+ {id:'origin',names:{en:'The Origin',de:'Der Ursprung',ru:'Исток'},bounds:[-112,84,-125,132],position:[12,0,62],rotation:0,height:44,connections:['arrival','skybridge','print-lab','living-lagoon','sky-tower'],anchor:[12,1.65,62],entry:[12,1.65,24],lookAt:[12,1.65,132],identity:'suspended mineral plateau',status:'active',mounts:[]}];
 export function spaceAt(p:T.Vector3){return worldSpaces.find(s=>p.x>=s.bounds[0]&&p.x<=s.bounds[1]&&p.z>=s.bounds[2]&&p.z<=s.bounds[3]);}
 /** Route via the circulation centreline; works/light-well routing remains in its existing owner. */
 export function expansionLeg(p:T.Vector3):T.Vector3[]{

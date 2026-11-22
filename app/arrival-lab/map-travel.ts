@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {containsGround,starBoundary} from './star-geography';
 import {onHorizon} from './star-geography';
 import {roofHeight} from './ascent';
 import {originBoundary,originHeight} from './origin';
@@ -15,6 +16,7 @@ export function planMapRoute(from:T.Vector3,to:T.Vector3,clear:(path:T.Vector3[]
  const add=(x:number,z:number)=>{let index=nodes.findIndex(n=>n.x===x&&n.z===z);if(index<0){index=nodes.length;nodes.push(new T.Vector3(x,1.65,z));}return index;};
  // Additional entrances use the same authored circulation graph, following inspected aisles.
  const aisles=[
+ [[-104,62],[-116,40],[-116,-10],[-70,-20],[-70,-125],[65,-125],[65,-170],[65,-206]],
  [[12,62],[12,115],[0,140],[-4,140]],
  [[-57,19],[-62,19],[-62,21.8],[-90.5,21.8],[-90.5,11],[-92,11],[-92,6]],
  [[-32,27],[-35,27],[-35,29],[-20,29]],
@@ -70,6 +72,7 @@ export function onMapGround(p:T.Vector3){
  if(!p.toArray().every(Number.isFinite)||inBasin(p.x,p.z))return false;
  if(onHorizon(p.x,p.z)&&Math.abs(p.y-1.65)<.2)return true;
  if(Math.abs(p.y-1.65)>.2){const roof=roofHeight(p.x,p.z);return roof!==undefined&&Math.abs(p.y-roof-1.65)<.25||originHeight(p.x,p.z)>0&&Math.abs(p.y-originHeight(p.x,p.z)-1.65)<.25;}
+ if(Math.abs(p.y-1.65)<.2&&p.z< -125&&containsGround(starBoundary,p.x,p.z,.5))return true;
  if(p.x>=-134&&p.x<=-106&&p.z>=59&&p.z<=65)return true;
  if(p.x>=-183.2&&p.x<=-152&&p.z>=99&&p.z<=114)return true;
  let inside=false;for(let i=0,j=originBoundary.length-1;i<originBoundary.length;j=i++){

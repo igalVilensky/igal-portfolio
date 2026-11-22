@@ -17,10 +17,10 @@ export function createOutdoorSky(scene:T.Scene,solids:T.Mesh[],sun:T.Directional
  const heights=new Float32Array(count);let cellX=Infinity,cellZ=Infinity,clock=0,day=1,cloud=0,refresh=1,lastWeather='',lastPeriod='';
  const surfaces:T.Mesh[]=[];const puddleMat=new T.MeshStandardMaterial({color:'#829eac',roughness:.15,metalness:.3,transparent:true,opacity:0,depthWrite:false});const snowMat=new T.MeshStandardMaterial({color:'#eef5fa',roughness:1,transparent:true,opacity:0,depthWrite:false});ms.push(puddleMat,snowMat);
  const patch=new T.CircleGeometry(1,12);gs.push(patch);
- function roof(x:number,z:number){up.set(x,90,z);ray.set(up,down);return ray.intersectObjects(bounds.filter(b=>x>=b.box.min.x&&x<=b.box.max.x&&z>=b.box.min.z&&z<=b.box.max.z).map(b=>b.mesh),false).find(h=>!h.object.userData.horizonVehicle)?.point.y??-100;}
+ function roof(x:number,z:number){up.set(x,220,z);ray.set(up,down);return ray.intersectObjects(bounds.filter(b=>x>=b.box.min.x&&x<=b.box.max.x&&z>=b.box.min.z&&z<=b.box.max.z).map(b=>b.mesh),false).find(h=>!h.object.userData.horizonVehicle)?.point.y??-100;}
  // Fixed weather patches sit on exposed outdoor floor only; no indoor snow layer.
  scene.updateMatrixWorld(true);
- for(const mesh of solids)if(!mesh.userData.horizonVehicle){const box=new T.Box3().setFromObject(mesh),size=box.getSize(new T.Vector3());const surface=size.x>2&&size.z>2&&size.y<2;if((!mesh.userData.noCollision||surface)&&box.min.y<90&&box.max.y>-.3)bounds.push({mesh,box});}
+ for(const mesh of solids)if(!mesh.userData.horizonVehicle){const box=new T.Box3().setFromObject(mesh),size=box.getSize(new T.Vector3());const surface=size.x>2&&size.z>2&&size.y<2;if((!mesh.userData.noCollision||surface)&&box.min.y<220&&box.max.y>-.3)bounds.push({mesh,box});}
  for(const [x,z] of [[32,55],[45,58],[60,48],[-40,55],[-55,62],[75,65],[92,49],[945,-705],[955,-710]] as [number,number][]){const y=roof(x,z);if(y<-.2||y>1)continue;for(const m of [puddleMat,snowMat]){const o=new T.Mesh(patch,m);o.rotation.x=-Math.PI/2;o.position.set(x,y+.035+(m===snowMat?.008:0),z);o.scale.set(2.5,1.4,1);root.add(o);surfaces.push(o);}}
  return {root,state,update(dt:number,p:T.Vector3,active:boolean,reduced:boolean){state.update(dt);root.visible=active;if(!active)return false;clock+=dt;refresh+=dt;
  const liveWeather=state.actual==='rain'||state.actual==='storm'||state.actual==='snow';

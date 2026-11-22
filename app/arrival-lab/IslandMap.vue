@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {towerCopy,towerFloor} from './sky-tower-model';
 import {MapPin,Navigation,Plus,Minus,X,Route,DoorOpen,Layers} from 'lucide-vue-next';
 import {originBoundary} from './origin';
 import {mapDestinations,mapRooms,projectWorld,selectMapDestination,starAtlasBounds,horizonAtlasBounds} from './world-map';
@@ -6,7 +7,7 @@ import {horizonBoundary} from './star-geography';
 import {createHorizonRoute} from './horizon-transit';
 import {horizonCopy} from './horizon-copy';
 import {navigationCopy} from './navigation-copy';
-const props=defineProps<{position:{x:number;z:number;yaw?:number};environment:string;notice?:string;device?:{x:number;z:number}}>();
+const props=defineProps<{position:{x:number;y?:number;z:number;yaw?:number};environment:string;notice?:string;device?:{x:number;z:number}}>();
 const emit=defineEmits<{close:[];travel:[id:string]}>();
 const {locale}=useI18n();
 const language=computed(()=>locale.value==='de'||locale.value==='ru'?locale.value:'en');
@@ -30,6 +31,7 @@ onMounted(()=>{closeButton.value?.focus();if(viewport.value&&!local.value){viewp
 <template>
  <section ref="panel" class="island-map" role="dialog" aria-modal="true" aria-labelledby="island-map-title" @keydown.stop="trap" @pointerdown.stop>
   <header><div><p>ARRIVAL</p><h2 id="island-map-title">{{c.map}}</h2></div><button ref="closeButton" :aria-label="c.close" :title="c.close" @click="emit('close')"><X aria-hidden="true"/></button></header>
+  <p v-if="environment==='sky-tower'">{{towerCopy[language].name}} · {{towerCopy[language].floors[towerFloor(position.y||1.65)]}}</p>
   <div class="atlas-toolbar"><span>{{overview?hc.outpost:hc.star}}</span><button @click="overview=!overview">{{overview?hc.star:hc.outpost}}</button><div><button :disabled="zoom<=1" :aria-label="c.zoomOut" @click="zoom=Math.max(1,zoom-.5)"><Minus aria-hidden="true"/></button><button :disabled="zoom>=4" :aria-label="c.zoomIn" @click="zoom=Math.min(4,zoom+.5)"><Plus aria-hidden="true"/></button></div></div>
   <div ref="viewport" class="atlas-viewport" tabindex="0" :aria-label="c.map">
    <div class="atlas-sheet" :style="{width:`${zoom*100}%`,height:`${zoom*420}px`}">
